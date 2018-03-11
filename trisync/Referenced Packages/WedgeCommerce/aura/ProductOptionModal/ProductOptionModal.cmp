@@ -1,0 +1,166 @@
+<aura:component controller="wk_wedge.WedgeProductOptionLightning">
+    <ltng:require styles="{!join(',',$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/css/backend/style-lightning.css',$Resource.wk_wedge__SLDS +'/assets/styles/salesforce-lightning-design-system-ltng.css')}" scripts="{!$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+    <aura:attribute name="ProductOptionId" type="String" />
+    <aura:attribute name="newProductOption" type="wk_wedge__Product_Option__c" default="{ 'sobjectType': 'wk_wedge__Product_Option__c',
+                         'Name': '',
+                         'wk_wedge__Option_Type__c': '',
+                         'wk_wedge__Option_Status__c':false,
+                         'wk_wedge__Description__c':''
+                       }"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initialize}"/>
+    <aura:handler name="openPopup" action="{!c.initialize}" event="wk_wedge:WedgePopupEvent"/>
+    <aura:attribute name="productOptions" type="wk_wedge__Product_Option__c[]"/>  
+    <aura:attribute name="variants" type="String"/>
+    <aura:attribute name="jsonString" type="String"/>
+    
+	<aura:registerEvent name="RemoveComponent" type="wk_wedge:RemoveComponentDynamically"/>
+    <aura:registerEvent name="UpdateEvent" type="wk_wedge:WedgePopupEvent"/>
+    
+	<div role="dialog" tabindex="-1" aura:id="Modalbox" aria-labelledby="header43" class="slds-modal ">
+    	<div>
+        	<div class="slds-modal__container ">
+            	<div class="slds-modal__header">                
+                	<button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removeComponent}">
+                    	<span>
+                        	<wk_wedge:SVG class="slds-button__icon slds-button__icon--large" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                            <span class="slds-assistive-text">Close</span>
+                        </span>                	
+                    </button>
+                    <div class="slds-grid">
+                    	<div class="slds-col slds-has-flexi-truncate">
+                        	<div class="slds-media slds-media--center slds-no-space slds-grow">
+                            	<div class="slds-media__figure">
+                                	<span class="slds-icon_container slds-icon-custom-custo31">
+                                    	<wk_wedge:SVG class="slds-icon" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/custom-sprite/svg/symbols.svg#custom31'}" />
+                                        <span class="slds-assistive-text">Event Icon</span>
+                                    </span>
+                                </div>
+                                <div class="slds-media__body">
+                                	<h1 class="slds-page-header__title slds-m-right--small slds-truncate slds-align-middle" title="New Product Feature">New Product Option</h1>
+                                </div>                        
+                            </div>
+                         </div>            	             
+                    </div>
+                </div>                    
+                <div class="modal-body scrollable slds-modal__content slds-p-around--medium parent">                    
+                    <div class="slds-tabs--scoped ">
+                        <ul class="slds-tabs--scoped__nav " role="tablist">
+                            <li aura:id="t1" class="slds-tabs--scoped__item slds-text-title--caps slds-active" title="General" role="presentation" onclick="{!c.tabOneAction}">
+                                <a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" id="tab-scoped-1__item">General</a>
+                            </li>
+                            <li aura:id="t2" class="slds-tabs--scoped__item slds-text-title--caps " title="Variants" role="presentation" onclick="{!c.tabTwoAction}">
+                           		<a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2" id="tab-scoped-2__item">Variants</a>
+                            </li>
+                        </ul>
+                        <div aura:id="tab1" class="slds-tabs--scoped__content slds-show " role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                        	<div class= "slds-form--stacked">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element slds-is-required">
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="name" label="Option Name" class="slds-input" labelClass="slds-form-element__label" value="{!v.newProductOption.Name}" required="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                    	<ui:inputCheckbox aura:id="status" label="Option Status" class="slds-checkbox" labelClass="slds-form-element__label slds-checkbox__label" value="{!v.newProductOption.wk_wedge__Option_Status__c}" />
+                                	</div>
+                                </div>
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <input type="hidden" value="{!v.newProductOption.wk_wedge__Option_Type__c}" id="ipType"/>
+                                        <label class="slds-form-element__label">Type</label>
+                                        <select class ="slds-input"  id="ip_type_sel" onchange="{!c.changeValue}" >
+                                           	<option value="">--None--</option>
+                                            <optgroup label="Checkbox">
+                                              	<option value="C">Single</option>
+                                                <option value="M">Multiple</option>
+                                            </optgroup>
+                                            <optgroup label="Select Box">
+                                              	<option value="T">Select List</option>
+                                            </optgroup>
+                                            <optgroup label="Other">
+                                              	<option value="S">Text</option>
+                                            </optgroup>
+                                         </select> 
+                                    </div>
+                                </div>
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <label class="slds-form-element__label">Description</label>                        
+                                        <lightning:inputRichText aura:id="content" value="{!v.newProductOption.wk_wedge__Description__c}" />           
+                                    </div>
+                                </div>
+                            </div>      
+                        </div>
+                        <div aura:id="tab2" class="slds-tabs--scoped__content slds-hide " role="tabpanel" aria-labelledby="tab-scoped-1__item">                            
+                            <div id="variantBlock" class="wgd-form--tab ">
+                                <div class="wdg-form--block"> 
+                                    <!--<div class="wdg-form-blocktitle">
+                                        <span>Add Variants </span>
+                                    </div>-->
+                                    <div class="wdg-form--blockfields">
+                                        <input type="hidden" value="{!v.variants}" id="variants"/>
+                                        
+                                        <table class="wdg-variant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Position </th>
+                                                    <th> <span style="margin-left:5px;">Value</span></th>
+                                                    <th><span style="margin-left:10px;">Modifier</span></th>
+                                                    <th><span style="margin-left:15px;"> Type</span></th>
+                                                	<th></th>
+                                            	</tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="PrimeRow">
+                                                    <!--<td class="Xsmall position inputpos"><input type="text" /></td>
+                                                    <td class="large variant inputvar"><input type="text" /></td>
+                                                    <td class="Xsmall option">
+                                                        <span class="wdg-body">
+                                                            <div class="option_btn">                                                                
+                                                                <a href="javascript:void(0)" class="wdg-ctrl-btn addNew addRow"><span></span></a>
+                                                            	<a href="javascript:void(0)" class="wdg-ctrl-btn delete deleteRow" ><span></span></a>
+                                                        	</div>
+                                                    	</span>
+                                                    </td>-->
+                                                        
+                                                    <td class="Xsmall position inputpos"><input type="text"/></td>
+                                                    <td class="Xsmall variant inputvar"><input type="text" /></td>
+                                                    <td class="Xsmall modifier inputType"><input type="text"/></td>
+                                                    <td class=" Xsmall typeval inputpos">
+                                                        <select name="singleSelect" class="selectType">
+                                                            <option value="Absolute" >Absolute</option>
+                                                        	<option value="Percent">Percent</option>
+                                                    	</select>                                                             
+                                                    </td>
+                                                    <td class="small option">
+                                                        <span class="wdg-body">
+                                                            <div class="option_btn">
+                                                                <a href="javascript:void(0)" class="wdg-ctrl--btn addNew addRow"><span></span></a>
+                                                            	<a href="javascript:void(0)" class="wdg-ctrl--btn delete deleteRow" ><span></span></a>
+                                                        	</div>
+                                                    	</span>
+                                                	</td>
+                                            	</tr>
+                                        	</tbody>
+                                    	</table>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">                            
+                            <ui:button aura:id="button1" class="slds-button slds-button--neutral slds-not-selected wdg-ctrl--btn-save" press="{!c.removeComponent}">Cancel</ui:button>
+                            <ui:button class="slds-button slds-button--neutral slds-button--brand slds-not-selected" press="{!c.createProductOption}">Save</ui:button>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="MB-Back"></div>
+</aura:component>

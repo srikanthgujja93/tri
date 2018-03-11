@@ -1,0 +1,13 @@
+.THIS {
+}
+.THIS .gkn-sms-spiner{
+    z-index:9999;
+}
+ .THIS .slds-select_container:after{
+    top:20px;
+}
+.THIS .slds-icon-text-default {
+    background-color: #0070d2;
+    fill: #ffffff;
+    padding: 0;
+}

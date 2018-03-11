@@ -1,0 +1,53 @@
+<apex:page Sidebar="false" cache="true" expires="86400" contentType="text/html" controller="ATC.AvSessionCon" showHeader="false" StandardStyleSheets="false">
+    <apex:pageMessages />    
+    <apex:stylesheet value="{!URLFOR($Resource.ATC__Jslib, 'resources/css/jslib-all.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ATC__JSResourcesMin, 'JSResources/css/style.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ATC__Jslib, 'avjs2.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ATC__TreeGrid5912, 'Grid/GridE.js')}" />
+    <apex:includeScript value="https://www.google.com/jsapi" /> 
+    <script> var SFORGPFX = "ATC"; </script>
+    <apex:includeScript value="{!URLFOR($Resource.ATC__JSResourcesMin, 'JSResources/js/avata-all-min.js')}" />     
+<!--initial loading progress bar-->
+<div id="loading-mask" class="ext-el-mask" style=""></div>
+<div id="loading">
+    <div id="loading-msg" class="ext-el-mask-msg x-mask-loading">
+        <div>Loading Avata CPD</div>
+    </div>
+</div>
+    <script>   
+    document.title = 'Avata CPD';
+    var SFSessionConnected = false;
+    function sfs_to_trigger()
+    {
+        if (!SFSessionConnected) {
+            window.location.href = getLogoutPagePath();
+        }
+    }
+    setTimeout('sfs_to_trigger()',10000); //1 min  
+    var isProjId = gup('prOh');
+    Ext.onReady(avataUI.init,avataUI,true);
+    function AvataMakeSforceConnection()
+    {
+        
+        if (sforce.connection) 
+        {
+           //check session Id in URL
+           var sid = gup('_sId');
+           if (sid !== '') {
+               sforce.connection.sessionId = sid;
+           } else {
+               sforce.connection.sessionId = '{!SessionId}'; // Try {!$Api.Session_ID} as in CPDX?
+           }
+            SFSessionConnected = true;
+            Avata.dbUtils.init();   
+           return true;
+        }
+        else return false;
+    }
+    var AvataImagePath = "{!URLFOR($Resource.JSResourcesMin, 'JSResources/images/icons')}";
+    var BlankImagePath = "{!URLFOR($Resource.Jslib, 'resources/images/default')}";
+    Ext.BLANK_IMAGE_URL = BlankImagePath+'/s.gif';
+    var SFHost = '{!$Api.PARTNER_SERVER_URL_140}';
+    var SFSRVURL = '{!$API.Partner_Server_URL_80}';
+    </script>
+</apex:page>

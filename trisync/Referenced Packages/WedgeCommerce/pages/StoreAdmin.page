@@ -1,0 +1,1637 @@
+<apex:page showheader="False" standardstylesheets="false" title="Store Admin" controller="wk_wedge.StoreAdminController" doctype="html-5.0" action="{!checkMetadataAPIConnection}">
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+    <apex:includeScript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+    <style>
+        .wdg-nav-icon.storeadmin {
+        background-color: #34becd;
+        }
+        .wdg-nav-icon.cms {
+        background-color: #34becd;
+        }
+        .wdg-Notedata{
+        font-size:12px;
+        color:red;
+        }
+        
+        .nav-tabs { 
+        border-bottom: 2px solid #DDD;
+        padding: 0px;
+        }
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        border-width: 0;
+        }
+        .nav-tabs > li {
+        display:inline-block;
+        }
+        .nav-tabs > li > a {
+        border: none;
+        display:block;
+        padding: 10px 15px;
+        color: #666;
+        }
+        .nav-tabs > li.active > a, .nav-tabs > li > a:hover {
+        border: none;
+        color: white !important;
+        background: #FF8C44 ;
+        }
+        .nav-tabs > li > a::after {
+        content: "";
+        background: #4285F4;
+        height: 2px; position: absolute;
+        width: 100%;
+        left: 0px;
+        bottom: -1px;
+        transition: all 250ms ease 0s;
+        transform: scale(0); 
+        }
+        .nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after {
+        transform: scale(1);
+        }
+        .tab-nav > li > a::after {
+        background: #21527d none repeat scroll 0% 0%;
+        color: #fff;
+        }
+        .tab-pane {
+        padding: 15px 0;
+        display:none;
+        }
+        .tab-content{
+        padding:20px
+        }
+        
+        .tab-content > .active{
+        display:block !important;
+        }
+        
+        .card {
+        background: #FFF none repeat scroll 0% 0%;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+        margin-bottom: 30px;
+        }
+        .hidden{
+        display:none !important;
+        }
+        .web-analytic-label {
+        width: 22%;
+        padding: 15px;
+        color: #555555;
+        font-size: 14px;
+        text-align: right;
+        vertical-align: top;
+        }
+        .web-analytic-input {
+        padding: 6px;
+        border-radius: 3px;
+        font-size: 14px;
+        color: #222;
+        border: 1px solid #adadad;
+        outline: none;
+        box-shadow: none;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        }
+        .wdg-form--table tbody td.field select.display-inline--block, .wdg-form--table tbody td.field input[type="text"].display-inline--block{
+        width: 100%;
+        }
+        /* #pushstatus,#pushNotiKeyPanel,#pushImage,#reqstatus,#reqKeyPanel,#rmaKeyPanel{
+        display:none;
+        }
+        #userKeyPanel,#status,*/
+        .wdg-form--table input[type="text"]{
+        width:auto;
+        display:inline-block;
+        }    
+        .wdg-addOption--btn{
+        margin-left: 10px;
+        }
+        .wedge_selectListOuter{
+        max-height: 200px;
+        }
+        /*.wdg-form--box .wdg-form--content{
+        height:620px;
+        }*/
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <apex:form >
+                <div class="wdg-popup wdg-hide" id="imagePopUp">
+                    <div class="wdg-popup--modal" id="doc-pop">
+                        <div class="wdg-modal--header clearfix">
+                            <div class="wdg-modal--title">{!$Label.wk_wedge__backend_image_text}</div>
+                            <apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+                        </div>   
+                        <div class="wdg-modal--content padding-0">
+                            <div class="wdg-imagepop--box">
+                                <div class="wdg-imagepop--folder">
+                                    <div class="wdg-images--container">
+                                        <apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+                                            <div class="wdg-checkbox--box">
+                                                <apex:inputcheckbox html-targetvalue="{!folder.value}"  styleclass="folder-checkbox"/>
+                                            </div>
+                                            <apex:outputlabel value="{!folder.label}"/>
+                                        </apex:datalist>
+                                        <apex:inputhidden value="{!documentfolder}" id="docfolder" />
+                                    </div>
+                                </div>
+                                <apex:outputpanel layout="block" id="imageSet" styleclass="wdg-imagepop--images">
+                                    <div class="wdg-images--container">
+                                        <apex:repeat value="{!Images}" var="imgs">
+                                            <apex:image url="/servlet/servlet.FileDownload?file={!Imgs.id}" html-targetId="{!Imgs.id}" alt="{!Imgs.name}"/>
+                                        </apex:repeat>
+                                        <apex:outputpanel layout="block" styleclass="selectFolder" rendered="{!Images.size==0}">
+                                            <apex:outputpanel >
+                                                <apex:outputtext value="{!$Label.wk_wedge__backend_image_choose_folder}" rendered="{!OR(documentfolder==null,documentfolder=='')}" />
+                                                <apex:outputtext value="{!$Label.wk_wedge__backend_no_image_returned}" rendered="{!AND(documentfolder!=null,documentfolder!='')}"/>
+                                            </apex:outputpanel>
+                                        </apex:outputpanel>
+                                    </div>
+                                </apex:outputpanel>
+                            </div> 
+                            <apex:actionfunction name="newImages" rerender="imageSet" status="waitstatus"/>
+                        </div>
+                        <div class="wdg-modal--footer">
+                        </div> 
+                    </div>
+                    <div class="wdg-popup--bg fadein"></div> 
+                </div> 
+            </apex:form>
+            
+            <apex:form styleclass="wdg-dataentry--form">
+                <div class="wdg-popup wdg-hide" id="fileuploadPopUp">
+                    <div class="wdg-popup--modal">
+                        <div class="wdg-modal--header clearfix">
+                            <div class="wdg-modal--title">{!$Label.wk_wedge__backend_image_text}</div>
+                            <apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+                        </div>
+                        <div class="wdg-modal--content padding-0">
+                            <div class="wdg-imagepop--box">
+                                <div class="wdg-imagepop--folder">
+                                    <div class="wdg-images--container">
+                                        <apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+                                            <div class="wdg-radio--box">
+                                                <span class="dot"></span>
+                                                <input type="radio" name="folder" value="{!folder.value}" class="folder-radio" />
+                                            </div>
+                                            <apex:outputlabel value="{!folder.label}"/>
+                                        </apex:datalist>
+                                        <apex:inputhidden value="{!uploadfolder}" id="uploadfolder" />
+                                    </div>
+                                </div>
+                                <apex:outputpanel layout="block"  styleclass="wdg-imagepop--images">
+                                    <apex:outputpanel layout="block" styleclass="wgd-uploadImage--box">
+                                        <div class="wdg-upload--image">
+                                            <apex:outputpanel layout="block"></apex:outputpanel>
+                                        </div>
+                                        <div class="wdg-uploadimage--title" id="Image_upload_title">Image.jpg</div>
+                                    </apex:outputpanel>
+                                    <div class="wdg-upload--file">
+                                        <div class="wdg-file--box">
+                                            <span>{!$Label.wk_wedge__backend_image_choose_file}</span>
+                                            <apex:inputFile value="{!document.body}" filename="{!document.name}" id="Uploadfile" accept="image/*" styleClass="inputupload" />
+                                        </div>
+                                        <div class="wdg-fileupload--error wdg-hide">
+                                            
+                                        </div>
+                                    </div> 
+                                </apex:outputpanel>
+                            </div>
+                        </div>
+                        <div class="wdg-modal--footer">
+                        </div>
+                    </div>
+                    <div class="wdg-popup--bg fadein"></div> 
+                </div>
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                    
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo store"></span>
+                            <span> {!$label.wk_wedge__Store_Admin_Top_Heading}</span>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <!--<a href="javascript:void(0);" class="wdg-ctrl--btn save"  onclick="saveConfig()">
+<span></span>
+</a>-->
+                            <a href="javascript:void(0);" class="wdg-ctrl--btn save">
+                                <span></span>
+                            </a>
+                            <apex:actionFunction name="saveConfig" action="{!saveconfig}"/>
+                            
+                        </div>  
+                    </div>
+                    <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-form--box">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active"> 
+                                    <a href="javascript:void(0)" data-target="GeneralInformation">{!$label.wk_wedge__Store_Admin_General_Tab_Text}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" data-target="SiteSEO">{!$label.wk_wedge__Store_Admin_SEO_Tab_Text}</a>
+                                </li>                                
+                                <apex:outputPanel rendered="{!storeAd.Id!=null}">
+                                    <li >                                        
+                                        <a href="javascript:void(0)" data-target="FeatureActivation">{!$label.wk_wedge__Store_Admin_Feature_Activation_Tab_Text}</a> 
+                                    </li>
+                                </apex:outputPanel>
+                                <li>
+                                    <a href="javascript:void(0)" data-target="AdditionalFeatures">{!$label.wk_wedge__Store_Admin_Additional_Features_Tab_Text}</a>
+                                </li>
+                                <li >
+                                    <a href="javascript:void(0)" data-target="WebAnalyticSetting">{!$label.wk_wedge__Store_Admin_Web_Analytics_Tab_Text}</a> 
+                                </li>                                
+                            </ul>
+                        </div>
+                        <div class="wdg-form--content">
+                            <div class="wgd-form--tab show" id ="GeneralInformation">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>{!$label.wk_wedge__Store_Admin_Information_Text}</span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_store_manager_label} :  "/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_store_manager_hint}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                            <apex:inputText value="{!queryUserName}"  onkeypress="return noenter(event, 'clickUser');"
+                                                                            onkeyup="delay('clickUser');" styleclass=" field--small display-inline--block accountList wdg_searchBox"
+                                                                            onclick="showList('#userList');" onblur="hideList('#userList');"
+                                                                            id="queryUserName" html-autocomplete="off">
+                                                            </apex:inputText>
+                                                            <span class="wedgeSelectListDropIcon"></span>
+                                                            
+                                                            <apex:inputHidden value="{!queryUserId}" id="queryUserId" />                                                             
+                                                            <div class="wedge_selectListOuter field--small" id="userList">
+                                                                <apex:outputPanel id="usertable">
+                                                                    <apex:repeat value="{!usr}" var="a">
+                                                                        <a class="wedge_SelectListInner" 
+                                                                           href="javascript:addAccount('{!a}','{!a.FirstName} {!a.LastName}','queryUserName', 'queryUserId');">
+                                                                            {!a.FirstName} {!a.LastName}</a>
+                                                                    </apex:repeat>
+                                                                    <apex:outputText value="No User Return"
+                                                                                     styleClass="wedge_SelectListInner"
+                                                                                     rendered="{!isUserList}"> </apex:outputText>
+                                                                </apex:outputPanel>
+                                                            </div>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel layout="block" Id="validateUser" styleclass="validateClass"></apex:outputPanel>
+                                                        <!--<apex:selectlist value="{!storeAd.User__c}" size="1" styleclass="field--small display-inline--block" id="storemgr">
+<apex:selectoptions value="{!useroptions}"/>
+</apex:selectlist> -->
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_store_pricebook_label} :  "/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_store_pricebook_hint}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                            <apex:inputText value="{!queryPriceBookName}"  onkeypress="return noenter(event, 'clickPb');"
+                                                                            onkeyup="delay('clickPb');" styleclass=" field--small display-inline--block accountList wdg_searchBox"
+                                                                            onclick="showList('#pbList');" onblur="hideList('#pbList');"
+                                                                            id="queryPriceBookName" html-autocomplete="off">
+                                                            </apex:inputText>
+                                                            <span class="wedgeSelectListDropIcon"></span>                                                            
+                                                            <apex:inputHidden value="{!queryPricebookId}" id="queryPricebookId" /> 
+                                                            
+                                                            <div class="wedge_selectListOuter field--small" id="pbList">
+                                                                <apex:outputPanel id="pbtable">
+                                                                    <apex:repeat value="{!pbList}" var="a">
+                                                                        <a class="wedge_SelectListInner" 
+                                                                           href="javascript:addAccount('{!a}','{!a.Name}','queryPriceBookName', 'queryPricebookId');">
+                                                                            {!a.Name}</a>
+                                                                    </apex:repeat>
+                                                                    <apex:outputText value="No Pricebook Return"
+                                                                                     styleClass="wedge_SelectListInner"
+                                                                                     rendered="{!isPriceBookList}"> </apex:outputText>
+                                                                </apex:outputPanel>
+                                                            </div>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel layout="block" Id="validatePriceBook" styleclass="validateClass"></apex:outputPanel>
+                                                        <!--<apex:selectlist value="{!storeAd.StorePriceBook__c}" size="1" styleclass="field--small display-inline--block" id="storepbook">
+<apex:selectoptions value="{!pricebookoptions}"/>
+</apex:selectlist> -->
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <!--<tr>
+<td class="label">
+<apex:outputlabel value="Portal Account : "/>
+</td>
+<td class="field">
+<apex:selectlist value="{!storeAd.Store_Portal_Account__c}" size="1" styleclass=" field--small display-inline--block" id="portalacc">
+<apex:selectoptions value="{!portalAccountoptions}"/>
+</apex:selectlist>
+<span><c:ToolTip helptext="Select the account to Store Registered Users as Contacts & Allow Portal Access"/></span>
+</td>
+</tr>
+<tr>
+<td class="label">
+<apex:outputlabel value="Registered User Account : "/>
+</td>
+<td class="field">
+<apex:selectlist value="{!storeAd.Registered_User_Account__c}" size="1" styleclass=" field--small display-inline--block" id="regacc">
+<apex:selectoptions value="{!accountoptions}"/>
+</apex:selectlist>
+<span><c:ToolTip helptext="All the Order of Registed Users will be created Under this account"/></span>
+</td>
+</tr>
+<tr>
+<td class="label">
+<apex:outputlabel value="Guest User Account  :  "/>
+</td>
+<td class="field">
+<apex:selectlist value="{!storeAd.Guest_Account__c}" size="1" styleclass="field--small display-inline--block" id="guestacc">
+<apex:selectoptions value="{!accountoptions}"/>
+</apex:selectlist>
+<span><c:ToolTip helptext="All the Order of Guest Users will be created Under this account"/></span>
+
+</td>
+</tr> -->
+                                                
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_guest_user_account_label} :  "/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_guest_user_account_hint}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                            <apex:inputText value="{!queryGuestName}"
+                                                                            onkeypress="return noenter(event, 'clickGuest');"
+                                                                            onkeyup="delay('clickGuest');"
+                                                                            styleclass=" field--small display-inline--block accountList"
+                                                                            onclick="showList('#guestAccountList');"
+                                                                            onblur="hideList('#guestAccountList');"
+                                                                            id="queryGuestName" html-autocomplete="off">
+                                                            </apex:inputText>
+                                                            
+                                                            <apex:inputHidden value="{!queryGuestId}" id="queryGuestId" /> 
+                                                            
+                                                            <div class="wedge_selectListOuter field--small" id="guestAccountList">   
+                                                                <apex:outputPanel id="guesttable">
+                                                                    <apex:repeat value="{!acc2}" var="a">
+                                                                        <a class="wedge_SelectListInner" 
+                                                                           href="javascript:addAccount('{!a}','{!a.Name}','queryGuestName', 'queryGuestId');">
+                                                                            {!a.Name}
+                                                                        </a>
+                                                                    </apex:repeat>
+                                                                    <apex:outputText value="No Account Return"
+                                                                                     styleClass="wedge_SelectListInner"
+                                                                                     rendered="{!isGuestAccountList}"> </apex:outputText>
+                                                                </apex:outputPanel>
+                                                            </div>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel layout="block" Id="validateGuestUser" styleclass="validateClass"></apex:outputPanel>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_frontend_default_language_label}:"/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_frontend_default_language_hint}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:selectlist value="{!frontendLanguage}" size="1" styleclass="field--small display-inline--block">
+                                                            <apex:selectoptions value="{!ActivatedLanguage}"/>
+                                                        </apex:selectlist>
+                                                        
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_notification_timeout_milliseconds_label} :"/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_notification_timeout_milliseconds_hint}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:selectlist id="storeNotify" value="{!storeAd.wk_wedge__Notification_Timeout__c}" size="1" styleclass="field--small display-inline--block">
+                                                            <apex:selectoptions value="{!NotificationTime}"/>
+                                                        </apex:selectlist>
+                                                    </td>
+                                                </tr>
+                                                <!--<tr>
+<td class="label">
+<apex:outputlabel value=" Currency symbol :  "/>
+</td>
+<td class="field">
+<apex:selectlist id="storecurr" value="{!storeAd.Currecy_Symbol__c}" size="1" styleclass="field--small display-inline--block">
+<apex:selectoptions value="{!Currencyoptions}"/>
+</apex:selectlist>
+<span><c:ToolTip helptext="Currently your default currency is {!Currency}"/></span>   
+</td>
+</tr>-->
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_terms_and_conditions_label} : "/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_terms_and_conditions_hint}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                            <apex:inputText value="{!queryArticleName}" onkeypress="return noenter(event, 'clickArticle');"
+                                                                            onkeyup="delay('clickArticle');" styleclass=" field--small display-inline--block accountList wdg_searchBox"
+                                                                            onclick="showList('#articleList');" onblur="hideList('#articleList');" id="queryArticleName" html-autocomplete="off">
+                                                            </apex:inputText>
+                                                            
+                                                            <apex:inputHidden value="{!queryArticleId}" id="queryArticleId" />                                                             
+                                                            <div class="wedge_selectListOuter field--small" id="articleList">   
+                                                                <apex:outputPanel id="articletable">
+                                                                    <apex:repeat value="{!artList}" var="a">
+                                                                        <a class="wedge_SelectListInner" 
+                                                                           href="javascript:addAccount('{!a}','{!a.Name}','queryArticleName', 'queryArticleId');">
+                                                                            {!a.Name}
+                                                                        </a>
+                                                                    </apex:repeat>
+                                                                    <apex:outputText value="No Article Return"
+                                                                                     styleClass="wedge_SelectListInner"
+                                                                                     rendered="{!isArticleList}"> </apex:outputText>
+                                                                </apex:outputPanel>
+                                                            </div>
+                                                        </apex:outputPanel>
+                                                        <!--<apex:selectlist value="{!storeAd.TNC__c}" size="1" styleclass=" field--small display-inline--block" id="storetnc">
+<apex:selectoptions value="{!articles}"/>
+</apex:selectlist>
+<span><c:ToolTip helptext="T & c Page for site Users"/></span>-->
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_robots_text_label} :"/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_robots_text_hint}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputtextarea value="{!RobotText}" id="RobotText"/>                                                        
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <apex:inputHidden value="{!configJson}" id="configjson"/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="wgd-form--tab" id="SiteSEO">
+                                <div class="wdg-form--block" >
+                                    <div class="wdg-form--blocktitle">
+                                        <span>{!$label.wk_wedge__Store_Admin_SEO_Tab_Text}</span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_site_url_label} :  " for="siteURL"/>
+                                                        <c:ToolTip helptext="{!$Label.wk_wedge__store_admin_site_url_hint}"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputText value="{!querySiteUrl}" id="siteURL" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_site_home_page_title_label} : " for="sitePageTitle"/>
+                                                        <c:ToolTip helptext="{!$Label.wk_wedge__store_admin_site_home_page_title_hint}"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputText value="{!querySitePageTitle}" id="sitePageTitle" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_site_meta_keywords_label}:  " for="sitemetakey"/>
+                                                        <c:ToolTip helptext="{!$Label.wk_wedge__store_admin_site_meta_keywords_hint}"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputText value="{!querySiteMetaKeywords}" id="sitemetakey" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_site_meta_description_label} :  " for="sitemetadesc"/>
+                                                        <c:ToolTip helptext="{!$Label.wk_wedge__store_admin_site_meta_description_hint}"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputText value="{!querySiteMetaDescription}" id="sitemetadesc" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>                                                           
+                                            </tbody>
+                                        </table> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wgd-form--tab" id="FeatureActivation">
+                                <div class="wdg-form--block" >
+                                    <div class="wdg-form--blocktitle">
+                                        <span>{!$label.wk_wedge__Store_Admin_Feature_Activation_Tab_Text}</span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <div class="card">
+                                            <ul class="nav nav-tabs" role="tablist">
+                                                <li role="presentation" class="active"><a href="#userRegistration" aria-controls="userRegistration" role="tab" data-toggle="tab">{!$label.wk_wedge__Store_Admin_Feature_Activation_User_Registration}</a></li>
+                                                <li role="presentation" class=""><a href="#pushNotification" aria-controls="pushNotification" role="tab" data-toggle="tab">{!$label.wk_wedge__Store_Admin_Feature_Activation_Push_Notification_Text}</a></li>
+                                                <li role="presentation" class=""><a href="#requestQuote" aria-controls="requestQuote" role="tab" data-toggle="tab">{!$label.wk_wedge__Store_Admin_Feature_Activation_Request_Quote}</a></li>
+                                                <li role="presentation" class=""><a href="#rmaSettings" aria-controls="rmaSettings" role="tab" data-toggle="tab">{!$label.wk_wedge__Store_Admin_Feature_Activation_RMA}</a></li> 
+                                                <li role="presentation" class=""><a href="#ChanelManager" aria-controls="ChanelManager" role="tab" data-toggle="tab">{!$label.wk_wedge__Store_Admin_Feature_Activation_Channel_Manager}</a></li> 
+                                                <li role="presentation" class=""><a href="#Wallet" aria-controls="Wallet" role="tab" data-toggle="tab">{!$label.wk_wedge__Store_Admin_Feature_Activation_Wallet}</a></li>                                            
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div role="tabpanel" class="tab-pane active" id="userRegistration">
+                                                    <apex:outputPanel id="renderuserReg">
+                                                        <table class="wdg-form--table">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="label">
+                                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_user_registration}: " for="userreg"/>
+                                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_feature_activation_user_registration_help}"/></span>
+                                                                    </td>
+                                                                    <td class="field">
+                                                                        <a href="javascript:void(0);" class="wdg-addOption--btn" id="activateUserReg">{!$label.wk_wedge__Store_Admin_Feature_Activation_Activate_Text}</a>
+                                                                        <apex:outputpanel id="userKeyPanel">
+                                                                            <apex:inputfield value="{!storeAd.wk_wedge__User_Rgistration_Key__c}" />
+                                                                            <apex:outputPanel id="userbuttonpanel">                                                                                                                                                                                                                     
+                                                                                <apex:outputPanel rendered="{!!storeAd.wk_wedge__User_Registration__c}"  ><a href="javascript:void(0);" class="wdg-addOption--btn" id="EnableUserReg">{!$label.wk_wedge__Store_Admin_Feature_Activation_Enable_Text}</a></apex:outputPanel>
+                                                                                <apex:outputPanel rendered="{!storeAd.wk_wedge__User_Registration__c}" ><a href="javascript:void(0);" class="wdg-addOption--btn" id="DisableUserReg">{!$label.wk_wedge__Store_Admin_Feature_Activation_Disable_Text}</a></apex:outputPanel>
+                                                                            </apex:outputPanel>
+                                                                        </apex:outputpanel>                                                        
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="userregfields">
+                                                                    <td class="label">
+                                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_portal_account} : "/>
+                                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_feature_activation_portal_account_help}"/></span>
+                                                                    </td>
+                                                                    <td class="field">
+                                                                        <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                                            <apex:inputText value="{!queryPortalName}"  onkeypress="return noenter(event, 'clickPortal');"
+                                                                                            onkeyup="delay('clickPortal');" styleclass=" field--small display-inline--block accountList wdg_searchBox"
+                                                                                            onclick="showList('#portalAccountList');" onblur="hideList('#portalAccountList');"
+                                                                                            id="queryPortalName" html-autocomplete="off">
+                                                                            </apex:inputText>
+                                                                            <span class="wedgeSelectListDropIcon"></span>                                                                    
+                                                                            <apex:inputHidden value="{!queryPortalId}" id="queryPortalId" /> 
+                                                                            <div class="wedge_selectListOuter field--small" id="portalAccountList">
+                                                                                <apex:outputPanel id="portaltable">
+                                                                                    <apex:repeat value="{!portalAcc}" var="a">
+                                                                                        <a class="wedge_SelectListInner" 
+                                                                                           href="javascript:addAccount('{!a}','{!a.Name}','queryPortalName', 'queryPortalId');">
+                                                                                            {!a.Name}</a>
+                                                                                    </apex:repeat>
+                                                                                    <apex:outputText value="No Account Return"
+                                                                                                     styleClass="wedge_SelectListInner"
+                                                                                                     rendered="{!isPortalAccountList}"> </apex:outputText>
+                                                                                </apex:outputPanel>
+                                                                            </div>
+                                                                        </apex:outputPanel>
+                                                                    </td> 
+                                                                </tr>
+                                                                <tr class="userregfields">
+                                                                    <td class="label">
+                                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_reg_acc} : "/>
+                                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_feature_activation_reg_acc_help}"/></span>
+                                                                    </td>
+                                                                    <td class="field">
+                                                                        <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                                            <apex:inputText value="{!queryRegisterName}" onkeypress="return noenterRegister(event, 'click');"
+                                                                                            onkeyup="delay('clickRegister');" styleclass=" field--small display-inline--block accountList wdg_searchBox"
+                                                                                            onclick="showList('#registerAccountList');" onblur="hideList('#registerAccountList');"
+                                                                                            id="queryRegisterName" html-autocomplete="off">
+                                                                            </apex:inputText>                                                            
+                                                                            <apex:inputHidden value="{!queryRegisterId}" id="queryRegisterId" /> 
+                                                                            
+                                                                            <div class="wedge_selectListOuter field--small" id="registerAccountList">
+                                                                                <apex:outputPanel id="registertable">
+                                                                                    <apex:repeat value="{!acc2}" var="a">
+                                                                                        <a class="wedge_SelectListInner" 
+                                                                                           href="javascript:addAccount('{!a}','{!a.Name}','queryRegisterName', 'queryRegisterId');">
+                                                                                            {!a.Name}
+                                                                                        </a>
+                                                                                    </apex:repeat>
+                                                                                    <apex:outputText value="No Account Return"
+                                                                                                     styleClass="wedge_SelectListInner"
+                                                                                                     rendered="{!isRegisterAccountList}"> </apex:outputText>
+                                                                                </apex:outputPanel>
+                                                                            </div>
+                                                                        </apex:outputPanel>
+                                                                    </td>
+                                                                </tr>                                                     
+                                                            </tbody>
+                                                        </table>
+                                                        <span class="wdg-Notedata" >
+                                                            <p class="wdg-note-content">
+                                                                {!$label.wk_wedge__Store_Admin_Feature_Activation_User_Reg_Note}
+                                                            </p>
+                                                        </span>
+                                                    </apex:outputPanel>          
+                                                </div>
+                                                <div role="tabpanel" Class="tab-pane" id="pushNotification">
+                                                    <table class="wdg-form--table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="label">
+                                                                    <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_push_notification}: " for="pushNotify"/>
+                                                                    <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_feature_activation_push_notification_help}"/></span>
+                                                                </td>
+                                                                <td class="field">
+                                                                    <a href="javascript:void(0);" class="wdg-addOption--btn" id="activatePushNot">{!$label.wk_wedge__Store_Admin_Feature_Activation_Activate_Text}</a>
+                                                                    <apex:outputpanel id="pushNotiKeyPanel">
+                                                                        <apex:inputfield value="{!storeAd.wk_wedge__Push_Notification_Key__c}"/>
+                                                                        <apex:outputPanel id="pushbuttonpanel">    
+                                                                            <apex:outputPanel rendered="{!!storeAd.wk_wedge__Enable_Push_Notification__c}"><a href="javascript:void(0);" class="wdg-addOption--btn" id="EnablePushNoti">{!$label.wk_wedge__Store_Admin_Feature_Activation_Enable_Text}</a></apex:outputPanel>
+                                                                            <apex:outputPanel rendered="{!storeAd.wk_wedge__Enable_Push_Notification__c}"><a href="javascript:void(0);" class="wdg-addOption--btn" id="DisablePushNoti">{!$label.wk_wedge__Store_Admin_Feature_Activation_Disable_Text}</a></apex:outputPanel>                                                                
+                                                                        </apex:outputPanel>
+                                                                    </apex:outputpanel>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="pushNotificationfields">
+                                                                <td class="label"><apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_push_notification_heading}"></apex:outputlabel></td>
+                                                                <td class="field">
+                                                                    <apex:inputText value="{!storeAd.wk_wedge__Push_Notification_Heading__c}" id="pushhead" maxlength="80"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="pushNotificationfields">
+                                                                <td class="label"><apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_push_notification_welcome}"></apex:outputlabel></td>
+                                                                <td class="field">
+                                                                    <apex:inputText value="{!storeAd.wk_wedge__Push_Notification_Text__c}" id="pushtext" maxlength="255"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="pushImage">
+                                                                <td class="label"><apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_push_notification_welcome_image}:"></apex:outputlabel></td>
+                                                                <td class="field">
+                                                                    <div class="wdg-warning--box">
+                                                                        <div class="wdg-warning">{!$Label.wk_wedge__store_admin_feature_activation_push_notification_image}</div>
+                                                                    </div>
+                                                                    <apex:actionregion >
+                                                                        <apex:outputpanel id="ImagesPane" layout="block" styleclass="wgd-uploadImage--box">
+                                                                            <div class="wdg-upload--image display-inline--block">
+                                                                                <apex:outputpanel layout="block" rendered="{!imgSelected==null}"></apex:outputpanel>
+                                                                                <apex:image url="/servlet/servlet.FileDownload?file={!imgSelected}" width="108px" height="90px" rendered="{!NOT(imgSelected==null)}" styleClass="ecm_thum_img"/>
+                                                                            </div>
+                                                                            <apex:inputhidden value="{!imgSelected}" id="Imgsel"/>
+                                                                            <apex:inputhidden value="{!ImageOptionSelected}" id="Imgoptsel"/>
+                                                                            <div class="wdg-uploadimage--title" id="Image_title">Image.jpg</div>
+                                                                        </apex:outputpanel>
+                                                                        <div class="wdg-uploadImage--btngroup">
+                                                                            <a href="javascript:void(0)" data-target="fileuploadPopUp" value="0" class="ImgSelect">{!$label.wk_wedge__Backend_Upload_Button_Text}</a>
+                                                                            <a href="javascript:void(0)" data-target="imagePopUp" value="1" class="ImgSelect">{!$label.wk_wedge__Backend_Document_Button_Text}</a>
+                                                                            <apex:outputlink value="javascript:void(0)" rendered="{!NOT(imgSelected==null)}" id="removeImages" style="border-left:none">{!$Label.wk_wedge__backend_remove_button_text}</apex:outputlink>
+                                                                        </div>
+                                                                    </apex:actionregion>
+                                                                    <apex:outputPanel layout="block" Id="validateImg" styleclass="validateClass"></apex:outputPanel>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>                         
+                                                </div>
+                                                <div role="tabpanel" class="tab-pane" id="requestQuote">
+                                                    <table class="wdg-form--table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="label">
+                                                                    <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_request_quote_text}: " for="reqQuote"/>
+                                                                    <span><c:ToolTip helptext="Enable Request Quote Functionality"/></span>
+                                                                </td>
+                                                                <td class="field">
+                                                                    <a href="javascript:void(0);" class="wdg-addOption--btn" id="activateReqQuote">{!$label.wk_wedge__Store_Admin_Feature_Activation_Activate_Text}</a>
+                                                                    <apex:outputpanel id="reqKeyPanel">
+                                                                        <apex:inputfield value="{!storeAd.wk_wedge__Request_Quote_key__c}"/>                                           
+                                                                        <apex:outputPanel id="reqbuttonpanel">  
+                                                                            <apex:outputPanel rendered="{!!storeAd.wk_wedge__Enable_Request_Quote__c}" ><a href="javascript:void(0);" class="wdg-addOption--btn" id="EnableReqQuote">{!$label.wk_wedge__Store_Admin_Feature_Activation_Enable_Text}</a></apex:outputPanel>
+                                                                            <apex:outputPanel rendered="{!storeAd.wk_wedge__Enable_Request_Quote__c}"><a href="javascript:void(0);" class="wdg-addOption--btn" id="DisableReqQuote">{!$label.wk_wedge__Store_Admin_Feature_Activation_Disable_Text}</a></apex:outputPanel>
+                                                                        </apex:outputPanel>  
+                                                                    </apex:outputpanel>                                              
+                                                                    
+                                                                </td>
+                                                            </tr>                                                      
+                                                        </tbody>
+                                                    </table>             
+                                                </div>
+                                                <div role="tabpanel" Class="tab-pane" id="rmaSettings">
+                                                    <table class="wdg-form--table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="label">
+                                                                    <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_rma_text}: " />
+                                                                    <span><c:ToolTip helptext="Enable RMA Functionality"/></span>
+                                                                </td>
+                                                                <td class="field">
+                                                                    <a href="javascript:void(0);" class="wdg-addOption--btn" id="activaterma">{!$label.wk_wedge__Store_Admin_Feature_Activation_Activate_Text}</a>
+                                                                    <apex:outputpanel id="rmaKeyPanel">
+                                                                        <apex:inputfield value="{!storeAd.wk_wedge__RMA_Key__c}"/>                                                                
+                                                                        <apex:outputPanel id="rmabuttonpanel">  
+                                                                            <apex:outputPanel rendered="{!!storeAd.wk_wedge__Enable_RMA_Settings__c}" ><a href="javascript:void(0);" class="wdg-addOption--btn" id="Enablerma">{!$label.wk_wedge__Store_Admin_Feature_Activation_Enable_Text}</a></apex:outputPanel>
+                                                                            <apex:outputPanel rendered="{!storeAd.wk_wedge__Enable_RMA_Settings__c}"><a href="javascript:void(0);" class="wdg-addOption--btn" id="Disablerma">{!$label.wk_wedge__Store_Admin_Feature_Activation_Disable_Text}</a></apex:outputPanel>
+                                                                        </apex:outputPanel>
+                                                                    </apex:outputpanel>
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="RMA">
+                                                                <td class="label">
+                                                                    <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_default_rma}: " for="defaultRequestStatus"/>
+                                                                    <span><c:ToolTip helptext="Select Default RMA Request Status which is generated by Store Registered User"/></span>
+                                                                </td>
+                                                                <td class="field">
+                                                                    <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                                        <apex:inputText value="{!queryRmaName}"  onkeypress="return noenter(event, 'clickRma');"
+                                                                                        onkeyup="delay('clickRma');" styleclass=" field--small display-inline--block accountList wdg_searchBox"
+                                                                                        onclick="showList('#rmaList');" onblur="hideList('#rmaList');"
+                                                                                        id="queryRmaName" html-autocomplete="off">
+                                                                        </apex:inputText>
+                                                                        <span class="wedgeSelectListDropIcon"></span>
+                                                                        <apex:inputHidden value="{!queryRmaName}" id="queryRmaId" />                                                                     
+                                                                        <div class="wedge_selectListOuter field--small" id="rmaList">
+                                                                            <apex:outputPanel id="rmatable">
+                                                                                <apex:repeat value="{!rmaList}" var="a">
+                                                                                    <a class="wedge_SelectListInner" 
+                                                                                       href="javascript:addRma('{!a}','{!a.Name}','queryRmaName','queryRmaId');">
+                                                                                        {!a.Name}</a>
+                                                                                </apex:repeat>
+                                                                                <apex:outputText value="No RMA Status Return"
+                                                                                                 styleClass="wedge_SelectListInner"
+                                                                                                 rendered="{!isRmaList}"> </apex:outputText>
+                                                                            </apex:outputPanel>
+                                                                        </div>
+                                                                    </apex:outputPanel>
+                                                                    <!-- <apex:selectlist value="{!storeAd.Default_RMA_Rquest_Status__c}" size="1" id="defaultRequestStatus" styleclass=" field--small display-inline--block">
+<apex:selectoptions value="{!actionOpt}"/>
+</apex:selectlist> -->
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>               
+                                                </div>
+                                                <div role="tabpanel" class="tab-pane" id="ChanelManager">
+                                                    <table class="wdg-form--table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="label">
+                                                                    <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_ebay_text}: " />
+                                                                    <span><c:ToolTip helptext="Enable eBay Chanel Manager"/></span>
+                                                                </td>
+                                                                <td class="field">
+                                                                    <a href="javascript:void(0);" class="wdg-addOption--btn" id="activateeBay">{!$label.wk_wedge__Store_Admin_Feature_Activation_Activate_Text}</a>
+                                                                    <apex:outputpanel id="eBayKeyPanel">
+                                                                        <apex:inputfield value="{!storeAd.wk_wedge__eBay_Key__c}"/>                                           
+                                                                        <apex:outputPanel id="ebaybuttonpanel">  
+                                                                            <apex:outputPanel rendered="{!!storeAd.wk_wedge__Enable_eBay__c}" ><a href="javascript:void(0);" class="wdg-addOption--btn" id="EnableeBay">{!$label.wk_wedge__Store_Admin_Feature_Activation_Enable_Text}</a></apex:outputPanel>
+                                                                            <apex:outputPanel rendered="{!storeAd.wk_wedge__Enable_eBay__c}"><a href="javascript:void(0);" class="wdg-addOption--btn" id="DisableeBay">{!$label.wk_wedge__Store_Admin_Feature_Activation_Disable_Text}</a></apex:outputPanel>
+                                                                        </apex:outputPanel>  
+                                                                    </apex:outputpanel>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="label">
+                                                                    <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_amazon_text}: " />
+                                                                    <span><c:ToolTip helptext="Enable Amazon Chanel Manager"/></span>
+                                                                </td>
+                                                                <td class="field">
+                                                                    <a href="javascript:void(0);" class="wdg-addOption--btn" id="activateamazon">{!$label.wk_wedge__Store_Admin_Feature_Activation_Activate_Text}</a>
+                                                                    <apex:outputpanel id="amazonKeyPanel">
+                                                                        <apex:inputfield value="{!storeAd.wk_wedge__Amazon_Key__c}"/>                                           
+                                                                        <apex:outputPanel id="amazonbuttonpanel">  
+                                                                            <apex:outputPanel rendered="{!!storeAd.wk_wedge__Enable_Amazon__c}" ><a href="javascript:void(0);" class="wdg-addOption--btn" id="Enableamazon">{!$label.wk_wedge__Store_Admin_Feature_Activation_Enable_Text}</a></apex:outputPanel>
+                                                                            <apex:outputPanel rendered="{!storeAd.wk_wedge__Enable_Amazon__c}"><a href="javascript:void(0);" class="wdg-addOption--btn" id="Disableamazon">{!$label.wk_wedge__Store_Admin_Feature_Activation_Disable_Text}</a></apex:outputPanel>
+                                                                        </apex:outputPanel>  
+                                                                    </apex:outputpanel>                                                        
+                                                                </td>
+                                                            </tr>                                                         
+                                                        </tbody>
+                                                    </table>             
+                                                </div>
+                                                <div role="tabpanel" class="tab-pane" id="Wallet">
+                                                    <table class="wdg-form--table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="label">
+                                                                    <apex:outputlabel value="{!$Label.wk_wedge__store_admin_feature_activation_wallet_text}: " />
+                                                                    <span><c:ToolTip helptext="Enable Wallet"/></span>
+                                                                </td>
+                                                                <td class="field">
+                                                                    <a href="javascript:void(0);" class="wdg-addOption--btn" id="activateWallet">{!$label.wk_wedge__Store_Admin_Feature_Activation_Activate_Text}</a>
+                                                                    <apex:outputpanel id="walletKeyPanel">
+                                                                        <apex:inputfield value="{!storeAd.wk_wedge__Wallet_Key__c}"/>                                           
+                                                                        <apex:outputPanel id="walletbuttonpanel">  
+                                                                            <apex:outputPanel rendered="{!!storeAd.wk_wedge__Enable_Wallet__c}" ><a href="javascript:void(0);" class="wdg-addOption--btn" id="Enablewallet">{!$label.wk_wedge__Store_Admin_Feature_Activation_Enable_Text}</a></apex:outputPanel>
+                                                                            <apex:outputPanel rendered="{!storeAd.wk_wedge__Enable_Wallet__c}"><a href="javascript:void(0);" class="wdg-addOption--btn" id="Disablewallet">{!$label.wk_wedge__Store_Admin_Feature_Activation_Disable_Text}</a></apex:outputPanel>
+                                                                        </apex:outputPanel>  
+                                                                    </apex:outputpanel>
+                                                                </td>
+                                                            </tr>                                                      
+                                                        </tbody>
+                                                    </table>             
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <span class="wdg-Notedata" >
+                                    <p class="wdg-note-content">
+                                        {!$label.wk_wedge__Store_Admin_Feature_Activation_Note_Text}<br/>
+                                    </p>
+                                </span>
+                            </div>
+                            <div class="wgd-form--tab" id="AdditionalFeatures">
+                                <div class="wdg-form--block" >
+                                    <div class="wdg-form--blocktitle">
+                                        <span>{!$label.wk_wedge__Store_Admin_Additional_Features_Tab_Text}</span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_additional_features_enable_shipping}:" for="enableshipping"/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_additional_features_enable_shipping_help}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="custom-checkbox {!IF(storeAd.wk_wedge__Enable_Shipping__c,'checked','')}">
+                                                            <apex:inputfield value="{!storeAd.wk_wedge__Enable_Shipping__c}" id="enableshipping" styleclass="display-inline--block"/>
+                                                        </div>                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_additional_features_enable_multi_currency}:" for="enablemulticurrency"/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_additional_features_enable_multi_currency_help}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="custom-checkbox {!IF(storeAd.wk_wedge__Enable_Multicurrency__c,'checked','')}">
+                                                            <apex:inputfield value="{!storeAd.wk_wedge__Enable_Multicurrency__c}" id="enablemulticurrency" styleclass="display-inline--block" />
+                                                            
+                                                            
+                                                        </div>                                                        
+                                                    </td>
+                                                </tr> 
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="{!$Label.wk_wedge__store_admin_additional_features_enable_multi_language}:" for="enablemultilanguage"/>
+                                                        <span><c:ToolTip helptext="{!$Label.wk_wedge__store_admin_additional_features_enable_multi_language_help}"/></span>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="custom-checkbox {!IF(storeAd.wk_wedge__Enable_Multilanguage__c,'checked','')}">
+                                                            <apex:inputfield value="{!storeAd.wk_wedge__Enable_Multilanguage__c}" id="enablemultilanguage" styleclass="display-inline--block"/>
+                                                        </div>                                                        
+                                                    </td>
+                                                </tr>                                                           
+                                            </tbody>
+                                        </table> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wgd-form--tab" id="WebAnalyticSetting">
+                                <div class="wdg-form--block" >
+                                    <div class="wdg-form--blocktitle">
+                                        <span>{!$label.wk_wedge__Store_Admin_Web_Analytics}</span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="card">
+                                                        <ul class="nav nav-tabs" role="tablist">
+                                                            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">{!$label.wk_wedge__Store_Admin_Web_Analytics_General_Tab_Text}</a></li>
+                                                            <apex:repeat value="{!WebOptions}" var="option" id="web-analytics-tabs">
+                                                                <li role="presentation" class="{!If((option.checked),'','hidden')}" data-toggle="{!option.optionName}"><a href="#{!option.optionName}" aria-controls="{!option.optionName}" role="tab" data-toggle="tab">{!option.optionLabel}</a></li>
+                                                            </apex:repeat>
+                                                        </ul>
+                                                        
+                                                        <!-- Tab panes -->
+                                                        <div class="tab-content">
+                                                            <div role="tabpanel" class="tab-pane active" id="home">
+                                                                <apex:repeat value="{!WebOptions}" var="option">
+                                                                    <div class="custom-checkbox {!If((option.checked),'checked','')}">
+                                                                        <apex:inputCheckbox value="{!option.checked}" title="{!option.optionName}" onchange="toggleTab(this)"/>
+                                                                    </div>
+                                                                    <apex:outputLabel value="{!option.optionLabel}" styleClass="web-analytic-label"/><br/>
+                                                                </apex:repeat>
+                                                            </div>
+                                                            <apex:repeat value="{!WebOptions}" var="option">
+                                                                <div layout="block" role="tabpanel" Class="tab-pane" id="{!option.optionName}">
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td><apex:outputLabel value="{!option.optionLabel} Key:" styleclass="web-analytic-label"/></td>
+                                                                            <td>
+                                                                                <apex:inputText value="{!option.keyValue}" styleClass="web-analytic-input" rendered="{!if((option.inputType=='key'),true,false)}"/>
+                                                                                <apex:inputTextarea value="{!option.keyValue}" styleClass="web-analytic-input" rendered="{!if((option.inputType=='code'),true,false)}"/>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </apex:repeat>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="wdg-Notedata" >
+                                        <p class="wdg-note-content">
+                                            NOTE: To know about web analytics and how to use it please follow this <a  target="_blank" href="https://wedgecommerce.com/using-web-analytics-wedgecommerce/">link</a>.
+                                        </p>
+                                    </span>
+                                </div>
+                            </div>                            
+                        </div>
+                    </apex:outputpanel>  
+                </div>                
+            </apex:form>
+            <apex:form >
+                <apex:actionFunction name="enableUserRegistration" action="{!enableUserRegistration}" status="waitstatus" reRender="userbuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()">
+                    <apex:param value="" name="userregkey" assignTo="{!userregkey}"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="disableUserRegistration" action="{!disableUserRegistration}" status="waitstatus" reRender="userbuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()"/>
+                
+                <apex:actionFunction name="registerremotesites" action="{!registerremotesites}" reRender="pushbuttonpanel"/>
+                
+                <apex:actionFunction name="enablePushNotification" action="{!enablePushNotification}" oncomplete="afterpushenable();" status="waitstatus" reRender="pushbuttonpanel,wdgerrorBlock,notice">
+                    <apex:param value="" name="pushnotikey" assignTo="{!pushnotikey}"/>
+                </apex:actionFunction>
+                
+                <!--                
+<apex:param value="" name="pushnotihead" assignTo="{!pushnotihead}"/>
+<apex:param value="" name="pushnotitext" assignTo="{!pushnotitext}"/>
+-->                
+                <apex:actionFunction name="disablePushNotification" action="{!disablePushNotification}" status="waitstatus" reRender="pushbuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()"/>
+                <apex:actionFunction name="enableRequestQuote" action="{!enableRequestQuote}" status="waitstatus" reRender="reqbuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()">
+                    <apex:param value="" name="reqquotekey" assignTo="{!reqquotekey}"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="disableRequestQuote" action="{!disableRequestQuote}" status="waitstatus" reRender="reqbuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()"/>
+                <apex:actionFunction name="enablerma" action="{!enablerma}" status="waitstatus" reRender="rmabuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()">
+                    <apex:param value="" name="rmakey" assignTo="{!rmakey}"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="disablerma" action="{!disablerma}" status="waitstatus" reRender="rmabuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()"/>                
+                
+                <apex:actionFunction name="registerebayremotesites" action="{!registerebayremotesites}" reRender="ebaybuttonpanel"/>
+                
+                
+                <apex:actionFunction name="enableebay" action="{!enableebay}" oncomplete="afterebayenable();" status="waitstatus" reRender="ebaybuttonpanel,wdgerrorBlock,notice">
+                    <apex:param value="" name="ebaykey" assignTo="{!ebaykey}"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="disableebay" action="{!disableebay}" status="waitstatus" reRender="ebaybuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()"/>
+                <apex:actionFunction name="enablewallet" action="{!enablewallet}" status="waitstatus" reRender="walletbuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()">
+                    <apex:param value="" name="walletkey" assignTo="{!walletkey}"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="disablewallet" action="{!disablewallet}" status="waitstatus" reRender="walletbuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()"/>
+                
+                <apex:actionFunction name="registeramazonremotesites" action="{!registeramazonremotesites}" reRender="amazonbuttonpanel"/>
+                
+                <apex:actionFunction name="enableamazon" action="{!enableamazon}" oncomplete="afteramazonenable();" status="waitstatus" reRender="amazonbuttonpanel,wdgerrorBlock,notice">
+                    <apex:param value="" name="amazonkey" assignTo="{!amazonkey}"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="disableamazon" action="{!disableamazon}" status="waitstatus" reRender="amazonbuttonpanel,wdgerrorBlock,notice" oncomplete="closenotifications()"/>
+                
+                <apex:actionFunction name="clickUser" action="{!getSearchUserResult}" reRender="usertable">
+                    <apex:param value="" name="queryUserName"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="clickPb" action="{!getSearchPricebookResult}" reRender="pbtable">
+                    <apex:param value="" name="queryPriceBookName"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="clickPortal" action="{!getSearchPortalResult}" reRender="portaltable">
+                    <apex:param value="" name="queryPortalName"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="clickRegister" action="{!getSearchRegisterResult}" reRender="registertable">
+                    <apex:param value="" name="queryRegisterName"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="clickGuest" action="{!getSearchGuestResult}" reRender="guesttable">
+                    <apex:param value="" name="queryGuestName"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="clickArticle" action="{!getSearchArticleResult}" reRender="articletable">
+                    <apex:param value="" name="queryArticleName"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="clickRma" action="{!getSearchRmaResult}" reRender="rmatable">
+                    <apex:param value="" name="queryRmaName"/>
+                </apex:actionFunction>
+            </apex:form>
+            <script>
+            function ValidateSave(event){
+                var username = $('[id$="queryUserName"]').val();
+                var pbname = $('[id$="queryPriceBookName"]').val();
+                var guestname = $("[Id$='queryGuestName']").val();
+                console.log('UserName: '+username+', pbname: '+pbname+', guestname: '+guestname);
+                if  ((username!='' && username!=null)&&(pbname!=null && pbname!='')&&(guestname!=null && guestname!='')) {
+                    $("[Id$='validateUser']").html('');
+                    $("[Id$='validatePriceBook']").html('');
+                    $("[Id$='validateGuestUser']").html('');
+                    saveConfig();  
+                    return true;
+                }
+                else{                    
+                    //alert("Review all the errors!");
+                    if(username=='' || username==null){
+                        $("[Id$='validateUser']").html('Please Select Store Manager');
+                    }else{
+                        $("[Id$='validateUser']").html('');
+                    }                       
+                    if(pbname=='' || username==null){
+                        $("[Id$='validatePriceBook']").html('Please Select a Price Book');
+                    }else{
+                        $("[Id$='validatePriceBook']").html('');
+                    } 
+                    if(guestname=='' || guestname==null){
+                        $("[Id$='validateGuestUser']").html('Please Select Guest User Account');
+                    }else{
+                        $("[Id$='validateGuestUser']").html('');
+                    } 
+                    event.preventDefault();
+                    return false;
+                }
+            }
+            function afterpushenable(){
+                closenotifications();
+                registerremotesites();
+            }
+            function afterebayenable(){
+                closenotifications();
+                registerebayremotesites();
+            }
+            function afteramazonenable(){
+                closenotifications();
+                registeramazonremotesites();
+            }                
+            wk=jQuery.noConflict();
+            (function(wk){
+                wk(document).ready(function(){
+                    
+                    //console.log(wk('[id$=RobotText]').siblings().remove());
+                    console.log(wk('[id$=RobotText]'));
+                    wk('[id$=RobotText]').show();
+                    
+                    wk('#user-dd').click(function(){
+                        wk(this).toggleClass('open');
+                    });
+                    createRemoteSite();
+                });
+                wk('.wdg-notice--close').click(function(){
+                    wk('.notice-success').hide();
+                });
+                wk('.save').click(function(e){
+                    console.log('test');
+                    var config = {};
+                    config.storemgr = $('select[id$="storemgr"] option:selected').val();
+                    config.storepbook = $('select[id$="storepbook"] option:selected').val();
+                    config.portalacc = $('select[id$="portalacc"] option:selected').val();
+                    config.regacc = $('select[id$="regacc"] option:selected').val();
+                    config.guestacc = $('select[id$="guestacc"] option:selected').val();
+                    config.storeNotify = $('select[id$="storeNotify"] option:selected').val();
+                    config.storetnc = $('select[id$="storetnc"] option:selected').val();
+                    config.pushhead = $('input[id$="pushhead"]').val();
+                    config.pushtext = $('input[id$="pushtext"]').val();
+                    config.rmaName  = $('input[id$="queryRmaName"]').val();
+                    config.siteurl  = $('input[id$="siteURL"]').val();
+                    config.sitepagetitle  = $('input[id$="sitePageTitle"]').val();
+                    config.sitemetadesc  = $('input[id$="sitemetadesc"]').val();
+                    config.sitemetakey  = $('input[id$="sitemetakey"]').val();
+                    config.robotsText = $('input[id$="RobotText"]').val();
+                    config = JSON.stringify(config);
+                    $('input[id$=configjson]').val(config);
+                    console.log(config);
+                    ValidateSave(e);
+                    //console.log($('select[id$="storemgr"] option:selected').val());                  
+                    
+                    
+                    
+                });                    
+                if((wk('[Id$="userKeyPanel"] input[type="text"]').val()==null ||  wk('[Id$="userKeyPanel"] input[type="text"]').val()=='')){
+                    wk('[id$="activateUserReg"]').show();
+                    wk('[Id$="userKeyPanel"]').hide();
+                    wk('.userregfields').hide();
+                    if('{!storeAd.id}'!='')
+                        disableUserRegistration();                        
+                    pushnotification();    
+                }else if( wk('[Id$="userKeyPanel"] input[type="text"]').val()!=null && wk('[Id$="userKeyPanel"] input[type="text"]').val()!=''){
+                    if('{!storeAd.wk_wedge__User_Registration__c}'=='true'){
+                        wk('.userregfields').show();
+                    }else{
+                        wk('.userregfields').hide();
+                    }
+                    wk('[id$="activateUserReg"]').hide();
+                    wk('[Id$="userKeyPanel"]').show();
+                    wk('[Id$="userKeyPanel"] input[type="text"]').attr('disabled','disabled');
+                    pushnotification();
+                }
+                wk(document).on('click','[id$="activateUserReg"]',function(){
+                    wk(this).hide();
+                    wk('[Id$="userKeyPanel"]').show();
+                });
+                wk(document).on('click','#DisableUserReg',function(){
+                    wk('.userregfields').hide();                        
+                    disableUserRegistration();                                             
+                });
+                wk(document).on('click','#EnableUserReg',function(){         
+                    var key = '{!activateUserRegKey}';
+                    key = SHA512(key);
+                    key = key.substr(0,20);
+                    if(key==wk('[Id$="userKeyPanel"] input[type="text"]').val()){
+                        wk('.userregfields').show();                                                          
+                        enableUserRegistration(wk('[Id$="userKeyPanel"] input[type="text"]').val());                           
+                    }else{
+                        window.ShowAlert('Wrong Key Entered');
+                        wk('[Id$="userKeyPanel"] input[type="text"]').removeAttr('disabled');
+                        disableUserRegistration();                                                               
+                    }                        
+                    wk('#activateUserReg').hide();
+                });
+                function pushnotification(){
+                    if((wk('[Id$="pushNotiKeyPanel"] input[type="text"]').val()==null ||  wk('[Id$="pushNotiKeyPanel"] input[type="text"]').val()=='')){
+                        wk('[Id$="activatePushNot"]').show();
+                        wk('[Id$="pushNotiKeyPanel"]').hide();                        
+                        wk('#pushImage').hide();
+                        wk('.pushNotificationfields').hide();
+                        if('{!storeAd.id}'!='')
+                            disablePushNotification();
+                    }else if( wk('[Id$="pushNotiKeyPanel"] input[type="text"]').val()!=null && wk('[Id$="pushNotiKeyPanel"] input[type="text"]').val()!=''){                        
+                        if('{!storeAd.wk_wedge__Enable_Push_Notification__c}'=='true'){
+                            wk('#pushImage').show();
+                            wk('.pushNotificationfields').show();
+                        }else{
+                            wk('#pushImage').hide();
+                            wk('.pushNotificationfields').hide();
+                        }
+                        wk('[id$="activatePushNot"]').hide();
+                        wk('[Id$="pushNotiKeyPanel"]').show();
+                        wk('[Id$="pushNotiKeyPanel"] input[type="text"]').attr('disabled','disabled');                        
+                    }
+                    requestQuote();
+                }                
+                wk(document).on('click','[id$="activatePushNot"]',function(){
+                    wk(this).hide();
+                    wk('[Id$="pushNotiKeyPanel"]').show();
+                });
+                wk(document).on('click','#DisablePushNoti',function(){    
+                    wk(".wdg-uploadimage--title").text("image.jpg");  
+                    //wk("[Id$='Imgsel']").val('');
+                    //wk("[Id$='Imgoptsel']").val('');
+                    wk(".wdg-upload--image").html("<div></div>");
+                    wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                    wk('#pushImage').hide();
+                    wk('.pushNotificationfields').hide();
+                    disablePushNotification();
+                    
+                });   
+                wk(document).on('click','#EnablePushNoti',function(){
+                    var key = '{!activatepushnotificationkey}';
+                    key = SHA512(key);
+                    key = key.substr(0,20);
+                    if(key==wk('[Id$="pushNotiKeyPanel"] input[type="text"]').val()){
+                        wk('#pushImage').show();
+                        wk('.pushNotificationfields').show();
+                        enablePushNotification(wk('[Id$="pushNotiKeyPanel"] input[type="text"]').val());
+                    }else{
+                        window.ShowAlert('Wrong Key Entered');
+                        wk('[Id$="pushNotiKeyPanel"] input[type="text"]').removeAttr('disabled');     
+                        wk('[Id$="pushnotikey"]').val('');                  
+                        wk(".wdg-uploadimage--title").text("image.jpg");  
+                        wk("[Id$='Imgsel']").val('');
+                        wk("[Id$='Imgoptsel']").val('');
+                        wk(".wdg-upload--image").html("<div></div>");
+                        wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                        wk('#pushImage').hide();
+                    }
+                    
+                });
+                function requestQuote(){
+                    if( (wk('[Id$="reqKeyPanel"] input[type="text"]').val()==null ||  wk('[Id$="reqKeyPanel"] input[type="text"]').val()=='')){
+                        wk('[id$="activateReqQuote"]').show();
+                        wk('[Id$="reqKeyPanel"]').hide();
+                        if('{!storeAd.id}'!='')
+                            disableRequestQuote();        
+                    }else if( wk('[Id$="reqKeyPanel"] input[type="text"]').val()!=null && wk('[Id$="reqKeyPanel"] input[type="text"]').val()!=''){
+                        
+                        wk('[id$="activateReqQuote"]').hide();
+                        wk('[Id$="reqKeyPanel"]').show();
+                        wk('[Id$="reqKeyPanel"] input[type="text"]').attr('disabled','disabled');
+                    }
+                    rma();
+                }
+                wk(document).on('click','[id$="activateReqQuote"]',function(){
+                    wk(this).hide();
+                    wk('[Id$="reqKeyPanel"]').show();
+                });
+                wk(document).on('click','#DisableReqQuote',function(){                        
+                    disableRequestQuote();                        
+                });
+                wk(document).on('click','#EnableReqQuote',function(){
+                    var key = '{!activaterequestquote}';
+                    key = SHA512(key);
+                    key = key.substr(0,20);
+                    
+                    if(key==wk('[Id$="reqKeyPanel"] input[type="text"]').val()){
+                        enableRequestQuote(wk('[Id$="reqKeyPanel"] input[type="text"]').val());
+                    }else{
+                        window.ShowAlert('Wrong Key Entered');
+                        wk('[Id$="reqKeyPanel"] input[type="text"]').removeAttr('disabled');
+                        disableRequestQuote();        
+                    }
+                    
+                });
+                
+                function rma(){
+                    if( (wk('[Id$="rmaKeyPanel"] input[type="text"]').val()==null ||  wk('[Id$="rmaKeyPanel"] input[type="text"]').val()=='')){                        
+                        wk('[Id$="activaterma"]').show();
+                        wk('[Id$="rmaKeyPanel"]').hide();
+                        wk('[Id$="RMA"]').hide();
+                        if('{!storeAd.id}'!='')
+                            disablerma(); 
+                    }else if( wk('[Id$="rmaKeyPanel"] input[type="text"]').val()!=null && wk('[Id$="rmaKeyPanel"] input[type="text"]').val()!=''){
+                        if('{!storeAd.wk_wedge__Enable_RMA_Settings__c}'=='true'){
+                            wk('[Id$="RMA"]').show();
+                        }else{
+                            wk('[Id$="RMA"]').hide();
+                        }
+                        wk('[id$="activaterma"]').hide();
+                        wk('[Id$="rmaKeyPanel"]').show();                        
+                        wk('[Id$="rmaKeyPanel"] input[type="text"]').attr('disabled','disabled');                                                
+                    }
+                    eBay();
+                }
+                wk(document).on('click','[id$="activaterma"]',function(){
+                    wk(this).hide();
+                    wk('[Id$="rmaKeyPanel"]').show();
+                });
+                wk(document).on('click','#Disablerma',function(){                       
+                    wk('[Id$="RMA"]').hide();
+                    disablerma();          
+                });
+                wk(document).on('click','#Enablerma',function(){
+                    var key = '{!activaterma}';
+                    key = SHA512(key);
+                    key = key.substr(0,20);                        
+                    if(key==wk('[Id$="rmaKeyPanel"] input[type="text"]').val()){                            
+                        wk('[Id$="RMA"]').show();  
+                        enablerma(wk('[Id$="rmaKeyPanel"] input[type="text"]').val());                                                      
+                    }else{
+                        window.ShowAlert('Wrong Key Entered');
+                        wk('[Id$="rmaKeyPanel"] input[type="text"]').removeAttr('disabled');
+                        disablerma(); 
+                    }                        
+                });
+                function eBay(){
+                    if((wk('[Id$="eBayKeyPanel"] input[type="text"]').val()==null ||  wk('[Id$="eBayKeyPanel"] input[type="text"]').val()=='')){
+                        wk('[id$="activateeBay"]').show();
+                        wk('[Id$="eBayKeyPanel"]').hide();
+                        if('{!storeAd.id}'!='')
+                            disableebay();     
+                    }else if( wk('[Id$="eBayKeyPanel"] input[type="text"]').val()!=null && wk('[Id$="eBayKeyPanel"] input[type="text"]').val()!=''){
+                        wk('[id$="activateeBay"]').hide();
+                        wk('[Id$="eBayKeyPanel"]').show();
+                        wk('[Id$="eBayKeyPanel"] input[type="text"]').attr('disabled','disabled');
+                    }
+                    wallet();
+                }
+                wk(document).on('click','[id$="activateeBay"]',function(){
+                    wk(this).hide();
+                    wk('[Id$="eBayKeyPanel"]').show();
+                });
+                wk(document).on('click','#DisableeBay',function(){                        
+                    disableebay();                        
+                });
+                wk(document).on('click','#EnableeBay',function(){
+                    var key = '{!activateebay}';
+                    key = SHA512(key);
+                    key = key.substr(0,20);         
+                    if(key==wk('[Id$="eBayKeyPanel"] input[type="text"]').val()){
+                        enableebay(wk('[Id$="eBayKeyPanel"] input[type="text"]').val());
+                    }else{
+                        window.ShowAlert('Wrong Key Entered');
+                        wk('[Id$="eBayKeyPanel"] input[type="text"]').removeAttr('disabled');
+                        disableebay();     
+                    }
+                    
+                });
+                function wallet(){
+                    if((wk('[Id$="walletKeyPanel"] input[type="text"]').val()==null ||  wk('[Id$="walletKeyPanel"] input[type="text"]').val()=='')){
+                        wk('[id$="activateWallet"]').show();
+                        wk('[Id$="walletKeyPanel"]').hide();
+                        if('{!storeAd.id}'!='')
+                            disablewallet(); 
+                    }else if( wk('[Id$="walletKeyPanel"] input[type="text"]').val()!=null && wk('[Id$="walletKeyPanel"] input[type="text"]').val()!=''){
+                        wk('[id$="activateWallet"]').hide();
+                        wk('[Id$="walletKeyPanel"]').show();
+                        wk('[Id$="walletKeyPanel"] input[type="text"]').attr('disabled','disabled');
+                    }
+                    amazon();
+                }
+                wk(document).on('click','[id$="activateWallet"]',function(){
+                    wk(this).hide();
+                    wk('[Id$="walletKeyPanel"]').show();
+                });                    
+                wk(document).on('click','#Disablewallet',function(){                        
+                    disablewallet();                        
+                });
+                wk(document).on('click','#Enablewallet',function(){
+                    var key = '{!activatewallet}';
+                    key = SHA512(key);
+                    key = key.substr(0,20);                                               
+                    if(key==wk('[Id$="walletKeyPanel"] input[type="text"]').val()){
+                        enablewallet(wk('[Id$="walletKeyPanel"] input[type="text"]').val());
+                    }else{
+                        window.ShowAlert('Wrong Key Entered');
+                        wk('[Id$="walletKeyPanel"] input[type="text"]').removeAttr('disabled');
+                        disablewallet();     
+                    }                        
+                });
+                function amazon(){
+                    if((wk('[Id$="amazonKeyPanel"] input[type="text"]').val()==null ||  wk('[Id$="amazonKeyPanel"] input[type="text"]').val()=='')){
+                        wk('[id$="activateamazon"]').show();
+                        wk('[Id$="amazonKeyPanel"]').hide();
+                        if('{!storeAd.id}'!='')
+                            disableamazon();     
+                    }else if( wk('[Id$="amazonKeyPanel"] input[type="text"]').val()!=null && wk('[Id$="amazonKeyPanel"] input[type="text"]').val()!=''){
+                        wk('[id$="activateamazon"]').hide();
+                        wk('[Id$="amazonKeyPanel"]').show();
+                        wk('[Id$="amazonKeyPanel"] input[type="text"]').attr('disabled','disabled');
+                    }
+                }
+                wk(document).on('click','[id$="activateamazon"]',function(){
+                    wk(this).hide();
+                    wk('[Id$="amazonKeyPanel"]').show();
+                });
+                wk(document).on('click','#Disableamazon',function(){                        
+                    disableamazon();                        
+                });
+                wk(document).on('click','#Enableamazon',function(){
+                    var key = '{!activateamazon}';
+                    key = SHA512(key);
+                    key = key.substr(0,20);         
+                    if(key==wk('[Id$="amazonKeyPanel"] input[type="text"]').val()){
+                        enableamazon(wk('[Id$="amazonKeyPanel"] input[type="text"]').val());
+                    }else{
+                        window.ShowAlert('Wrong Key Entered');
+                        wk('[Id$="amazonKeyPanel"] input[type="text"]').removeAttr('disabled');
+                        disableamazon();     
+                    }
+                    
+                });
+            }(jQuery));
+            </script>
+            
+            
+            <script>
+            function noenter(ev, obj)  {
+                if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+                    if(obj == 'clickPortal') {
+                        console.log($('input[id$="queryPortalName"]').val());
+                        clickPortal($('input[id$="queryPortalName"]').val()); 
+                    } else if(obj == 'clickRegister') {
+                        clickRegister($('input[id$="queryRegisterName"]').val());
+                    } else if(obj == 'clickGuest') {
+                        clickGuest($('input[id$="queryGuestName"]').val());
+                    } else if(obj == 'clickUser') {
+                        clickUser($('input[id$="queryUserName"]').val());
+                    }else if(obj == 'clickPb') {
+                        clickPb($('input[id$="queryPriceBookName"]').val());
+                    }else if(obj == 'clickArticle') {
+                        clickArticle($('input[id$="queryArticleName"]').val());
+                    }else if(obj == 'clickRma') {
+                        clickRma($('input[id$="queryRmaName"]').val());
+                    }
+                    
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            function delay(obj){
+                var interval = 0;
+                if (interval)
+                    window.clearTimeout(interval);
+                interval = window.setTimeout(function() {
+                    if(obj == 'clickPortal') {
+                        console.log($('input[id$="queryPortalName"]').val());
+                        clickPortal($('input[id$="queryPortalName"]').val()); 
+                    } else if(obj == 'clickRegister') {
+                        clickRegister($('input[id$="queryRegisterName"]').val());
+                    } else if(obj == 'clickGuest') {
+                        clickGuest($('input[id$="queryGuestName"]').val());
+                    } else if(obj == 'clickUser') {
+                        clickUser($('input[id$="queryUserName"]').val());
+                    }else if(obj == 'clickPb') {
+                        clickPb($('input[id$="queryPriceBookName"]').val());
+                    }else if(obj == 'clickArticle') {
+                        clickArticle($('input[id$="queryArticleName"]').val());
+                    }else if(obj == 'clickRma') {
+                        clickRma($('input[id$="queryRmaName"]').val());
+                    }
+                }, 500);
+            }
+            function showList(obj){
+                $(obj).css('visibilty','visible').slideDown(500);
+            }
+            function hideList(obj){
+                $(obj).css('visibilty','hidden').slideUp(1000);        
+            }
+            function addAccount(obj,name, nameId, valueId) {
+                // $(".queryPortalName").val(name);
+                $('[id$="'+valueId+'"]').val(obj);
+                $('[id$="'+nameId+'"]').val(name);
+            }
+            function addRma(obj,name, nameId, valueId) {
+                // $(".queryPortalName").val(name);
+                $('[id$="'+valueId+'"]').val(name);
+                $('[id$="'+nameId+'"]').val(name);
+            }
+            
+            
+            wk=jQuery.noConflict();
+            (function(wk){
+                wk( document).on("click",".wdg-form--headeroptions li a ",function(){
+                    wk(this).parent().siblings().removeClass("active");
+                    wk(this).parent().addClass("active");
+                    var ids=wk(this).attr("data-target");
+                    wk("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                    
+                    
+                });
+                wk(document ).on("click",".folder-checkbox",function(){
+                    var arr=[];
+                    wk(".folder-checkbox").each(function(){
+                        if(this.checked){
+                            wk(this).parent().addClass("checked");
+                            arr.push(wk(this).attr('targetvalue'));
+                        }
+                        else
+                            wk(this).parent().removeClass("checked");
+                    });
+                    wk("[Id$='docfolder']").val(arr.join(','))
+                    newImages();
+                });
+                wk(document ).on("click",".folder-radio",function(){
+                    wk(".folder-radio").parent().removeClass("checked");
+                    
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                        wk("[Id$='uploadfolder']").val(wk(this).val())                            
+                    }
+                });
+                wk(document).on("click","[Id$='wgdPopupClose']", function(){
+                    wk("[Id$='imagePopUp'],[Id$='fileuploadPopUp']").removeClass("wdg-show").addClass("wdg-hide");
+                });
+                wk(document).on("click",".wdg-uploadImage--btngroup a",function(){
+                    var ids=wk(this).attr("data-target");
+                    wk("[Id$='"+ids+"']").addClass("wdg-show").removeClass("wdg-hide");
+                });
+                wk(document).on("click",".wdg-imagepop--box .wdg-images--container img",function(){
+                    var ids=wk(this).attr("targetid");
+                    var name=wk(this).attr("alt");
+                    wk("[Id$='Imgsel']").val(ids);
+                    wk("[Id$='Imgoptsel']").val(0);
+                    wk("[Id$='Image_title']").text(name);
+                    wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                    wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+                    wk("[Id$='wgdPopupClose']").trigger("click");
+                    
+                });
+                wk(document).on("click","[Id$='Uploadfile']",function(event){
+                    var ufolder=wk("[Id$='uploadfolder']").val();
+                    wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");
+                    wk(".wdg-fileupload--error").text("");
+                    if(ufolder==null || ufolder==''){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Please Select a folder from left");
+                        event.preventDefault();
+                    }
+                });
+                wk( document ).on("click"," [Id$='removeImages']", function(){
+                    wk(".wdg-uploadimage--title").text("image.jpg");  
+                    wk("[Id$='Imgsel']").val('');
+                    wk("[Id$='Imgoptsel']").val('');
+                    wk(".wdg-upload--image").html("<div></div>");
+                    wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                    
+                });
+                wk(document).on("change","[Id$='Uploadfile']",function(event){
+                    var ufolder=wk("[Id$='uploadfolder']").val();
+                    wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");https://wedgecommerce-main-dev-ed--wk-wedge.ap2.visual.force.com/s.gif
+                    wk(".wdg-fileupload--error").text("");
+                    if(ufolder==null || ufolder==''){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Please Select a folder from left");
+                        event.preventDefault();
+                    }
+                    var fakepath=wk(this).val();
+                    var templist=fakepath.split('\\');
+                    var filename=templist[templist.length-1];  
+                    var tempext=filename.split('.')
+                    var fileext=tempext[tempext.length-1];
+                    if(fileext.toLowerCase()!='jpg' && fileext.toLowerCase()!='jpeg' && fileext.toLowerCase()!='png'){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Only jpeg, jpg and png files are allowed");
+                        wk(this).val('')
+                        
+                    }else{
+                        wk(".wdg-uploadimage--title").text(filename);
+                        wk("[Id$='Imgoptsel']").val(1);
+                        wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                        wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+                        
+                        wk("[Id$='wgdPopupClose']").trigger("click");
+                    }
+                });
+                
+            }(jQuery));
+            function toggleTab(ckb){
+                var data_tog = ckb.title;
+                console.log('a');
+                if(ckb.checked)
+                    $('li[data-toggle='+data_tog+']').removeClass('hidden');
+                else
+                    $('li[data-toggle='+data_tog+']').addClass('hidden');
+            }
+            </script>
+            <script>
+            function createRemoteSite()
+            {
+                
+                // Disable button
+                
+                // Calls the Metdata API from JavaScript to create the Remote Site Setting to permit Apex callouts
+                var binding = new XMLHttpRequest();
+                var request =
+                    '<?xml version="1.0" encoding="utf-8"?>' +
+                    '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
+                    '<env:Header>' +
+                    '<urn:SessionHeader xmlns:urn="http://soap.sforce.com/2006/04/metadata">' +
+                    '<urn:sessionId>{!$Api.Session_ID}</urn:sessionId>' +
+                    '</urn:SessionHeader>' +
+                    '</env:Header>' +
+                    '<env:Body>' +
+                    '<createMetadata xmlns="http://soap.sforce.com/2006/04/metadata">' +
+                    '<metadata xsi:type="RemoteSiteSetting">' +
+                    '<fullName>Multi_Language</fullName>' +
+                    '<description>For Multi language Api</description>' +
+                    '<disableProtocolSecurity>false</disableProtocolSecurity>' +
+                    '<isActive>true</isActive>' +
+                    '<url>https://{!baseUrl}</url>' +
+                    '</metadata>' +
+                    '</createMetadata>' +
+                    '</env:Body>' +
+                    '</env:Envelope>';
+                binding.open('POST', 'https://{!Host}/services/Soap/m/41.0');
+                binding.setRequestHeader('SOAPAction','""');
+                binding.setRequestHeader('Content-Type', 'text/xml');
+                binding.onreadystatechange =
+                    function() {
+                    if(this.readyState==4) {
+                        var parser = new DOMParser();
+                        var doc  = parser.parseFromString(this.response, 'application/xml');
+                        var errors = doc.getElementsByTagName('errors');
+                        var messageText = '';
+                        for(var errorIdx = 0; errorIdx < errors.length; errorIdx++)
+                            messageText+= errors.item(errorIdx).getElementsByTagName('message').item(0).innerHTML + '\n';
+                        //displayMetadataResponse(messageText);
+                    }
+                }
+                binding.send(request);
+            }
+            
+            
+            //To disable right click on page
+            $(document).ready(function(){
+                $(document).bind("contextmenu",function(e){
+                    return false;
+                });
+            });
+            </script>
+            <!--<apex:form id="myForm" style="display:none;">
+<!-- <apex:actionFunction name="displayMetadataResponse" action="{!displayMetadataResponse}" rerender="myForm">
+<apex:param name="metadataResponse" assignTo="{!metadataResponse}" value="{!metadataResponse}"/>
+</apex:actionFunction> ->
+<apex:sectionHeader title="Declarative Rollups for Lookups" subtitle="Welcome"/>
+<apex:pageMessages />
+<apex:outputPanel rendered="{!MetadataConnectionWarning}">
+<!-- <apex:commandButton id="createremotesitebtn" value="Create Remote Site Setting" action="{!createRemote}"/> ->
+<input id="createremotesitebtn" type="button" onclick="createRemoteSite();" value="Create Remote Site Setting"/> 
+</apex:outputPanel>
+</apex:form>-->
+        </apex:define>
+    </apex:composition>
+</apex:page>
+<!--
+/*if(wk('[Id$="userregkey"]').val()==null || wk('[Id$="userregkey"]').val()==''){
+wk('#userKeyPanel').hide();
+wk('#activateUserReg').show();
+alert('working');
+}else{
+alert('working');
+wk('#userKeyPanel input').val(wk('[Id$="userregkey"]').val());Feature Activation
+wk('#userKeyPanel input').attr('disabled','true');
+wk('#activateUserReg').hide();
+wk('#userKeyPanel').show();
+
+//wk("#EnableUserReg").trigger('click');
+//wk("#EnablePushNoti").trigger('click');
+//wk("#EnableReqQuote").trigger('click');
+//wk('#status').show();                        
+}*/
+-->

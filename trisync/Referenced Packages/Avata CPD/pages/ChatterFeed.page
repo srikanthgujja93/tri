@@ -1,0 +1,45 @@
+<apex:page Sidebar="false" controller="ATC.ChatterFeedController" showHeader="false" StandardStyleSheets="true">
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" /> 
+<!--  local styling -->
+    <style type="text/css">
+    #aspacer {
+        height: 8px;
+    }
+    #atitle {
+        margin-top: 10px; margin-left: 50px;margin-right: 50px; text-align: center;
+        border: 2px solid  #E3DEB8; height: 30px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #ffffff;
+        background-color: #0066cc;
+    }
+    #acore {
+        margin-top: 20px; margin-left: 50px;margin-right: 50px;
+    }
+    #contentButtonBar {
+        display: none;
+    }
+    .avsflink {
+      cursor: pointer;
+      color:#ffffff;
+    }
+    </style>
+  <script>
+    document.title = 'CPD Chatter';
+    $(document).ready(function() {
+        $('a.avsflink').mouseover(function() {
+            $(this).css('color','red');
+        });
+        $('a.avsflink').mouseout(function() {
+            $(this).css('color','#ffffff');
+        });
+    });
+  </script>
+    
+    <div id="atitle">
+     <div id="aspacer"></div>{!TitlePre}<a class="avsflink" href="{!Link1}">{!ObjName}</a>: {!ObjTitle}</div>
+    <div id="acore">
+    <chatter:feed entityId="{!RecordId}"> 
+    </chatter:feed>
+    </div>
+</apex:page>

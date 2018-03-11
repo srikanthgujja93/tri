@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <description>This is used for diagnostic purposes</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Line1__c</fullName>
+        <deprecated>false</deprecated>
+        <description>First line</description>
+        <externalId>false</externalId>
+        <label>Line1</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Line2__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Second line</description>
+        <externalId>false</externalId>
+        <label>Line2</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Line3__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Third line</description>
+        <externalId>false</externalId>
+        <label>Line3</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Line4__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Fourth line</description>
+        <externalId>false</externalId>
+        <label>Line4</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Line5__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Fifth line</description>
+        <externalId>false</externalId>
+        <label>Line5</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <label>Diagnostics</label>
+    <visibility>Public</visibility>
+</CustomObject>

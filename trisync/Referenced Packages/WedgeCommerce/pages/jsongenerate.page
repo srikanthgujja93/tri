@@ -1,0 +1,5 @@
+<apex:page controller="wk_wedge.jsondatagenerate" action="{!parseJson}" cache="false">
+  
+    {!text1}
+
+</apex:page>

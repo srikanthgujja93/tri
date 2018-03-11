@@ -1,0 +1,3 @@
+<apex:page controller="wk_wedge.wedgeRobot" contentType="text/plain" showHeader="false">
+{!RobotText}
+</apex:page>

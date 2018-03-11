@@ -1,0 +1,143 @@
+<apex:page controller="wk_wedge.rmaactionlisting" title="RMA Action Listing" showheader="false" setup="false" standardstylesheets="false" cache="false">
+    <style>
+        .wdg-nav-icon.RMA {
+            background-color: #34becd;
+        }
+        .wdg-nav-icon.RMAAction {
+            background-color: #34becd;
+        }
+        .wdg-body .wdg-dataTable--box{
+            margin-top:5px;
+        }
+        .totalRec{
+            font-size: 14px;
+            color: #777777;
+            margin-top:2px;
+        }
+        .wdg-body-titletext{
+            display:inline-block;
+            vertical-align: top;
+            line-height: 1;
+        }
+        .recperpage{
+            background: #FFF;
+            padding: 4px 8px;
+            border: 2px solid #57BDC2;
+            border-radius: 4px;
+            cursor:pointer;
+        }
+        .recperpage:focus{
+            outline:none;
+            cursor:pointer;
+        }
+    </style>
+    <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>    
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+            <apex:form id="theForm">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                            <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                        </apex:outputpanel>
+                    
+                    
+                   <div class="wdg-body--titleblock clearfix">
+                         <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo rmaaction"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> RMA Actions </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <!--<apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!pagesize}" id="recPerPage" onchange="updatePage()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>-->
+                            
+                           
+                        </div>
+                    </div>
+                    
+                    <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-dataTable--box">
+                    <apex:datatable value="{!Product2s}" var="Prod" styleclass="wdg-dataTable" id="wdgTable" >
+                        <apex:column styleclass="Xsmall">
+                            <apex:facet name="header">
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" id="headerCB"/>
+                                </div>
+                            </apex:facet>
+                            <div class="custom-checkbox">
+                                <input type="checkbox" class="eachselect" value="{!Prod.id}"/>
+                            </div>
+                        </apex:column>
+                        <apex:column styleclass="medium" >
+                            <apex:facet name="header">
+                                <apex:commandlink value="Name {!IF(fieldName=='name',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                    <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                </apex:commandlink>
+                            </apex:facet>
+                            <apex:outputLink value="/{!Prod.id}">{!Prod.name}</apex:outputLink>
+                        </apex:column>
+                         
+                         <apex:column value="{!Prod.wk_wedge__Status__c}" headerValue="Status"/>
+                         <!--<apex:column >
+                                <apex:facet name="header">
+                                    <apex:commandlink value="Status {!IF(fieldName=='status__C',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="status__C" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                <apex:outputpanel layout="block" styleclass="dropdown status-dropdown">
+                                    <div data-toggle="dropdown" class="status status-value dropdown-toggle" id="ecm_status_Dropdown">
+                                        <span>{!IF(Prod.status__c, 'Active','Hidden')}</span><span class="status-caret"></span>
+                                    </div>
+                                    <div class="status-dropdown-menu">
+                                        <span class="status status-option" targetid="{!Prod.id}">Active</span>
+                                        <span class="status status-option" targetid="{!Prod.id}"> Hidden</span>
+                                    </div>
+                                 </apex:outputpanel>
+                            </apex:column>-->               
+                                              
+                    </apex:datatable>
+                    <span class="wdg-Notedata" >
+                        <p class="wdg-note-content">
+                            NOTE: RMA Settings is only applicable for Registered User on Activated Orders
+                        </p>
+                        <p class="wdg-note-content">
+                            Path: Store Administration > Default Settings > RMA Settings
+                        </p>
+                    </span>
+                </apex:outputpanel> 
+               </div>
+                                   <apex:actionfunction name="changeRecordstatus" action="{!savestatus}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>
+                <apex:actionFunction name="updatePage" action="{!updatedata}" status="waitstatus"/>
+            </apex:form>
+             <script>
+            jQuery(document).ready(function($) {
+              // Get Accounts via the REST API
+              $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__RMA_Actions__c',
+                {
+                  beforeSend: function(xhr) {
+                    // Set the OAuth header from the session ID
+                    xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                  },
+                  success: function(response) {
+                    // Append the records to HTML list
+                    var str=JSON.stringify(response);
+                    var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                    var arr = total.split(',');
+                    document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                            });
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    // Error
+                    console.log(jqXHR.status + ': ' + errorThrown);
+                  }
+                }
+              );
+            });
+          </script>
+          </apex:define>
+    </apex:composition>
+</apex:page>

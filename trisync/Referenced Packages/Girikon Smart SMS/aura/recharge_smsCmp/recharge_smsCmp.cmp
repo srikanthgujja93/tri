@@ -1,0 +1,34 @@
+<aura:component >
+    <aura:attribute name="billingInfo" type="Object"/>
+    <aura:attribute name="rechargeStatus" type="String" default=""/>
+    <aura:attribute name="chargeid" type="String" default=""/>
+    <!--sforgid-->
+    <aura:handler value="{!this}" name="init" action="{!c.doInit}"/>
+    <div style="margin:0px">
+        <div aura:id="smsCountInfo"></div>
+        <div aura:id="billingInfo">
+            <lightning:card iconName="standard:insights" title="Recharge Status">
+                <div class="slds-grid slds-wrap slds-m-left_medium">                   
+                    <aura:if isTrue="{!v.rechargeStatus=='success'?true:false}">
+                        <div class="slds-size_12-of-12">
+                            <lightning:icon iconName="action:approval" size="small"/>
+                        </div>
+                        <aura:set attribute="else">
+                            <div class="slds-size_12-of-12">
+                                <lightning:icon iconName="action:close" size="small"/>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                    <div class="slds-size_12-of-12">Recharge Status: {!v.rechargeStatus}</div>
+                    <div class="slds-size_12-of-12">
+                        {!v.chargeid!=''?'ChargeId :'+v.chargeid:''}
+                    </div> 
+                    
+                    <div class="slds-size_12-of-12 slds-m-top_medium">
+                        <lightning:button label="Close" onclick="{!c.close}"/>
+                    </div>
+                </div>               
+            </lightning:card>
+        </div>
+    </div>
+</aura:component>

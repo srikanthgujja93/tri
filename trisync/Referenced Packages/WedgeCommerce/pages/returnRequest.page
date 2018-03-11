@@ -1,0 +1,550 @@
+<apex:page controller="wk_wedge.RequestController" standardstylesheets="false" setup="false" showheader="false" applyHtmlTag="false" applyBodyTag="false" doctype="html-5.0">
+   
+  <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+        <div class="container">
+        <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+            <TITLE>PRODUCT DETAIL</TITLE>
+            <style>
+                    .horizontal-grey{
+                        border-color:#cccccc;
+                    }
+                    .wishlist-details-container .details-column-header{
+                    
+                    }
+                    .wishlist-product-details{
+                        width:100%;
+                    }
+                    .wishlist-product-details .details-header{
+                        font-weight:700;
+                        color:#333;
+                    }
+                    .wishlist-product-details td{
+                        padding:10px 0px;
+                        vertical-align:top;
+                    }
+                    .wishlist-product-details .w-prod-img{
+                        display:inline-block;
+                        border:1px solid #cccccc;
+                    }
+                    .wishlist-product-details .W-product-desc{
+                        display:inline-block;
+                        vertical-align:top;
+                        margin-left:10px;
+                        max-width:70%;
+                        text-transform: uppercase;
+                    }
+                    .wishlist-product-details .w-add-to-cart{
+                        padding:10px;
+                        display:inline-block;
+                        color:#fff;
+                        width:160px;
+                        vertical-align:middle;
+                        text-align:center;
+                        background:#4BBA60;
+                        border-radius:3px;
+                        
+                        
+                    }
+                    .wishlist-product-details .w-remove{
+                        width:15px;
+                        height:15px;
+                        vertical-align:middle;
+                        display:inline-block;
+                        background:transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}') no-repeat -203px -47px;
+                    }
+                     .wishlist-product-details .w-moveTowishlist{
+                        width:15px;
+                        height:15px;
+                        vertical-align:middle;
+                        display:inline-block;
+                        margin-left:15px;
+                        position:relative;
+                        background:transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}') no-repeat -188px -47px;
+                    }
+                    .w-update{
+                        width:20px;
+                        height:15px;
+                        vertical-align:middle;
+                        display:inline-block;
+                        background:transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}') no-repeat -237px -48px;
+                    }
+                    .W-product-desc a{
+                        color:#333333;
+                    }
+                    td.product-details{
+                        width:40%;
+                    }
+                    td.product-price{
+                        width:15%;
+                    }
+                    td.product-quant{
+                        width:20%;
+                    }
+                    td.product-opt{
+                        width:10%;
+                    }
+                    .product-opt>div{
+                        position:relative;
+                    }
+                    .product-opt>div .wishlist-tooltip {
+                        background: #EBEBEB;
+                        padding: 4px 8px;
+                        border: 1px solid #cccccc;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        text-align:center;
+                        position:absolute;
+                        margin-top:8px;
+                        display:none
+                        
+                    }
+                    .wishlist-tooltip .tip {
+                        width: 0;
+                        height: 0;
+                        border-left: 8px solid transparent;
+                        border-right: 8px solid transparent;
+                        border-bottom: 8px solid #cccccc;
+                        position: absolute;
+                        top: -8px;
+                        right: 60px;
+                    }
+                   .W-product-details .stock-limit{
+                        padding:3px 5px;
+                        background:#cce7f3;
+                        width:125px;
+                        margin-top:15px;
+                    
+                    }
+                   .product-quant .prod-quant-bar{
+                        width:120px;
+                        height:35px;
+                        border:1px solid #ccc;
+                        box-sizing:border-box;
+                        
+                    }
+                    .prod-quant-bar>*{
+                        float:left;
+                        cursor:pointer;
+                    }
+                    .prod-quant-bar input, .prod-quant-bar input:active,.prod-quant-bar input:hover,.prod-quant-bar input:focus{
+                        border:none;
+                        outline:none;
+                        box-sizing:border-box;
+                        width:54px;
+                        height:100%;
+                        text-align:center;
+                        border-right:1px solid #ccc;
+                        border-left:1px solid #ccc;
+                    }
+                    .prod-quant-bar i{
+                        width: 32px;
+                        height: 100%;
+                        font-size: 23px;
+                        text-align: center;
+                        font-style: normal;
+                        font-weight:600;
+                        
+                    }
+                    div.max-quant{
+                        color:#d74c3b;
+                    }
+                   .cart-update-opt .cart-info-btn , .cart-update-opt .cart-info-btn:hover, .cart-update-opt .cart-info-btn:active, .cart-update-opt .cart-info-btn:focus{
+                    color:#fff;
+                    min-width:160px;
+                    padding:10px;
+                    text-align:center;
+                    border-radius:3px;
+                   
+                        
+                    }
+                    .cart-update-opt .cont-shop{
+                        float:left;
+                        background-color:#595959;
+                    }
+                     .cart-update-opt .cart-update{
+                        float:right;
+                        background-color:#0086CE;
+                        border: 1px solid #0086CE;
+                    }
+                    .checout-proceed{
+                        
+                        display:block;
+                        width:100%;
+                        background-color:#4BBA60;
+                    }
+                   
+                 
+                   .summary-heading{
+                        text-align:right;   
+                    
+                    }   
+                   .cart-ord-sum .cart-ord-details{
+                        width:100%;
+                        margin:10px 0px;
+                   }
+                   .cart-ord-details td{
+                        width:50%;
+                        padding:6px;
+                   } 
+                   .cart-ord-details td:last-child{
+                        text-align:right; 
+                    }
+                    .no-items--continue, .no-items--continue:hover, .no-items--continue:active, .no-items--continue:focus{
+                        display:inline-block;
+                        background-color:#0086CE;
+                        color: #fff;
+                        min-width: 160px;
+                        padding: 10px;
+                        margin:5px 0px;
+                        text-align: center;
+                        border-radius: 3px;
+                    }
+                    .wk_Prodname{
+                        color:#0086C0;
+                        font-weight:800;
+                        
+                    }
+                    .custom-checkbox{
+                        position:relative;
+                        width:15px;
+                        height:15px;
+                        padding:0;
+                        background:#fff;
+                        border:1px solid #ccc;
+                        
+                    }
+                    .custom-checkbox.checked{
+                        background: #fff url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/check.png')}") no-repeat center;
+                    }
+                    .custom-checkbox>input[type="checkbox"]{
+                        position:absolute;
+                        width:15px;
+                        height:15px;
+                        z-index:2;
+                        top:0;
+                        opacity:0;
+                        margin:0;
+                        padding:0;
+                        left:0
+                    }
+                    .selectType {
+                            padding: 6px;
+                            border-radius: 3px;
+                            font-size: 14px;
+                            color: #222;
+                            max-width: 165px;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            background: #fff;
+                            border: 1px solid #adadad;
+                            outline: none;
+                            box-shadow: none;
+                            display: inline-block;
+                            margin-left: 0;
+                            box-sizing: border-box;
+                    }
+                    .no-results{
+                            min-height: 250px;
+                            width: 100%;
+                            display: table;
+                            margin: 10px 0;
+                    }
+                    .no-results .no-result-msg p{
+                            font-size:21px;
+                            font-weight:700;
+                    }
+                    .itemDescription{
+                        color: #1c1c1c;
+                        font-size: 12px;
+                        font-weight: 700;
+                    }
+                    @media screen and (max-width: 991px) {
+                        .wishlist-product-details .W-product-desc{
+                            display: block;
+                            max-width: 100%;
+                        }
+                        hr.top-50{
+                            display:none;
+                        }
+                        hr.bottom-50{
+                            display:none;
+                        }
+                        .large-width{
+                            width:100%;
+                        }
+                        .W-product-details a{
+                            display:inline-block;
+                        }
+                        td.product-details {
+                            width: 100%;
+                        }
+                        td.product-price{
+                            width: 100%;
+                            padding-bottom: 25px;
+                        }
+                        td.product-quant {
+                            width: 100%;
+                            text-align: right;
+                            text-align: -moz-right;                         
+                            text-align: -webkit-right;
+                        }
+                        .custom-checkbox{
+                            float: right;
+                        }
+                        td.product-opt{
+                            width: 100%;
+                        }
+                        
+                        table {
+                          border: 0;
+                        }
+        
+                        table thead {
+                          display: none;
+                        }
+        
+                        table tr {
+                          margin-bottom: 10px;
+                          display: block;
+                          border-bottom: 2px solid #ddd;
+                          padding:10px;
+                        }
+                        table tr:last-child{
+                            border-bottom:0;
+                        }
+                        table td {
+                          display: block;
+                          text-align: right;
+                          font-size: 13px;
+                          border-bottom: 1px dotted #ccc;
+                        }
+        
+                        table td:last-child {
+                          border-bottom: 0;
+                        }
+        
+                        table td:before {
+                          content: attr(heading);
+                          float: left;
+                          text-transform: uppercase;
+                          font-weight: bold;
+                        }       
+                    }
+                    @media screen and (max-width: 475px){
+                        .cart-update-opt .cont-shop{
+                            display: block;
+                            float: unset;
+                        }
+                        .cart-update-opt .cart-update{
+                            display: block;
+                            float: unset;
+                            width: 100%;
+                            margin-top: 5px;
+                        }
+                    }                    
+                </style>
+            <hr class="top-50 horizontal-grey"/>
+            <apex:outputpanel layout="block" styleclass="wishlist-details-container" id="cart-details-wrapper">
+                <apex:outputpanel layout="block" >
+                    <apex:outputpanel layout="block" styleclass="row">
+                        <apex:outputpanel layout="block" styleclass="col-md-12" id="cartCount">
+                            <h4 class="oxy-20-bold inline--block wishlist-details-title">{!$Label.wk_wedge__returnrequest_order_products}</h4>                            
+                        </apex:outputpanel>                        
+                    </apex:outputpanel> 
+                    <apex:form >
+                        <apex:outputpanel layout="block" styleclass="container" id="carttable">
+                            <apex:outputpanel layout="block" styleclass="row">
+                                <apex:selectList size="1" styleclass="selectType" value="{!reqActionValue}">
+                                    <apex:selectOptions value="{!reqAction}"/>
+                                </apex:selectList>
+                                <apex:outputPanel layout="block" rendered="{!Orderdetails.orderitems.size==0}" styleclass="no-results">
+                                    <div class="no-result-msg">
+                                        <p>No Products to return</p>
+                                    </div>
+                                </apex:outputPanel>
+                                <apex:datatable id="wishlisttable" rendered= "{!Orderdetails.orderitems.size>0}" value="{!Orderdetails.orderitems}" var="item" styleclass="wishlist-product-details"> 
+                                    <apex:column styleclass="product-price" html-heading="{!$Label.wk_wedge__returnrequest_return_refund}">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__returnrequest_return_refund}</h5>
+                                        </apex:facet>
+                                        <apex:outputpanel layout="block" styleclass="custom-checkbox custom-return">
+                                            <input type="checkbox" value="{!item.id}" quant="" res=""/>
+                                        </apex:outputpanel>
+                                    </apex:column>
+                                    <apex:column styleclass="product-details" html-heading="{!$Label.wk_wedge__returnrequest_product}">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__returnrequest_product}</h5>
+                                        </apex:facet>
+                                        <apex:outputpanel layout="block" styleclass="W-product-details">
+                                            <apex:image url="/servlet/servlet.FileDownload?file={!item.pricebookentry.product2.wk_wedge__Image_Id__c}" height="100px" width="100px" styleclass="w-prod-img"/>
+                                            <apex:outputpanel layout="block" styleclass="W-product-desc">
+                                               <apex:outputlink value="{!URLFOR($Page.wk_wedge__productdetail,null,[productid=item.pricebookentry.product2.id])}"> <span class="wk_Prodname">{!item.pricebookentry.product2.name}</span></apex:outputlink>
+                                               <apex:outputPanel layout="block" styleClass="itemDescription">{!item.Description}</apex:outputPanel>
+                                            </apex:outputpanel>
+                                        </apex:outputpanel>
+                                    </apex:column>
+                                    <apex:column value="{!Currsymbol}  {!item.pricebookentry.unitprice}" styleclass="product-price" html-heading="{!$Label.wk_wedge__returnrequest_price}">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__returnrequest_price}</h5>
+                                        </apex:facet>
+                                    </apex:column> 
+                                    <apex:column styleclass="product-price" html-heading="{!$Label.wk_wedge__returnrequest_reason}">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__returnrequest_reason}</h5>
+                                        </apex:facet>
+                                        <apex:selectList size="1" styleclass="selectType reason res{!item.id}">
+                                            <apex:selectOptions value="{!reasons}"/>
+                                        </apex:selectList>
+                                    </apex:column>  
+                                    <apex:column styleclass="product-quant" html-heading="{!$Label.wk_wedge__returnrequest_quantity}">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__returnrequest_quantity}</h5>
+                                        </apex:facet>
+                                        <apex:outputpanel layout="block"  styleclass="prod-quant-bar">
+                                            <i class="quat-ico" id="quant-ico-sub">&#8722;</i><apex:inputtext value="{!item.wk_wedge__Product_Left_For_RMA__c}" id="prodQ" styleclass="{!item.id}" html-min="1" html-max="{!item.wk_wedge__Product_Left_For_RMA__c}"/><i class="quat-ico" id="quant-ico-add">+</i>
+                                        </apex:outputpanel>
+                                        <div class="max-quant"></div>
+                                    </apex:column>                                                                      
+                                </apex:datatable>
+                            </apex:outputpanel>  
+                        </apex:outputpanel>
+                        <apex:outputpanel layout="block" id="navigator">
+                            <apex:inputhidden value="{!requestStr}" id="requestStr"/>
+                            <apex:outputpanel rendered="{!Orderdetails.orderitems.size>0}" layout="block">
+                                <hr class="horizontal-grey"/>  
+                                <apex:outputpanel layout="block">
+                                    <apex:outputpanel layout="block" styleclass="row">
+                                        <apex:outputpanel layout="block" styleclass="col-xs-12 cart-update-opt">
+                                            <apex:outputlink value="{!$Site.baseurl}" styleclass="cart-info-btn cont-shop">{!$Label.wk_wedge__returnrequest_continue_shopping}</apex:outputlink>
+                                            <apex:commandButton action="{!updaterequest}" styleclass="cart-info-btn cart-update"  id="SubReturn" value="{!$Label.wk_wedge__returnrequest_request_return_refund_button}" /> 
+                                        </apex:outputpanel> 
+                                    </apex:outputpanel>
+                                </apex:outputpanel>
+                                <hr class=" horizontal-grey"/>                                 
+                            </apex:outputpanel>        
+                        </apex:outputpanel>
+                    </apex:form>
+                </apex:outputpanel>                
+            </apex:outputpanel>
+            <script>
+                wk=jQuery.noConflict();
+                wk(function() {
+                    wk('.reason').each(function(){
+                        var clas = wk(this).attr('class');
+                        var arr = clas.split(' ');
+                        var str = wk(this).val();
+                        wk(".custom-return input").each(function(){
+                            var val = wk(this).val();
+                            if('res'+val == arr[2]){
+                                wk(this).attr('res',str);
+                            }                                    
+                        });
+                    });
+                    wk(document).on('change','.reason',function(){
+                        var clasch = wk(this).attr('class');
+                        var arrch = clasch.split(' ');
+                        var strch = wk(this).val();
+                        wk(".custom-return input").each(function(){
+                            var val = wk(this).val();
+                            if('res'+val == arrch[2]){
+                                wk(this).attr('res',strch);
+                            }                                    
+                        });
+                    });
+                    wk("[id$='cart-details-wrapper']").on('click', '#quant-ico-sub',function(){
+                            wk(this).parent().next().empty();
+                            var d=parseInt(wk(this).next().attr('max'));
+                             var a=wk(this).next().val();
+                             a=a-1;
+                             if(a>1){
+                                wk(this).next().val(a);
+                                var clas = wk(this).next().attr('class');
+                                wk(".custom-return input").each(function(){
+                                    var val = wk(this).val();
+                                    if(val == clas){
+                                        wk(this).attr('quant',a);
+                                    }                                    
+                                });
+                             }else if(d== 0) {
+                                wk(this).next().val(0);
+                                var clas = wk(this).next().attr('class');
+                                wk(".custom-return input").each(function(){
+                                    var val = wk(this).val();
+                                    if(val == clas){
+                                        wk(this).attr('quant',0);
+                                    }                                    
+                                });
+                             }else{
+                                wk(this).next().val(1);
+                                var clas = wk(this).next().attr('class');
+                                wk(".custom-return input").each(function(){
+                                    var val = wk(this).val();
+                                    if(val == clas){
+                                        wk(this).attr('quant',1);
+                                    }                                    
+                                });
+                             }
+                            
+                        });
+                        wk("[id$='cart-details-wrapper']").on('click', '#quant-ico-add',function(){
+                             wk(this).parent().next().empty();
+                             var a=parseInt(wk(this).prev().val());
+                              a++;
+                              var d=parseInt(wk(this).prev().attr('max'))
+                              if(a>d){
+                                a=d;
+                                wk(this).parent().next().html('Maximum quantity selected');
+                              }
+                                
+                              wk(this).prev().val(a);
+                              var clas = wk(this).prev().attr('class');
+                              wk(".custom-return input").each(function(){
+                                  var val = wk(this).val();
+                                  if(val == clas){
+                                      wk(this).attr('quant',a);
+                                  }                                    
+                              });
+                              
+                              
+                        });
+                        wk(document ).on("click",".custom-return input",function(){
+                            wk(this).parent().removeClass("checked");
+                            if(this.checked){
+                                wk(this).parent().addClass("checked");                                
+                                
+                            }     
+                        });
+                        wk(document).on('click','[Id$="SubReturn"]',function(){
+                            var arr = [];
+                            var checkBoxes = document.querySelectorAll('input[type="checkbox"]');
+                            var numCheck = 0;
+                            for(var i=0;i<checkBoxes.length;i++){
+                                if(checkBoxes[i].checked == true)
+                                {
+                                    numCheck += 1;    
+                                }
+                            } 
+                            if(numCheck == 0) {
+                                window.ShowAlert('Please select atleast one product to return!!');
+                            }
+                            wk(".custom-return input:checked").each(function(){
+                                    var quant = wk(this).attr('quant');
+                                        if(quant==null || quant==''){
+                                            quant = wk('.'+wk(this).val()).val();
+                                        } 
+                                        if(wk('.'+wk(this).val()).val() == '0' || wk('.'+wk(this).val()).val() == '0.00'){
+                                             window.ShowAlert("Quantity of item which you have selected is 0 so we cannot accept your request!!");
+                                        }
+                                        arr.push({'productid':wk(this).val(),'quantity':quant,'reason':wk(this).attr('res')});                                 
+                                        
+                                });
+                                wk("[Id$='requestStr']").val(JSON.stringify(arr));
+                                
+                        });
+                }(jQuery));
+            </script>
+            </div>
+       </apex:define>
+    </apex:composition>
+</apex:page>

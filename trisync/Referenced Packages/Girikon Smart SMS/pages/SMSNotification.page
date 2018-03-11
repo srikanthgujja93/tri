@@ -1,0 +1,27 @@
+<!-- 
+    Created by   : Sudip Halder
+    Created Date : 13/June/2017
+    Description  : This VF page open lightning component (SMSNotification) in salesforce classic.
+-->
+<apex:page sidebar="false" showHeader="false">
+    
+ <style>
+    body.sfdcBody.apexPageInline{margin:0px;}    
+ </style>    
+    <style>
+        .name-btn{height:24px !important;}
+        .reply-btn svg{transform:rotateY(207deg);}
+        .reply-btn button{width:16px!important}
+    </style>
+    <apex:includeLightning />
+    <div id="lightning" />
+    <script>  
+    var style = "position: relative;left: 85%;top: -25px;display: inline";
+    $Lightning.use("gkn_sms:SMSNotificationApp", function() {
+        $Lightning.createComponent("gkn_sms:SMSNotification", {
+            "pageType" : "classic",
+            "styleAttribute":style            
+        }, "lightning", function(cmp) {});
+    });
+    </script>
+</apex:page>

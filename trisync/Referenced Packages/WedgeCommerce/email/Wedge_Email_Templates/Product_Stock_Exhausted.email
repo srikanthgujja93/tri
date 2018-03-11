@@ -1,0 +1,7 @@
+<messaging:emailTemplate subject="Product Out of Stock" recipientType="User" relatedToType="Product2">
+    <messaging:htmlEmailBody >
+        Hello {!recipient.name},<br/><br/>This is to inform you that the stock for product {!relatedto.name} has completely exhausted.
+        <br/>Please Re-stock the product so that customers can continue buying it without any problem.<br/><br/>
+        Thank You,
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>

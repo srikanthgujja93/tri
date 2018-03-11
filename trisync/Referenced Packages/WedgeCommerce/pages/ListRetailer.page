@@ -1,0 +1,246 @@
+<apex:page showheader="false" standardStyleSheets="false" doctype="html-5.0" title="Retailer List" controller="wk_wedge.ListRetailers">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>    
+            <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+            <style>
+                .wdg-nav-icon.productcatalog,.wdg-nav-icon.purchasechannel{
+                background-color: #34becd;
+                }
+                .loadcontainer{
+                width:13%;
+                background-color:white;
+                display:flex;
+                flex-wrap: wrap;
+                justify-content:center;
+                align-items:center;
+                height:100px;
+                border:2px solid #16325C;
+                }
+                .counttext{
+                margin:0;
+                color:#8e8e8e;
+                text-align:center;
+                }
+                .connectbutton {
+                background-color: #7DC37D;
+                color: white;
+                border: none;
+                height: 30px;
+                border-radius: 3px;
+                cursor: pointer;
+                margin-right: 5px;
+                }
+                .disablebutton {
+                background-color: darkgrey !important;
+                }
+                .wdg-dataTable--paginate{
+                display: flex;
+                justify-content: center;
+                }
+                .wdg-body .wdg-dataTable--box{
+                margin-top:5px;
+                }
+                .totalRec{
+                font-size: 14px;
+                color: #777777;
+                margin-top:2px;
+                }
+                .wdg-body-titletext{
+                display:inline-block;
+                vertical-align: top;
+                line-height: 1;
+                }
+                .recperpage{
+                background: #FFF;
+                padding: 4px 8px;
+                border: 2px solid #57BDC2;
+                border-radius: 4px;
+                cursor:pointer;
+                margin-right: 10px;
+                }
+                .recperpage:focus{
+                outline:none;
+                cursor:pointer;
+                }
+                .img-class{
+                width:200px;
+                }
+            </style>
+            <apex:form id="theForm">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                    <div class="wdg-body--header">
+                        
+                        
+                        <div class="wdg-search--box"> 
+                            <apex:inputtext html-placeholder="Search Code/Name" value="{!searchstr}" onkeydown="dosearch(event)"/>
+                            <apex:commandbutton value="Search" styleclass="wdg-submit--btn search" onclick="initsearch()" action="{!dummymethod}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>
+                            <apex:actionFunction name="initsearch" action="{!fetchagain}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>
+                        </div> 
+                    </div>
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo Purchasechan"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> Retailers </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!currentlimit}" id="recPerPage" onchange="initsearch()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>
+                            <!--<apex:commandButton action="{!updateDynamic}" value="{!if((DynamicCurrencyUpdate),'Disable Dynamic Currency Update','Enable Dynamic Currency Update')}" styleclass="connectbutton {!if((DynamicCurrencyUpdate),'disablebutton','')}"/>-->
+                            <apex:outputLink styleclass="wdg-ctrl--btn addNew" value="{!$Page.wk_wedge__AddRetailer}"><span></span></apex:outputLink>
+                            
+                            <div class="wdg-ctrl--btngroup clearfix">
+                                <div class="wdg-ctrl--btn settings">
+                                    <span></span>
+                                </div>
+                                <div class="dropdown dropdown-wrap">
+                                    <button type="button"  data-toggle="dropdown" class="wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                        <span></span>
+                                    </button>
+                                    <div class="dropdownMenu">
+                                        <div><apex:commandLink action="{!dummymethod}" onclick="deletemultiple()" reRender="wdgTable" value="Delete Selected"/></div>
+                                        <div><apex:commandLink action="{!deleteallebaycat}">Delete All</apex:commandLink></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <apex:outputpanel layout="block"  id="wdgTablebox" styleclass="wdg-dataTable--box">
+                        <apex:datatable value="{!recordlist}" var="Prod" styleclass="wdg-dataTable"  id="wdgTable">
+                            <apex:column styleClass="ess_table_col_first" headerClass="ess_table_col_first" rendered="{!rendercol}">
+                                <apex:facet name="header">
+                                    <apex:outputpanel styleclass="custom-checkbox">
+                                        <apex:inputCheckbox id="headcheck" onchange="checkallbox()"/>
+                                    </apex:outputpanel>
+                                </apex:facet>
+                                <div class="custom-checkbox">
+                                    <apex:inputCheckbox onchange="allBoxesChecked()"/>
+                                </div>
+                            </apex:column>
+                            <apex:column headerValue="Name">
+                                <apex:outputLink value="/{!Prod.id}">{!Prod.name}</apex:outputLink>
+                            </apex:column>
+                            <apex:column headerValue="Logo">
+                                <apex:image value="/servlet/servlet.FileDownload?file={!Prod.wk_wedge__Image_ID__c}" styleclass="img-class"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Action</apex:facet>
+                                <apex:outputlink title="Edit"  value="{!URLFOR($Page.wk_wedge__AddRetailer, null, ['id'=Prod.id])}" styleclass="wdg-ctrl--btn edit" style="margin-left:10px;" rendered="{!rendercol}"><span></span></apex:outputlink>
+                                <apex:commandlink styleclass="wdg-ctrl--btn delete" value="" title="Delete" action="{!deleterecord}" rerender="wdgTablebox" status="waitstatus" rendered="{!rendercol}">
+                                    <apex:param name="delid" value="{!Prod.id}"/>
+                                    <span></span>
+                                </apex:commandlink> <!--onclick="deleteRec('{!Prod.id}')"-->
+                            </apex:column>
+                            <apex:facet name="footer">
+                                
+                           
+                        <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate" id="footpanal">
+                            <apex:outputpanel rendered='{!totalrecords>0}'>
+                                <apex:commandlink value="" action="{!fetchagain}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first "><span></span></apex:commandlink>
+                                <apex:commandlink value="" action="{!fetchlessrecords}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                <apex:outputText styleclass="wdg-dataTable--pages" value="{!pageno} of {!totalPage} "></apex:outputText>
+                                <apex:commandlink value="" action="{!fetchmorerecords}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                <apex:commandlink value="" action="{!fetchlastpage}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!NOT(renderCol)}">
+                                    <div >No Records Returned !!!!</div>
+                                </apex:outputpanel>
+                       
+                            
+                            <script>
+                            console.log('{!totalRecords}');
+                            $('#totalrec').text('{!totalRecords}');
+                            </script>
+                        </apex:outputpanel>
+                       </apex:facet>
+                       </apex:datatable>     
+                    </apex:outputpanel>
+                </div>
+                
+                <apex:actionFunction name="initsearch" action="{!fetchagain}" rerender="wdgTable, footpanal, headpanal" status="loadgif"/>
+                <apex:actionFunction action="{!deleterecord}" name="deleteinit" reRender="wdgTable, pbm, headpanal" oncomplete="recordcount()" status="loadgif">
+                    <apex:param name="delid" value=""/>
+                    <apex:param name="idlen" value="15" assignTo="{!idlength}"/>
+                </apex:actionFunction>
+                <apex:actionFunction action="{!deleteallebaycat}" name="deleteAll" rerender="wdgTable" status="loadgif" oncomplete="recordcount()"/>
+            </apex:form>
+            
+            <script>
+            var allchecked=false;
+            function deletemultiple(){
+                var checkedBoxes= document.querySelectorAll('input[type=checkbox]:checked');
+                //console.log(checkedBoxes);
+                var str='';
+                var i=0;
+                if(allchecked)
+                    i++;
+                for(;i<checkedBoxes.length;i++){
+                    var tempstr=checkedBoxes[i].parentNode.parentNode.nextSibling.nextSibling.childNodes[0].href;
+                    console.log(checkedBoxes[i].parentNode.parentNode.nextSibling.nextSibling);
+                    while(tempstr.length!=18){
+                        tempstr=tempstr.substr(1);
+                    }
+                    str+=tempstr;
+                    console.log(str);
+                }
+                deleteinit(str);
+            }
+            function checkallbox(){
+                var checkBoxes= document.querySelectorAll('input[type=checkbox]');
+                console.log(checkBoxes);
+                if(allchecked==false){
+                    for(var i=1;i<checkBoxes.length;i++){
+                        checkBoxes[i].checked=true;
+                        $(checkBoxes[i].parentNode).addClass('checked');
+                    }
+                    allchecked=true;
+                }else{
+                    for(var i=1;i<checkBoxes.length;i++){
+                        checkBoxes[i].checked=false;
+                        $(checkBoxes[i].parentNode).removeClass('checked');
+                    }
+                    allchecked=false;
+                }
+            }
+            function allBoxesChecked(){
+                var checkBoxes= document.querySelectorAll('input[type=checkbox]');
+                var i=1;
+                for(;i<checkBoxes.length;i++){
+                    if(checkBoxes[i].checked==false){
+                        checkBoxes[0].checked=false;
+                        $(checkBoxes[0].parentNode).removeClass('checked');
+                        break;
+                    }
+                }
+                if(i==checkBoxes.length){
+                    checkBoxes[0].checked=true;
+                    $(checkBoxes[0].parentNode).addClass('checked');
+                    allchecked=true;
+                }
+                else{
+                    checkBoxes[0].checked=false;
+                    $(checkBoxes[0].parentNode).removeClass('checked');
+                    allchecked=false;
+                }
+            }
+            function dosearch(event){
+                console.log(event);
+                if(event.keyCode==13){
+                    event.preventDefault();
+                    initsearch();
+                }
+                return false;
+            }
+            </script>
+        </apex:define>  
+    </apex:composition>
+</apex:page>

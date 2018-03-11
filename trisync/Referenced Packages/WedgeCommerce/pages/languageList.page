@@ -1,0 +1,270 @@
+<apex:page controller="wk_wedge.updateLanguage" 
+           title="Language Listing" showheader="false" setup="false" standardstylesheets="false" cache="false">
+    <script>
+        jQuery(document).ready(function($) {
+            saveList();
+        });
+    </script>
+    <style>
+        .wdg-nav-icon.multilanguage {
+            background-color: #34becd;
+        }
+         .wdg-nav-icon.cms{
+                    background-color: #34becd;
+                } 
+        .wdg-ctrl--btn.addNew {
+            display : none;
+        }
+        
+        .wdg-body .wdg-dataTable--box{
+            margin-top:5px;
+        }
+        .totalRec{
+            font-size: 14px;
+            color: #777777;
+            margin-top:2px;
+        }
+        .wdg-body-titletext{
+            display:inline-block;
+            vertical-align: top;
+            line-height: 1;
+        }
+        .recperpage{
+            background: #FFF;
+            padding: 4px 8px;
+            border: 2px solid #57BDC2;
+            border-radius: 4px;
+            cursor:pointer;
+        }
+        .recperpage:focus{
+            outline:none;
+            cursor:pointer;
+        }
+        .wdg-note-content {
+            text-align: left;
+        }
+        .wdg-dataTable--paginate {
+            margin-top: 45px;
+        }
+    </style>
+    <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/> 
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">    
+            <apex:form id="theForm">
+                
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                    <div class="wdg-body--header">
+                       <div class="wdg-search--box"> 
+                           <apex:inputtext html-placeholder="{!$Label.wk_wedge__language_list_search_placeholder}"  value="{!searchQuery}"/>
+                           <apex:commandbutton value="Search" styleclass="wdg-submit--btn search" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,urlstr" status="waitstatus" oncomplete="getCount()"/>
+                           <apex:outputPanel id="urlstr"><apex:inputHidden id="urlval" value="{!url}"/></apex:outputPanel>
+                        </div> 
+                    </div>
+                    <apex:inputHidden value="{!enablelist}" id="enable"/>
+                   <div class="wdg-body--titleblock clearfix">
+                         <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo mullanguage"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> {!$label.wk_wedge__Language_List_Head_Text} </div>
+                                <div class="totalRec"> {!$label.wk_wedge__Language_List_Total_Records}: <apex:outputtext id="totalrec" value=""> </apex:outputtext></div>
+                            </div>
+                        </div>  
+                        <div class="wdg-ctrl--btnPanel">
+                            
+                            <div class="wdg-ctrl--btngroup clearfix">
+                                
+                                <div class="wdg-ctrl--btn settings">
+                                    <span></span>
+                                </div>
+
+                                <div class="dropdown dropdown-wrap">
+                                    <button type="button"  data-toggle="dropdown" class="wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                        <span></span>
+                                    </button>
+                                    <div class="dropdownMenu">
+                                        <div>
+                                            <apex:commandlink value="{!$Label.wk_wedge__language_list_enable_selected}"
+                                                              action="{!enable}" 
+                                                              onclick="getSelected('enable');"
+                                                              rerender="wdgerrorBlock,wdgTable,wdgTablebox"
+                                                              status="waitstatus" >
+                                                <apex:param name="enable" value="enableSlected"/>
+                                            </apex:commandlink>
+                                        </div>
+                                        <div>
+                                            <apex:commandlink value="{!$Label.wk_wedge__language_list_disable_selected}"
+                                                              action="{!enable}"
+                                                              onclick="getSelected('disable');"
+                                                              rerender="wdgerrorBlock,wdgTable,wdgTablebox"
+                                                              status="waitstatus">
+                                                <apex:param name="enable" value="disableSelected"/>
+                                            </apex:commandlink>
+                                        </div>
+                                        <div>
+                                            <apex:commandlink value="{!$Label.wk_wedge__language_list_enable_all}"
+                                                              action="{!enable}"
+                                                              rerender="wdgerrorBlock,wdgTable,wdgTablebox"
+                                                              status="waitstatus">
+                                                <apex:param name="enable" value="enableAll"/>
+                                            </apex:commandlink>
+                                        </div>
+                                        <div>
+                                            <apex:commandlink value="{!$Label.wk_wedge__language_list_disable_all}"
+                                                              action="{!enable}"
+                                                              rerender="wdgerrorBlock,wdgTable,wdgTablebox"
+                                                              status="waitstatus">
+                                                <apex:param name="enable" value="disableAll"/>
+                                            </apex:commandlink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-dataTable--box">
+                    <apex:actionFunction name="saveList" action="{!saveLanguage}" oncomplete="getCount();" rerender="wdgTablebox"/>
+                    <apex:datatable value="{!Product2s}" var="Prod" styleclass="wdg-dataTable" id="wdgTable" >
+                         <apex:column styleclass="Xsmall">
+                            <apex:facet name="header">
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" id="headerCB"/>
+                                </div>
+                            </apex:facet>
+                            <div class="custom-checkbox">
+                                <input type="checkbox" class="eachselect" value="{!Prod.Id}"/>
+                            </div>
+                        </apex:column> 
+                        <apex:column styleclass="medium" >
+                            <apex:facet name="header">
+                                <apex:commandlink value="{!$Label.wk_wedge__language_list_table_name + IF(fieldName=='name',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                    <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                </apex:commandlink>
+                            </apex:facet>
+                           <apex:outputLink value="/{!Prod.id}" target="_blank">{!Prod.name}</apex:outputLink> 
+                        </apex:column>
+                         <apex:column styleclass="medium" >
+                            <apex:facet name="header">
+                                <apex:commandlink value="{!$Label.wk_wedge__language_list_table_code + IF(fieldName=='Code__c',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                    <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                </apex:commandlink>
+                            </apex:facet>
+                            <apex:outputLink value="/{!Prod.id}" target="_blank">{!Prod.wk_wedge__Code__c}</apex:outputLink> 
+                        </apex:column>
+                         
+                         <apex:column styleclass="medium">
+                                <apex:facet name="header">
+                                    <apex:commandlink value="{!$Label.wk_wedge__language_list_table_status + IF(fieldName=='Active__c',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="Active__c" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                 <apex:outputpanel layout="block" styleclass="dropdown status-dropdown">
+                                    <div data-toggle="dropdown" class="status status-value dropdown-toggle" id="ecm_status_Dropdown">
+                                        <span>{!IF(Prod.Active__c, 'Enable','Disable')}</span><span class="status-caret"></span>
+                                    </div>
+                                    <div class="status-dropdown-menu">
+                                        <span class="status status-option" targetid="{!Prod.wk_wedge__Code__c}">Enable</span>
+                                        <span class="status status-option" targetid="{!Prod.wk_wedge__Code__c}"> Disable</span>
+                                    </div>
+                                 </apex:outputpanel>
+                            </apex:column>
+                          <apex:facet name="footer">
+                            <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                    <apex:outputpanel rendered='{!Product2s.size>0}'>
+                                    <apex:commandlink value="" action="{!first}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                    <apex:commandlink value="" action="{!previous}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate  Prev"><span></span></apex:commandlink>
+                                    <apex:outputText styleclass="wdg-dataTable--pages" value="{!pagenumber} of {!totalPages} "></apex:outputText>
+                                    <apex:commandlink value="" action="{!next}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                    <apex:commandlink value="" action="{!last}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                </apex:outputpanel> 
+                                <apex:outputpanel rendered="{!Product2s.size==0}" style="margin-bottom: 45px;">
+                                    <div class="No-Product">{!$Label.wk_wedge__language_list_no_records_found}</div>
+                                </apex:outputpanel>
+                                 <apex:outputpanel >
+                                     <span class="wdg-Notedata" >
+                                        <!-- <p class="wdg-note-content">
+                                            NOTE: Create remote site of your visualforce URL. Path to create remote site is <strong>Setup||Security Control||Remote Site Setting|| New Remote Site </strong> 
+                                            and copy url as show in <a href="https://www.awesomescreenshot.com/image/2890533/611940a6e4d1485b3236828c54b42cf1" 
+                                            target="_blank"> this image</a>
+                                        </p> -->
+                                        <p class="wdg-note-content">
+                                            NOTE: You have to enable required language from Translation Workbench. To know how to create kindly visit <a href="https://wedgecommerce.com/translation-workbench-salesforce/" 
+                                            target="_blank"> this link</a>
+                                        </p>
+                                        <p class="wdg-note-content">
+                                            You can override custom lable according to your language. To know how to override custom label kindly visit <a href="https://wedgecommerce.com/custom-labels-salesforce/" 
+                                            target="_blank"> this link</a>
+                                        </p>
+                                        
+                                    </span>
+                                 </apex:outputpanel>
+                            </apex:outputpanel>
+                        </apex:facet>
+                    </apex:datatable>
+                    
+                    <apex:inputhidden value="{!deleteAll}" id="deletable"/>
+                </apex:outputpanel> 
+               </div>
+               <apex:actionFunction name="updatePage" action="{!updatedata}" status="waitstatus"/>
+            <apex:actionfunction name="changeRecordstatus" action="{!savestatus}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" oncomplete="window.location.reload()"/>
+            <script>
+             function getSelected(obj){
+                 var inputCheckBox = document.getElementsByTagName("input"); 
+                 var enable = '';
+                 var disable = '';
+                 for(var i=0; i<inputCheckBox.length; i++){                             
+                         if(inputCheckBox[i].checked == true){
+                             enable += inputCheckBox[i].value+',';
+                         } 
+                     
+                 }
+                 if(enable.length == 0 && obj =='enable') {
+                    window.ShowAlert("Please select atleast one language to enable!!");
+                     return false;
+                 }
+                 if(enable.length == 0 && obj =='disable') {
+                    window.ShowAlert("Please select atleast one language to disable!!");
+                     return false;
+                 }
+                 $('[id$="enable"]').val(enable);
+                 
+                 
+             }
+             function getCount(){
+              // Get Accounts via the REST API
+              if($('[Id$="urlval"]').val()!='' && $('[Id$="urlval"]').val()!=null){
+                  $.ajax($('[Id$="urlval"]').val(),
+                      {
+                      beforeSend: function(xhr) {
+                        // Set the OAuth header from the session ID
+                        xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                      },
+                      success: function(response) {
+                        // Append the records to HTML list
+                        var str=JSON.stringify(response);
+                        
+                        var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                        var arr = total.split(',');
+                        
+                        var count = arr[0].replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                });
+                                console.log(count);
+                                $('[id$="totalrec"]').html('<span> '+count+'</span>');
+                       
+                      },
+                      error: function(jqXHR, textStatus, errorThrown) {
+                        // Error
+                        console.log(jqXHR.status + ': ' + errorThrown);
+                      }
+                    }
+                  );
+              }
+            }
+          </script>
+            </apex:form>
+          </apex:define>
+    </apex:composition>
+</apex:page>

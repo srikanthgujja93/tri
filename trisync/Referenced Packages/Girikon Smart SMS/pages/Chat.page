@@ -1,0 +1,48 @@
+<apex:page title="SMS Conversation" sidebar="false" controller="gkn_sms.ChatController">
+    <apex:includeLightning />
+    <div id="lightning" />
+    <apex:form >
+        <apex:outputText style="display:none!important" id="recordId" value=""/>
+    </apex:form>
+    <script>  
+    var style = "position: relative;left: 85%;top: -25px;display: inline";
+    $Lightning.use("gkn_sms:ChatApp", function() {
+        $Lightning.createComponent("gkn_sms:ChatCmp", {userId:"!JSENCODE($CurrentPage.parameters.userId)",recordId:"{!JSENCODE($CurrentPage.parameters.recordId)}"}, "lightning", function(cmp) {});
+    });
+    </script>
+    <apex:outputPanel rendered="{!$User.UITheme == 'Theme3'}">
+        <style>
+        #lightning{height:585px}
+            .sms-user-list{height:580px;overflow-x:hidden;overflow-y:auto;background-color:#e9eaec;border:1px solid #1799e2}
+            .discussion{height:446px;overflow-y:auto;border:1px solid rgb(233, 234, 236)}
+        </style>
+    </apex:outputPanel>    
+    <apex:outputPanel rendered="{!$User.UITheme == 'Theme4d'}">
+        <style>
+        #lightning{height:650px}
+            .sms-user-list{height:600px;overflow-x:hidden;overflow-y:auto;background-color:#e9eaec;border:1px solid #1799e2}
+            .discussion{height:466px;overflow-y:auto;border:1px solid rgb(233, 234, 236)}
+        </style>
+    </apex:outputPanel>    
+<style>
+.smart-sms-chat{width:100%;margin:0 auto}.smart-sms-chat .top-bar{background:#1799e2;color:#fff;padding:.5rem;position:relative;overflow:hidden}.smart-sms-chat .top-bar h1{display:inline;font-size:1.1rem}.smart-sms-chat .top-bar .typicons-message{display:inline-block;padding:4px 5px 2px}.smart-sms-chat .top-bar .typicons-minus{position:relative;top:3px}.smart-sms-chat .top-bar .left{float:left}.smart-sms-chat .top-bar .right{float:right;padding-top:5px}.smart-sms-chat .top-bar>*{position:relative}.smart-sms-chat .top-bar::before{content:"";position:absolute;top:-100%;left:0;right:0;bottom:-100%;opacity:.25;background:radial-gradient(#fff,#000);animation:pulse 1s ease alternate infinite}.smart-sms-chat .discussion{list-style:none;background:#fff;margin:0;padding:0 0 50px}.smart-sms-chat .discussion li{padding:.5rem;overflow:hidden;display:flex}.smart-sms-chat .discussion .avatar{width:40px;position:relative}.smart-sms-chat .discussion .avatar img{display:block;width:40px}.smart-sms-chat .other .avatar:after,.smart-sms-chat .self .avatar:after{content:"";position:absolute;width:0;height:0}.smart-sms-chat .other .avatar:after{top:0;right:0;border:5px solid #fdb59c;border-left-color:transparent;border-bottom-color:transparent}.slds-scope hr{margin:1rem 0!important}.slds-scope .slds-badge{font-size:100%!important;text-transform:capitalize!important}.smart-sms-chat .self{justify-content:flex-end;align-items:flex-end}.smart-sms-chat .other .messages{background:#fdb59c}
+.smart-sms-chat .self .messages{order:1;border-bottom-right-radius:0;background:#d5ebf2}.smart-sms-chat .self .avatar{order:2}
+.smart-sms-chat .self .avatar:after{bottom:0;left:0;border:5px solid #d5ebf2;border-right-color:transparent;border-top-color:transparent;box-shadow:1px 1px 2px rgba(0,0,0,.2)}.smart-sms-chat .messages{background:#fff;padding:10px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.2)}.smart-sms-chat .messages p{font-size:.8rem;margin:0 0 .2rem}.smart-sms-chat .messages time{font-size:.7rem;color:#2b2828}@keyframes pulse{from{opacity:0}to{opacity:.5}}.border-radius0{border-radius:0!important}.smart-sms-chat ::-webkit-scrollbar{width:8px}.smart-sms-chat ::-webkit-scrollbar-track{-webkit-box-shadow:inset 0 0 6px rgba(0,0,0,.3);-webkit-border-radius:0;border-radius:0}.smart-sms-chat ::-webkit-scrollbar-thumb{-webkit-border-radius:0;border-radius:0;background:gray;-webkit-box-shadow:inset 0 0 6px rgba(0,0,0,.5)}.smart-sms-chat ::-webkit-scrollbar-thumb:window-inactive{background:gray}
+.smart-sms-chat textarea{resize:vertical}   
+.smart-sms-chat .mms-media{width:200px;border-radius:2px;padding:2px;background-color:#fff;border:1px dashed #fff;}    
+.slds-scope .slds-icon-standard-user {
+    background-color: #8199af !important;
+}
+
+.slds-scope .slds-icon_container, 
+.slds-scope .slds-icon__container{
+    border-radius: 0px !important;
+}
+.slds-scope .slds-icon-standard-user .slds-icon {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    fill: rgb(255, 255, 255);
+}
+    
+</style>
+</apex:page>

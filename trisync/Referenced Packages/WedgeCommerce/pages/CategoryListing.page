@@ -1,0 +1,250 @@
+<apex:page showheader="false" standardstylesheets="false" title="Categories" id="CategoryListingPage" controller="wk_wedge.categoryListing"  cache="false" docType="HTML-5.0">
+    <apex:includescript value="{!URLFOR($Resource.wk_wedge__SFResources,'EcomResources/exterfiles/jquery.min.js')}"/>
+    
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <style>
+                .child-expander.hidden>span{
+                visibility:hidden;
+                }
+                .wdg-nav-icon.productcatalog, .wdg-nav-icon.category {
+                background-color: #34becd;
+                }
+                .display-inline--block{
+                width: 85%;
+                word-break: break-all;  
+                }
+                .wdg-body .wdg-dataTable--box{
+                margin-top:5px;
+                }
+                .totalRec{
+                font-size: 14px;
+                color: #777777;
+                margin-top:2px;
+                }
+                .wdg-body-titletext{
+                display:inline-block;
+                vertical-align: top;
+                line-height: 1;
+                }
+                .finaltable{
+                height: 70px !important;
+                border-bottom: none !important;
+                }
+            </style>
+            <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>    
+            <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+            <apex:form id="catListForm" styleclass="wdg-dataentry--form">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                    
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo categories"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> Categories </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div>
+                        <div class="wdg-filter--options" style="display:inline-block">
+                            <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!activatedLanguage.size>1}">
+                                <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                <apex:selectOptions value="{!activatedLanguage}">
+                                    <span class="caret multidropdownsymbol"></span>
+                                </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            
+                            <a href="{!$page.addcategories}" class=" wdg-ctrl--btn addNew">
+                                <span></span>
+                            </a>
+                            
+                            <div class="wdg-ctrl--btngroup clearfix">
+                                
+                                <div class="wdg-ctrl--btn settings">
+                                    <span></span>
+                                </div>
+                                <div class="dropdown dropdown-wrap">
+                                    <button type="button"  data-toggle="dropdown" class="wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                        <span></span>
+                                    </button>
+                                    <div class="dropdownMenu">
+                                        <div> <a href="javascript:void(0)"  id="deleteSelected">Delete Selected</a></div>
+                                        <div> <a href="javascript:void(0)" id="deleteALL"  > Delete All</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-form--box">
+                        <table class="wdg-form--header wdg-category--tableheader">
+                            <thead>
+                                <tr>
+                                    <td class="Xsmall">
+                                        <div class="custom-checkbox">
+                                            <input type="checkbox" id="headerCB" />
+                                        </div>
+                                    </td>
+                                    <td class="small">Order</td>
+                                    <td class="halfwidth left-shift">Category Name</td>
+                                    <td class="small">Products</td>
+                                    <td class="medium">Status</td>
+                                    <td class="small">Edit</td>
+                                </tr>
+                            </thead> 
+                        </table> 
+                        <div class="wdg-form--content wdg-no-scroll">
+                            <table class="wdg-category--tableCategory root" >
+                                <tbody>
+                                    <tr>
+                                        <td class="Xsmall">&nbsp;&nbsp;</td>
+                                        <td class="small">&nbsp;&nbsp;</td>
+                                        <td class="halfwidth left-shift" >
+                                            <div class="child-expander child-expander-active" data-target="catRoot">
+                                                <span></span>
+                                                <p class="display-inline--block">Root</p>
+                                            </div>
+                                        </td>
+                                        <td class="small">&nbsp;</td>
+                                        <td class="medium">&nbsp;</td>
+                                        <td class="small">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="content-container" id="catRoot">
+                                
+                            </div>
+                        </div>
+                        
+                    </apex:outputpanel> 
+                    
+                    <apex:inputhidden value="{!deleteAll}" id="deletable"/>
+                    <apex:actionfunction name="deleteSelectedRecords" action="{!deleteSelectedCategories}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete()"/>
+                    <apex:actionfunction name="deleteAllRecords" action="{!deleteAllCategories}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete()"/>
+                    <apex:actionfunction name="changeRecordstatus" action="{!updateStatus}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="closenotifications();"/>
+                </div>
+            </apex:form>
+            
+            <script>
+            var catJson='{!JSENCODE(jsonstring)}';
+            </script>   
+            <script>
+            wk=jQuery.noConflict();
+            (function(wk){
+                window.addSpaces=function(rootL){
+                    var s='';
+                    for(var i=0;i<rootL;i++)
+                        s+='&nbsp;&nbsp;&nbsp;';
+                    
+                    return s; 
+                    
+                }
+                window.createtable=function(rootL, s, containerID){
+                    var dataTable='';
+                    
+                    for(var key in s){
+                        var catStatus=s[key]['status']==true?'Active':'Hidden';
+                        dataTable='<table class="wdg-category--tableCategory cat-table cat-tree-table cat-table-nochild">';
+                        dataTable+='<tbody><tr>';
+                        dataTable+='<td class="Xsmall">';
+                        dataTable+='<div class="custom-checkbox"><input  class="eachselect" type="checkbox"  Value="'+s[key]['key']+'"/></div>';
+                        dataTable+='</td>'
+                        dataTable+='<td class="small">';
+                        dataTable+= '<span>' +s[key]['order']+'</span>';
+                        dataTable+='</td>';
+                        dataTable+='<td class=" halfwidth left-shift">';
+                        
+                        if(s[key]['children'] ===undefined){
+                            dataTable+= '<div class="child-expander hidden">'+addSpaces(rootL)+'<span></span>';
+                        }else{
+                            dataTable+= '<div class="child-expander child-expander-active" data-target="cat-rl'+rootL+'-'+s[key]['key']+'">'+addSpaces(rootL)+'<span></span>';
+                        }
+                        dataTable+= '<p class="display-inline--block">'+ s[key]['title'] +'</p></div>';
+                        dataTable+='</td>';
+                        dataTable+='<td class="small">';
+                        dataTable+='<a target="_blank" href="'+s[key]['href']+'" class="wdg-category--products">'+s[key]['Products']+' </a>';
+                        dataTable+='</td>';
+                        dataTable+='<td class="medium">';
+                        dataTable+='<div class="dropdown status-dropdown">';
+                        dataTable+='<div data-toggle="dropdown" class="status status-value dropdown-toggle" id="ecm_status_Dropdown">';
+                        dataTable+='<span>'+catStatus+'</span> <span class="status-caret"></span>';
+                        dataTable+='</div>';
+                        dataTable+='<div class="status-dropdown-menu">';
+                        dataTable+='<span class="status status-option" targetid="'+s[key]['key']+'"> Active</span>';
+                        dataTable+='<span class="status status-option" targetid="'+s[key]['key']+'">Hidden</span>';
+                        dataTable+='</div></div>';
+                        dataTable+='</td>';
+                        dataTable+='<td class="small">';
+                        dataTable+='<a href="/apex/addcategories?id='+s[key]['key']+'" class="wdg-ctrl--btn edit"><span></span></a>';
+                        dataTable+='</td>';
+                        dataTable+='</tr></tbody></table>';
+                        if(s[key]['children'] !==undefined){
+                            dataTable+='<div class="cat-middle-wrap" id="cat-rl'+rootL+'-'+s[key]['key']+'"></div>'
+                            wk("[Id$='"+containerID+"']").append(dataTable);
+                            createtable(rootL+1, s[key]['children'],'cat-rl'+rootL+'-'+s[key]['key']);
+                        }else{
+                            wk("[Id$='"+containerID+"']").append(dataTable);
+                        }
+                    }
+                    //datatable+= '<table class="wdg-category--tableCategory cat-table cat-tree-table cat-table-nochild" style="height: 70px;"></table>';
+                }
+                
+                wk( window ).load(function(){
+                    var categories=[];
+                    wk(".child-expander>span").hide();
+                    if(catJson!=null && catJson!=''){
+                        categories=JSON.parse(catJson)
+                        if(categories.length>0){
+                            wk(".child-expander>span").show();
+                            window.createtable(1, categories,'catRoot');
+                        }
+                        console.log(wk("#catRoot").append('<table class="wdg-category--tableCategory cat-table cat-tree-table cat-table-nochild finaltable"></table>'));
+                    }
+                });
+                
+                wk( document ).on("click",".wdg-body .wdg-category--tableCategory td div.child-expander span", function(){
+                    var a=wk(this).parent().attr('data-target');
+                    wk(this).toggleClass('content-expand');
+                    console.log(a);
+                    wk("[Id$='"+a+"']").slideToggle(200);
+                });
+                
+            }(jQuery));
+            </script>
+            
+            <script>
+            jQuery(document).ready(function($) {
+                // Get Accounts via the REST API
+                $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Categories__c',
+                       {
+                           beforeSend: function(xhr) {
+                               // Set the OAuth header from the session ID
+                               xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                           },
+                           success: function(response) {
+                               // Append the records to HTML list
+                               var str=JSON.stringify(response);
+                               var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                               var arr = total.split(',');
+                               document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                   return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                               });
+                           },
+                           error: function(jqXHR, textStatus, errorThrown) {
+                               // Error
+                               console.log(jqXHR.status + ': ' + errorThrown);
+                           }
+                       }
+                      );
+            });
+            function afterdelete(){
+                recordcount();
+                closenotifications();    
+            }
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,125 @@
+<aura:component controller="gkn_sms.ChatController" implements="force:appHostable" access="global">
+    <ltng:require scripts="{!join(',',
+                           $Resource.gkn_sms__notification + '/cometd.js',
+                           $Resource.gkn_sms__jslib + '/jquery.js',
+                           $Resource.gkn_sms__notification + '/json2.js',
+                           $Resource.gkn_sms__notification + '/jquery.cometd.js')}"
+                  afterScriptsLoaded="{!c.scriptLoaded}"/>
+    
+    <aura:attribute name="loggedinUserPic" type="String" default=""/>
+    <aura:attribute name="recordId" type="String" default=""/>
+    <aura:attribute name="userId" type="String" default=""/>
+    
+    <aura:attribute name="histories" type="list" default="[]"/>
+    <aura:attribute name="historyToDisplay" type="list" default="[]"/>
+    
+    <aura:attribute name="toNumber" type="String" default=""/>
+    <aura:attribute name="fromNumber" type="String" default=""/>
+    
+    <aura:attribute name="externalUserName" type="String" default=""/>
+    <aura:attribute name="loggedInUserName" type="String" default=""/>
+    <aura:attribute name="loggedInUserId" type="String" default=""/>
+    <aura:attribute name="userList" type="list" default="[]"/>
+    
+    <aura:attribute name="objectName" type="String" default=""/>
+    <aura:attribute name="hasMessage" type="String" default=""/>
+    <aura:attribute name="messageType" type="String" default=""/>
+    
+    <aura:attribute name="parentRecordId" type="String" default=""/>
+    
+    <aura:attribute name="charleft" type="integer" default="160"/>
+    <aura:attribute name="totalSegment" type="integer" default="0"/>
+    <aura:attribute name="totalchars" type="integer" default="0"/>
+    
+    <aura:attribute name="isFirefox" type="boolean" default="false"/>
+    
+    <aura:attribute name="dateDivider" type="String" default=""/>
+    
+    <aura:attribute name="outgoing_msg" type="String" default=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>    
+    <audio src="{!$Resource.gkn_sms__alert}" aura:id="soundEffect" ></audio>
+    
+    <aura:if isTrue="{!!empty(v.hasMessage)?true:false}">
+        <div style="position:absolute" class="{!v.hasMessage==''?'slds-hide':'slds-notify_container slds-is-relative slds-show'}">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.messageType}" role="alert"> 
+                <span class="slds-assistive-text">{!v.messageType}</span>
+                <span class="{!'slds-icon_container slds-icon-utility-'+v.messageType+' slds-m-right_small slds-no-flex slds-align-top'}" title="{!v.messageType}">
+                    <lightning:icon variant="bare" class="slds-icon slds-icon_small" iconName="{!'utility:'+v.messageType}" size="small" alternativeText="{!v.messageType}"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        {!v.hasMessage}
+                    </h2>
+                </div>
+                <lightning:buttonIcon iconName="utility:close" class="slds-notify__close slds-button_icon-inverse" size="small" variant="bare" onclick="{!c.closeToast}"/>
+            </div>
+        </div>            
+    </aura:if>
+    
+    <div class="slds-grid">
+        <div class="slds-p-left_xxx-small slds-size_2-of-12">
+            <ul aura:id="urserlist" class="slds-has-dividers_around slds-has-block-links_space sms-user-list">
+                <aura:iteration items="{!v.userList}" var="item" indexVar="index">
+                    <li class="" style="border-bottom:1px solid #1799e2" onclick="{!c.filterDatas}" id="{!item.userId}" data-userid="{!item.userId}">
+                        <a><lightning:avatar src="{!item.userPic}" alternativeText="{!item.userName}" fallbackIconName="standard:user" />&nbsp; {!item.userId==v.loggedInUserId?'Me':item.userName}</a>
+                    </li>
+                </aura:iteration>
+                <aura:if isTrue="{!v.userList.length>1}">
+                    <li style="border-bottom:1px solid #1799e2" class="" onclick="{!c.filterDatas}" id="-1" data-userid="-1">
+                        <a><lightning:icon iconName="standard:groups" alternativeText="Conversation"/>&nbsp; All Users</a>
+                    </li>
+                </aura:if>
+            </ul>
+        </div>
+        <div class="slds-p-right_xxx-small slds-size_10-of-12">
+            <section class="smart-sms-chat">
+                <lightning:spinner aura:id="spinner" variant="brand" size="small" />
+                <header class="top-bar">
+                    <div class="left">
+                        <span class="icon typicons-message"></span>      
+                        <h1>SMS Conversation {!v.externalUserName} ({!v.toNumber})</h1>
+                    </div>
+                    <div class="right">
+                        <span class="icon typicons-minus"></span>
+                        <span class="icon typicons-times"></span>
+                    </div>
+                </header>        
+                <div class="tab-content">
+                    <ol aura:id="conversation_container" class="discussion">
+                        <aura:iteration items="{!v.historyToDisplay}" var="item" indexVar="index">
+                            <gkn_sms:SingleMessage isSentOrReceived="{!item.isSentOrReceived}" 
+                                             isDateChange="{!item.isDateChange}" 
+                                             smstype="{!item.SMS_Type=='Outgoing'?'self':'other'}" 
+                                             message="{!item.SMS_Body}" 
+                                             mms="{!item.mmsurl}"
+                                             createddate="{!item.createddates}" 
+                                             profilePic="{!item.pic}"/>
+                        </aura:iteration>
+                    </ol>
+                </div>
+                <div style="margin-top:0px">
+                    <ui:inputTextArea value="{!v.outgoing_msg}" 
+                                      aura:id="outgoingsms" 
+                                      updateOn="keyup" 
+                                      keyup="{!c.submitMsg}" 
+                                      class="{!v.isFirefox?'border-radius0 slds-input firefox':'border-radius0 slds-input'}" 
+                                      rows="3" 
+                                      placeholder="Say something..." 
+                                      maxlength="1550"/>                    
+                    <div style="position:relative;bottom:-10px;left:10px;">
+                        <div class="slds-grid">
+                            <div class="slds-p-horizontal_small slds-size_8-of-12">
+                                Characters Left: <lightning:badge label="{!v.charleft}" />,
+                                Segments :   <lightning:badge label="{!v.totalSegment}"/>
+                                Total Characters: <lightning:badge label="{!v.totalchars}"/>
+                            </div>
+                            <div class="slds-p-horizontal_small slds-size_4-of-12">
+                                160 Characters = 1 Segment, Max-Length  = 1550.
+                            </div>
+                        </div>
+                    </div>
+                </div>        
+            </section>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,245 @@
+<aura:component controller="gkn_sms.WorkflowConfigController" implements="force:appHostable">
+    <ltng:require scripts="{!$Resource.gkn_sms__jslib + '/jquery.js'}"/>
+    <aura:attribute name="workflowConfig" type="gkn_sms__WorkflowConfig__c"
+                    default="{'sobjectType': 'gkn_sms__WorkflowConfig__c','Name':'','gkn_sms__FromNumber__c':'','gkn_sms__Object_Name__c':'','gkn_sms__isSaveInCustomObj__c':false,'gkn_sms__toNumber__c':'', 'gkn_sms__Template_Id__c':''}" />
+    <aura:attribute name="selectedObj" type="String" default=""/>
+    <aura:attribute name="matchKey" type="String" default=""/>
+    <aura:attribute name="workflowList" type="gkn_sms__WorkflowConfig__c[]"/>
+    <aura:attribute name="deleteRecord" type="gkn_sms__WorkflowConfig__c" default="null"/>
+    
+    <aura:handler name="init" value="{!this}"  action="{!c.doInit}"/>
+    <aura:attribute name="smsBody" type="String" default=""/>	
+    <aura:attribute name="isDelete" type="boolean" default="false"/>
+    <aura:registerEvent name="smsApp" type="gkn_sms:smsApp" />
+    
+    <lightning:spinner aura:id="loading" class="slds-show gkn-sms-spiner" alternativeText="Loading" variant="brand" size="small" />
+    <div aura:id="mobileAction" class="slds-hide" style="background-color:#fff">
+        <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <div class="slds-media slds-media--center slds-has-flexi-truncate">      
+                    <div class="slds-media__body">
+                        <lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelConfig}" />
+                        Create New
+                    </div>
+                </div>
+                <div class="slds-no-flex">
+                    <lightning:button variant="brand" label="Save Config" onclick="{!c.addNewConfig}" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <article class="slds-card onesetupSetupHeader">
+        <div class="slds-card__header setup-header-element slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="setup-header-element">
+                    <span
+                          class="slds-icon_container slds-icon-utility-settings setup-icon"
+                          title="Setup"> 
+                        <lightning:icon variant="inverse" iconName="utility:settings" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <div class="slds-p-left--medium">
+                            <span class="slds-text-heading--small">SMS Workflow Configuration</span>
+                        </div>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-p-left--medium">
+            <div class="slds-p-left--x-small">
+                <div class="slds-card__body">Create workflow configuration to send sms from workflow.</div>
+            </div>
+        </div>
+    </article>
+    <div class="slds-m-around--small"></div>
+    <div aura:id="workflowconfigcontainer" class="slds-grid slds-p-horizontal--small">		
+        <div class="slds-col slds-p-left--small" style="width:170px">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="configName"><abbr
+                                                                               class="slds-required" title="required">*</abbr> Title</label>
+                <div class="slds-form-element__control">
+                    <ui:inputText aura:id="configName" class="slds-input"
+                                  value="{!v.workflowConfig.Name}" />
+                </div>
+            </div>			
+            <div class="slds-m-around--small"></div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="fromNumber"><abbr
+                                                                               class="slds-required" title="required">*</abbr> From Number</label>
+                <div class="slds-form-element__control">
+                    <div class="slds-select_container">
+                        <ui:inputSelect class="slds-select" aura:id="fromNumber" value="{!v.workflowConfig.gkn_sms__FromNumber__c}" />
+                    </div>
+                </div>
+            </div>			
+            <div class="slds-m-around--small"></div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="objectName">
+                    <abbr class="slds-required" title="required">*</abbr> Select Object</label>
+                <div class="slds-form-element__control">
+                    <div aura:id="objectNameLabel" class="slds-select_container">					
+                        <ui:inputSelect class="slds-select" change="{!c.changeObject12}" aura:id="objectName"
+                                        value="{!v.workflowConfig.gkn_sms__Object_Name__c}" />
+                    </div>
+                </div>
+            </div>
+            <div class="slds-m-around--small"></div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="fieldName">
+                    <abbr class="slds-required" title="To Number is required field">*</abbr> To Number Field
+                </label>
+                <div class="slds-form-element__control">
+                    <div aura:id="toNumberLabel" class="slds-select_container">
+                        <ui:inputSelect class="slds-select" aura:id="fieldName" value="{!v.workflowConfig.gkn_sms__toNumber__c}" />
+                    </div>
+                </div>
+            </div>
+            <div class="slds-m-around--small"></div>
+            <br/>
+            <div aura:id="desktopAction" class="slds-form-element">
+                <lightning:button aura:id="savebutton" variant="brand" label="Save Workflow Config" onclick="{!c.addNewConfig}" />
+                <lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelConfig}" />
+                <lightning:spinner aura:id="smsSpinner" class="hide" alternativeText="Loading" variant="brand" size="small" />
+            </div>
+        </div>
+        <div class="slds-col slds-p-left--medium " style="width:170px">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="tempList">
+                    <abbr class="slds-required" title="required">*</abbr> Select Template</label>
+                <div class="slds-form-element__control">
+                    <div class="slds-select_container">
+                        <ui:inputSelect class="slds-select" value=""  change="{!c.changeTemplate}" aura:id="tempList" />
+                    </div>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="tempBody">
+                    <abbr class="slds-required" title="required">*</abbr> SMS Content</label>            
+                <div class="slds-form-element__control">
+                    <div class="slds-input_container">
+                        <ui:outputTextarea class="slds-textarea smsbodypreview" aura:id="tempBody" value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-m-around--small"></div>                       
+        </div>
+        <div class="slds-col">&nbsp;</div>
+        <div class="slds-col">&nbsp;</div>
+        <div class="slds-col">&nbsp;</div>
+        <div class="slds-col">&nbsp;</div>
+        <div class="slds-col">&nbsp;</div>
+    </div>
+    <div class="slds slds-p-top--small slds-p-horizontal--small">
+        <div class="slds-form-element slds-hide" aura:id="matcherKey">
+            <label class="slds-text-heading_small slds-form-element__label" for="outputMatcherKey">
+                Copy following text and paste in <strong>task description field</strong>.
+            </label>
+            <div class="slds-form-element__control">
+                <div class="slds-input_container">
+                    <ui:outputText class="slds-input" aura:id="outputMatcherKey" value="{!v.matchKey}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-m-around--medium"></div>
+    <div class="workflow-config-list slds-p-horizontal--small slds">
+        <div style="slds-m-around--small slds-m-left--medium slds">
+            <span class="slds-text-heading--small">Workflow configuration List</span>
+        </div>
+        <div class="slds">
+            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal" role="grid">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th>S.NO.</th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Configuration Name">Config Name</div>
+                        </th>                        
+                        <th scope="col">
+                            <div class="slds-truncate" title="Object Name">Object</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="To Number">To Number</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="From Number">From Number</div>
+                        </th> 
+                        <th scope="col">
+                            <div class="slds-truncate" title="Country Code">Country Code</div>
+                        </th> 
+                        <th data-label="col">
+                            <div class="slds-truncate" title="Unique Key">Unique Key</div>
+                        </th>                        
+                        <th scope="col">
+                            <div class="slds-truncate" title="Action">Action</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration var="item" items="{!v.workflowList}" indexVar="index">
+                        <tr>
+                            <td data-label="S.N">
+                                <div class="slds-truncate" title="S.N.">{!index+1}</div>
+                            </td>
+                            <td data-label="Config Name">
+                                <div class="slds-truncate" title="">{!item.Name}</div>
+                            </td>
+                            <td data-label="Object Name">
+                                <div class="slds-truncate" title="">{!item.gkn_sms__Object_Name__c}</div>
+                            </td>
+                            <td data-label="To Number">
+                                <div class="slds-truncate" title="">{!item.gkn_sms__toNumber__c}</div>
+                            </td>
+                            <td data-label="From Number">
+                                <div class="slds-truncate" title="">{!item.gkn_sms__FromNumber__c}</div>
+                            </td>  
+                            <td data-label="Country Code">
+                                <div class="slds-truncate" title="">{!item.gkn_sms__Country_Code__c}</div>
+                            </td>
+                            <td data-label="Unique Key">
+                                <div class="slds-truncate" title="">{!item.gkn_sms__Matcher_Key__c}</div>
+                            </td>                            
+                            <td data-label="Actions">
+                                <lightning:button variant="brand"
+                                                  value="{!item}" label="Edit" onclick="{!c.editFromNumber}"
+                                                  iconName="utility:edit" iconPosition="left" /> 
+                                <lightning:button value="{!item}" onclick="{!c.deleteAlert}" variant="destructive" label="Delete" iconName="utility:delete"
+                                                  iconPosition="left" />
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <aura:if isTrue="{!v.isDelete==true?true:false}">
+        <div role="alertdialog" tabindex="-1"
+             aria-labelledby="prompt-heading-id"
+             aria-describedby="prompt-message-wrapper"
+             class="slds-modal slds-fade-in-open slds-modal--prompt">
+            <div class="slds-modal__container">
+                <div
+                     class="slds-modal__header slds-theme--error slds-theme--alert-texture">
+                    <lightning:button variant="slds-button" value="No" onclick="{!c.deleteConfirm}"
+                                      class="slds-button slds-modal__close slds-button--icon-inverse"
+                                      title="Close">
+                        <lightning:icon variant="inverse" iconName="utility:close" size="small"/>
+                        <span class="slds-assistive-text">Close</span>
+                    </lightning:button>
+                    <h2 class="slds-text-heading--medium" id="prompt-heading-id">WARNING!</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <p>Are you sure you want to delete "<strong><ui:outputPhone value="{!v.deleteRecord.Name}"/></strong>"?</p>
+                </div>
+                <div class="slds-modal__footer slds-theme--default">
+                    <lightning:button value="No" onclick="{!c.deleteConfirm}" class="slds-button slds-button--neutral" label="No"/>
+                    <lightning:button value="{!v.deleteRecord}" onclick="{!c.deleteConfirm}" class="slds-button slds-button--neutral" label="Yes"/>
+                </div>				
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+    </aura:if>
+</aura:component>

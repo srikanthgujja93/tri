@@ -1,0 +1,303 @@
+<apex:page controller="wk_wedge.userOrders" standardstylesheets="false" setup="false" showheader="false" cache="false">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+        <div class="container">
+          <title> MY ORDERS</title>
+            <style>
+                .order-start-wrap{
+                    margin-top:15px;
+                }
+                .unit-order-wrap{
+                    border-bottom:1px solid #ccc;
+                    margin-top: 15px;
+                    padding: 10px;
+                    padding-top: 0;                    
+                }
+                h4.order-count{
+                    display:block;
+                    padding-bottom:15px;
+                    border-bottom:1px solid #ccc;
+                }
+                .order-details-button, .order-details-button:hover, .order-details-button:active, .order-details-button:focus{
+                    text-decoration:none;
+                    display: inline-block;
+                    background-color: #4BBA60;
+                    color: #fff;
+                    width: 160px;
+                    padding: 10px;
+                    margin: 5px 0px;
+                    cursor:pointer;
+                    text-align: center;
+                    border-radius: 3px;
+                }
+                .order-status-note{
+                    text-decoration:none;
+                    display: block;
+                    background-color: #0086C0;
+                    color: #fff;
+                    width: 160px;
+                    padding: 10px;
+                    margin: 5px 0px;
+                    text-align: center;
+                    border-radius: 3px;
+                }
+                .unitproduct{
+                    margin:10px;
+                    display:inline-block;
+                }
+                .unitproduct img{
+                    border:1px solid #ccc;
+                }
+                .unitproduct .unitproduct-url{
+                    display:inline-block;
+                    vertical-align:middle;
+                    cursor:pointer;
+                }   
+                .unitproduct .unitproduct-details{
+                    margin-left:15px;
+                    display:inline-block;
+                    vertical-align:middle;
+                }
+                .unitproduct-details>span {
+                    font-weight: 700;
+                    display: block;
+                    margin-top: 10px;
+                 }
+
+                a.mor-prod {
+                 color: #0086C0;
+                 padding-left: 10px;
+                    font-weight: 700;
+                }
+                .status-amount{
+                    float:right;
+                    
+                    margin-top: 28px;
+                    font-weight: 700;
+                }
+                 .prdname-url, .prdname-url:hover, .prdname-url:active, .prdname-url:focus{
+                     color:#333;
+                     font-weight:bold;
+                 }
+                 .wdg-ctrl--btn {
+                    position: relative;
+                    width: 30px;
+                    height: 30px;
+                    outline: none;
+                    border: none;
+                    border-radius: 3px;
+                    cursor: pointer;
+                    margin-left: 5px;
+                    vertical-align: middle;
+                    display: inline-block;
+                }
+                .wdg-ctrl--btn.paginate {
+                    background-color: #0088BB;
+                    vertical-align: middle;
+                }
+                .wdg-ctrl--btn>span {
+                    background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite-icon.png')}') no-repeat;
+                    width: 15px;
+                    height: 15px;
+                    position: absolute;
+                    display: inline-block;
+                    z-index: 1;
+                }
+                .searchstring{
+                    margin: 0 5px 0 20px;
+                    border-radius: 3px;
+                    border: 1px solid #0087C1;
+                    font-size: 14px;
+                    padding: 2px;
+                }
+                .searchstring:focus{
+                    outline: none;
+                }
+                .searchRecordPanel{
+                    display: inline-block;
+                    background: #0087C1;
+                    border: 1px solid #0087C1;
+                    border-radius: 2px;
+                }
+                .searchRecordPanel a{
+                    display: inline-block;
+                    background-color: transparent;
+                    background-repeat: no-repeat;
+                    margin-right: 5px;
+                    vertical-align: middle;
+                    color: #fff;
+                    padding: 3px 10px;
+                    font-weight: 700;
+                }
+                input.searchstring{
+                    margin-left: 5px;
+                    border: none;
+                    border-bottom: 0;
+                    border-radius:0;
+                }
+                select.searchstring{
+                    background: #fff;
+                    height: 26px;
+                    vertical-align: bottom;
+                    margin-left: 10px;
+                }
+                .searchpanel{
+                    float: right;
+                }
+                .searchpanel div{
+                    display: inline-block;
+                    border-bottom: 1px solid #0087C1;
+                    padding-bottom: 0px;
+                    margin-right: 4px;
+                }
+                .wdg-ctrl--btn.paginate.first>span {
+                    background-position: -30px -135px;
+                }
+                .wdg-ctrl--btn.paginate>span {
+                    height: 10px;
+                    width: 15px;
+                    top: 10px;
+                    left: 8px;
+                }
+                .wdg-ctrl--btn.paginate.Prev>span {
+                    background-position: 0px -135px;
+                }
+                .wdg-ctrl--btn.paginate.next>span {
+                    background-position: -15px -135px;
+                }
+                .wdg-ctrl--btn.paginate.last>span {
+                    background-position: -45px -135px;
+                }
+                .wdg-dataTable--paginate{
+                    text-align: center;
+                    margin: 35px 10px; 
+                }
+                @media screen and (max-width: 542px){
+                    
+                    
+                    .status-amount{
+                        margin-top:0;
+                    }
+                }
+                @media screen and (max-width: 542px){
+                    .order-details-button, .order-details-button:hover, .order-details-button:active, .order-details-button:focus{
+                        display: block;
+                        width: 100%;
+                    }                   
+                    .order-status-note{
+                        display: block;
+                        width: 100%;
+                    }
+                    .unitproduct .unitproduct-url{
+                        display: block;
+                        text-align: center;
+                    }
+                    .unitproduct {
+                        width: 100%;
+                        margin: 10px 0;
+                    }
+                    .unitproduct .unitproduct-url{
+                        display: block;
+                        text-align: center;
+                    }
+                    .unitproduct .unitproduct-details{
+                        display: block;
+                        width: 100%;
+                        margin-left: 0;
+                        text-align: center;
+                    }
+                    .status-amount{
+                        float: unset;
+                        text-align: center;
+                        margin-top:0;
+                    }
+                    a.mor-prod{
+                        text-align: center;
+                        width: 100%;
+                        display: block;
+                    }
+                }                
+            </style>
+            <apex:outputpanel layout="block" id="orderWrap">
+                <apex:outputpanel layout="block"  rendered="{!allorders!=null}" >
+                    <div class="container order-start-wrap">
+                       <h4 class="oxy-20-bold  order-count"> 
+                           {!$Label.wk_wedge__myorder_your_orders} ({!TotalCount})
+                            <apex:form >
+                            <apex:outputPanel style="float: right;font-weight: 500;margin-top: -24px;">
+                                <apex:selectList size="1" value="{!recordValue}" onchange="fetchrecordpage()" styleclass="searchstring" rendered="{!allorders.size>0}">
+                                    <apex:selectOptions value="{!recPerPage}"/>
+                                </apex:selectList>
+                             </apex:outputPanel>                         
+                             <!--<apex:outputPanel >
+                                <apex:inputText value="{!searchQuery}" html-placeholder="Search Orders.." styleclass="searchstring"/>
+                                <apex:outputpanel styleclass="searchRecordPanel" title="Search">
+                                    <apex:commandLink value="" action="{!searchResults}" rerender="orderList,orderPaginate"/>
+                                </apex:outputpanel>
+                             </apex:outputPanel>-->
+                             <apex:actionFunction name="fetchrecordpage" action="{!fetchrecordpage}" rerender="orderList,orderPaginate"/>
+                           </apex:form>   
+                        </h4>                       
+                        <apex:outputpanel layout="block" id="orderList">
+                            <apex:repeat value="{!allorders}" var="ord" >
+                                <div class="unit-order-wrap">
+                                    <div class="clearfix">
+                                        <a class="order-details-button " href="{!URLFOR($Page.wk_wedge__OrderDetails,null,['ord'=ord.ordernumber])}">{!ord.ordernumber}</a>
+                                        <span class="order-status-note pull-right" >{!ord.status}</span>
+                                    </div>
+                                    <apex:outputpanel layout="block"  styleclass="order-product-wrap clearfix" rendered="{!AND(ord.orderitems!=null,ord.orderitems.size>0)}">
+                                        <apex:repeat var="prod" value="{!ord.orderitems[0]}">
+                                            <div class="unitproduct">
+                                                <a href="{!URLFOR($Page.productdetail,null, ['productid'=prod.pricebookentry.product2.id])}"
+                                                 class="unitproduct-url">
+                                                    <apex:image url="/servlet/servlet.FileDownload?file={!prod.pricebookentry.product2.image_id__C}" width="100px" height="100px"/>
+                                                </a>
+                                                <div class="unitproduct-details">
+                                                    <a href="{!URLFOR($Page.productdetail,null, ['productid'=prod.pricebookentry.product2.id])}" class="prdname-url"> 
+                                                        <span>{!prod.pricebookentry.product2.name}</span>
+                                                    </a>
+                                                    <span>{!prod.description}</span> 
+                                                    <span>{!prod.pricebookentry.product2.productcode} </span>
+                                                    <span>{!prod.Quantity} &#215; {!currsymbol}&nbsp;<apex:outputtext value="{0,number,###,##0.00}">
+                                                        <apex:param value="{!prod.pricebookentry.unitprice * exchangeRate}"/> </apex:outputtext></span>
+                                                    <span>{!$Label.wk_wedge__myorder_paid_by} : {!ord.Payment_Methods__r.name}</span>
+                                                    <span>{!$Label.wk_wedge__myorder_total_return_request} : {!ord.Return_requests__r.size}</span>
+                                                </div>
+                                            
+                                            </div>
+                                            <div class="status-amount">
+                                                <span>{!$Label.wk_wedge__myorder_total_amount} : {!currsymbol}&nbsp;<apex:outputtext value="{0,number,###,##0.00}">
+                                                     <apex:param value="{!ord.totalAmount * exchangeRate}"/>
+                                                </apex:outputtext></span>
+                                                
+                                            </div>
+                                            
+                                        </apex:repeat>                                    
+                                    </apex:outputpanel>
+                                    <apex:outputlink rendered="{!IF(ord.orderitems.size>1,true,false)}" styleclass="mor-prod" value="{!URLFOR($Page.wk_wedge__OrderDetails,null,['ord'=ord.ordernumber])}"> order have  {!ord.orderitems.size-1} more products </apex:outputlink>
+                                </div>
+                            </apex:repeat>
+                        </apex:outputpanel>
+                        <apex:form id="orderPaginate">
+                            <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                <apex:outputpanel rendered="{!allorders.size>0}">
+                                    
+                                    <apex:commandlink value="" action="{!first}" status="docSearch" rerender="orderList,orderPaginate" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                    <apex:commandlink value="" action="{!previous}" status="docSearch"  rerender="orderList,orderPaginate"  styleclass="wdg-ctrl--btn paginate  Prev"><span></span></apex:commandlink>
+                                    <apex:outputText styleclass="wdg-dataTable--pages" value=" {!pagenumber} of {!totalPages} "></apex:outputText>
+                                    <apex:commandlink value="" action="{!next}" status="docSearch" rerender="orderList,orderPaginate" styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                    <apex:commandlink value="" action="{!last}" status="docSearch"  rerender="orderList,orderPaginate" styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                </apex:outputpanel> 
+                                <apex:outputpanel rendered="{!allorders.size==0}">
+                                    <div class="No-Product">{!$Label.wk_wedge__blog_no_records_returned}</div>
+                                </apex:outputpanel>
+                            </apex:outputpanel>
+                        </apex:form>
+                    </div>
+                </apex:outputpanel>
+            </apex:outputpanel>
+            </div>
+        </apex:define>
+    </apex:composition>
+
+</apex:page>

@@ -1,0 +1,208 @@
+<apex:page controller="wk_wedge.orderconfirm" showheader="false" standardstylesheets="false" setup="false" title="order Status">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+                   <TITLE>ORDER CONFIRM</TITLE>
+
+            <style>
+               .wdg-msg--box{
+                    height: 500px;
+                    width: 600px;
+                    margin: 6% auto;
+                    padding:1px 60px;
+                    box-shadow: 0px 0px 15px 4px #ccc;
+                    border-radius: 3px;
+                    text-align:center;
+                }
+                .wdg-msg--box.height-extra{
+                    height: 550px;
+                }
+                .wdg-msg--box .wdg-order-confirm {
+                    width: 215px;
+                    height: 214px;
+                    margin: 35px auto;
+                    background: transparent  url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/image.png')}") no-repeat center ;
+                    background-size: contain;
+                }
+                .wdg-msg--box .wdg-order-failed{
+                    width:250px;
+                    height:215px;
+                    margin:35px auto;
+                    background:transparent  url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/paymentfailed.png')}") no-repeat center;
+                    background-size: contain;
+                }
+                .wdg-msg--box .wdg-msg-title{
+                    text-align:center;
+                    font-size:16px;
+                    font-weight:700;
+                }
+                .wdg-msg--box .wdg-msg-title.highlight{
+                    font-size:30px;
+                }
+                .wdg-msg--box .wdg-msgbox--input{
+                    display: block;
+                    margin: 0 auto;
+                    padding: 6px 12px;
+                    border-radius: 3px;
+                    border-width: 1px;
+                    border-style: solid;
+                    width: 300px;
+                    margin-top: 25px;
+                    margin-bottom: 25px;
+                    border-color: #adadad;
+                    outline: none;
+                }
+                .wdg-msg--box .wdg-msgbox--btn{
+                    margin-top:20px;
+                }
+                @media screen and (max-width: 675px) {
+                    .wdg-msg--box{
+                        height: unset;
+                        width: unset;
+                        padding: 1px 10px;
+                    }
+                    .wdg-msg--box .wdg-msgbox--btn{
+                        margin-bottom: 20px;
+                    }
+                }
+                @media screen and (max-width: 420px) {                  
+                    .wdg-msg--box .wdg-order-failed{
+                        width: unset;
+                        height: 175px;
+                    }
+                    .wdg-msg--box .wdg-order-confirm{
+                        width: unset;
+                        height: 175px;
+                    }                   
+                }
+            </style>
+        <div class="container">
+          <apex:outputpanel layout="block" styleclass="wdg-msg--box" id="thisblock">
+                <apex:form >
+                    <apex:outputpanel layout="block" styleclass="{!IF(paymentstatus=='Completed','wdg-order-confirm','wdg-order-failed')}"></apex:outputpanel>
+                    <p class="wdg-msg-title highlight">
+                        <apex:outputText value="{!IF(paymentstatus=='Completed','Success!!!','Payment Failed !!!')}"></apex:outputText>
+                    </p>
+                    <p class="wdg-msg-title">
+                        <apex:outputText rendered="{!(paymentstatus=='Completed')}" value="Your order has been successfully placed. You can view order details by clicking on below button"></apex:outputText>
+                    </p>
+                    <apex:commandlink action="{!Orderdetails}" rendered="{!(paymentstatus=='Completed')}" styleclass="wdg-btn blue large wdg-msgbox--btn">Order Details</apex:commandlink>
+                    <apex:outputlink value="{!$Site.baseURL}" rendered="{!NOT(paymentstatus=='Completed')}" styleclass="wdg-btn gray large wdg-msgbox--btn">Back To Home</apex:outputlink>
+                    <apex:actionfunction name="updateOrder" action="{!updateorder}" rerender="notice,cartItems" status="docSearch" oncomplete="closenotifications()"/>
+                </apex:form> 
+            </apex:outputpanel>
+            </div>   
+            <script>
+                (function(wk){
+                     wk( window).load(function(){
+                            updateOrder(); 
+                         
+                     });
+                  })(jQuery);
+                    
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>
+<!--
+<apex:page controller="wk_wedge.orderconfirm" showheader="false" standardstylesheets="false" setup="false" title="order Status">
+     <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+              <TITLE>ORDER CONFIRM</TITLE>
+
+            <style>
+                .wrapper{
+                    height:auto;
+                }
+                .order-confirm .box-wrap{
+                        border: 1px solid #ccc;
+                        box-shadow: 0 0 5px #888;
+                        margin: 0 auto;
+                        min-height: 450px;
+                        width: 600px;
+                        padding:20px;
+                        text-align:center;
+                    
+                }
+                .order-confirm  .ord-msg{
+                    margin:0 auto;
+                    font-size:24px;
+                    margin:20px 0px;
+                }
+                .order-confirm  .order-msg-img{
+                    margin:20px auto;
+                    
+                }
+                .order-msg-img.order-msg-img-failed{
+                    width:250px;
+                    height:215px;
+                    background:transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/all-images/paymentfailed.png')}') no-repeat center center;
+                }
+                .order-msg-img.order-msg-img-congrats{
+                    width:215px;
+                    height:215px;
+                    background:transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/all-images/image.png')}') no-repeat center center;
+                }
+
+                .info-panel-btn,.info-panel-btn:hover,.info-panel-btn:active,.info-panel-btn:focus {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    border-radius: 3px;
+                    background-color: #0086C0;
+                    vertical-align: middle;
+                    color: #fff;
+                    min-width: 100px;
+                    text-align: center;
+                }
+                .margin-20{
+                    margin:20px 0px;
+                }
+                a.backToHome{
+                    color:#1366B2;
+                }
+                a.backToHome::before{
+                    vertical-align:middle;
+                    content:"";
+                    width:16px;
+                    height:8px;
+                    display:inline-block;
+                    margin-right:10px;
+                    background:transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/all-images/arrow.png')}') no-repeat center center;
+                }
+            </style>
+            <apex:outputpanel layout="block" styleclass="order-confirm" id="thisblock">
+                <apex:outputpanel styleclass="container" layout="block">
+                    <apex:outputpanel layout="block" styleclass="row">
+                        <apex:outputpanel styleclass="col-xs-12" layout="block">
+                            <apex:outputPanel styleclass="box-wrap" layout="block">
+                                <h4 class="oxy-20-bold ord-msg"><apex:outputtext >{!IF(paymentstatus=='Completed','Congratulations','Payment Failed')}</apex:outputtext></h4>
+                                <apex:outputpanel layout="block" styleclass="order-msg-img {!IF(paymentstatus=='Completed','order-msg-img-congrats','order-msg-img-failed')}">
+                                </apex:outputpanel>
+                                <apex:outputpanel layout="block" rendered="{!(paymentstatus=='Completed')}">
+                                    <p>Your order has been successfully placed. You can view order details by clicking on below button.</p>
+                                </apex:outputpanel>
+                                <apex:outputpanel layout="block" styleclass="margin-20">
+                                    <apex:form >
+                                        <apex:commandlink action="{!Orderdetails}" styleclass="{!IF(paymentstatus=='Completed','info-panel-btn','backToHome')}">{!IF(paymentstatus=='Completed','Order detais','Back to Home')}</apex:commandlink>
+                                    </apex:form>
+                                </apex:outputpanel>
+                            </apex:outputPanel>
+                        </apex:outputpanel>
+                    </apex:outputpanel>
+                </apex:outputpanel>
+            </apex:outputpanel>
+            <apex:form >
+                <apex:actionfunction name="updateOrder" action="{!updateorder}" rerender="thisblock,cart" status="docSearch"/>
+            </apex:form>
+            <script>
+                (function(wk){
+                     wk( window).load(function(){
+                            updateOrder(); 
+                         
+                     });
+                  })(jQuery);
+                    
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>
+-->

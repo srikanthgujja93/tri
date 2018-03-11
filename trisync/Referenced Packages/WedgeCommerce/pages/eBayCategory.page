@@ -1,0 +1,6 @@
+<apex:page showHeader="false" title="Customers" standardStylesheets="false" docType="HTML-5.0" cache="false">
+   <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+        </apex:define>
+   </apex:composition>
+</apex:page>

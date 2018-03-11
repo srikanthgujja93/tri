@@ -1,0 +1,109 @@
+<apex:page controller="wk_wedge.all_categories" showHeader="false" standardStylesheets="false">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+            <TITLE>All Categories</TITLE>
+
+            <style>
+                .cat_link{
+                    display:block;
+                    color:black;
+                    padding: 3px 0;
+                    padding:10px;
+                }
+                .head_link{
+                    font-weight:bold;
+                    margin-bottom: 10px;
+                }
+                .head_link:hover{
+                    color:black;
+                }
+                .cat-box{
+                    background-color:#EEEEEE;
+                    margin-top:10px;
+                }
+            </style>
+            <div class="container">                
+                <div class="row" id="cat-container">
+                    <div class="col-md-3" id="col_1">
+                        
+                    </div>
+                    <div class="col-md-3" id="col_2">
+                        
+                    </div>
+                    <div class="col-md-3" id="col_3">
+                        
+                    </div>
+                    <div class="col-md-3" id="col_4">
+                        
+                    </div>
+                </div>
+            </div>
+            <script>
+                var categoriesJSON = '{!JSENCODE(jsonstring)}';
+                generateCategoryView();
+                function generateCategoryView(){
+                    var categoriesArr = JSON.parse(categoriesJSON);
+                    var total = categoriesArr.length
+                    for(var i=0;i<categoriesArr.length;i++){
+                        if(categoriesArr[i].haschildren)
+                        total += categoriesArr[i].children.length;
+                    }
+                    var per_block = total/4;
+                    //console.log(total + ' ' + per_block);
+                    var shown = 0;
+                    var cur_block = 1;
+                    var cur_block_count = 0;
+                    for(var i=0;i<categoriesArr.length;i++){
+                        if(categoriesArr[i].haschildren){
+                            console.log(categoriesArr[i].children.length/2 + ' ' + (per_block-cur_block_count));
+                            if(categoriesArr[i].children.length/2 >= per_block-cur_block_count && cur_block<4){
+                                shown += cur_block_count;
+                                per_block = (total - shown)/(4-cur_block);
+                                //console.log(cur_block_count + ' ' + cur_block + ' ' + shown);
+                                cur_block++;
+                                //console.log(cur_block);
+                                cur_block_count = 0;
+                            }
+                        }else{
+                            if(cur_block_count >= per_block){
+                                cur_block++;
+                                shown++;
+                                cur_block_count = 0;
+                            }
+                        }
+                        cur_block_count++;
+                        var name = categoriesArr[i].title;
+                        if(name.length>35){
+                            name = name.substring(0,30)+'...';
+                        }
+                        $("#col_"+cur_block).append('<div id="container_'+categoriesArr[i].alias.replace(/-/g,'_')+'" class="cat-box"></div>');
+                        var divblock = $("#col_"+cur_block).children('div').last();
+                        if(categoriesArr[i].imgid!=undefined && categoriesArr[i].imgid!=''){
+                            $(divblock).append('<img src="/servlet/servlet.FileDownload?file='+categoriesArr[i].imgid+'" class="img-responsive"/>');
+                        }
+                           //console.log(categoriesArr[i].imgid);
+                        $(divblock).append('<a href="'+categoriesArr[i].alias+'" class="cat_link head_link">'+name+'</a>');
+                        if(categoriesArr[i].haschildren){
+                            //console.log(cur_block_count+categoriesArr[i].children.length);
+                            /*if(cur_block_count+categoriesArr[i].children.length >= per_block){
+                                per_block = (total - shown)/(4-cur_block);
+                                cur_block++;
+                                console.log(cur_block);
+                                cur_block_count = 0;
+                            }*/
+                            cur_block_count+=categoriesArr[i].children.length;
+                            for(var j=0;j<categoriesArr[i].children.length; j++){
+                                var subname = categoriesArr[i].children[j].title;
+                                if(subname.length>35){
+                                    subname = subname.substring(0,30)+'...';
+                                }
+                                $(divblock).append('<a href="'+categoriesArr[i].alias+'/'+categoriesArr[i].children[j].alias+'" class="cat_link">'+subname+'</a>');
+                            }
+                        }
+                    }
+                    //console.log(total);
+                }
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

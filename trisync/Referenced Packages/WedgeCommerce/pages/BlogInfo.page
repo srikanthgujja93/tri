@@ -1,0 +1,128 @@
+<apex:page controller="wk_wedge.blogViewController"  doctype="html-5.0" setup="false" standardstylesheets="false" showHeader="false" cache="false" > 
+      <TITLE>{!Article[0].Page_Title__c}</TITLE>
+    <meta name="description" content="{!Article[0].Meta_Description__c}"/>
+    <meta name="keywords" content="{!Article[0].Meta_Keywords__c}"/>
+    <link rel="canonical" href="{!Article[0].Canonical_URL__c}" />
+       <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+          <style>
+              .blog_image{
+                
+              }
+              .blog_name{
+                  margin:40px auto 0px;
+                  
+              }
+             .blog_date{
+                  display: inline-block;
+                  margin-bottom: 15px;
+                  margin-right: 10px;
+                  color: #bbb;
+                  font-weight: normal;
+                  margin-left:10px;
+                  font-size: 14px;
+                }
+            .blog_seprator{
+                 display: inline-block;
+                  margin-bottom: 15px;
+                  color: #bbb;
+                  font-weight: normal;
+                  font-size: 14px;
+            }
+            .blog_description{
+                  margin:20px 10px 30px;
+                  text-align:justify; 
+            }
+            .recentblog_item{
+                list-style-type: square;
+                color: #ccc;
+                margin-bottom: 10px;
+             }
+             .recentblog_item>a{
+                 color:#2B83BF;
+             }
+             .recent_blog{
+                 border-bottom:1px solid #ccc;
+                 padding-bottom:5px;
+             }
+              .wedge-blog--blog{
+                    font-family: 'Oxygen', sans-serif;
+              }
+              @media (max-width: 991px){
+                    .recentblogs{
+                        display: none;
+                    }
+                    /*h2.recent_blog,ul.recentblog__list{ 
+                        display: none;
+                    }*/
+                }
+                @media (max-width: 475px){
+                    
+                    .wdg-site--breadcrumbs{
+                        padding: 20px 0 0;
+                    }
+                    .blog_name{
+                        margin: 0;
+                    }
+                    h2,.blog_userInfo,.blog_readmore{
+                        text-align: center;
+                    }
+                    
+                    
+                }
+          </style>
+          
+        <div class="container">
+            <TITLE>Blog</TITLE>
+            <div class="fullpageWrap">
+                <div class="container">
+                    <div class="row">
+                     <div class="col-md-9 wdg-site--breadcrumbs">
+                         <apex:outputPanel >
+                             <apex:outputLink value="{!$Site.baseurl}"><i class="wdg-home--logo"></i></apex:outputLink>
+                             <apex:outputText >&nbsp;/&nbsp;</apex:outputText>
+                             <apex:outputLink value="{!$Site.baseurl}/Blog">{!$Label.wk_wedge__bloginfo_blog}</apex:outputLink>
+                             <apex:outputText >&nbsp;/&nbsp;</apex:outputText>
+                             <apex:outputText styleClass="wedge-blog--blog" value="{!article[0].name}"/>
+                         </apex:outputPanel>
+                      <apex:repeat value="{!article}" var="blog">
+                          <apex:outputpanel layout="block" styleclass="blog_name">
+                           <h2> <apex:outputText value="{!blog.name}" styleClass=""></apex:outputText> </h2>
+                          </apex:outputpanel>
+                          <apex:outputPanel layout="block" styleClass="blog_userInfo">
+                               <apex:outputText value="{0,date,MM/dd/yy}" styleClass="blog_date">
+                                    <apex:param value="{!blog.CreatedDate}" />                                   
+                            </apex:outputText>
+                            <span class="blog_seprator">|</span>
+                            <apex:outputText value="{!blog.CreatedBy.firstname}"  styleClass="blog_date"></apex:outputText>                          
+                          </apex:outputPanel>
+                          <apex:outputpanel layout="block" styleclass="blog_image"> 
+                              <apex:image styleclass="blog_image img img-responsive" url="/servlet/servlet.FileDownload?file={!blog.wk_wedge__Banner_Image_ID__c}" height="300" width="848"/>
+                          </apex:outputpanel>
+                          <apex:outputpanel layout="block" styleclass="blog_description"> 
+                             <apex:outputText value="{!blog.wk_wedge__Post_Description__c}" escape="false" styleClass=""></apex:outputText>
+                          </apex:outputpanel>
+                       </apex:repeat>
+                      </div>
+                      <div class="col-md-3 recentblogs">
+                         <div>
+                             <h2 class="recent_blog">{!$Label.wk_wedge__bloginfo_recent_blogs}</h2>
+                             <div>
+                                <ul class="recentblog__list">
+                                  <apex:repeat value="{!RecentArticle}" var="blog">
+                                    <li class="recentblog_item">
+                                        <a href="{!URLFOR($Page.wk_wedge__BlogInfo, null, ['blogId'=blog.id])}">{!blog.name}</a>
+                                    </li>
+                                  </apex:repeat>
+                                </ul>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+           </div>
+        </apex:define>
+   </apex:composition>
+
+</apex:page>

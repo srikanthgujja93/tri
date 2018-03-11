@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <auraComponent>ListSMSTemplate</auraComponent>
+    <icon>Girikon_SMS/table_icon.png</icon>
+    <label>SMS Template List</label>
+    <mobileReady>false</mobileReady>
+    <motif>Custom196: TV Widescreen</motif>
+</CustomTab>

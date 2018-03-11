@@ -1,0 +1,180 @@
+<apex:page showheader="False" standardstylesheets="false" title="Add Currency" controller="wk_wedge.AddToWallet" doctype="html-5.0">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <style>
+            .wdg-nav-icon.walletsystem {
+                    background-color: #34becd;
+                }
+                .oauthclass{
+                    width:50px;
+                }
+                .wdg-Notedata{
+                    font-size:12px;
+                    color:red;
+                }
+                .connectbutton:hover{
+                    cursor:pointer;
+                }
+                .connectbutton:disabled{
+                    background-color: darkgrey;
+                    cursor:not-allowed;
+                }
+                .newwidth{
+                    display:inline !important;
+                    width:95% !important;
+                }
+                .disabled{
+                    width:95% !important;
+                    display: inline-block !important;
+                }
+                .wdg-form--table input[type="date"], .wdg-form--table input[type="number"] {
+                    padding: 6px;
+                    border-radius: 3px;
+                    font-size: 14px;
+                    color:#222;
+                    border: 1px solid #adadad;
+                    outline: none;
+                    box-shadow: none;
+                    display:block;
+                    width:100%;
+                    box-sizing:border-box;
+                }
+                .wdg-tbl--width10{
+                    width:10%;
+                }
+                .wdg-tbl--width15{
+                    width:15%;
+                }
+                .wdg-tbl--width20{
+                    width:20%;
+                }
+                .wdg-tbl--width40{
+                    width:40%;
+                }
+                .wdg-tbl--cell{
+                    padding:10px;
+                    text-align:center
+                }
+                .wdg-tbl--cell:first-child, .wdg-tbl--cell:last-child{
+                    padding-left:0;
+                }
+            </style>
+            <apex:form styleclass="wdg-dataentry--form">
+            
+                <div class="wdg-body">
+                    <apex:messages styleClass="wdg-error--msg"/>
+                   
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo walletsys"></span>
+                            <span>Update Wallet</span>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:commandlink styleclass="wdg-ctrl--btn save " onclick="validateSave()" rerender="none">
+                                <span></span>
+                            </apex:commandlink>
+                            <a href="{!$page.WalletListing}" class="wdg-ctrl--btn cancel"> 
+                                <span></span>
+                            </a>
+                         </div>  
+                    </div>
+                     <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-form--box">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active">
+                                    <a href="javascript:void(0)" data-target="general">General</a>
+                                </li>
+                                <!--<li >
+                                    <a href="javascript:void(0)" data-target="Transactions">Transactions</a> 
+                                </li>-->
+                            </ul>
+                        </div>
+                        <div id="general" class="wdg-form--content">
+                            <div class="wdg-form--block">
+                                <div class="wdg-form--blocktitle">
+                                    <span>Information </span>
+                                </div>
+                                <div class="wdg-form--blockfields">
+                                    <table class="wdg-form--table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >User:</apex:outputLabel>
+                                                    <span><c:ToolTip helptext="Enter the User ID"/></span>
+                                                </td>
+                                                <td class="field">
+                                                    <div class="requiredInput">
+                                                        <div class="requiredBlock"></div>
+                                                        <apex:inputHidden value="{!CurrUsr}"/>
+                                                        <apex:inputText value="{!CurrUsr}" styleclass="newwidth" required="true" disabled="true"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >Add Amount:</apex:outputLabel>
+                                                    <span><c:ToolTip helptext="Enter the Amount to update"/></span>
+                                                </td>
+                                                <td class="field">
+                                                    <div class="requiredInput">
+                                                        <div class="requiredBlock"></div>
+                                                        <apex:inputText value="{!CurrAmt}" styleclass="newwidth" required="true" id="curramt"/>
+                                                    </div>
+                                                    <span id="amterr" class="wdg-Notedata"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >Notes:</apex:outputLabel>
+                                                    <span><c:ToolTip helptext="Enter Notes for Update (if any)"/></span>
+                                                </td>
+                                                <td class="field">
+                                                    <div class="requiredInput">
+                                                        <div class="requiredBlock"></div>
+                                                        <apex:inputTextarea value="{!reason}" required="true" id="wt-notes"/>
+                                                    </div>
+                                                    <span id="noteserr" class="wdg-Notedata"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <td  class="label"></td>
+                                        </tfoot>
+                                    </table>
+                                    <apex:actionFunction action="{!savedata}" name="initSave"/>
+                                </div>
+                            </div>
+                            <span class="wdg-Notedata" >NOTE: To debit from Wallet add the currency amount in Negative.</span>
+                        </div>
+                    </apex:outputpanel>  
+                </div>
+            </apex:form>
+            <script>
+                $('.wdg-form--headeroptions li').click(function(){
+                    $('#'+$('.active').find('a').attr('data-target')).css('display','none');
+                    var newactive = '#'+$(this).find('a').attr('data-target');
+                    $(newactive).css('display','block');
+                    //console.log($('.active').find('a').attr('data-target'));
+                    //console.log($(this));
+                });
+            	function validateSave(){
+                    var valid = true;
+                    $('#amterr').text('');
+                    $('#noteserr').text('');
+                    var amount = $('input[id$=curramt]').val();
+                    if(amount == undefined || amount == '' || !$.isNumeric(amount)){
+                        valid = false;
+                        $('#amterr').text('Amount must not be empty and must be a number');
+                    }
+                    var desc = $('[id$="wt-notes"]').val();
+                    if(desc == undefined || desc == ''){
+                        valid = false;
+                        $('#noteserr').text('Notes are required.');
+                    }
+                    if(valid)
+                    	initSave();
+                }
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

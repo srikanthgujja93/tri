@@ -1,0 +1,130 @@
+<aura:component controller="wk_wedge.StoreAdminLightning">
+    <ltng:require styles="{!$Resource.wk_wedge__SLDS +'/assets/styles/salesforce-lightning-design-system-ltng.css'}"/>
+    <aura:attribute name="article" type="Object[]"/>
+	<aura:attribute name="pricebookoptions" type="Object[]"/>
+    <aura:attribute name="portalAccountoptions" type="Object[]"/>
+    <aura:attribute name="accountoptions" type="Object[]"/>
+    <aura:attribute name="Currencyoptions" type="Object[]"/>
+    <aura:attribute name="Templates" type="Object[]"/>
+    <aura:attribute name="useroptions" type="Object[]"/>
+    <aura:attribute name="notificationOption" type="Object[]"/>
+    <aura:attribute name="StoreAdmin" type="wk_wedge__StoreAdmin__c"/>
+    <aura:attribute name="newStoreAdmin" type="wk_wedge__StoreAdmin__c" default="{ 'sobjectType': 'wk_wedge__StoreAdmin__c',
+                         'wk_wedge__User__c':'',
+                         'wk_wedge__StorePriceBook__c':'',                         
+                         'wk_wedge__Store_Portal_Account__c':'',
+                         'wk_wedge__Registered_User_Account__c':'',
+                         'wk_wedge__Guest_Account__c':'',
+                         'wk_wedge__Notification_Timeout__c':0,
+                         'wk_wedge__Currecy_Symbol__c':'',
+                         'wk_wedge__TNC__c':''
+                       }"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.getSelectoptions}"/>
+    
+    <div class="wk_static">
+		<div class="slds-backdrop" aura:id="MB-Back">
+            <div class="cp-spinner cp-balls"></div>
+        </div>        
+		<div class="slds-page-header pageHeader slds-p-around--none" role="banner">			
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size--1-of-2 slds-p-around--x-small">
+                	<div class="slds-has-flexi-truncate">
+                        <div class="slds-media">
+                            <div class="storeadminlarge slds-m-left--medium">
+                                <span ></span>
+                            </div>
+                            <div class="slds-media__body slds-m-left--x-small">
+                                <p class="heading">Store Administration</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size--1-of-2">
+                    <div class="slds-float--right">    
+                        <div class="saveicon slds-m-right--medium" onclick="{!c.createStoreAdmin}">
+                        	<span ></span>
+                        </div>
+                    	<span class="slds-assistive-text">Save</span>
+                    </div>
+                </div>										
+            </div>
+		</div>		
+		<div class="slds-m-around--large">
+        	<div class= "slds-form slds-form_stacked form">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect aura:id="user" value="{!v.newStoreAdmin.wk_wedge__User__c}" label="Store Manager" class="slds-input inputlength" labelClass="slds-form-element__label labellength" >
+                            <aura:iteration items="{!v.useroptions}" var="key">
+                                <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>           
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-top--small">
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect aura:id="pricebook" value="{!v.newStoreAdmin.wk_wedge__StorePriceBook__c}" label="Store Pricebook" class="slds-input inputlength" labelClass="slds-form-element__label labellength" >
+                            <aura:iteration items="{!v.pricebookoptions}" var="key">
+                                <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>           
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-top--small">
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect aura:id="portalAccount" value="{!v.newStoreAdmin.wk_wedge__Store_Portal_Account__c}" label="Portal Account" class="slds-input inputlength" labelClass="slds-form-element__label labellength" >
+                            <aura:iteration items="{!v.portalAccountoptions}" var="key">
+                                <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>           
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-top--small">
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect aura:id="regAccount" value="{!v.newStoreAdmin.wk_wedge__Registered_User_Account__c}" label="Registered User Account" class="slds-input inputlength" labelClass="slds-form-element__label labellength" >
+                            <aura:iteration items="{!v.accountoptions}" var="key">
+                                <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>           
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-top--small">
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect aura:id="guestAccount" value="{!v.newStoreAdmin.wk_wedge__Guest_Account__c}" label="Guest Account" class="slds-input inputlength" labelClass="slds-form-element__label labellength" >
+                            <aura:iteration items="{!v.accountoptions}" var="key">
+                                <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>           
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-top--small">
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect aura:id="notify" value="{!v.newStoreAdmin.wk_wedge__Notification_Timeout__c}" label="Notification Timeout" class="slds-input inputlength" labelClass="slds-form-element__label labellength" >
+                            <aura:iteration items="{!v.notificationOption}" var="key">
+                                <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect> 
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-top--small">
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect aura:id="cursymbol" value="{!v.newStoreAdmin.wk_wedge__Currecy_Symbol__c}" label="Currency Symbol" class="slds-input inputlength" labelClass="slds-form-element__label labellength" >
+                            <aura:iteration items="{!v.Currencyoptions}" var="key">
+                                <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>           
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-top--small">
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect aura:id="articles" value="{!v.newStoreAdmin.wk_wedge__TNC__c}" label="Terms And condition" class="slds-input inputlength" labelClass="slds-form-element__label labellength" >
+                            <aura:iteration items="{!v.article}" var="key">
+                                <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>           
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>    
+</aura:component>

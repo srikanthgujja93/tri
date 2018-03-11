@@ -1,0 +1,3529 @@
+<apex:page standardstylesheets="false" applyhtmltag="false" applybodytag="false" cache="false" showheader="false" doctype="html-5.0" controller="wk_wedge.wedgesiteTemplateContoller" title="wedgeCommerce" language="{!selectedLanguage}">
+    <html class="wdg-full--height">
+        <head> 
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+            <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+            <apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+            <apex:includeScript value="{!URLFOR($Resource.wk_wedge__countryState)}"/>
+            <apex:includeScript value="{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/js/frontend/sha512.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/js/frontend/sha256.js')}"/>
+            <link href='//fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'/>
+            <link rel="manifest" href="{!URLFOR($Resource.pushnotification,'pushnotification/manifest.json')}"/>   
+            <apex:outputPanel id="fb_analytics" rendered="{!fbanalytic}">
+                <!-- Facebook Pixel Code -->
+                <script>
+                !function(f,b,e,v,n,t,s){
+                    
+                    if(f.fbq)
+                        return;
+                    n=f.fbq=function(){
+                        n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)
+                    };
+                    if(!f._fbq)f._fbq=n;
+                    n.push=n;
+                    n.loaded=!0;
+                    n.version='2.0';
+                    n.queue=[];
+                    t=b.createElement(e);
+                    t.async=!0;
+                    t.src=v;
+                    s=b.getElementsByTagName(e)[0];
+                    s.parentNode.insertBefore(t,s)
+                }
+                (window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '{!fbdata}');
+                fbq('track', 'PageView');
+                </script>
+                <noscript>
+                <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={!fbdata}&ev=PageView&noscript=1"/>
+                    </noscript>
+                <!-- End Facebook Pixel Code -->
+                    </apex:outputPanel>
+                <apex:outputpanel id="google_analytics" rendered="{!googleanalytic}">
+                    
+                <!-- Global site tag (gtag.js) - Google Analytics -->
+                <script async="true" src="https://www.googletagmanager.com/gtag/js?id=UA-106154959-1">
+                </script>
+                <script>
+                    window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                
+                gtag('config', '{!googledata}');
+                </script>
+
+            </apex:outputPanel>
+            <site:googleAnalyticsTracking />
+            <script>
+            var siteurl="{!$Site.baseurl}";
+            if(siteurl=="")
+                siteurl='/apex';
+            console.log(siteurl);
+            </script>
+            <style type="text/css">
+                .wdg-full--height{
+                width:100%;
+                height:100%;
+                min-height:100%;
+                }
+                ul#applied-filter,ul.filters-category-wrap{
+                list-style-type:none;
+                margin-top:0px;
+                padding:0;
+                margin-bottom:10px;
+                }
+                
+                #applied-filter li{
+                padding:5px;
+                }
+                .wdg-status--loaderbg{
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                z-index: 223;
+                padding-top: 75px;
+                left: 0;
+                top: 0;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.4);
+                } 
+                .wdg-status--image{
+                height: 80px;
+                width: 80px;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                z-index: 789;
+                border-radius: 50%;
+                margin-left: -35px;
+                margin-top: -35px;
+                background: #fff url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/wedgecommerce-2.gif')}') no-repeat center;
+                }
+                /*---------Wedge preheader----------*/
+                body{
+                font-family: 'Oxygen', sans-serif;
+                font-size: 100%;
+                margin: 0;
+                background: #fff;
+                }
+                body *{
+                font-family: 'Oxygen', sans-serif;
+                }
+                .inline--block{
+                display:inline-block;
+                }
+                hr.top-50{
+                margin-top:50px;
+                }
+                hr.bottom-50{
+                margin-bottom:50px;
+                }
+                a, a:active, a:focus,a:hover{
+                text-decoration:none;
+                outline:none;
+                }
+                .bold,.oxy-20-bold{
+                font-size:20px;
+                font-weight:600;
+                }
+                .oxy-20-bold.oxy-20-bold--underline{
+                display: block;
+                border-bottom:1px solid #ccc;
+                padding-bottom:10px;
+                }
+                .wdg .wdg-pre--header{
+                box-sizing:border-box;
+                height:40px;
+                background-color:#EBEBEB;
+                }
+                .wdg-pre--header{
+                color:#333;
+                font-size:14px;
+                
+                }
+                .wdg-pre--header .wdg-preheader--navigation{
+                float:right;
+                height:100%;
+                
+                }
+                .wdg-multi-curr-pick{
+                -webkit-appearance: none;
+                -moz-appearence: none;
+                background: transparent;
+                border: none;
+                padding: 9px 40px;
+                padding-left: 0;
+                outline:none;
+                }
+                .wdg-preheader--navigation .wdg-preheader--navlist{
+                list-style-type:none;
+                padding:0;
+                margin:0; 
+                }
+                .wdg-preheader--navlist>li{
+                display:inline-block;
+                margin:0;
+                margin-left:15px;
+                padding:0;
+                }
+                .wdg-preheader--navlist>li>a{
+                color:#333;
+                text-decoration:none;
+                display:block;
+                height:45px;
+                line-height:2.5;
+                }
+                .wdg-preheader--navlist li>a *{
+                vertical-align: middle;
+                }
+                .wdg-icon{
+                display: inline-block;
+                background-color: transparent;
+                background-image: url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}");
+                background-repeat: no-repeat;
+                height: 15px;
+                width: 15px;
+                
+                margin-right: 5px; 
+                vertical-align: middle;
+                }
+                .wdg-preheader--navlist>li>a i.blogdata{
+                background-position:-316px -49px;
+                }
+                .wdg-preheader--navlist>li>a i.checkorder{
+                background-position: -349px -48px;
+                }
+                .wdg-preheader--navlist>li>a i.wishlist{
+                background-position: -50px -30px;
+                }
+                .wdg-preheader--navlist>li>a i.account{
+                background-position: -20px -30px;
+                }
+                .wdg-pre--header .wdg-user--dropdown{
+                margin:0;
+                padding:0;
+                border:0;
+                margin-top: -5px;
+                right: 0;
+                left: auto;
+                border-radius: 0px;
+                background: #fff;
+                }
+                .wdg-filter--options>select {
+                border: none;
+                border-radius: 3px;
+                padding: 9px 30px 11px 10px;
+                font-size: 14px;
+                outline: none;
+                background:#DCDCDC;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+                -o-appearance: none;
+                appearance: none;
+                cursor:pointer;
+                margin:0px 4px;
+                }
+                .multidropdownsymbol {
+                top: 45%;
+                right: 10px;
+                float: right;
+                position: absolute;
+                }
+                .wdg-wallet--menu{
+                height:auto !important;
+                word-break: break-word;
+                }
+                .wdg-site--breadcrumbs{
+                padding:20px 0;
+                }
+                .wdg-categories-new{
+                min-width:100px;
+                background: #2776AE !important;
+                width: 200px;
+                border:none !important;
+                color:white !important;
+                padding: 14px 12px !important;
+                font-size: 16px !important;
+                text-align:left;
+                font-weight:bold !important;
+                position:relative;
+                border-radius: 0 !important;
+                }
+                .wdg-categories-new:hover, .wdg-categories-new:focus, .wdg-categories-new:active{
+                background-color: #2776AE !important;
+                border:none !important;
+                color:white;
+                outline:none !important;
+                box-shadow:none !important;
+                }
+                .wdg-categories-new .caret{
+                position:absolute;
+                right:12px;
+                top:50%;
+                transform:translatey(-50%)
+                }
+                .cat-main-menu{
+                /*display:inline-block !important;*/
+                position:absolute !important;
+                height:0%;
+                overflow:hidden !important;
+                box-shadow:none;
+                border:none;
+                border-radius:0 !important;
+                }
+                .dropdown-menu>li>a{
+                width:250px;
+                padding: 8px 15px;
+                }
+                .wdg-lvl2-cat{
+                position:absolute;
+                top:100%;
+                left:250px;
+                z-index:2000;
+                }
+                .sub-cat-menu{
+                position: absolute !important;
+                left:250px;
+                top:100%;
+                width:260px;
+                background-color:white;
+                /*display:none !important;
+                display:flex;*/
+                display:none;   
+                justify-content:space-between;
+                border-radius:0 !important;
+                overflow:hidden;
+                border: 1px solid rgba(0,0,0,.175);
+                z-index:2000;
+                }
+                .sub-cat-menu ul{
+                width:260px;
+                border:none !important;
+                border-radius:0 !important;
+                display:inline-block !important;
+                box-shadow:none !important;
+                }
+                .sub-cat-menu ul li a:hover{
+                color:#0086C0;
+                background-color:white;
+                }
+                .active-sub-menu{
+                display:flex !important;
+                }
+                .cat-main-menu li a:hover{
+                background-color: #2B84C0;
+                color:white;
+                }
+                .cat-main-menu hr, .sub-cat-menu hr{
+                margin-top: 0px!important;
+                margin-bottom: 0px!important;
+                }
+                .main_sub{
+                font-weight:bold !important;
+                }
+                .dropdown-menu li{
+                margin-left:0 !important;
+                }
+                .viewall-class{
+                color:#0086C0 !important;
+                }
+                .cat-main-menu li .viewall-class:hover{
+                color:white !important;
+                }
+                .ddicon{
+                background-color:white;
+                }
+                .root-cat-link span{
+                z-index:2000;
+                }
+                .cat-main-menu li a .menucaret{
+                display:none !important;
+                transform: rotateZ(-90deg) scale(0.5,0.5) !important;
+                right:-36px;
+                }
+                .cat-main-menu li a .active-carret{
+                display: inline !important;
+                }
+                .cat-main-menu li .active-main-menu{
+                background-color: #2B84C0;
+                color:white !important;
+                }
+            </style>
+            <style>
+                .wdg-header .wdg-search--navigation{
+                display:block;
+                width:460px;
+                height:40px;
+                margin:0 auto;
+                position: relative;
+                vertical-align: middle;
+                }
+                .wdg-header .wdg-search--navigation .wdg-search--keyword{
+                 -webkit-appearance: none;
+                -moz-appearence: none;
+                appearence: none;
+                -webkit-border-radius:0px;
+                border-radius:0px;
+                outline: none;
+                display: inline-block;
+                float: left;
+                height: 40px;
+                width: 250px;
+                padding: 6px 12px;
+                box-sizing: border-box;
+                border: 1px solid #0087C1;
+                border-right: none;
+               
+                }
+                .wdg-header .wdg-search--navigation .wdg-search--categories{
+                display: inline-block;
+                float: left;
+                position: relative;
+                }
+                .wdg-search--categories .categories-list{
+                display: inline-block;
+                padding: 6px 12px;
+                width: 155px;
+                outline: none;
+                height: 40px;
+                text-align: left;
+                font-size: 14px;
+                border: 1px solid #0087C1;
+                background: #fff;
+                position: relative;
+                border-radius:0px;
+                }
+                .wdg-search--categories .categories-list span.caret{
+                float:right;                    
+                position: absolute;                    
+                right:5%;
+                top:50%;
+                }
+                .wdg-search--categories .categories-options{
+                min-width: 155px;
+                border-radius: 0px;
+                padding: 0px;
+                border: none;
+                margin-top: 0px;
+                border-left: 1px solid #0087C1;
+                border-right: 1px solid #0087C1;
+                max-height: 500px;
+                overflow-y: scroll;
+                }
+                .wdg-search--categories .categories-options span{
+                display: block;
+                padding: 6px 12px;
+                cursor: pointer;
+                font-size: 14px;
+                }
+                .wdg-search--categories .categories-options.mobile span{
+                display: block;
+                padding: 6px 12px;
+                cursor: pointer;
+                font-size: 12px;
+                }
+                .wdg-header .wdg-search--navigation .wdg-search--go{
+                display: inline-block;
+                float: left;
+                width: 50px;
+                position: relative;
+                height: 40px;
+                min-height: 20px;
+                background: #0087C1;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                border: 1px solid #0087C1;
+                }
+                .wdg-header .wdg-search--navigation .wdg-search--go>i{
+                width: 18px;
+                height: 18px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-left: -9px;
+                margin-top: -9px;
+                background-position: -214px -30px;
+                }
+                .wdg-icon{
+                display: inline-block;
+                background-color: transparent;
+                background-image: url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}");
+                background-repeat: no-repeat;
+                height: 15px;
+                width: 15px;
+                
+                margin-right: 5px; 
+                vertical-align: middle;
+                }
+                .wdg-icon.cart{
+                width: 20px;
+                height: 20px;
+                background-position: 0px -28px;
+                }
+                .wdg-cart--btn >span{
+                vertical-align:middle;
+                }
+                .wdg-cart--btn .wdg-cartitem--highlight{
+                background-color: #fff;
+                border-radius: 84px;
+                color: #0086c0;
+                padding: 1px 6px;
+                
+                text-align: center;
+                }
+                .wdg-btn,.wdg-btn:hover,.wdg-btn:focus,.wdg-btn:active{
+                display:inline-block;
+                height:40px;
+                min-width:90px;
+                padding:0px 6px;
+                outline:none;
+                border:none;
+                line-height: 2.7;
+                text-align: center;
+                box-sizing:border-box;
+                text-decoration:none;
+                color:#fff;
+                font-size:14px;
+                border-radius:3px;
+                }
+                .wdg-btn.medium{
+                width:120px;
+                }
+                .wdg-btn.standard{
+                min-width:150px;    
+                }
+                .wdg-btn.large{
+                min-width:150px;    
+                }
+                .wdg-btn.full-width{
+                display:block;
+                width:100%;
+                }
+                .wdg-btn.gray{
+                background:#595959;
+                }
+                .wdg-btn.transparent{
+                background-color:#fff;
+                color:#222;
+                text-align:right;
+                } 
+                .wdg-btn.blue{
+                background-color:#0087C1;
+                }
+                .wdg-btn.green{
+                background-color:#4BBA60;
+                }                
+            </style>
+            <style>
+                /*--------Sign In---------*/                
+                .wdg-signIn--box{
+                width:550px;
+                height:315px;
+                position:relative;
+                display:table;
+                margin:0 auto;
+                border:1px solid #ccc;
+                box-sizing:border-box;
+                }
+                .wdg-signIn--box .fieldset{
+                text-align:left;
+                }
+                .wdg-loggedIn--box{
+                width:180px;
+                overflow:hidden;
+                }
+                .dropdown-menu.mobile{
+                position: absolute;
+                top: 100%;
+                left: 0;
+                z-index: 1000; 
+                display: none;
+                float: initial;
+                min-width: 160px;
+                padding: 0;
+                margin: 0;
+                font-size: 14px;
+                text-align: left;
+                list-style: none;
+                background-color: #fff;
+                -webkit-background-clip: padding-box;
+                background-clip: padding-box;
+                border-radius: 0;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                }
+                .dropdown-menu.mobile.wdg-user--dropdown{
+                position: unset;
+                border: 0;
+                }
+                .wdg-loggedIn--box.mobile .wdg-loggedIn--nav li{
+                border:0;
+                }
+                /*.wdg-signIn--box span.sign-in--carret,.wdg-loggedIn--box span.sign-in--carret, .cat-main-menu li a .sign-in--carret{
+                width: 20px;
+                height: 15px;
+                position: absolute;
+                display: inline-block;
+                background-color: transparent;
+                background-image: url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}");
+                background-repeat:no-repeat;
+                top:0;
+                right:0;
+                margin-right:30px;
+                margin-top:-15px;
+                background-position: -217px -48px;
+                }*/
+                .wdg-signIn--box>div{
+                display:table-cell;
+                width:50%;
+                padding:10px;
+                }
+                .wdg-signIn--box div.sign-in{
+                border-right:1px solid #ccc;
+                
+                }
+                
+                .wdg-signIn--box div.sign-in .sign-in--with, .wdg-signIn--box .fieldset div{
+                margin-top:20px;
+                margin-bottom:20px;
+                }
+                .wdg-signIn--box  .fieldset label{
+                font-weight: 500;
+                display: block;
+                margin-bottom: 4px;
+                }
+                .wdg-signIn--box .fieldset input{
+                box-sizing: border-box;
+                padding: 6px;
+                outline: none;
+                width: 100%;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                font-weight: 500;
+                display: block;
+                
+                }
+                .wdg-loggedIn--box .wdg-loggedIn--nav{
+                padding:0;
+                margin:0;
+                list-style-type:none;
+                border-bottom:2px solid #ccc;
+                }
+                .wdg-loggedIn--box .wdg-loggedIn--nav>li>a:nth-child(even){
+                background-color:#EBEBEB;
+                }
+                .wdg-loggedIn--box .wdg-loggedIn--nav>li>a, .wdg-loggedIn--box .wdg-loggedIn--nav>span>li>a{
+                display: block;
+                height: 40px;
+                border-top:1px solid #ccc;
+                background-color:#fff;
+                box-sizing: border-box;
+                padding: 8px 15px;
+                text-align: left;
+                color: #333;
+                }
+                .wdg-loggedIn--box .wdg-loggedIn--nav>li:last-child{
+                border-top:1px solid #ccc;
+                }
+                .wdg-loggedIn--box .wdg-loggedIn--nav>li>a:hover, .wdg-loggedIn--box .wdg-loggedIn--nav>span>li>a:hover{
+                color:#fff;
+                background-color:#0087C1;
+                }
+                .wdg-logoff--btn, .wdg-logoff--btn:hover,.wdg-logoff--btn:active,.wdg-logoff--btn:focus{
+                margin: 10px;
+                width:160px;
+                }
+            </style>
+            <style>
+                .wdg div.wdg-show,.wdg span.wdg-show,.wdg ul.wdg-show,.wdg div.wdg-show{
+                display:block;
+                } 
+                .wdg .wdg-categories--megaNav{
+                background: #0086C0;
+                font-size:14px;
+                box-sizing:border-box;
+                border-radius: 0;
+                margin-bottom: 0;
+                border-bottom: none;
+                }
+                .wdg-categories--megaNav .wdg-categories, .wdg-categories--megaNav ul{
+                margin: 0;
+                padding: 0;
+                position: relative;
+                list-style-type: none;
+                }
+                .wdg-categories--megaNav .wdg-categories>li{
+                margin: 0;
+                min-width: 100px;
+                font-size: 14px;
+                float: left;
+                }
+                .wdg-categories--megaNav .wdg-categories>li>a,.wdg-categories--megaNav .wdg-categories>li>a:hover,
+                .wdg-categories--megaNav .wdg-categories>li>a:focus{
+                display: block;
+                color: #fff;
+                padding: 15px;
+                text-decoration: none;
+                text-align: center;
+                border-right: 1px solid #006E9E;
+                }
+                .wdg-categories--megaNav .wdg-categories>li:first-child>a{
+                border-left:0px solid #006E9E;
+                }
+                .wdg-categories--megaNav .wdg-root--nav{
+                min-width: 200px;
+                display: none;
+                position: absolute;
+                background: white;
+                z-index: 200;
+                border: 1px solid #CCCCCC;
+                border-top: 0;
+                padding: 15px 16px;
+                }
+                .wdg-categories--megaNav .wdg-root--nav a:hover{
+                color:#0087C1;
+                }
+                .wdg-categories--megaNav .child-categories{
+                margin-bottom: 10px;
+                }
+                .wdg-categories--megaNav .child-categories>a{
+                font-family: 'Oxygen', sans-serif;
+                font-size: 13px;
+                font-weight: normal;
+                font-style: normal;
+                text-decoration: none;
+                outline: none;
+                color: #6E6E6E;
+                cursor: pointer;
+                border-bottom: 0;
+                }
+                .wdg-categories--megaNav  li.subcategories--col{    
+                margin: 0px 10px 0px 0px;
+                display: inline-block;
+                vertical-align: top;
+                min-width: 240px;
+                }
+                li.subcategories--col>div   {
+                min-height: 25px;
+                margin-bottom: 10px;
+                padding-bottom: 2px;
+                border-bottom: 1px solid #CCCCCC;
+                }
+                li.subcategories--col>div>a{
+                font-weight:600;
+                color:#494949;
+                }   
+                .wdg-categories--megaNav .wdg-shift--right>ul{
+                left:auto;
+                }
+                .wdg-categories-new{
+                min-width:100px;
+                background-color: #2776AE !important;
+                width: 200px;
+                border:none;
+                color:white;
+                padding: 14px 12px;
+                font-size: 16px !important;
+                text-align:left;
+                font-weight:bold;
+                position:relative;
+                border-radius: 0 !important;
+                }
+                .wdg-categories-new:hover, .wdg-categories-new:focus, .wdg-categories-new:active{
+                background-color: #2776AE !important;
+                border:none !important;
+                color:white;
+                outline:none !important;
+                box-shadow:none !important;
+                }
+                .wdg-categories-new .caret{
+                position:absolute;
+                right:12px;
+                top:50%;
+                transform:translatey(-50%)
+                }
+                .cat-main-menu{
+                /*display:inline-block !important;*/
+                position:absolute !important;
+                height:0%;
+                overflow:hidden !important;
+                box-shadow:none;
+                border:none;
+                border-radius:0 !important;
+                }
+                .dropdown-menu>li>a{
+                width:250px;
+                padding: 8px 15px;
+                }
+                .wdg-lvl2-cat{
+                position:absolute;
+                top:100%;
+                left:250px;
+                z-index:2000;
+                }
+                .sub-cat-menu{
+                position: absolute !important;
+                left:250px;
+                top:100%;
+                width:260px;
+                background-color:white;
+                /*display:none !important;
+                display:flex;*/
+                display:none;   
+                justify-content:space-between;
+                border-radius:0 !important;
+                overflow:hidden;
+                border: 1px solid rgba(0,0,0,.175);
+                z-index:2000;
+                }
+                .sub-cat-menu ul{
+                width:260px;
+                border:none !important;
+                border-radius:0 !important;
+                display:inline-block !important;
+                box-shadow:none !important;
+                }
+                .sub-cat-menu ul li a:hover{
+                color:#0086C0;
+                background-color:white;
+                }
+                .active-sub-menu{
+                display:flex !important;
+                }
+                .cat-main-menu li a:hover{
+                background-color: #2B84C0;
+                color:white;
+                }
+                .cat-main-menu hr, .sub-cat-menu hr{
+                margin-top: 0px!important;
+                margin-bottom: 0px!important;
+                }
+                .main_sub{
+                font-weight:bold !important;
+                }
+                .dropdown-menu li{
+                margin-left:0 !important;                    
+                }
+                .dropdown-menu.categories-options.mobile li,.dropdown-menu.categories-options li{
+                border-bottom: 1px solid #0087C1;
+                }
+                .viewall-class{
+                color:#0086C0 !important;
+                }
+                .cat-main-menu li .viewall-class:hover{
+                color:white !important;
+                }
+                .ddicon{
+                background-color:white;
+                }
+                .root-cat-link span{
+                z-index:2000;
+                }
+                .cat-main-menu li a .menucaret{
+                display:none !important;
+                transform: rotateZ(-90deg) scale(0.5,0.5) !important;
+                right:-36px;
+                }
+                .cat-main-menu li a .active-carret{
+                display: inline !important;
+                }
+                .cat-main-menu li .active-main-menu{
+                background-color: #2B84C0;
+                color:white !important;
+                }
+                .wdg-header--Menu{
+                display:flex;
+                }
+                .wdg-home--logo{
+                display: inline-block;
+                background-color: transparent;
+                background-image: url('{!urlfor($Resource.wk_wedge__wedgecommerce,"/wedgeCommerce/images/sprite.png")}');
+                background-repeat: no-repeat;
+                height: 15px;
+                width: 16px;
+                margin-right: 5px;
+                vertical-align: middle;
+                background-position: -171px -49px;
+                }
+                .wdg-disp-ib{
+                display:inline-block;
+                }
+                
+                .wdg-disp-ib .wdg-filter--options{
+                position:relative;
+                }                  
+            </style>
+            <style>
+                /*---------Footer-----------*/
+                .wdg-template--body {
+                min-height: 60%;
+                font-size: 14px;
+                background-color: #fff;
+                }
+                .wdg .wdg-pre--footer{
+                min-height:150px;
+                color:#fff;
+                font-size:14px;
+                padding:15px 0px;
+                background-color:#444444;
+                } 
+                .wdg-prefooter--table{
+                display:table;
+                border-spacing:0;
+                width:100%;
+                height:100%;
+                min-height:150px;
+                box-sizing:border-box;
+                }
+                .wdg-pre--footer .wdg-prefooter--table>div{
+                display:table-cell;
+                padding:15px;
+                height: 100%;                    
+                box-sizing:border-box;
+                border-right:1px solid #5c5c5c;
+                }
+                .wdg-pre--footer .wdg-prefooter--table>div:last-child{
+                border-right:0;
+                }
+                .wdg-prefooter--table ul.links{
+                margin:0;
+                padding:0;
+                list-style-type:none;
+                display:block;
+                }
+                .wdg-prefooter--table ul.links>li{
+                padding:0;
+                margin-top:7px;
+                }
+                .wdg-prefooter--table ul.links>li:first-child{
+                margin-top:0px;
+                }
+                .wdg-prefooter--table ul.links>li>a{
+                color:#fff;
+                }
+                .wdg-prefooter--table ul.links>li>a.wdg-prefooter--btn, .wdg-prefooter--table ul.links>li>button.wdg-prefooter--btn{
+                display: inline-block;
+                /*height: 40px;*/
+                min-width: 150px;
+                outline: none;
+                border: 1px solid #fff;
+                line-height: 2.7;
+                font-weight:600;
+                background:transparent;
+                text-align: center;
+                box-sizing: border-box;
+                text-decoration: none;
+                color: #fff;
+                border-radius: 3px;
+                }
+                .wdg-prefooter--table ul.links>li> .wdg-footer--textBlock h5{
+                font-weight:600;
+                font-size:15px;
+                margin:7px 0px;
+                }
+                .wdg-prefooter--table ul.wdg-social{
+                display:block;
+                list-style-type:none;
+                padding:0;
+                margin:0;
+                margin-top:10px;
+                
+                }
+                .wdg-prefooter--table ul.wdg-social>li{
+                display:inline-block;
+                margin:5px;
+                
+                }
+                
+                .wdg-prefooter--table ul.wdg-social>li>a{
+                display:block;
+                height:36px;
+                width:36px;
+                border-radius:6px;  
+                }
+                .wdg-prefooter--table ul.wdg-social>li>a>img{
+                width:100%;
+                height:100%;
+                }
+                .wdg--footer{
+                height:45px;
+                color:#fff;
+                box-sizing:border-box;
+                font-size:14px;
+                padding:14px 0px;
+                background-color:#0087C1;
+                }
+                .wdg-float--right{
+                float:right;
+                }
+                .wdg-float--left{
+                float:left;
+                }
+                .wdg-float--clear{
+                clear:both;
+                }
+                .filter-stack  .filters-category-wrap ul,.filter-stack  .filters-category-wrap ul li{
+                display:block;
+                }
+                .filter-stack .filters-category li{
+                padding-left:30px;
+                line-height:1.8
+                
+                }
+                a.text-bold{
+                font-weight:700;
+                }
+                .filter-stack  .filters-category-wrap a{
+                color:#333;
+                font-size:14px;
+                }
+                .filter-stack .no-parent-cat >ul.filters-category>li{
+                padding-left:0px; 
+                }
+                .price-header{
+                position:relative;
+                padding: 4px 0px;
+                border-top:1px solid #ccc;
+                border-bottom:1px solid #ccc;
+                
+                }
+                .oxy-20-bold, message, p, span, div, a{
+                word-break: break-word;
+                }
+                .wdg-prefooter--table ul.links > li > a.wdg-prefooter--btn, .wdg-prefooter--table ul.links > li > button.wdg-prefooter--btn{
+                word-break: break-all;
+                }
+            </style>
+            <style type="text/css">
+                /*---------Popup----------*/
+                .notices{
+                position: fixed;
+                top: 15px;
+                right: 0;
+                z-index: 555;
+                width: 500px;
+                
+                }
+                
+                .notices .notice-error>ul , .notices .notice-success>ul{
+                list-style-type:none;       
+                margin:0;
+                padding:0;
+                }
+                .notices .notice-error>ul>li, .notices .notice-success>ul>li{
+                padding:10px;
+                margin-top:10px;
+                margin-botton:10px;
+                
+                background-size: 64px 64px;
+                border: 1px solid #3c763d;
+                border-radius: 3px 0px 0px 3px;
+                font-size:15px;
+                color:#fff;
+                text-align: justify;
+                
+                }
+                .notices .notice-error>ul>li{
+                background-color:#c23934;
+                border: 1px solid #d74c3b;
+                }
+                .notices .notice-success>ul>li{
+                background-color: #04844b;
+                }
+                .notices i, .notices .wdg-notice--close{
+                height: 25px;
+                width: 25px;
+                margin-right:10px;
+                content: "";
+                display: inline-block;
+                vertical-align: top;
+                }
+                .notices i.error{
+                background: transparent url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/icon-warning.png')}") no-repeat center;
+                }
+                .notices i.success{
+                background: transparent  url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/icon-alarm.png')}")   no-repeat center;
+                }
+                .notices .wdg-notice--msg{
+                display:inline-block;
+                vertical-align:top;
+                margin-right:5px;
+                margin-left:5px;
+                width:385px;    
+                }
+                .notices .wdg-notice--close{
+                background: transparent   url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/icon-close.png')}") no-repeat center;
+                margin-left: 10px;
+                cursor: pointer;
+                }
+                
+                .wdg-popup--small{
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                fint-size:14px;
+                background: #fff;
+                z-index: 778;
+                border-radius:3px;
+                }
+                .wdg-popup--small.wishlist{
+                background-color: #fefefe;
+                margin: auto;
+                border: 1px solid #888;
+                width: 60%;
+                position: unset;
+                top: unset;
+                left: unset;
+                }
+                .wdg-popup--small.option{
+                height: auto;
+                min-height: 250px;
+                width: 600px;
+                margin-top: -125px;
+                margin-left: -300px;
+                }
+                .wdg-popup--small.cart{
+                margin: auto;
+                border: 1px solid #888;
+                width: 42%;
+                position: unset;
+                top: unset;
+                left: unset;
+                }
+                .wdg-popup--small .details.detail-header {
+                padding: 10px 15px;
+                font-size: 16px;
+                color: #333;
+                border-bottom: 1px solid #ccc;
+                }
+                .wdg-popup--small .details.details-close {
+                float: right;
+                cursor: pointer;
+                }   
+                .wdg-popup--small .details.Quickproduct-details {
+                padding: 15px 40px;
+                }
+                .wdg-popup--small .details.Quickproduct-details .details-image-Box {
+                display: inline-block;
+                vertical-align: middle;
+                border: 1px solid #ccc;
+                height: 100px;
+                width: 100px;
+                overflow: hidden;
+                padding: 0;
+                }
+                .wdg-popup--small .details.Quickproduct-details .details-image-Box>img {
+                width:100%;
+                height:100%;
+                }
+                .details.Quickproduct-details .details-product-Box {
+                display: inline-block;
+                vertical-align: middle;
+                margin-left: 15px;
+                font-size:14px;
+                color:#222;
+                text-align: right;
+                width: 75%;
+                }
+                .details.Quickproduct-details .details-product-Box {
+                display: inline-block;
+                vertical-align: middle;
+                margin-left: 15px;
+                text-align: right;
+                font-size:14px;
+                }
+                .details.detail-prefooter {
+                padding: 10px 22px;
+                font-weight: 700;
+                font-size:14px;
+                }
+                .details.detail-prefooter .total{
+                text-align:right;
+                }
+                .details.detail-footer {
+                border-top: 1px solid #ccc;
+                padding: 15px 20px;
+                }
+                .productQview .productQview-wrap {
+                position: unset;
+                top: unset;
+                left: unset;
+                background: #fff;
+                z-index: 778;
+                border-radius: 3px;
+                width: 75%;
+                font-size: 14px;
+                overflow: auto;
+                box-shadow: 0px 0px 15px 4px #333;
+                margin: auto;
+                }
+                .productQview .productQview-wrap.requestQoute{
+                width: 52%;
+                }
+                .productQview .productQview-wrap .productQview-header{
+                padding: 10px 15px;
+                font-size: 16px;
+                color: #333;
+                height: 40px;
+                border-bottom: 1px solid #ccc;
+                }
+                .productQview-close{
+                cursor: pointer;
+                float: right;
+                }
+                .productQview .productQview-wrap .productQview-details{
+                padding: 15px;
+                }
+                .productQview .productQview-wrap .productQview-details .productQview-details--box{
+                /*height: 448px;*/
+                overflow-y: auto;
+                overflow-x: hidden;
+                }
+                .productQview .productQview-wrap .productQview-details .name{
+                display: block;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #ccc;
+                }
+                .productQview .productQview-wrap .productQview-details .description{
+                text-align:justify;
+                }
+                .productQview .productQview-wrap .productQview-details .price{
+                font-weight: 700;
+                color: #333;
+                font-size: 20px;
+                margin-top: 25px;
+                margin-bottom: 15px;
+                }
+                .productQview .productQview-wrap .productQview-details .specs{
+                margin: 15px 0px;
+                display: table;
+                }
+                .productQview .productQview-wrap .productQview-details .specs>div{
+                margin-bottom: 12px!important;
+                }
+                .productQview .productQview-wrap .productQview-details .specs>div>span{
+                padding: 8px 0px;
+                margin-right: 10px;
+                }
+                .productQview .productQview-wrap .productQview-details .specs>div>span:last-child {
+                padding-left: 15px;    
+                }
+                .wdg .quant-group>*{
+                display:inline-block;
+                vertical-align:middle;
+                }
+                .wdg .quant-group .quant-box{
+                width: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding: 2px;
+                text-align: center; 
+                }
+                .wdg .quant-group .quant-controller {
+                height: 35px;
+                width: 20px;
+                text-decoration: none;
+                }
+                .wdg .quant-group .quant-controller i {
+                display: block;
+                font-style: normal;
+                height: 17.5px;
+                border: 1px solid #ccc;
+                text-align: center;
+                width: 20px;
+                line-height: 16px;
+                color: #333;
+                text-decoration: none;
+                }
+                .productQview .productQview-wrap .productQview-details  .details-btn{
+                margin-top: 15px;
+                }
+                .productQview .productQview-wrap .productQview-details  .details-btn>a:last-child{
+                margin-left: 55px;
+                }
+                .details detail-header{
+                color: #0086C0!important;
+                }
+                .wdg-offer-email.err,.wdg-offer-number.err,.wdg-offer-textarea.err,.wdg-offer-multiSelect.err,.wdg-offer-inputField.err{
+                border: 1px solid #c23932 !important;
+                }
+                .selectType {
+                padding: 6px;
+                border-radius: 3px;
+                font-size: 14px;
+                color: #222;
+                background: #fff;
+                border: 1px solid #adadad;
+                outline: none;
+                box-shadow: none;
+                display: inline-block;
+                margin-left:45px;
+                box-sizing: border-box;
+                }
+                .custom-checkbox{
+                position:relative;
+                width:15px;
+                height:15px;
+                padding:0;
+                background:#fff;
+                border:1px solid #ccc;
+                margin-bottom: 10px;
+                }
+                .custom-checkbox.checked{
+                background: #fff url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/check.png')}") no-repeat center;
+                }
+                .custom-checkbox>input[type="checkbox"]{
+                position:absolute;
+                width:15px;
+                height:15px;
+                z-index:2;
+                top:0;
+                opacity:0;
+                margin:0;
+                padding:0;
+                left:0
+                }
+                .wdg-offer-radioOptions{
+                margin-right: 20px;
+                }
+                
+                .wdg-offer-selectlist{
+                margin-left:0;
+                width:100%;
+                margin-bottom: 10px;
+                }
+                .wdg-offer-multiSelect{
+                width: 100%;
+                border-radius: 3px;
+                margin-bottom: 10px;
+                }
+                .wdg-offer-email,.wdg-offer-number,.wdg-offer-textarea,.wdg-offer-inputField,.wdg-offer-Date{
+                width: 100%;
+                padding: 6px;
+                border-radius: 3px;
+                border: 1px solid #adadad;
+                margin-bottom: 10px;
+                }
+                .wdg-offer-options{
+                margin-left: 10px;
+                vertical-align: top;
+                }
+                /*.productQview.offer{
+                z-index:5325;
+                }*/
+                .productQview.offer .productQview-wrap .productQview-details {
+                overflow: auto;
+                max-height: 430px;
+                }
+                .productQview.offer .productQview-wrap .productQview-details.requestQoute{
+                max-height: 370px;
+                }
+                .productQview.offer .productQview-wrap .productQview-details.tnc{
+                height: auto;
+                }
+                .details.detail-footer {
+                margin-bottom: 0;
+                }
+                .productQview.offer .productQview-wrap .productQview-header,.wdg-wishlist--view.offer .productQview-header,.wdg-cart--view.offer .details.detail-header{
+                margin-bottom: 0;
+                padding: 13px 15px;
+                height: 50px;
+                background: #0087C1;
+                color: #fff;
+                font-weight: 600;
+                font-size: 15px;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+                }
+                .productQview-close.offer,.details-close.offer {
+                background: #FFFFFF;
+                color: #0087C1;
+                height: 22px;
+                width: 22px;
+                text-align: center;
+                vertical-align: middle;
+                border-radius: 50%;
+                }
+                .addcart{
+                border-radius: 3px;
+                text-align: center;
+                cursor: pointer;
+                display: inline-block;
+                text-decoration: none;
+                border: 1px solid #008AB6;
+                margin-left: 12px;
+                }
+                .addcart::before{
+                content: "";
+                display: inline-block;
+                background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -238px -69px;
+                background-repeat: no-repeat;
+                width: 38px;
+                height: 38px;
+                vertical-align: middle;
+                border-radius: 3px;
+                }
+                .addcart:hover::before{
+                background-position: -278px -69px;
+                } 
+                
+                .addrequestQuote{
+                border-radius: 5px;
+                text-align: center;
+                cursor: pointer;
+                display: inline-block;
+                text-decoration: none;
+                border: 1px solid #FFB23A;
+                vertical-align: top;
+                margin-left: 12px;
+                }
+                .addrequestQuote::before{
+                content: "";
+                display: inline-block;
+                background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -318px -69px;
+                background-repeat: no-repeat;
+                width: 38px;
+                height: 38px;
+                vertical-align: middle;
+                border-radius: 3px;
+                margin-top: unset;
+                }
+                .addrequestQuote:hover::before{
+                background-position: -357px -69px;
+                }
+                .addwishlist{
+                display: inline-block;
+                width: 40px;
+                height: 40px;
+                background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -81px -69px;
+                border-radius: 3px;
+                border: 1px solid #999999;
+                vertical-align: middle;
+                margin-left: 12px;
+                }                    
+                .addwishlist:hover{
+                background-position: -121px -69px;    
+                }
+                .retailer{
+                border-radius: 3px;
+                text-align: center;
+                cursor: pointer;
+                display: inline-block;
+                text-decoration: none;
+                border: 1px solid #00B570;
+                vertical-align: top;
+                margin-left: 12px;
+                }
+                .retailer::before{
+                content: "";
+                display: inline-block;
+                background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -318px -109px;
+                background-repeat: no-repeat;
+                width: 38px;
+                height: 38px;
+                vertical-align: middle;
+                border-radius: 3px;
+                margin-top: unset;
+                }
+                .retailer:hover::before{
+                background-position: -358px -109px;
+                }
+                .linkTag{
+                color: #337ab7;
+                /*text-decoration: underline;*/
+                cursor: pointer;
+                }
+                @media (min-height: 927px){
+                .productQview.offer .productQview-wrap .productQview-details{
+                max-height: 750px;
+                }
+                .productQview.offer .productQview-wrap .productQview-details.requestQoute{
+                max-height: 650px;
+                }
+                }
+                @media (max-height: 365px){
+                
+                .productQview.offer .productQview-wrap .productQview-details{
+                /* height: 140px;*/
+                
+                }
+                .details.detail-footer{
+                padding: 7px;
+                }
+                .productQview.offer .productQview-wrap .productQview-header, .wdg-wishlist--view.offer .productQview-header, .wdg-cart--view.offer .details.detail-header{
+                padding: 10px 15px;
+                height: 42px;
+                }
+                .wdg-status--loaderbg{
+                padding-top: 40px;
+                }                   
+                }
+                @media (max-height: 300px){
+                .wdg-status--loaderbg {
+                padding-top: 2px;
+                }
+                .wdg-popup--small .details.Quickproduct-details{
+                padding: 11px 40px;
+                }
+                .productQview.offer .productQview-wrap .productQview-details.tnc{
+                /*max-height: 213px;*/
+                overflow: auto;
+                }                   
+                }
+            </style>
+            <style>
+                /*-----------WedgeCommerce Nav-----------*/
+                .addwishlistDisabled {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    background: transparent url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -81px -109px;
+                    border-radius: 3px;
+                    border: 1px solid #D21B28;
+                    vertical-align: middle;
+                    margin-left: 15px;
+                }
+                .addwishlistDisabled:hover {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    background: transparent url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -121px -109px;
+                    border-radius: 3px;
+                    border: 1px solid #D21B28;
+                    vertical-align: middle;
+                    margin-left: 15px;
+                }
+                .wdg-categories-new{
+                min-width: 100px; 
+                background-color: #2776AE !important;
+                width: 175px; 
+                border: none;
+                color: white;
+                padding: 14px 28px 14px 12px;
+                font-size: 16px !important;
+                text-align: left;
+                font-weight: bold;
+                position: relative;
+                border-radius: 0 !important;
+                display:inline-block;
+                }
+                .navbar-default .navbar-toggle .icon-bar {
+                background-color: #fff;
+                }
+                .navbar-default .navbar-toggle {
+                border: none;
+                }
+                .navbar-default .navbar-toggle:hover,.navbar-default .navbar-toggle:focus{
+                background: transparent;
+                }
+                .wdg-navmenu{
+                background-color: #fff;
+                transition: .5s;
+                height: 100%;
+                position: fixed;
+                left: -400px;
+                top: 0;
+                width: 300px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                color: #aaa;
+                z-index: 999999;
+                border: 1px solid #ccc;
+                }
+                .wdg-navmenu.show{
+                left:0;
+                overflow-x: hidden;
+                overflow-y: auto;
+                }
+                /*.nav > li {
+                width: 100%;
+                }*/
+                .wdg-navicons{
+                width:100%;
+                display:none;
+                }
+                .wdg-navicons > div{
+                float:right;
+                height: 100%;
+                position: relative;
+                }
+                .wdg-navimg.search > div{
+                background-position: -214px -28px;
+                }
+                .wdg-navimg.wishlist{
+                padding: 10px 13px;
+                }
+                .wdg-navimg.wishlist > div{
+                background-position: -330px -47px;
+                margin-top: 8px;
+                position: relative;
+                }
+                .wdg-navimg.wishlist > .count{                  
+                position: absolute;
+                height: 18px;
+                width: 18px;
+                background-color: #fff;
+                color: red;
+                top: 4%;
+                left: 66%;
+                border-radius: 50%;
+                font-size: 9px;
+                font-weight: 600;
+                padding: 3px;
+                text-align: center;              
+                }
+                .wdg-navimg.user{
+                padding: 10px 14px;
+                }
+                .wdg-navimg.user > div{
+                background-position: -143px -28px;
+                width: 15px;
+                }
+                .wdg-navimg.cart > div{
+                background-position: 0px -28px;
+                width: 21px;
+                position: relative;
+                }
+                .wdg-navimg.cart > .count{                  
+                position: absolute;
+                height: 18px;
+                width: 18px;
+                background-color: #fff;
+                color: red;
+                top: 3%;
+                left: 92%;
+                border-radius: 50%;
+                font-size: 9px;
+                font-weight: 600;
+                padding: 3px;
+                text-align: center;             
+                }
+                .wdg-navimg{
+                color: #fff;
+                display: inline-block;
+                height: 100%;
+                width: 44px;
+                padding: 10px 12px;
+                border-left: 2px solid #007FAE;
+                margin-right: -4px;
+                cursor: pointer;
+                margin-bottom: -12px;    
+                }
+                .wdg-navimg > div{
+                background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat;
+                height: 20px;
+                width: 17px;
+                margin-top: 6px;
+                }
+                .wdg .wdg-header.mobile{
+                display:none;
+                }
+                .wdg .wdg-header{
+                background-color:#fff;
+                padding:15px 0px;
+                font-size:14px;
+                }
+                .sign-in-heading{
+                padding:10px;
+                border-bottom:1px solid #ddd;
+                }
+                .wdg-navimg:hover{
+                background-color: #007FAE;
+                }
+                .wdg-navmenu hr{
+                margin: 0;
+                }
+                .wdg-alert--container{
+                display:none;
+                }
+                .wdg-alert--cover{
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 1000000;
+                }
+                .wdg-custom--alert{
+                z-index:1000001;
+                min-height:20%;
+                width:auto;
+                display: inline-block;
+                position: fixed;
+                top: 25%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                }
+                .wdg-custom--alert .wdg-alert--header{
+                margin-bottom: 0;
+                padding: 10px 15px;
+                height: 42px;
+                background: #0087C1;
+                color: #fff;
+                font-weight: 600;
+                font-size: 15px;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+                }
+                .wdg-alert--close{
+                background: #FFFFFF;
+                color: #0087C1;
+                height: 22px;
+                width: 22px;
+                text-align: center;
+                vertical-align: middle;
+                border-radius: 50%;
+                cursor: pointer;
+                float: right;
+                }
+                .wdg-alert--body{
+                min-height:20px;
+                background-color:white;
+                }
+                .alert-text{
+                text-align:center;
+                padding: 50px 50px;
+                margin-right: 10px;
+                font-size: 14px;
+                line-height: 1.42857143;
+                color: #333;
+                font-family: 'Oxygen', sans-serif;
+                margin:0;
+                }
+                select.searchstring{
+                    -webkit-appearance: none;
+                }
+                @media (max-width: 1024px){
+                .wdg-popup--small.cart{
+                width: 60%;
+                }
+                .details.Quickproduct-details .details-product-Box{
+                width: 76%;
+                }
+                }                
+                @media (max-width: 992px){
+                .details.Quickproduct-details .details-product-Box{
+                width: 75%;
+                }
+                .wdg-popup--small.cart{
+                width: 70%;
+                }
+                .wdg-header .wdg-search--navigation{
+                margin:0;
+                }
+                .wdg-cart{
+                margin-top: 10px;
+                }
+                .wdg-search{
+                margin-top:10px;
+                }
+                
+                /*.wdg-signIn--box>div{
+                display:table-cell;
+                width:100%;
+                padding:10px;
+                }
+                .wdg-signIn--box div.sign-in{
+                border-right:none;
+                border-bottom: 1px solid #ccc;
+                }
+                .wdg-signIn--box.mobile>div{
+                display:table-cell;
+                width:100%;
+                padding:10px;
+                }              
+                
+                
+                */
+                .preheaderli span{
+                display: none;
+                }
+                .wdg-loggedIn--nav.mobile{
+                width: 100%;
+                }
+                .wdg-loggedIn--box.mobile{
+                width: 85%;
+                margin: 0 auto;
+                }
+                .wdg-loggedIn--box.mobile .wdg-loggedIn--nav{
+                border: 1px solid #ccc;
+                border-top: none;
+                text-align: center;
+                margin: 10px 0;
+                }
+                .wdg-loggedIn--box.mobile .wdg-loggedIn--nav>li>a, .wdg-loggedIn--box .wdg-loggedIn--nav>span>li>a{
+                text-align: unset;                      
+                }
+                .wdg-pre--footer .wdg-prefooter--table>div{
+                border:none;
+                }
+                .wdg-pre--footer .wdg-prefooter--table>div{
+                display:initial;
+                border-bottom: 1px dashed #5c5c5c;
+                text-align:center;
+                }
+                .wdg-pre--footer .wdg-prefooter--table>div:last-child{
+                border-bottom: none;
+                }
+                .wdg-prefooter--table ul.wdg-social{
+                text-align:center;
+                }
+                .wdg .wdg-pre--footer{
+                padding: 15px 0 0;
+                }
+                .productQview .productQview-wrap.requestQoute{
+                width: 70%;
+                }
+                .wdg-custom--alert{
+                width:60%;
+                }
+                }
+                @media screen and (max-width: 767px){
+                .wdg-search{
+                display:none;
+                }
+                .wdg-cart{
+                display:none;
+                }  
+                .wdg-categories-new{
+                display:none;
+                }
+                .wdg-preheader--navlist>li.mobile-display{
+                display:none;
+                }
+                .wdg--footer{
+                height: unset;
+                }
+                .wdg-navmenu{
+                width: 300px;
+                }
+                .wdg-navicons{
+                display:block;
+                }
+                .wdg-header .wdg-search--navigation.mobile{
+                width: 380px;
+                margin:0 auto;
+                }
+                .wdg .wdg-header.mobile{
+                padding: 0;
+                margin-top: 10px;
+                padding-bottom: 10px;
+                }
+                .wdg-header .wdg-search--navigation .wdg-search--keyword.mobile{
+                -webkit-appearance: none;
+                -moz-appearence: none;
+                appearence: none;
+                -webkit-border-radius:0px;
+                border-radius:0px;
+                width:200px;
+                border-radius:0px;
+                }
+                .wdg-search--categories .categories-options.mobile{
+                width: 130px;
+                min-width: 110px;
+                }
+                .wdg-search--categories .categories-list{
+                width:130px;
+                font-size: 12px;
+                }
+                .wdg-signIn-ctrl{
+                margin-bottom:10px;                 
+                }
+                .wdg-signIn--box.mobile div.sign-in{
+                border-right:none;
+                border-bottom: 1px dashed #0088bb;
+                padding:0;
+                }
+                .wdg-signIn--box div.create-an--account{
+                margin-bottom:20px;
+                padding: 0;                    
+                }
+                .wdg-signIn--box>div{
+                display:table-cell;
+                width:100%;
+                padding:10px;
+                }
+                .wdg-signIn--box div.sign-in{
+                border-right:none;
+                border-bottom: 1px solid #ccc;
+                }
+                .wdg-signIn--box{
+                width:400px;
+                margin: 10px auto;
+                }
+                
+                .wdg-popup--small.wishlist{
+                width:90%;
+                }
+                .productQview.offer .productQview-wrap .productQview-header, .wdg-wishlist--view.offer .productQview-header, .wdg-cart--view.offer .details.detail-header{
+                padding: 10px 15px;
+                height: 40px;
+                font-size: 14px;
+                }
+                .productQview-close.offer, .details-close.offer{
+                height: 20px;
+                width: 20px;
+                }
+                .details.Quickproduct-details .details-product-Box{
+                font-size: 13px;
+                width: 70%;
+                }
+                .wdg-popup--small .details.Quickproduct-details .details-image-Box{
+                height: 75px;
+                width: 75px;
+                padding:0;
+                margin-left: 4px;
+                }
+                .details.detail-footer{
+                padding: 10px;
+                }
+                .wdg-btn.signin, .wdg-btn.signin:hover, .wdg-btn.signin:focus, .wdg-btn.signin:active{
+                height: 32px;
+                font-size: 12px;
+                }
+                .wdg-popup--small.cart{
+                width: 80%;
+                }
+                .details.detail-prefooter .total{
+                text-align: left;
+                }
+                .wdg-pre--footer .wdg-prefooter--table>div:last-child{
+                border-bottom:0;
+                }
+                .wdg-status--loaderbg{
+                padding-top: 35px;
+                }
+                .productQview .productQview-wrap.requestQoute{
+                width: 60%;
+                }
+                .wdg-custom--alert{
+                width:70%;
+                }
+                }
+                @media screen and (max-width: 475px){
+                .notices{
+                width: unset;
+                }
+                .notices .wdg-notice--msg{
+                width: 180px;
+                margin: 0;
+                }
+                .notices .notice-error>ul>li, .notices .notice-success>ul>li{
+                font-size: 13px;
+                }
+                .notices .wdg-notice--close{
+                height: 20px;
+                width: 20px;
+                }
+                .wdg-filter--options>select{
+                padding: 9px 20px 11px 8px;
+                -moz-padding-end: 12px;
+                -moz-padding-start: 4px;
+                }
+                .wdg-prefooter--table ul.wdg-social{
+                text-align:center;span
+                }
+                .wdg-pre--footer .wdg-prefooter--table>div{
+                text-align:center;
+                }
+                .wdg-prefooter--table ul.links > li > a.wdg-prefooter--btn, .wdg-prefooter--table ul.links > li > button.wdg-prefooter--btn{
+                word-break:break-all;
+                }
+                .wdg-status--loaderbg{
+                padding-top: 25px;
+                }
+                .wdg-popup--small .details.Quickproduct-details{
+                padding: 15px 5px;
+                }
+                .details.Quickproduct-details .details-product-Box{
+                width: 64%;
+                }
+                .details.Quickproduct-details .row{
+                margin: 0;
+                }
+                
+                .wdg-preheader--navlist>li{
+                margin-left: 5px;
+                }
+                .productQview .productQview-wrap.requestQoute{
+                width: 90%;
+                }
+                }
+                @media screen and (max-width: 420px){
+                
+                .wdg-navmenu{
+                width:270px;
+                }
+                .wdg-header .wdg-search--navigation.mobile{
+                width: 300px;
+                }
+                .wdg .wdg-header.mobile{
+                padding: 0;
+                padding-bottom:10px;
+                }
+                .wdg-header .wdg-search--navigation .wdg-search--keyword.mobile{
+                -webkit-appearance: none;
+                -moz-appearence: none;
+                appearence: none;
+                -webkit-border-radius:0px;
+                border-radius:0px;
+                border-radius:none!important;
+                font-size: 15px;
+                padding: 3px 12px;
+                width: 120px;
+                }
+                .wdg-search--categories .categories-list{
+                height: 40px;
+                font-size: 15px;
+                padding: 3px 12px;
+                width:125px;
+                }
+                .wdg-search--categories .categories-options.mobile{
+                font-size: 12px;
+                padding: 0;
+                width:125px;
+                min-width:125px;
+                margin-bottom: 14px;
+                }
+                .wdg-signIn--box{
+                width: 310px;
+                }
+                .sign-in-heading{
+                padding: 5px;
+                border-bottom: 1px solid #ddd;
+                font-size: 15px;
+                }
+                .wdg-signIn--box  .fieldset label{
+                font-size: 12px;
+                }
+                .wdg-btn.signin, .wdg-btn.signin:hover, .wdg-btn.signin:focus, .wdg-btn.signin:active{
+                height: 35px;
+                min-width: 80px;
+                font-size: 13px;
+                }
+                .wdg-btn.large, .wdg-btn.large:hover{
+                min-width:130px;
+                }
+                .wdg-signIn--box div.sign-in .sign-in--with, .wdg-signIn--box .fieldset div{
+                margin-top: 10px;
+                margin-bottom: 10px;
+                font-size: 13px;
+                }
+                .create-acc--here{
+                font-size: 13px;
+                }
+                .wdg-popup--small.cart{
+                width: 90%;
+                }
+                .productQview .productQview-wrap {
+                width:90%;
+                }
+                .wdg-status--loaderbg{
+                padding-top: 25px;
+                }
+                .productQview .productQview-wrap.requestQoute{
+                width: 90%;
+                }                   
+                .wdg-custom--alert{
+                width:80%;
+                }
+                }
+                @media screen and (max-width: 320px){
+                
+                .wdg-search{
+                display:none;
+                }
+                .wdg-cart{
+                display:none;
+                }     
+                .wdg-navmenu{
+                width:270px;
+                }
+                .wdg-status--loaderbg{
+                padding-top: 25px;
+                }
+                .navbar{
+                min-heigth:45px;
+                }
+                .wdg-navimg{                        
+                padding: 8px 12px;
+                }
+                .wdg-navimg.wishlist{
+                padding: 8px 13px;
+                }
+                .wdg-navimg.user {
+                padding: 7px 14px;
+                }
+                .wdg-header .wdg-search--navigation.mobile{
+                width: 283px;
+                }
+                .wdg .wdg-header.mobile{
+                padding: 0;
+                padding-bottom: 10px;
+                }
+                .wdg-header .wdg-search--navigation .wdg-search--keyword.mobile{
+                -webkit-appearance: none;
+                -moz-appearence: none;
+                appearence: none;
+                -webkit-border-radius:0px;
+                border-radius:0px;
+                font-size: 12px;
+                height: 35px;
+                width: 135px;
+                }
+                .wdg-search--categories .categories-options.mobile{
+                font-size: 12px;
+                width: 110px;
+                min-width:110px;
+                }
+                .wdg-search--categories .categories-list{
+                height: 35px;
+                font-size: 12px;
+                width: 110px;
+                }
+                .wdg-header .wdg-search--navigation .wdg-search--go.moblie{
+                width: 35px;
+                height: 35px;
+                }
+                .wdg-search--categories .categories-list.moblie span.caret{
+                top: 47%;
+                }
+                .wdg-signIn--box{
+                width: 275px;
+                }
+                .wdg-popup--small.cart{
+                width: 90%;
+                }
+                .productQview .productQview-wrap.requestQoute{
+                width: 90%;
+                
+                }
+                .wdg-custom--alert{
+                width:90%;
+                }
+                }
+            </style>
+            
+        </head>             
+        
+        <body class="wdg wdg-full--height">
+            <apex:actionStatus id="docSearch" stopText="" layout="block" styleclass="wdg-status--loader">
+                <apex:facet name="start">
+                    <div class="wdg-status--loaderbg"></div>
+                    <div class="wdg-status--image"></div>
+                </apex:facet>
+            </apex:actionStatus>
+            <apex:outputPanel layout="block" styleclass="wdg-alert--container">
+                <apex:outputPanel layout="block" styleclass="wdg-alert--cover">
+                    <apex:outputPanel styleclass="wdg-custom--alert">
+                        <div class="wdg-alert--header">
+                            <span>Alert</span>
+                            <span class="wdg-alert--close offer" id="details-close">×</span>
+                        </div>
+                        <div class="wdg-alert--body">
+                            <p class="alert-text" id="wdg-custom-alrt--text">Alert Text Here</p>
+                        </div>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <apex:outputpanel layout="block" id="makeanofferview" styleclass="productQview offer">
+                <apex:outputpanel layout="block" rendered="{!makeanofferview}">
+                    <div class="wdg-status--loaderbg"> 
+                        <div class="productQview-wrap requestQoute">
+                            <p class="productQview-header">
+                                <apex:outputText value="{!$Label.wk_wedge__site_template_request_quote_popup}"/>
+                                <span class="productQview-close offer" id="details-close" > ×</span>
+                            </p>
+                            <div class="productQview-details requestQoute">
+                                <apex:repeat value="{!requestQuoteCustomField}" var="key">
+                                    <div style="margin-bottom:3px;"><b>{!key.name}<apex:outputPanel rendered="{!key.wk_wedge__Required__c}" style="color: #ff0000">*</apex:outputPanel>&nbsp;:</b></div>
+                                    <div>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='S'}" layout="block">
+                                            <select class="wdg-offer-selectlist selectType"  var-name="{!key.name}" req="{!key.wk_wedge__Required__c}">
+                                                <apex:repeat value="{!key.Request_Quote_Custom_Field_Variants__r}" var="subkey">
+                                                    <option value="{!subkey.name}">{!subkey.name}</option>
+                                                </apex:repeat>
+                                            </select>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='R'}" layout="block">
+                                            <apex:repeat value="{!key.Request_Quote_Custom_Field_Variants__r}" var="subkey">
+                                                <input type="radio" value="{!subkey.name}" name="{!key.Id}"  var-name="{!key.name}" req="{!key.wk_wedge__Required__c}" class="wdg-offer-radio" /> <span class="wdg-offer-radioOptions">{!subkey.name}</span>       
+                                            </apex:repeat>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='N'}" layout="block" >
+                                            <apex:repeat value="{!key.Request_Quote_Custom_Field_Variants__r}" var="subkey">
+                                                <div class="custom-checkbox">
+                                                    <input type="checkbox" value="{!subkey.name}" class="wdg-offer-multiCheck" req="{!key.wk_wedge__Required__c}" var-name="{!key.name}"/> <span class="wdg-offer-options">{!subkey.name}</span>
+                                                </div>
+                                            </apex:repeat>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='M'}" layout="block">
+                                            <select multiple="true" class="wdg-offer-multiSelect" var-name="{!key.name}" req="{!key.wk_wedge__Required__c}">
+                                                <apex:repeat value="{!key.Request_Quote_Custom_Field_Variants__r}" var="subkey">
+                                                    <option value="{!subkey.name}">{!subkey.name}</option>
+                                                </apex:repeat>
+                                            </select>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='C'}" layout="block" styleClass="custom-checkbox">
+                                            <input type="checkbox" class="wdg-offer-check" var-name="{!key.name}" req="{!key.wk_wedge__Required__c}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='I'}" layout="block">
+                                            <input type="text" class="wdg-offer-inputField" var-name="{!key.name}" req="{!key.wk_wedge__Required__c}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='T'}" layout="block">
+                                            <textarea class="wdg-offer-textarea" var-name="{!key.name}" req="{!key.wk_wedge__Required__c}"></textarea>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='V'}" layout="block">
+                                            <input type="Date" class="wdg-offer-Date" var-name="{!key.name}" req="{!key.wk_wedge__Required__c}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='Y'}" layout="block">
+                                            <input type="email" class="wdg-offer-email" var-name="{!key.name}" req="{!key.wk_wedge__Required__c}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='Z'}" layout="block">
+                                            <input type="text" class="wdg-offer-number" var-name="{!key.name}" req="{!key.wk_wedge__Required__c}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!key.wk_wedge__Element_Type__c=='P'}" layout="block">
+                                            <input type="text" class="wdg-offer-number" var-name="{!key.name}" req="{!key.wk_wedge__Required__c}"/>
+                                        </apex:outputPanel>                                        
+                                    </div>
+                                </apex:repeat>
+                                <apex:outputPanel layout="block">
+                                    <sup class="req" style="color: #ff0000">*</sup>{!$Label.wk_wedge__these_information_are_required}
+                                </apex:outputPanel>
+                            </div>
+                            <p class="details detail-footer clearfix"> 
+                                <a href="javascript:void(0);" class="wdg-float--right wdg-btn green medium createOffer"><apex:outputText value="{!$Label.wk_wedge__site_template_request_quote_submit}"/></a>
+                            </p>
+                        </div>
+                    </div>                  
+                    
+                </apex:outputpanel>
+            </apex:outputpanel>
+            <apex:outputpanel layout="block" id="QuickwishlistView">
+                <apex:outputpanel layout="block" rendered="{!qwishlist}" styleclass="wdg-wishlist--view offer">
+                    <div class="wdg-status--loaderbg">
+                        
+                        <div class="wdg-popup--small wishlist">
+                            <p class="productQview-header">
+                                <span><apex:outputText value="{!$Label.wk_wedge__site_template_product_is_added_to_wishlist}"/></span>
+                                <span class="details details-close offer" id="details-close" > ×</span>
+                            </p>
+                            <div class="details Quickproduct-details">
+                                <div>
+                                    <div class="details-image-Box">
+                                        <img src="/servlet/servlet.FileDownload?file={!pProductImage}"/>
+                                    </div>
+                                    <div class="details-product-Box">
+                                        <p class="text-left"> {!pProductName} successfully added to wishlist</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="details detail-footer clearfix"> 
+                                <a href="{!URLFOR($Page.wishlist,null,null)}" class="wdg-float--right wdg-btn green medium">View wishlist</a>
+                            </p>
+                            
+                        </div>
+                        
+                    </div>                 
+                    
+                </apex:outputpanel>
+            </apex:outputpanel>
+            <apex:outputpanel layout="block" id="QuickcartView">
+                <apex:outputpanel layout="block" rendered="{!qcartView}" styleclass="wdg-cart--view offer">
+                    <div class="wdg-status--loaderbg">
+                        <div class="wdg-popup--small cart">
+                            <p class="details detail-header">
+                                <span><apex:outputText value="{!$Label.wk_wedge__site_template_product_is_added_to_cart}"/></span>
+                                <span class="details details-close offer" id="details-close" > ×</span>
+                            </p>
+                            <div class="details Quickproduct-details">
+                                <div class="row">
+                                    <div class="details-image-Box col-md-4 col-sm-12">
+                                        <img src="/servlet/servlet.FileDownload?file={!pProductImage}"/>
+                                    </div>
+                                    <div class="details-product-Box col-md-8 col-sm-12">
+                                        <p class="prodname">{!pProductname}</p>
+                                        <p class="prodQuant"> <apex:outputText value="{!$Label.wk_wedge__site_template_quickcartview_popup_quantity}"/> : {!pProductQuantity} </p>
+                                        <p class="prodprice"> <apex:outputText value="{!$Label.wk_wedge__site_template_quickcartview_popup_price}"/> : {!pProductQuantity} &#10005; {!Currsymbol}&nbsp;<apex:outputtext value="{0,number,###,##0.00}"><apex:param value="{!pProductprice}"/></apex:outputtext> </p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="details detail-prefooter clearfix row"> 
+                                <div class="col-md-6 col-sm-8 col-xs-12">You have {!cartitems} {!IF(cartitems >1,'items','item')} in your cart</div>
+                                <div class="col-md-6 col-sm-4 col-xs-12 total"><apex:outputText value="{!$Label.wk_wedge__site_template_quickcartview_popup_cart_total}"/> : {!Currsymbol}&nbsp;<apex:outputtext value="{0,number,###,##0.00}"><apex:param value="{!Carttotal}"/></apex:outputtext></div>                                
+                            </div>
+                            <p class="details detail-footer clearfix"> 
+                                <a href="{!URLFOR($page.viewcart,null,null)}" class=" wdg-float--left wdg-btn blue medium"><apex:outputText value="{!$Label.wk_wedge__site_template_quickcartview_popup_viewcart}"/></a>
+                                <a href="{!URLFOR($page.checkout,null,null)}" class="wdg-float--right wdg-btn green medium"><apex:outputText value="{!$Label.wk_wedge__site_template_product_popup_checkout}"/></a>
+                            </p>
+                            
+                        </div>
+                    </div>                 
+                    
+                </apex:outputpanel>
+            </apex:outputpanel> 
+            <apex:outputpanel layout="block" id="QuickproductView" styleclass="productQview offer">
+                <apex:outputpanel layout="block" rendered="{!qproductView}">
+                    <div class="wdg-status--loaderbg">
+                        <apex:outputpanel layout="block" styleclass="productQview-wrap" id="qvPop">
+                            <div class="productQview-header"> 
+                                <span><apex:outputText value="{!$Label.wk_wedge__site_template_quick_view_product}"/></span>
+                                <span class="productQview-close offer" id="details-close">×</span>
+                            </div>
+                            <div class="productQview-details">
+                                <div class="row">
+                                    <div class="col-md-6 text-center"> 
+                                        <img id="img1"  src="/servlet/servlet.FileDownload?file={!Qproductdetails.Image_Id__c}" data-zoom-image="/servlet/servlet.FileDownload?file={!Qproductdetails.Image_Id__c}" height="400px" width="360px" />
+                                    </div> 
+                                    <div class="col-md-6 productQview-details--box"> 
+                                        <h4 class="bold name"> {!Qproductdetails.name}</h4>
+                                        <apex:outputText styleclass="description"  style="word-wrap: break-word;" value=" {!Qproductdetails.wk_wedge__product_description__c}" escape="false" id="proddesc"></apex:outputText>
+                                        <span id ="seeMoreDesc" class="linkTag" style="display:none;">See More</span>
+                                        <span id ="seeLessDesc" class="linkTag" style="display:none;">See Less</span>
+                                        <p class="price" id="ProductOptions"><apex:outputText value="{!$Label.wk_wedge__site_template_product_popup_price}"/> : {!Currsymbol}&nbsp;<apex:outputtext value="{0,number,###,##0.00}"><apex:param value="{!Qproductdetails.wk_wedge__List_price__c}"/></apex:outputtext></p>
+                                        <div class="specs">
+                                            <div>
+                                                <span><apex:outputText value="{!$Label.wk_wedge__site_template_product_popup_product_sku}"/> :</span>
+                                                <span>{!Qproductdetails.ProductCode}</span>
+                                            </div>
+                                            <div>
+                                                <span><apex:outputText value="{!$Label.wk_wedge__site_template_product_popup_product_availability}"/> :</span>
+                                                <span>{!IF(Qproductdetails.wk_wedge__Stock_Availability__c,$Label.wk_wedge__available, $Label.wk_wedge__out_of_stock)}</span>
+                                            </div>
+                                            <apex:form >
+                                                <apex:inputhidden id="listpriceTemp" value="{!Qproductdetails.wk_wedge__List_price__c}"/>
+                                                <apex:outputPanel layout="block" id="ProductOptionsTemp" styleClass="em_productfeatures">
+                                                    <apex:repeat value="{!prodOptList}" var="key">                        
+                                                        <apex:outputpanel rendered="{!key.wk_wedge__Option_Type__c=='M' && key.Product_Option_Variants__r.size>0}">
+                                                            <ul style="list-style-type : none;">
+                                                                <li>
+                                                                    <div class="em_feturename">
+                                                                        <b><apex:outputText value="{!key.Name} :"></apex:outputText></b> 
+                                                                    </div> 
+                                                                    <ul style="list-style-type : none;">
+                                                                        <li>
+                                                                            <input type="radio" name="variant-{!key.Id}" class="variantstemp" value="--None--"/>&nbsp;None
+                                                                        </li> 
+                                                                        <apex:repeat value="{!key.Product_Option_Variants__r}" var="sub" rendered="{!key.wk_wedge__Option_Type__c=='M'}">
+                                                                            <li>
+                                                                                <input type="radio" name="variant-{!key.Id}" class="variantstemp" var-type="{!sub.Type__c}"  var-mod="{!sub.wk_wedge__Modifier__c}" value="{!sub.Id}" opt-name="{!key.name}" opt-value="{!sub.name}"/>
+                                                                                {!sub.name} &#x00028; {!If(sub.Modifier__c >=0 , '+','-')}  <apex:outputPanel rendered="{!sub.wk_wedge__Type__c=='Absolute'}">{!Currsymbol}&nbsp;</apex:outputPanel> <apex:outputPanel styleClass="modifier"><apex:outputtext value="{0,number,###,##0.00}"><apex:param value="{!sub.wk_wedge__Modifier__c}"/></apex:outputtext></apex:outputPanel> <apex:outputPanel rendered="{!sub.wk_wedge__Type__c=='Percent'}">%</apex:outputPanel>&#x00029;
+                                                                            </li>
+                                                                        </apex:repeat> 
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </apex:outputpanel>
+                                                        <apex:outputpanel rendered="{!key.wk_wedge__Option_Type__c=='T' && key.Product_Option_Variants__r.size>0}">
+                                                            <ul style="list-style-type : none;">
+                                                                <li>
+                                                                    <div class="em_feturename">
+                                                                        <b><apex:outputText value="{!key.Name} :"></apex:outputText></b> 
+                                                                    </div>                               
+                                                                    <select class="variantstemp selectType " name="variant-{!key.Id}" >
+                                                                        <option value="--None--">--None--</option>
+                                                                        <apex:repeat value="{!key.Product_Option_Variants__r}" var="sub" >                                
+                                                                            <option value="{!sub.Id}" var-type="{!sub.Type__c}"  var-mod="{!sub.wk_wedge__Modifier__c}" opt-name="{!key.name}" opt-value="{!sub.name}">{!sub.name} &#x00028; {!If(sub.Modifier__c >=0 , '+','-')} <apex:outputPanel rendered="{!sub.wk_wedge__Type__c=='Absolute'}">{!Currsymbol}&nbsp;</apex:outputPanel><apex:outputPanel rendered="{!sub.wk_wedge__Type__c=='Percent'}">%</apex:outputPanel> <apex:outputPanel styleClass="modifier"><apex:outputtext value="{0,number,###,##0.00}"><apex:param value="{!sub.wk_wedge__Modifier__c}"/></apex:outputtext></apex:outputPanel> &#x00029;</option>                                
+                                                                        </apex:repeat>
+                                                                    </select>                               
+                                                                </li>
+                                                            </ul>
+                                                        </apex:outputpanel>
+                                                    </apex:repeat>
+                                                    <apex:inputhidden id="costTemp" value="{!costTemp}"/>
+                                                    <apex:inputhidden id="variantDescriptionTemp" value="{!variantDescriptionTemp}"/>
+                                                </apex:outputPanel>
+                                            </apex:form>
+                                            <div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="details-btn">
+                                            <apex:outputpanel rendered="{!AND(NOT(Qproductdetails.wk_wedge__Sold_By_Retailer__c),NOT(Qproductdetails.wk_wedge__Amount__c==0))}"><apex:outputText value="{!$Label.wk_wedge__site_template_product_popup_quantity}"/> :</apex:outputpanel>                                            
+                                            <apex:outputpanel styleclass="quant-group" rendered="{!AND(NOT(Qproductdetails.wk_wedge__Sold_By_Retailer__c),NOT(Qproductdetails.wk_wedge__Amount__c==0))}">
+                                                <input type ="text" class="quant-box" value="1" max="{!Qproductdetails.amount__C}" id="quantval"/>
+                                                <a href="javascript:void(0)" class="quant-controller">
+                                                    <i id="add">&#43;</i>
+                                                    <i id="reduce">&#x2212;</i>
+                                                </a>
+                                            </apex:outputpanel>  
+                                            <apex:outputlink value="javascript:void(0)" onclick="assignValuesTemp()" styleclass="addcart" rendered="{!AND(NOT(Qproductdetails.wk_wedge__Sold_By_Retailer__c),NOT(Qproductdetails.wk_wedge__Amount__c==0))}" title="{!$Label.wk_wedge__site_template_product_popup_add_to_cart_button}"></apex:outputlink>
+                                            <apex:outputlink value="{!urlfor($Page.wk_wedge__productdetail,null,['productid'=Qproductdetails.id])}" styleclass="retailer"  title="{!$Label.wk_wedge__retailers_label}"  rendered="{!Qproductdetails.wk_wedge__Sold_By_Retailer__c}" ></apex:outputlink>
+                                            <apex:outputpanel rendered="{!storeAd.wk_wedge__Request_Quote_key__c!=null && storeAd.wk_wedge__Request_Quote_key__c!='' && storeAd.wk_wedge__Enable_Request_Quote__c==true}">
+                                                <a href="javascript:void(0);" class="addrequestQuote" id="requestQuote" title="{!$Label.wk_wedge__Site_Template_Product_Popup_Request_Quote_Button}"></a>
+                                            </apex:outputpanel>
+                                            <apex:outputPanel style="margin-top:10px;" >
+                                                <apex:outputtext rendered="{!AND(AND(userregenbale,NOT(Qproductdetails.wk_wedge__Sold_By_Retailer__c)),NOT(Qproductdetails.isActive))}" ><a href="javascript:void(0)"  onclick="addtowishlistfunc()" class="addwishlist" title="{!$Label.wk_wedge__Site_Template_Product_Popup_Add_to_wishlist_Button}"></a></apex:outputtext>
+                                                <apex:outputlink rendered="{!AND(AND(userregenbale,NOT(Qproductdetails.wk_wedge__Sold_By_Retailer__c)),Qproductdetails.isActive)}" value="javascript:void(0);" styleclass="addwishlistDisabled" title="{!$Label.wk_wedge__product_already_added_in_wishlist}"/>                                                 
+                                            </apex:outputPanel>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </apex:outputpanel> 
+                        
+                    </div>   
+                    
+                </apex:outputpanel>
+                <script>
+                /*
+                 * JS inside popup as 
+                 * it needs to be rerendered with popup.
+                 */
+                window.thisDesc = $('[id$=proddesc]').text();
+                if(window.thisDesc.length > 125){
+                    $('[id$=proddesc]').text(window.thisDesc.substring(0,120)+'...');
+                    $('#seeMoreDesc').show();
+                }
+                $('#seeMoreDesc').click(function(){
+                    $('[id$=proddesc]').text(window.thisDesc);
+                    $('#seeMoreDesc').hide();
+                    $('#seeLessDesc').show();
+                });
+                $('#seeLessDesc').click(function(){
+                    $('[id$=proddesc]').text(window.thisDesc.substring(0,120)+'...');
+                    $('#seeMoreDesc').show();
+                    $('#seeLessDesc').hide();
+                });
+                </script>
+            </apex:outputpanel> 
+            <apex:outputpanel layout="block" id="TncView" styleclass="productQview offer tnc">
+                <apex:outputpanel layout="block" rendered="{!tnCviEW}">
+                    <div class="wdg-status--loaderbg">
+                        <apex:outputpanel layout="block" styleclass="productQview-wrap" id="qvtncpop">
+                            <div class="productQview-header"> 
+                                <span><apex:outputText value="{!$Label.wk_wedge__site_template_terms_and_conditions}"/></span>
+                                <span class="productQview-close offer" id="details-close">×</span>
+                            </div>
+                            <div class="productQview-details tnc">
+                                <apex:dynamiccomponent componentValue="{!TNCarticle}"/>
+                            </div>
+                        </apex:outputpanel>  
+                    </div>   
+                    
+                </apex:outputpanel>
+            </apex:outputpanel>
+            <apex:outputpanel id="notice" layout="block" styleclass="notices" >
+                <apex:outputpanel layout="block" rendered="{!err}" styleclass="notice-error">
+                    <apex:datalist value="{!notices}" var="notice">
+                        <i class="error"></i><span class="wdg-notice--msg">{!notice}</span><span class="wdg-notice--close"></span>
+                    </apex:datalist>
+                </apex:outputpanel>
+                <apex:outputpanel layout="block" rendered="{!success}" styleclass="notice-success" style="display: block;">
+                    <apex:datalist value="{!notices}" var="notice">
+                        <i class="success"></i><span class="wdg-notice--msg">{!notice}</span><span class="wdg-notice--close"></span>
+                    </apex:datalist>
+                </apex:outputpanel>
+            </apex:outputpanel>
+            <apex:outputpanel id="loginError" layout="block" styleclass="notices">
+                <apex:outputpanel layout="block" rendered="{!$CurrentPage.parameters.loginerr=='1'}" styleclass="notice-error">
+                    <ul class="notice">
+                        <li>
+                            <i class="error"></i><span class="wdg-notice--msg">
+                            {!$Label.Login_failed_Please_check_your_username_and_password}
+                            </span><span class="wdg-notice--close"></span>
+                        </li>
+                    </ul>
+                </apex:outputpanel>
+            </apex:outputpanel>
+            <div class="wdg-pre--header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-8 col-sm-6 col-md-3">
+                            <apex:form styleClass="wdg-disp-ib" rendered="{!AND(enableMulticurrency,CurrencyList.size>1)}">
+                                <div class="wdg-filter--options">
+                                    <apex:selectList value="{!selectedcurrency}" size="1" id="currencylist" rendered="{!if((CurrencyList.size>0),true,false)}">
+                                        <apex:actionSupport action="{!dummymethod}" event="onchange"/>
+                                        <apex:selectOptions value="{!CurrencyList}">
+                                            <!--<span class="caret multidropdownsymbol" style="left: 80%;"></span>-->
+                                            <span class="caret multidropdownsymbol"></span>
+                                        </apex:selectOptions>
+                                        
+                                    </apex:selectList>
+                                    <!--<apex:commandButton action="{!dummymethod}" value="select"/>-->
+                                </div>
+                            </apex:form>
+                            <!--<c:siteMultiLanguage />-->
+                            <apex:form styleClass="wdg-disp-ib" rendered="{!AND(enableMultilanguage,activatedLanguage.size>1)}">
+                                <div class="wdg-filter--options" style="margin-left:10">
+                                    <apex:selectList value="{!selectedLanguage}" multiselect="false" size="1">
+                                        <apex:actionSupport action="{!changeLang}" event="onchange"/>
+                                        <apex:selectOptions value="{!activatedLanguage}">
+                                            <span class="caret multidropdownsymbol"></span>
+                                        </apex:selectOptions>
+                                    </apex:selectList> 
+                                </div>
+                            </apex:form>
+                        </div>
+                        
+                        <div class="col-xs-4 col-sm-6 col-md-9">
+                            <div class="wdg-preheader--navigation">
+                                <ul class="wdg-preheader--navlist">
+                                    <li>
+                                        <apex:outputlink styleclass="preheaderli" title="Check Order" value="/listorder" id="listorder" rendered="{!GuestUser}"><!--{!URLFOR($Page.listorder)}-->
+                                            <i class="checkorder wdg-icon"></i><span>{!$Label.SiteTemplate_Check_Order}</span>
+                                        </apex:outputlink> 
+                                    </li>
+                                    <li>
+                                        <apex:outputlink styleclass="preheaderli" title="Blogs" value="/blog" id="blog" ><!--{!URLFOR($Page.blog)}-->
+                                            <i class="blogdata wdg-icon"></i><span>{!$Label.SiteTemplate_Blogs}</span>
+                                        </apex:outputlink> 
+                                    </li>
+                                    <li class="mobile-display">
+                                        <apex:outputlink styleclass="preheaderli" value="/wishlist" id="wishcount" rendered="{!userregenbale}"> <!--{!URLFOR($Page.wishlist,null,null)} -->
+                                            <i class="wishlist wdg-icon"></i><span>{!$label.Wishlist} ({!wishlistcount})</span>
+                                        </apex:outputlink> 
+                                    </li>
+                                    <li class="dropdown mobile-display">
+                                        <apex:outputText rendered="{!userregenbale}">
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                                                <i class="account wdg-icon"></i>
+                                                <span><apex:outputtext value="{!IF(NOT(ISPICKVAL($User.UserType,'Guest')),$User.FirstName +'  '+$User.LastName,$Label.wk_wedge__sitetemplate_account)}"/></span>
+                                                <span class="caret"></span>
+                                            </a>
+                                        </apex:outputText>
+                                        <div class="dropdown-menu wdg-user--dropdown">
+                                            <apex:form >
+                                                <apex:outputpanel layout="block" styleclass="wdg-signIn--box" rendered="{!ISPICKVAL($User.UserType,'Guest')}">
+                                                    <span class="sign-in--carret"></span>
+                                                    <div class="sign-in">
+                                                        <h4 class="bold" style="padding:10px;border-bottom:1px solid #ddd;"> <apex:outputText value="{!$Label.wk_wedge__sign_in}"/></h4>
+                                                        <p class="sign-in--with"> <apex:outputText value="{!$Label.wk_wedge__sign_in_with_your_e_mail_and_password}"/> </p>
+                                                        <section class="fieldset">
+                                                            <div>
+                                                                <apex:outputlabel value="{!$Label.wk_wedge__site_template_sign_in_email} :" for="usr"></apex:outputlabel>
+                                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__site_template_sign_in_email}" value="{!username}" id="usr"/>
+                                                            </div>
+                                                            
+                                                            <div>
+                                                                <apex:outputlabel value="{!$Label.wk_wedge__site_template_sign_in_password} :" for="pswd"></apex:outputlabel>
+                                                                <apex:inputsecret html-placeholder="********" value="{!password}" id="pswd"/>
+                                                            </div>
+                                                        </section>
+                                                        <div class="wdg-signIn-ctrl clearfix">
+                                                            <apex:commandlink value="{!$Label.wk_wedge__sign_in}" action="{!sitelogin}" styleclass="wdg-btn blue pull-left"/>
+                                                            <a href="{!URLFOR($Page.wedgeforgotpassword)}" class="wdg-btn blue pull-right"><apex:outputText value="{!$Label.wk_wedge__sitetemplate_forgot_password}"/></a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="create-an--account">
+                                                        <h4 class="bold" style="padding:10px;border-bottom:1px solid #ddd;">{!$Label.wk_wedge__register}</h4>
+                                                        <p class="create-acc--here"> {!$Label.wk_wedge__create_a_new_account_here_using_your_email_address}</p>
+                                                        <apex:outputlink value="{!URLFOR($Page.wk_wedge__wedgeSiteRegister)}" styleclass="wdg-btn full-width gray">{!$Label.wk_wedge__create_an_account}</apex:outputlink>
+                                                        
+                                                    </div>
+                                                </apex:outputpanel>
+                                                <apex:outputpanel layout="block" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}" styleclass="wdg-loggedIn--box">
+                                                    <ul class="wdg-loggedIn--nav">
+                                                        <li><a href="{!URLFOR($Page.wk_wedge__UserProfiles)}">{!$Label.wk_wedge__my_profile}</a></li>
+                                                        <li><a href="{!URLFOR($Page.wk_wedge__myorders)}">{!$Label.wk_wedge__my_orders}</a></li>
+                                                        <apex:outputPanel rendered="{!storead.wk_wedge__Enable_Wallet__c}"><li><a href="/mywallet" class="wdg-wallet--menu">{!$Label.My_Wallet} ({!Currsymbol} <!--{!URLFOR($Page.mywallet,null,[wid=wallet.id])}-->
+                                                            <apex:outputtext value="{0,number,###,##0.00}">
+                                                                <apex:param value="{!if((WalletAmount == null),0,WalletAmount)}"/>
+                                                            </apex:outputtext>
+                                                            ) </a></li> </apex:outputPanel>
+                                                        <li><apex:commandbutton value="{!$Label.wk_wedge__sign_out}" action="{!sitelogout}" styleclass="wdg-btn blue wdg-logoff--btn"></apex:commandbutton></li>
+                                                    </ul>
+                                                </apex:outputpanel>
+                                            </apex:form>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wdg-header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-12 text-center">
+                            <apex:outputlink value="{!$Site.baseurl}" styleclass="wdg-site--logo ">
+                                <apex:image url="/servlet/servlet.FileDownload?file={!logo}" rendered="{!logo!=''}" width="257" height="40px"/>
+                            </apex:outputlink>
+                        </div>
+                        <div class="col-md-7 col-sm-9 wdg-search">
+                            <div class="wdg-search--navigation">
+                                <apex:form > 
+                                    <apex:inputtext styleclass="wdg-search--keyword" value="{!queryKeyword}" html-placeholder="{!$Label.wk_wedge__search_here}"/>
+                                    <div class="wdg-search--categories">
+                                        <apex:inputhidden value="{!categoryQuery}" id="catQuery"/>
+                                        <button class="categories-list" id="caret-dropdown" type="button" data-toggle="dropdown" aria-expanded="false">
+                                            <span id="categoryValue">{!categoryKeyword}</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu categories-options " id="dropOpt">
+                                            <li><span id="all"><apex:outputText value="{!$Label.wk_wedge__site_template_search_all_categories}"/></span></li>
+                                        </ul>
+                                    </div>
+                                    <apex:commandLink value="" action="{!search}" styleClass="wdg-search--go">
+                                        <i class="wdg-icon"></i>
+                                    </apex:commandLink>
+                                    <apex:actionfunction name="addtocartfunc" action="{!addToThisCart}" status="docSearch" rerender="cartItems,QuickproductView,rerenderNav,QuickcartView,notice" oncomplete="hideQveiw()">
+                                        <apex:param name="costTemp" value="" assignTo="{!costTemp}"/>
+                                        <apex:param name="variantDescriptionTemp" value="" assignTo="{!variantDescriptionTemp}"/>
+                                    </apex:actionfunction>
+                                    <apex:actionfunction name="addtowishlistfunc" action="{!addToThiswishlist}" status="docSearch" rerender="wishcount,QuickproductView,QuickwishlistView,notice" oncomplete="hideWQveiw()"/>
+                                    <apex:inputhidden value="{!quantity}" id="prodQuantity"/> 
+                                </apex:form>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-3 text-right wdg-cart">
+                            <apex:outputlink id="cartItems" value="{!URLFOR($Page.wk_wedge__viewcart)}" styleclass="wdg-cart--btn wdg-btn blue large">
+                                <i class="wdg-icon cart"></i>
+                                <span>{!$Label.cart}</span>
+                                <span class="wdg-cartitem--highlight">{!cartitems}</span>
+                                <span>{!$Label.Items}</span>
+                            </apex:outputlink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="wdg-categories--megaNav navbar navbar-default">
+                <div class="container">
+                    <div class="row">
+                        <div class="wdg-navmenu">
+                            <div class="wdg-navcat"></div>
+                            <hr/>
+                            <ul id="megaCategories" class="nav navbar-nav"></ul>
+                        </div>
+                        <div class="col-md-12 ">                            
+                            <div class="navbar-header wdg-header--Menu">
+                                <div class="dropdown cat-dropdown" style="display:{!if((catMenuType=='list'),'initial','none')}">
+                                    <button class="btn wdg-categories-new" id="cat-dropdwn" type="button" data-toggle="dropdown">
+                                        {!$Label.wk_wedge__site_template_search_all_categories}
+                                        <span class="caret"></span>
+                                    </button>
+                                </div>
+                                <div class="wdg-lvl2-cat">
+                                    
+                                </div>
+                                <div class="collapse navbar-collapse" id="navbarcat">
+                                    <ul id="megaCategories" class="nav navbar-nav wdg-categories">
+                                        
+                                    </ul>
+                                </div>
+                                <button type="button" class="navbar-toggle"  id="wdgnavmenu">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>                        
+                                </button>
+                                <apex:outputpanel layout="block" id="rerenderNav" styleclass="wdg-navicons">
+                                    <div>
+                                        <div class="wdg-navimg search" title="Search">
+                                            <div></div>                                         
+                                        </div>
+                                        <div class="wdg-navimg user" title="User">
+                                            <div></div>
+                                        </div>
+                                        <div class="wdg-navimg wishlist" title="Wishlist" onclick="redirectWishlist()">
+                                            <div></div>
+                                            <span class="count">{!wishlistcount}</span>
+                                        </div>                              
+                                        <div class="wdg-navimg cart" title="Cart" onclick="redirectcart()">
+                                            <div></div>
+                                            <span class="count">{!cartitems}</span>
+                                        </div>
+                                    </div>
+                                </apex:outputpanel>  
+                            </div>  
+                        </div>                        
+                    </div>
+                </div>
+            </nav>
+            <div class="wdg-header mobile">
+                <div class="wdg-search--navigation mobile">
+                    <apex:form >
+                        <apex:actionfunction name="redirectWishlist" action="{!redirectWishlist}"/>
+                        <apex:actionfunction name="redirectcart" action="{!redirectCart}"/>  
+                        <apex:inputtext styleclass="wdg-search--keyword mobile" value="{!queryKeyword}" html-placeholder="{!$Label.wk_wedge__search_here}"/>
+                        <div class="wdg-search--categories mobile">
+                            <apex:inputhidden value="{!categoryQuery}" id="catQuery"/>
+                            <button class="categories-list mobile" id="" type="button" data-toggle="dropOpt" aria-expanded="false">
+                                <span id="categoryValue">{!categoryKeyword}</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu categories-options mobile" id="dropOpt">
+                                <li><span id="all">{!$Label.wk_wedge__site_template_search_all_categories}</span></li>
+                            </ul>
+                        </div>
+                        <apex:commandLink value="" action="{!search}" styleClass="wdg-search--go moblie">
+                            <i class="wdg-icon"></i>
+                        </apex:commandLink>
+                        <apex:actionfunction name="addtocartfunc" action="{!addToThisCart}" status="docSearch" rerender="cartItems,QuickproductView,QuickcartView,notice" oncomplete="hideQveiw()">
+                            <apex:param name="costTemp" value="" assignTo="{!costTemp}"/>
+                            <apex:param name="variantDescriptionTemp" value="" assignTo="{!variantDescriptionTemp}"/>
+                        </apex:actionfunction>
+                        <apex:actionfunction name="addtowishlistfunc" action="{!addToThiswishlist}" status="docSearch" rerender="wishcount,QuickproductView,QuickwishlistView,notice" oncomplete="hideWQveiw()"/>
+                        <apex:inputhidden value="{!quantity}" id="prodQuantity"/> 
+                    </apex:form>
+                </div>
+            </div>
+            <div class="dropdown-menu mobile wdg-user--dropdown">
+                <apex:form >
+                    <apex:outputpanel layout="block" styleclass="wdg-signIn--box mobile container" rendered="{!ISPICKVAL($User.UserType,'Guest')}">
+                        <span class="sign-in--carret"></span>
+                        <div class="row">
+                            <div class="sign-in col-sm-12 col-md-6">
+                                <h4 class="bold sign-in-heading" > {!$Label.wk_wedge__sign_in}</h4>
+                                <p class="sign-in--with"> {!$Label.wk_wedge__sign_in_with_your_e_mail_and_password} </p>
+                                <section class="fieldset">
+                                    <div>
+                                        <apex:outputlabel value="{!$Label.wk_wedge__site_template_sign_in_email} :" for="usr"></apex:outputlabel>
+                                        <apex:inputtext html-placeholder="{!$Label.wk_wedge__site_template_sign_in_email}" value="{!username}" id="usr"/>
+                                    </div>
+                                    <div>
+                                        <apex:outputlabel value="{!$Label.wk_wedge__site_template_sign_in_password} :" for="pswd"></apex:outputlabel>
+                                        <apex:inputsecret html-placeholder="********" value="{!password}" id="pswd"/>
+                                    </div>
+                                </section>
+                                <div class="wdg-signIn-ctrl clearfix">
+                                    <apex:commandlink value="{!$Label.wk_wedge__sign_in}" action="{!sitelogin}" styleclass="wdg-btn blue pull-left signin"/>
+                                    <a href="{!URLFOR($Page.wedgeforgotpassword)}" class="wdg-btn large blue pull-right signin">{!$Label.wk_wedge__sitetemplate_forgot_password}</a>
+                                </div>
+                            </div>
+                            <div class="create-an--account col-sm-12 col-md-6">
+                                <h4 class="bold sign-in-heading">{!$Label.REGISTER}</h4>
+                                <p class="create-acc--here"> {!$Label.Create_a_new_account_here_using_your_email_address}</p>
+                                <apex:outputlink value="{!URLFOR($Page.wk_wedge__wedgeSiteRegister)}" styleclass="wdg-btn full-width gray">{!$Label.wk_wedge__create_an_account}</apex:outputlink>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                    <apex:outputpanel layout="block" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}" styleclass="wdg-loggedIn--box mobile">
+                        <ul class="wdg-loggedIn--nav mobile">
+                            <li><a href="{!URLFOR($Page.wk_wedge__UserProfiles)}">{!$Label.wk_wedge__my_profile}</a></li>
+                            <li><a href="{!URLFOR($Page.wk_wedge__myorders)}">{!$Label.wk_wedge__my_orders}</a></li>
+                            <apex:outputPanel rendered="{!storead.wk_wedge__Enable_Wallet__c}"><li><a href="{!URLFOR($Page.mywallet,null,[wid=wallet.id])}" class="wdg-wallet--menu">{!$Label.My_Wallet} ({!Currsymbol} 
+                                <apex:outputtext value="{0,number,###,##0.00}">
+                                    <apex:param value="{!if((WalletAmount == null),0,WalletAmount)}"/>
+                                </apex:outputtext>
+                                ) </a></li> </apex:outputPanel>
+                            <li><apex:commandbutton value="{!$Label.wk_wedge__sign_out}" action="{!sitelogout}" styleclass="wdg-btn blue wdg-logoff--btn"></apex:commandbutton></li>
+                        </ul>
+                    </apex:outputpanel>
+                </apex:form>
+            </div>
+            <div class="dropdown-menu mobile wdg-user--dropdown"></div>
+            <section class="wdg-template--body">
+                
+                <apex:insert name="templatebody"/>
+            </section>   
+            <apex:outputpanel layout="block" styleclass="wdg-pre--footer" rendered="{!Componentstatus['Footer Menu Links']}">
+                <div class="container">
+                    <div class="row">
+                        <div class="">
+                            <div class="wdg-prefooter--table">
+                                <div class="footer-col--1  col-md-3 col-sm-12 col-xs-12">
+                                    <ul class="links"></ul>
+                                </div>
+                                <div class="footer-col--2  col-md-3 col-sm-12 col-xs-12">
+                                    <ul class="links"></ul>
+                                </div>
+                                <div class="footer-col--3  col-md-3 col-sm-12 col-xs-12">
+                                    <ul class="links"></ul>
+                                </div>
+                                <div class="footer-col--4  col-md-3 col-sm-12 col-xs-12">
+                                    <ul class="links"></ul>
+                                    <apex:datalist value="{!socialMedia}" var="tsocial" styleclass="wdg-social" rendered="{!AND(Componentstatus['Social Icons'],socialMedia.size>0)}">
+                                        <!--<apex:outputlink value="{!tsocial.wk_wedge__Url__c}">
+<apex:image url="/servlet/servlet.FileDownload?file={!tsocial.wk_wedge__Image_id__c}"/>
+</apex:outputlink>-->
+                                        <apex:outputlink value="{!tsocial.wk_wedge__Url__c}" target="{!tsocial.wk_wedge__Target__c}" >
+                                            <apex:image url="/servlet/servlet.FileDownload?file={!tsocial.wk_wedge__Image_id__c}"/>
+                                        </apex:outputlink>
+                                    </apex:datalist>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </apex:outputpanel>
+            <apex:outputpanel layout="block" styleclass="wdg--footer" rendered="{!Componentstatus['Footer Text']}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <apex:dynamicComponent componentvalue="{!footertextval}" />   
+                        </div>
+                    </div>
+                </div>
+            </apex:outputpanel>
+            <apex:form >
+                <apex:actionFunction name="viewMakeOfferPopup" action="{!ViewMakeAnOfferPopup}" status="docSearch" rerender="makeanofferview"/>
+                <apex:actionFunction name="createquote" action="{!createquote}" rerender="makeanofferview, notice" status="docSearch" oncomplete="closenotifications()"/>
+                <apex:inputhidden value="{!quoteInfo}" id="quoteInfomain"/>
+                <apex:inputhidden value="{!productOpt}" id="productOptmain"/>
+            </apex:form>
+            
+        </body>
+        
+        <script>
+        
+        $=jQuery.noConflict();
+        (function($){
+             
+            /*if(navigator.userAgent.includes("Firefox")){
+                        alert('working');
+                        $('wdg-prefooter--btn').css('word-break','break-all');
+                    }*/
+                    generateNavCategoryView();   
+                    $('[Id$="wdgnavmenu"]').click(function(e){                  
+                        $('.dropdown-menu.mobile').slideUp();
+                        $('.wdg-header.mobile').slideUp(); 
+                        $('.wdg-navmenu').addClass('show');                                                                 
+                    });
+                    $('body').click(function(e){
+                        var rem = $(e.target).attr('class'); 
+                        if(rem!='icon-bar' && rem!='navbar-toggle'){
+                            $('.wdg-navmenu').removeClass('show');
+                        }
+                    });
+                    $('.wdg-navimg.search').click(function(e){
+                        $('.dropdown-menu.mobile').hide();
+                        $('.wdg-navmenu').removeClass('show');
+                        $('.wdg-header.mobile').slideToggle();
+                        
+                    });
+                    $('.wdg-navimg.user').click(function(e){
+                        $('.wdg-header.mobile').hide();
+                        $('.wdg-navmenu').removeClass('show');
+                        $('.dropdown-menu.mobile').slideToggle();
+                    });
+                    function generateNavCategoryView(){
+                        var megaCategories='{!JSENCODE(jsonstring)}';
+                        var categoryarr = JSON.parse(megaCategories);
+                        var dd = $('.wdg-navcat').append('<ul class="nav navbar-nav"></ul>');
+                        dd = (dd).children("ul");
+                        var screenHeight = $(window).height();
+                        screenHeight = parseInt((screenHeight-150)/36);
+                        var imgvar = "{!urlfor($resource.wedgecommerce,'/wedgeCommerce/images/dropdown-icon.png')}";
+                        for(var i = 0;i<categoryarr.length && i<screenHeight-1;i++){
+                            //console.log(categoryarr[i]);
+                            var name = categoryarr[i].title;
+                            if(name.length>35){
+                                name = name.substring(0,30)+'...';
+                            }
+                            var d2d = $(dd).append('<li><a href="{!$Site.baseUrl}/'+categoryarr[i].alias+'" class="root-cat-link">'+name+'</a></li>');
+                            if(categoryarr[i].haschildren){
+                                d2d = $(d2d).children().last().children();
+                                $(d2d).append('<span class="sign-in--carret menucaret" style="top:'+((i-1)*37+62)+'px"></span>');
+                                $(d2d).append('<div class="openside"></div>');
+                                d2d = $(d2d).children('div');
+                                d2d = $('.wdg-navcat').append('<div class="sub-cat-menu" id="nav'+categoryarr[i].alias.replace(/[^a-zA-Z 0-9]+/g,'')+'-sub-menu" style="min-height:'+((i)*37+40)+'px;top:100%; max-height:'+screenHeight*37+'px"><ul class="dropdown-menu" id="nav_sub_cat_1"></ul></div>');
+                                d2d = $(d2d).children('div').children('ul').last();
+                                //console.log(categoryarr[i].children);
+                                var k=0;
+                                for(var j=0;j<categoryarr[i].children.length && (j+k)< screenHeight*3-1;j++){
+                                    var subname = categoryarr[i].children[j].title;
+                                    if(subname.length>30){
+                                        subname = subname.substring(0,28)+'...';
+                                    }
+                                    if((j+k)%screenHeight == 0 && j!=0){
+                                        $(d2d).parent().outerWidth($(d2d).parent().outerWidth()+280);
+                                        $(d2d).parent().append('<ul id="nav_sub_cat_'+((j+k)/screenHeight)+'" class="dropdown-menu"></ul>');
+                                        d2d = $(d2d).siblings('ul').last();
+                                    }
+                                    $(d2d).append('<li><a href="{!$Site.baseUrl}/'+categoryarr[i].alias+'/'+categoryarr[i].children[j].alias+'" class="main_sub">'+subname+'</a></li>');
+                                    if(categoryarr[i].children[j].haschildren){
+                                        //d3d = $(d3d).children().last().children();
+                                        //console.log(categoryarr[i].children[j].children.length);
+                                        for(k=0; k<categoryarr[i].children[j].children.length && k<4 && (j+k)< screenHeight*3-1;k++){
+                                            var subsubname = categoryarr[i].children[j].children[k].title;
+                                            if(subsubname.length>30){
+                                                subsubname = subsubname.substring(0,28)+'...';
+                                            }
+                                            $(d2d).append('<li><a href="{!$Site.baseUrl}/'+categoryarr[i].alias+'/'+categoryarr[i].children[j].alias+'/'+categoryarr[i].children[j].children[k].alias+'">'+subsubname+'</a></li>');
+                                        }
+                                        if(categoryarr[i].children[j].children.length > 4){
+                                            $(d2d).append('<li><a href="{!$Site.baseUrl}/'+categoryarr[i].alias+'/'+categoryarr[i].children[j].alias+'" class="viewall-class">View All</a></li>');
+                                        }
+                                    }
+                                    //$(d2d).append('<hr/>');
+                                    /*if(categoryarr[i].children.length>screenHeight){
+                                        $('.cat-main-menu').append('<li><a>View All</a></li>');
+                                    }*/
+                                }
+                            }
+                        }
+                        if(categoryarr.length>screenHeight){
+                            $('.cat-main-menu').append('<li><a href="{!$Site.baseUrl}/all_categories" class="viewall-class">View All</a></li>');
+                        }
+                        $('.cat-main-menu li a').hover(function(){
+                            //$('.active-carret').removeClass('active-carret');
+                            $('.active-sub-menu').removeClass('active-sub-menu');
+                            $('.active-main-menu').removeClass('active-main-menu');
+                            $(this).children('span').addClass('active-carret');
+                            $(this).addClass('active-main-menu');
+                            var textval = $(this).attr('href').substring('{!$Site.baseUrl}'.length+1);
+                            console.log(textval);
+                            $('#'+textval.replace(/[^a-zA-Z 0-9]+/g,'')+'-sub-menu').addClass('active-sub-menu');
+                        });
+                    }
+                }(jQuery));             
+      </script>
+      <script>
+      $=jQuery.noConflict();
+      (function($){
+          window.ShowAlert = function(AlertText){
+              $('#wdg-custom-alrt--text').text(AlertText);
+              $('.wdg-alert--container').show();
+              return 1;
+          }
+         
+          
+          generateHomeCategoryView();
+          
+          $('#cat-dropdwn').click(function(){
+              var count = $('.cat-main-menu').children('li').length;
+              //console.log('test'+$(window).height());
+              if($(this).siblings('ul').outerHeight()==0){
+                  var listTop = $('.wdg-categories-new').innerHeight();
+                  $('.cat-main-menu').css('top',(listTop-1)+'px');
+                  //$('.cat-main-menu').animate({height:count*36+'px'},'1s');
+                  var screenHeight = $(window).height();
+                  screenHeight = parseInt((screenHeight-150)/37);
+                  if(screenHeight > count)
+                      screenHeight = count;
+                  //console.log(screenHeight+ ' ' + count);
+                  //console.log($('.cat-main-menu li:nth-child('+(2*screenHeight-1)+')'));
+                  if(screenHeight>1){
+                      $('.cat-main-menu li:nth-child('+(2*screenHeight-1)+')').children('a').text('View All');
+                      $('.cat-main-menu li:nth-child('+(2*screenHeight-1)+')').children('a').attr('href','{!$Site.baseUrl}/all_categories');
+                      $('.cat-main-menu li:nth-child('+(2*screenHeight-1)+')').children('a').addClass('viewall-class');
+                  }
+                  $('.cat-main-menu').animate({height:screenHeight*37+'px'},'1s');
+                  $('.cat-main-menu').css("display","inline-block");
+                  $('.cat-main-menu').css("border","1px solid rgba(0,0,0,.175)");
+              }else{
+                  /*$('.active-sub-menu').removeClass('active-sub-menu');
+                    $('.cat-main-menu').animate({height:'0'},'1s','linear',function(){
+                        $('.cat-main-menu').css("display","none");
+                    });*/
+                    $(this).trigger('blur');
+                    //$('.cat-main-menu').css("border","none");
+                }
+                //$('.cat-main-menu').animate({box-shadow:"0 6px 12px rgba(0,0,0,.175)"   1px solid rgba(0,0,0,.15)});
+            });
+            
+            $('#cat-dropdwn,.cat-main-menu').blur(function(){
+                setTimeout(hideMainCat,250);
+            });
+            
+            function hideMainCat(){
+                $('.cat-main-menu').animate({height:"0%"},'1s','linear',function(){
+                    $(this).css("border","none");
+                    $(this).css("display","none");
+                    $('.active-sub-menu').removeClass('active-sub-menu');
+                });
+            }
+            $('.wdg-search--categories.mobile').click(function(){
+                $(this).find('ul').slideToggle();
+            });
+            
+            function generateHomeCategoryView(){
+                var megaCategories='{!JSENCODE(jsonstring)}';
+                var categoryarr = JSON.parse(megaCategories);
+                var dd = $('.cat-dropdown').append('<ul class="dropdown-menu cat-main-menu"></ul>');
+                dd = (dd).children("ul");
+                var screenHeight = $(window).height();
+                screenHeight = parseInt((screenHeight-150)/36);
+                var imgvar = "{!urlfor($resource.wedgecommerce,'/wedgeCommerce/images/dropdown-icon.png')}";
+                for(var i = 0;i<categoryarr.length && i<screenHeight-1;i++){
+                    //console.log(categoryarr[i]);
+                    var name = categoryarr[i].title;
+                    if(name.length>35){
+                        name = name.substring(0,30)+'...';
+                    }
+                    var d2d = $(dd).append('<li><a href="{!$Site.baseUrl}/'+categoryarr[i].alias+'" class="root-cat-link">'+name+'</a></li>');
+                    if(categoryarr[i].haschildren){
+                        d2d = $(d2d).children().last().children();
+                        //console.log(d2d);
+                        $(d2d).append('<span class="sign-in--carret menucaret" style="top:'+((i-1)*37+62)+'px"></span>');
+                        $(d2d).append('<div class="openside"></div>');
+                        d2d = $(d2d).children('div');
+                        //d2d = $('.cat-dropdown').append('<ul class="dropdown-menu sub-cat-menu" id="'+categoryarr[i].alias+'-sub-menu" style="top:'+((i)*36+40)+'px"></ul>');
+                        d2d = $('.cat-dropdown').append('<div class="sub-cat-menu" id="'+categoryarr[i].alias.replace(/[^a-zA-Z 0-9]+/g,'')+'-sub-menu" style="min-height:'+((i)*37+40)+'px;top:100%; max-height:'+screenHeight*37+'px"><ul class="dropdown-menu" id="sub_cat_1"></ul></div>');
+                        d2d = $(d2d).children('div').children('ul').last();
+                        //console.log(categoryarr[i].children);
+                        var k=0;
+                        for(var j=0;j<categoryarr[i].children.length && (j+k)< screenHeight*3-1;j++){
+                            var subname = categoryarr[i].children[j].title;
+                            if(subname.length>30){
+                                subname = subname.substring(0,28)+'...';
+                            }
+                            if((j+k)%screenHeight == 0 && j!=0){
+                                $(d2d).parent().outerWidth($(d2d).parent().outerWidth()+280);
+                                $(d2d).parent().append('<ul id="sub_cat_'+((j+k)/screenHeight)+'" class="dropdown-menu"></ul>');
+                                d2d = $(d2d).siblings('ul').last();
+                            }
+                            $(d2d).append('<li><a href="{!$Site.baseUrl}/'+categoryarr[i].alias+'/'+categoryarr[i].children[j].alias+'" class="main_sub">'+subname+'</a></li>');
+                            if(categoryarr[i].children[j].haschildren){
+                                //d3d = $(d3d).children().last().children();
+                                //console.log(categoryarr[i].children[j].children.length);
+                                for(k=0; k<categoryarr[i].children[j].children.length && k<4 && (j+k)< screenHeight*3-1;k++){
+                                    var subsubname = categoryarr[i].children[j].children[k].title;
+                                    if(subsubname.length>30){
+                                        subsubname = subsubname.substring(0,28)+'...';
+                                    }
+                                    $(d2d).append('<li><a href="{!$Site.baseUrl}/'+categoryarr[i].alias+'/'+categoryarr[i].children[j].alias+'/'+categoryarr[i].children[j].children[k].alias+'">'+subsubname+'</a></li>');
+                                }
+                                if(categoryarr[i].children[j].children.length > 4){
+                                    $(d2d).append('<li><a href="{!$Site.baseUrl}/'+categoryarr[i].alias+'/'+categoryarr[i].children[j].alias+'" class="viewall-class">View All</a></li>');
+                                }
+                            }
+                            $(d2d).append('<hr/>');
+                            /*if(categoryarr[i].children.length>screenHeight){
+                                $('.cat-main-menu').append('<li><a>View All</a></li>');
+                            }*/
+                        }
+                    }
+                    $(dd).append('<hr/>');
+                }
+                if(categoryarr.length>screenHeight){
+                    $('.cat-main-menu').append('<li><a href="{!$Site.baseUrl}/all_categories" class="viewall-class">View All</a></li>');
+                }
+                $('.cat-main-menu li a').hover(function(){
+                    $('.active-carret').removeClass('active-carret');
+                    $('.active-sub-menu').removeClass('active-sub-menu');
+                    $('.active-main-menu').removeClass('active-main-menu');
+                    //console.log('test');
+                    $(this).children('span').addClass('active-carret');
+                    $(this).addClass('active-main-menu');
+                    var textval = $(this).attr('href').substring('{!$Site.baseUrl}'.length+1);
+                    //console.log(textval);
+                    $('#'+textval.replace(/[^a-zA-Z 0-9]+/g,'')+'-sub-menu').addClass('active-sub-menu');
+                });
+            }
+            
+            
+            $(document).on('click','.variantstemp',function(){
+                var listPrice = $("[id$='listpriceTemp']").val();         
+                var existing =parseFloat(listPrice);
+                $(".em_productfeatures input:checked").each(function(){
+                    var id = $(this).val();
+                    if(id!='--None--'){
+                        var typ = $(this).attr('var-type');
+                        if(typ == 'Percent'){
+                            var value = parseFloat($(this).attr('var-mod') * existing)/100;
+                            existing += value;
+                        }else{
+                            existing += parseFloat($(this).attr('var-mod'));
+                        }
+                    }
+                    
+                    
+                });                       
+                $(".em_productfeatures select").each(function(){
+                    var id = $(this).val();
+                    if(id!='--None--'){
+                        var typ = $(this).find('option:selected').attr('var-type');
+                        if(typ == 'Percent'){
+                            var value = parseFloat($(this).find('option:selected').attr('var-mod') * existing)/100;
+                            existing += value;                      
+                        }else{
+                            existing += parseFloat($(this).find('option:selected').attr('var-mod'));
+                        }
+                        
+                    }                
+                });
+                $("[id$='ProductOptions']").html('Price : {!Currsymbol}  '+existing.toFixed(2).replace(/./g, function(c, i, a) {
+                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                }));
+                $("[id$='costTemp']").val(existing.toString());
+            });
+        }(jQuery));
+      function assignValuesTemp(){
+          $("[id$='variantDescriptionTemp']").val('');
+          var variant = $("[id$='variantDescriptionTemp']").val();
+          
+          $(".em_productfeatures input:checked").each(function(){                
+              variant += $(this).val()+';';             
+          });                       
+          $(".em_productfeatures select").each(function(){
+              var id = $(this).val();
+              if(id!='--None--'){
+                  variant += $(this).val()+';';       
+              }            
+          });
+          
+          variant = variant.substring(0,variant.length-1);
+          if(variant!=''){
+              $("[id$='variantDescriptionTemp']").val(variant);            
+          }else{
+              $("[id$='variantDescriptionTemp']").val('');
+              $("[id$='costTemp']").val($("[id$='listpriceTemp']").val()); 
+          }
+          addtocartfunc($("[id$='costTemp']").val(),$("[id$='variantDescriptionTemp']").val());
+          
+      }
+      
+      </script>
+      <script>
+      var dropdownList='{!JSENCODE(CategoriesforDrop)}';
+      var megaCategories='{!JSENCODE(jsonstring)}';
+      var headerslinks='{!JSENCODE(MenuLinksJson)}'; 
+      var footerlinks='{!JSENCODE(allFooterLinks)}';
+      var npsc='wk_wedge__';          
+      var TimeoutVal='{!TimeoutValue}';        
+      </script>
+      <!--/** script for mega menu categories **/ -->
+      <script>
+      window.childCategories=function(data){
+          var begin='';
+          for(var item=0;item<data.length;item++){
+              if(data[item].alias!==undefined && data[item].title!==undefined){
+                  begin+='<li class="subcategories--col"><div><a href="'+siteurl+'/'+data[item].alias+'">'+data[item].title+'</a></div><ul class="submenu-type-list">';
+                  if(data[item].children !==undefined){
+                      for(var a=0;a<data[item].children.length;a++)
+                          begin+='<li class="child-categories"><a href="'+siteurl+'/'+data[item].alias+'">'+data[item].children[a].title+'</a></li>';
+                  }
+                  begin+='</ul></li>';
+              }
+          }
+          return begin; 
+      }
+      window.subChildCategories=function(data){
+          var begin='';
+          for(item in data){
+              if(data[item].alias!==undefined && data[item].title!==undefined){
+                  begin+='<li class="child-categories"><a href="'+siteurl+'/'+data[item].alias+'">'+data[item].title+'</a></li>';
+              }
+          }
+          return begin;
+      }
+      window.rootcategories=function (data){
+          var begin='';
+          for(var item=0;item<data.length;item++){
+              if(data[item].alias!==undefined && data[item].title!==undefined){
+                  begin+='<li><a href="'+siteurl+'/'+data[item].alias+'">'+data[item].title+'</a>';
+                  
+                  if(data[item].children!==undefined){
+                      var count=0;
+                      var childData=data[item].children;
+                      for(child in childData){
+                          if(childData[child].children!==undefined)
+                              count+=1;
+                      }
+                      if(count>0){
+                          begin+='<div class="nav-wrap"><ul class="wdg-root--nav" style="left:auto;">'
+                          begin+=childCategories(data[item].children);
+                          begin+='</div></ul>';
+                      }    
+                      else{
+                          begin+='<div class="nav-wrap"><ul class="wdg-root--nav" style="left:auto;">';
+                          begin+=subChildCategories(data[item].children);
+                          begin+='</div></ul>';
+                      } 
+                      
+                  }
+                  
+                  begin+='</li>';
+              }
+          }
+          begin+=''
+          return begin;
+      };
+      window.headerLinks=function(menuitem){
+          var s='';
+          for(var item=0;item<menuitem.length;item++ ){
+              if(menuitem[item][npsc+'Url__c']!==undefined && menuitem[item][npsc+'title__c']!==undefined){
+                  if(menuitem[item][npsc+'URL_Target__c']=='New')
+                      s+='<li><a href="'+menuitem[item][npsc+'Url__c']+'" target="_blank">'+menuitem[item][npsc+'title__c']+'</a>';
+                  else
+                      s+='<li><a href="'+menuitem[item][npsc+'Url__c']+'">'+menuitem[item][npsc+'title__c']+'</a>';
+              }
+          }
+          return s;
+      }
+      window.emailValidatior=function(str){
+          var regex=/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+          regex.test(str);
+      }
+      $=jQuery.noConflict();
+      (function($){
+          $( document ).ready(function(){
+              $('.wdg-alert--close').click(function(){
+                  $('.wdg-alert--container').hide();
+              });
+              if(megaCategories!=null && megaCategories!=''){
+                  var categories=JSON.parse(megaCategories);
+                  if('{!catMenuType}' == 'list'){
+                      $("[Id$='megaCategories']").html(window.headerLinks(JSON.parse(headerslinks)));
+                  }else{
+                      $("[Id$='megaCategories']").html(window.rootcategories(categories)+window.headerLinks(JSON.parse(headerslinks)));
+                  }
+              }
+          }); 
+          $(document ).on("mouseenter", ".wdg [Id$='megaCategories']>li",function(){
+              $('div>ul',this).addClass('wdg-show');
+              var wid=0;
+              var widx=0;
+              $(this).prevAll().each(function(){
+                  wid+=$(this).width();
+              });
+              $('div>ul>li',this).each(function(){
+                  widx+=$(this).width();
+              });
+              wid=$(this).parent().width()-wid;
+              if(widx> wid){
+                  $('.nav-wrap',this).addClass('wdg-shift--right');
+              }
+          });
+          $(document ).on("mouseleave", ".wdg [Id$='megaCategories']>li",function(){
+              $('div>ul',this).addClass('wdg-show');
+              $('.wdg-root--nav').removeClass('wdg-show');
+              $('.nav-wrap',this).removeClass('wdg-shift--right');
+          }); 
+      }(jQuery));
+      
+      </script>
+      <script>
+      $=jQuery.noConflict();
+      (function($){
+          $( document ).ready(function(){
+              var temp = $("[Id$='categoryValue']").html();
+              if(temp.length > 15)
+                  temp = temp.substring(0,12)+'...';
+              $("[Id$='categoryValue']").html(temp);
+              if(dropdownList!=null && dropdownList!=''){
+                  var categories=JSON.parse(dropdownList);
+                  var opt='';
+                  for(key in categories){
+                      if(categories[key]["Id"]!==undefined && categories[key]["Name"]!==undefined){
+                          var temp = categories[key]["Name"];
+                          if(temp.length > 15)
+                              temp = temp.substring(0,12)+'...';
+                          opt+='<li><span id="'+categories[key]["Id"]+'">'+temp+'</span>';
+                      }
+                  }
+                  $("[Id$='dropOpt']").append(opt);
+              }
+          }); 
+          $( document ).on("click",".wdg .wdg-header .wdg-search--categories .categories-options li>span",function(){
+              var temp = $(this).text();
+              if(temp.length > 15)
+                  temp = temp.substring(0,12)+'...';
+              $("[Id$='categoryValue']").html(temp);
+              $("[Id$='catQuery']").val($(this).attr('id'));
+          });     
+      }(jQuery));
+      </script>
+      <!-- /* footer Links JS  **/ -->
+      <script>
+      $=jQuery.noConflict();
+      (function($){
+          window.createFooterLinks=function(link,className){
+              if(className == 'wdg-prefooter--btn')
+                  return '<li><button class="'+className+'" onclick="window.location.href=\''+link[npsc+"Url__c"]+'\'">'+link[npsc+"title__c"]+'</button></li>';
+              else if(link[npsc+"URL_Target__c"] == "New")
+                  return '<li><a class="'+className+'" href="'+link[npsc+"Url__c"]+'" target="_blank">'+link[npsc+"title__c"]+'</a></li>';
+              return '<li><a class="'+className+'" href="'+link[npsc+"Url__c"]+'">'+link[npsc+"title__c"]+'</a></li>';
+          }
+          window.createTextBlock =function(link){
+              var textBlock='<li><div class="wdg-footer--textBlock">';
+              textBlock+='<h5>'+link[npsc+"title__c"]+'</h5>'
+              textBlock+='<p>'+link[npsc+"Description__c"]+'</p>'
+              textBlock+='</div></li>'
+              
+              return textBlock;
+              
+          }
+          window.checkforType=function(link){
+              var str='';
+              if(link[npsc+"Type__c"]=='Contact Us'|| link[npsc+"Type__c"]=='Article' || link[npsc+"Type__c"]=='Link'){
+                  str=window.createFooterLinks(link,'wdg-prefooter--link');
+                  
+              }
+              else if(link[npsc+"Type__c"]=='Button'){
+                  str=window.createFooterLinks(link,'wdg-prefooter--btn');
+                  
+              }
+                  else if(link[npsc+"Type__c"]=='Text Block'){
+                      str=window.createTextBlock(link);
+                      
+                  }
+              return str;
+              
+          }
+          window.closenotifications=function(){
+              var timeoutvalue= parseInt(TimeoutVal);
+              if(isNaN(timeoutvalue))
+                  timeoutvalue=1500;
+              setTimeout(function(){
+                  $(".wdg .notices>div>ul").remove();
+                  $(".wdg .details.details-close").trigger("click");
+              },timeoutvalue );
+          }
+          $(document).on("click",".wdg .notices>div>ul>li>span.wdg-notice--close",function(){
+              $(this).parent().remove();
+              
+          });
+          $(document).on("click",".wdg .wdg-wishlist--view .details.detail-header [Id$='details-close'],.wdg .wdg-cart--view .details.detail-header [Id$='details-close'],.wdg .productQview .productQview-header [Id$='details-close']",function(){
+              $(this).parent().parent().parent().remove();
+              
+          });
+          $( document).on('click',' .quant-controller>#reduce',function(){
+              var a=parseInt($("[Id$='quantval']").val());
+              a=a-1;
+              var val=1;
+              a= a > val?a:val;
+              $("[Id$='quantval']").val(a);
+              $("[Id$='prodQuantity']").val(a);
+          });
+          $( document).on('click','.quant-controller>#add',function(){
+              //console.log('test quan');
+              var a=parseInt($("[Id$='quantval']").val());
+              a=a+1;
+              var val=parseInt($("[Id$='quantval']").attr('max'));
+              a= a < val?a:val;
+              $("[Id$='quantval']").val(a);
+              $("[Id$='prodQuantity']").val(a);
+          });
+          $( document ).ready(function(){
+              window.closenotifications();
+              var links=JSON.parse(footerlinks);
+              for(key in links){
+                  if(links[key][npsc+"Position__c"]=='Column 1'){                                    
+                      $(".wdg-pre--footer .wdg-prefooter--table .footer-col--1 ul.links ").append(window.checkforType(links[key]));
+                  }
+                  if(links[key][npsc+"Position__c"]=='Column 2'){
+                      $(".wdg .wdg-pre--footer .wdg-prefooter--table .footer-col--2 ul.links ").append(window.checkforType(links[key]));
+                  }
+                  if(links[key][npsc+"Position__c"]=='Column 3'){
+                      $(".wdg .wdg-pre--footer .wdg-prefooter--table .footer-col--3 ul.links ").append(window.checkforType(links[key]));
+                  }
+                  if(links[key][npsc+"Position__c"]=='Column 4'){
+                      $(".wdg .wdg-pre--footer .wdg-prefooter--table .footer-col--4 ul.links ").append(window.checkforType(links[key]));
+                  }
+              }
+          });
+          $( document).on("mouseenter"," .wdg-page--block .wdg-panel--block .panel-product--row .product-details--container ",function(){
+              $(".product-image--wrapper",this).addClass("shady");
+          }).on("mouseleave"," .wdg-page--block .wdg-panel--block .panel-product--row .product-details--container ",function(){
+              $(".product-image--wrapper",this).removeClass("shady");
+          });
+      }(jQuery));
+      </script>
+      <!--<apex:includeScript value="{!$Resource.wedgeCommerceFormValidation}"/>-->
+      <!--<apex:includeScript value="/resource/1513340041000/wedgeCommerceFormValidation"/>-->
+      <script>
+      window.exchangeRate = {!exchangeRate};
+      $=jQuery.noConflict();
+      (function($){
+          $(document).load(function(){
+              window.exchangeRate = {!exchangeRate};
+              //console.log(exchangeRate);
+          });
+          var quoteInfomain = $('[Id$="quoteInfomain"]').val();
+          $(document).on('click','[Id$="requestQuote"]',function(){
+              $('[Id$="QuickproductView"] .wdg-status--loaderbg').css('z-index','222');
+              $('[Id$="QuickproductView"] .wdg-status--loaderbg').css('display','none');
+              viewMakeOfferPopup();
+          });
+          /*$(document).on('click','[Id$="selectOptions"]',function(){
+                   alert('working');
+               });*/
+          $(document).on('click','.createOffer',function(e){
+              var str= $('.wdg-offer-email').val();
+              var bool = false;
+              var num = '';
+              $('.wdg-offer-number').each(function(){
+                  num += $(this).val();
+              });
+              if(!str.match(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/) ){
+                  $('.wdg-offer-email').addClass('err');
+                  
+              }else if(num.match(/[^0-9]/)){
+                  $('.wdg-offer-number').each(function(){                           
+                      var ind= $(this).val(); 
+                      if(ind!=null && ind!=''){
+                          $(this).addClass('err');
+                      }
+                  });
+              }else{
+                  $('.wdg-offer-email').removeClass('err');
+                  var obj = {'email':'','price':'','quantity':'','otherInfo':''};
+                  obj['email']=$('.wdg-offer-email').val();
+                  var otherInfo='';
+                  $('.wdg-offer-number').each(function(){                           
+                      var name=$(this).attr('var-name');
+                      $(this).removeClass('err');                           
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }
+                      if(name=='Price per Product'){
+                          obj['price']=$(this).val();
+                          //console.log(exchangeRate);
+                          //console.log(obj['price']/exchangeRate);
+                          obj['price'] = obj['price']/exchangeRate;
+                          obj['price'] = obj['price'].toFixed(2);
+                      }else if(name=='Product Quantity'){
+                          obj['quantity']=$(this).val();
+                      }
+                      
+                  });
+                  //console.log(obj);
+                  $('.wdg-offer-selectlist').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }
+                  });
+                  $('input:checked.wdg-offer-radio').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }
+                  });
+                  $('input:checked.wdg-offer-multiCheck').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }                
+                  });
+                  $('.wdg-offer-multiSelect').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }                   
+                  });
+                  $('input:checked.wdg-offer-check').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }
+                  });
+                  $('.wdg-offer-textarea').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{                           
+                          $(this).addClass('err');
+                      }                  
+                  });
+                  $('.wdg-offer-email').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }          
+                  });
+                  $('.wdg-offer-inputField').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }          
+                  });
+                  $('.wdg-offer-Date').each(function(){
+                      var name=$(this).attr('var-name');
+                      if($(this).val()!=null && $(this).val()!=''){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':'+$(this).val()+',';
+                      }else if($(this).attr('req')!='true'){
+                          $(this).removeClass('err');
+                          otherInfo+= name +':"",';
+                      }else{
+                          $(this).addClass('err');
+                      }          
+                  });
+                  otherInfo = otherInfo.slice(0,-1);
+                  obj['otherInfo']=otherInfo;
+                  $('[Id$="quoteInfomain"]').val(JSON.stringify(obj));
+                  //console.log($('[Id$="quoteInfomain"]'));
+                  if(!$('.requestQoute').children('div').children('div').children().hasClass('err')){
+                      var productOpt = '';                           
+                      $(".em_productfeatures input:checked").each(function(){
+                          var id = $(this).val();
+                          if(id!='--None--'){
+                              productOpt += $(this).attr('opt-name')+':'+$(this).attr('opt-value')+',';                                    
+                          }
+                      });                       
+                      $(".em_productfeatures select").each(function(){
+                          var id = $(this).val();
+                          if(id!='--None--'){
+                              var optname = $(this).find('option:selected').attr('opt-name');
+                              var optval = $(this).find('option:selected').attr('opt-value');
+                              productOpt += optname +':'+ optval+',';                              
+                          }            
+                      });
+                      productOpt = productOpt.slice(0,-1);
+                      $('[Id$="productOptmain"]').val(productOpt);
+                      $('[Id$="QuickproductView"] .wdg-status--loaderbg').css('z-index','223');
+                      $('[Id$="QuickproductView"] .wdg-status--loaderbg').css('display','block');
+                      createquote();
+                  }
+              }         
+          });
+          $(document ).on("click",".custom-checkbox input",function(){
+              $(this).parent().removeClass("checked");
+              if(this.checked){
+                  $(this).parent().addClass("checked");
+              }     
+          });
+          $(document).on("click",".wdg .wdg-wishlist--view .details.detail-header [Id$='details-close'],.wdg .wdg-cart--view .details.detail-header [Id$='details-close'],.wdg .productQview .productQview-header [Id$='details-close'],.wdg .wdg-wishlist--view .productQview-header [Id$='details-close']",function(){
+              $(this).parent().parent().parent().remove();
+              
+          });
+          $(document).on('click','.productQview-close.offer',function(){
+              $('[Id$="QuickproductView"] .wdg-status--loaderbg').css('z-index','223');
+              $('[Id$="QuickproductView"] .wdg-status--loaderbg').css('display','block');
+          });
+      }(jQuery));
+      </script>
+    </html>
+</apex:page>

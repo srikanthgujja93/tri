@@ -1,0 +1,577 @@
+<apex:page showheader="false" title="Search" setup="false" standardstylesheets="false" doctype="html-5.0" controller="wk_wedge.SearchResultsController" cache="false">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+            <div class="container">
+                <TITLE>SEARCH RESULTS</TITLE>
+                <style>
+                    .search-body{
+                    height:100%;
+                    display:table;
+                    width:100%;
+                    }
+                    .search-body-form{
+                    height:100%;
+                    width:100%;
+                    vertical-align:middle;
+                    display:table-cell;
+                    }
+                    .no-results{
+                    vertical-align:middle;
+                    height:100%;
+                    width:100%;
+                    display:table;
+                    }
+                    .hide-msg.no-results{
+                    display:none;
+                    }
+                    .no-results .no-result-msg{
+                    display: table-cell;
+                    vertical-align:middle;
+                    
+                    }
+                    .no-results .no-result-msg p{
+                    text-align:center;
+                    font-size:21px;
+                    font-weight:700;
+                    margin: 100px 0;
+                    }
+                    .search-results{
+                    border:1px solid #ccc;
+                    width:100%;
+                    overflow:hidden;
+                    margin-top: 35px;
+                    margin-bottom: 35px;
+                    }
+                    .search-results-filters{
+                    padding:7px 12px;
+                    background:#0086C0;
+                    color:#fff;
+                    font-size:13px;
+                    margin:-1px -1px 0px -1px;
+                    
+                    }
+                    
+                    .search-results-filters .sort-filters{
+                    display:inline-block;
+                    margin-left:10px;
+                    min-width:175px;
+                    position:relative;
+                    }
+                    .sort-filters .filters-select-dropdown{
+                    border:1px solid #0087C1;
+                    background:#fff;
+                    color:#333;
+                    width:100%;
+                    padding:3px 9px;  
+                    outline:none; 
+                    border-radius:0px;
+                    
+                    }
+                    .sort-filters.open{
+                    color:#333;
+                    }
+                    .sort-filters .dropdown-menu.options{
+                    font-size:13px;
+                    min-width:100%;
+                    width:100%;
+                    
+                    
+                    }
+                    .sort-filters .dropdown-menu.options span{
+                    cursor:pointer;
+                    padding:3px 9px;  
+                    height:auto;
+                    }
+                    .sort-filters .filters-select-dropdown:active,.sort-filters .filters-select-dropdown:focus{
+                    outline:none;
+                    }
+                    .product-details-container{
+                    width:100%;
+                    margin:20px auto;
+                    height: 430px;
+                    
+                    display:block;
+                    color:#333333!important;
+                    }
+                    .product-details-container:hover{
+                    box-shadow:0px 0px 15px 4px #ccc;
+                    height:auto;
+                    
+                    }
+                    .product-details-container .product-image-wrapper{
+                    height:265px;
+                    text-align:center;
+                    position: relative;
+                    }
+                    .product-details{
+                    height:135px;
+                    background-color:#fff;
+                    text-align:center;
+                    padding:15px;
+                    
+                    }
+                    .product-details .productlabel{
+                    color:#333333;
+                    display:block;
+                    margin-bottom:13px;
+                    
+                    }
+                    .product-details .product-price{
+                    display:block;
+                    margin-bottom:13px;
+                    }
+                    .productlabel label{
+                    word-break:break-word;
+                    }
+                    .product-image-wrapper  .product-image{
+                    width:220px;
+                    height:220px;
+                    display:inline-block;
+                    margin-top :20px;
+                    }
+                    .new-arriwal-panel .new-arrival-block{
+                    border-top:1px solid #ccc;
+                    }
+                    .searched-product-wrap{
+                    margin-left:20px;
+                    margin-right:20px;
+                    height:90%;
+                    }
+                    .p-detail-btn-group{
+                    width:100%;
+                    text-align:center;
+                    position: absolute;
+                    left: 0;
+                    bottom: 40px;
+                    }
+                    .p-detail-btn-group .quickzoom{
+                    display:inline-block;
+                    width:40px;
+                    height:40px;
+                    background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}') no-repeat -1px -69px;    
+                    border-radius:3px;
+                    border:1px solid #FF7E00;
+                    vertical-align:middle;
+                    /*visibility:hidden;*/
+                    margin-left: 12px;
+                    
+                    }
+                    .p-detail-btn-group .quickzoom:hover{
+                    background-position: -40px -69px;    
+                    }
+                    .p-detail-btn-group .addcart-info-group{
+                    background:#fff;
+                    padding:0;
+                    border-radius:3px;
+                    text-align:center;
+                    vertical-align:middle;
+                    cursor:pointer;
+                    display:inline-block;
+                    border:1px solid #008AB6;
+                    color:#333;
+                    margin-left:12px;
+                    font-weight:700;
+                    text-decoration:none;
+                    
+                    }
+                    .retailer{
+                        margin-left: 12px;
+                    }
+                    .product-details{
+                    height:165px !important;
+                    }
+                    .p-detail-btn-group .addcart-info-group.white-text{
+                    /*background:#0087C1;*/
+                    color:#fff;
+                    }
+                    .p-detail-btn-group .addcart-info-group.white-text:hover::before{
+                    background-position:-278px -69px;
+                    }
+                    .p-detail-btn-group .addcart-info-group span{
+                    vertical-align: middle;
+                    }
+                    .p-detail-btn-group .addcart-info-group::before{
+                    content: "";
+                    display: inline-block;
+                    background-color: transparent;
+                    background-image: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}');
+                    background-repeat: no-repeat;
+                    width: 38px;
+                    height: 38px;
+                    background-position: -238px -69px;
+                    /* margin-right: 5px; */
+                    vertical-align: middle;
+                    
+                    }
+                    .product-details .addwishlist{
+                    display:inline-block;
+                    width:40px;
+                    height:40px;
+                    vertical-align:middle;
+                    background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}') no-repeat -81px -69px;    
+                    border-radius:3px;
+                    border:1px solid #999999;
+                    /*visibility:hidden;*/
+                    margin-left:12px;
+                    
+                    }
+                    a *{
+                    cursor:pointer;
+                    }
+                    /*.product-details .addwishlist.visible,.p-detail-btn-group .quickzoom.visible{
+                    visibility:visible;
+                    }*/
+                    .product-details .addwishlist:hover{
+                    background-position: -121px -69px;    
+                    }
+                    .addwishlistDisabled {
+                        display: inline-block;
+                        width: 40px;
+                        height: 40px;
+                        background: transparent url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -81px -109px;
+                        border-radius: 3px;
+                        border: 1px solid #D21B28;
+                        vertical-align: middle;
+                        margin-left: 12px;
+                    }
+                    .addwishlistDisabled:hover {
+                        display: inline-block;
+                        width: 40px;
+                        height: 40px;
+                        background: transparent url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -121px -109px;
+                        border-radius: 3px;
+                        border: 1px solid #D21B28;
+                        vertical-align: middle;
+                        margin-left: 12px;
+                    }
+                    .out-of-stock-wrapper{
+                        position: absolute;
+                        height: calc(100% - 45px);
+                        width: 220px;
+                        margin-top: 20px;
+                        box-sizing: border-box;
+                        vertical-align: middle;
+                        background: #e2dcdc;
+                        opacity: 0.4;
+                        text-align: center;
+                        z-index: 1;
+                    }
+                    .out-of-stock-text{
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        font-size: 30px;
+                        font-weight: 700;
+                        margin-top: -15px;
+                        margin-left: -90px;
+                        color: #222;
+                        box-sizing: border-box;
+                        vertical-align: middle;
+                        text-align: center;
+                    }
+                    @media screen and (max-width: 767px){
+                    
+                    .p-detail-btn-group .quickzoom{
+                    display: none;
+                    }
+                    /*.product-details .addwishlist{
+                    visibility: unset;
+                    display: none;
+                    }*/
+                    .product-details .addwishlist.visible{
+                    visibility: unset;
+                    display: inline-block;
+                    }                   
+                    
+                    }
+                    
+                </style>
+                
+                <apex:outputpanel layout="block" styleclass="search-body " id="searchView">
+                    
+                    <apex:form styleclass="search-body-form">
+                        <apex:inputhidden value="{!prodId}" id="prodid"/>
+                        <apex:inputhidden value="{!prodName}" id="prodName"/>
+                        <apex:inputhidden value="{!prodImg}" id="prodimg"/>
+                        <apex:inputhidden value="{!prodprice}" id="prodprice"/>
+                        <apex:actionfunction name="addTocartDB" action="{!addtocart}" status="docSearch" rerender="cartItems,notice,rerenderNav,QuickcartView" oncomplete="closenotifications()"/>
+                        <apex:actionfunction name="addToWishlistDB" action="{!addtowishlist}" status="docSearch"  rerender="cartItems,notice,rerenderNav,QuickwishlistView,wishcount," oncomplete="reloadProducts()"/>
+                        <apex:actionfunction name="qViewAction" action="{!qViewopen}" status="docSearch"  rerender="cartItems,notice,QuickproductView" />
+                        <apex:outputPanel id="context">
+                        <script>
+                                        window.contextId = '{!contextId}';
+                                        </script>
+                        </apex:outputPanel>
+                        <apex:outputpanel styleclass="search-results" layout="block" id="productsData">
+                            
+                            <div class="search-results-filters">
+                                <span>{!$Label.wk_wedge__searchresult_sort_by} :</span>
+                                <div class="sort-filters">
+                                    <button class="filters-select-dropdown" id="caret-dropdown" type="button" data-toggle="dropdown" aria-expanded="false">
+                                        <span id="filterVal">{!$Label.wk_wedge__searchresult_alphabetically_a_to_z}</span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu options" id="filterOpt">
+                                        <li><span id="0">{!$Label.wk_wedge__searchresult_alphabetically_a_to_z}</span></li>
+                                        <li><span id="1">{!$Label.wk_wedge__searchresult_alphabetically_z_to_a}</span></li>
+                                        <li><span id="2">{!$Label.wk_wedge__searchresult_price_low_to_high}</span></li>
+                                        <li><span id="3">{!$Label.wk_wedge__searchresult_price_high_to_low}</span></li>
+                                        <li><span id="4">{!$Label.wk_wedge__searchresult_newest_first}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="Product-catalogue" class="searched-product-wrap">
+                                <div class="no-results">
+                                    <div class="no-result-msg" id="msgWarnings">
+                                        
+                                        <p> {!$Label.wk_wedge__searchresult_loading_products} </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputpanel>
+                        <apex:outputpanel >
+                        </apex:outputpanel>
+                    </apex:form>
+                    
+                    
+                </apex:outputpanel>
+                
+                
+                <script>
+                
+                /*var currencylist = document.querySelectorAll('select[id$=currencylist]')
+                var currSymbol = currencylist[0].options[currencylist[0].selectedIndex].text;
+                currSymbol = currSymbol.substring(currSymbol.indexOf('(')+1,currSymbol.length-1);*/
+                
+                function reloadProducts(){            
+                    window.parseProduct('0');
+                    closenotifications();
+                }
+                    
+                var currSymbol = '{!currSymbol}';
+                var selectedlanguage = '{!selectedlanguage}';
+                var userregenbale = '{!userregenbale}';
+                var selCurr = '{!CurrencyCode}';
+                window.siteurl = '{!$Site.BaseCustomUrl}';
+                if(window.siteurl == '')
+                    window.siteurl = '{!$Site.BaseUrl}';
+                wk=jQuery.noConflict();
+                (function(wk) {
+                    var wkNSpace='wk_wedge__';
+                    var products=[];
+                    wk( window ).load(function(){
+                        window.parseProduct('0');
+                    });
+                    window.parseProduct=function(val){
+                        wk("[Id$='docSearch.start']").css({"display":"block"});
+                        window.createWarnigsView("{!$Label.wk_wedge__searchresult_loading_products}");
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.SearchResultsController.sortproduct}',
+                            val, '{!JSENCODE($CurrentPage.parameters.cid)}','{!JSENCODE($CurrentPage.parameters.Prod)}', JSON.stringify({'selectedCurrency':selCurr,'selectedlanguage':selectedlanguage,'contextId':window.contextId}),
+                            handleResponse, {escape: false}
+                            
+                        );
+                        
+                        
+                    }
+                    
+                    function handleResponse(result,event){
+                        wk("[Id$='docSearch.start']").css({"display":"none"});
+                        if (event.status){
+                            if(result!='empty' && JSON.parse(result).length>0){
+                                products=JSON.parse(result);
+                                window.createSearchView();
+                            }else{
+                                window.createWarnigsView(" {!$Label.wk_wedge__no_products_found_matching_the_search_criteria} ");
+                            }
+                        } else {
+                            window.createWarnigsView("{!$Label.wk_wedge__no_products_found_matching_the_search_criteria} ");
+                        }
+                    }
+                    window.createWarnigsView=function(warn){
+                        wk("[Id$='Product-catalogue']").empty();
+                        var wrp=document.createElement("div");
+                        wrp.className='no-results';
+                        var wrp2=document.createElement("div");
+                        wrp2.className='no-result-msg';
+                        var wrp3=document.createElement("P");
+                        var text=document.createTextNode(warn);
+                        wrp3.appendChild(text);
+                        wrp2.appendChild(wrp3);
+                        wrp.appendChild(wrp2);
+                        wk("[Id$='Product-catalogue']").append(wrp);
+                    }
+                    window.createRow=function(){
+                        var row=document.createElement("DIV");
+                        row.className='row';
+                        return row;
+                    }
+                    window.createCol=function(){
+                        var col=document.createElement("DIV");
+                        col.className='col-md-3';
+                        return col;
+                    }
+                    window.qView=function(id){
+                        wk("[Id$='prodid']").val(id);
+                        qViewAction();
+                    }
+                    window.addToCart=function(id,name,image, price){
+                        wk("[Id$='prodid']").val(id);
+                        wk("[Id$='prodName']").val(name);
+                        wk("[Id$='prodimg']").val(image);
+                        wk("[Id$='prodprice']").val(price);
+                        addTocartDB();
+                    }
+                    window.addToWishList=function(id,name,image){
+                        wk("[Id$='prodid']").val(id);
+                        wk("[Id$='prodName']").val(name);
+                        wk("[Id$='prodimg']").val(image);
+                        addToWishlistDB();                      
+                        
+                    }
+                    window.createProduct=function(j){
+                        var wkNSpace='wk_wedge__';
+                        var Productwrap=document.createElement("A");
+                        Productwrap.className="product-details-container";
+                        //Productwrap.href=siteurl+"/products/"+products[j][wkNSpace+"alias__c"];
+                        Productwrap.href = window.siteurl + '/' + products[j]["Description"];
+                        
+                        var productImgWrap=document.createElement("DIV");
+                        productImgWrap.className="product-image-wrapper";
+                        
+                        var productOutOfStockWrap = document.createElement('span');
+                        productOutOfStockWrap.className ='out-of-stock-wrapper';
+                        
+                        var productOutOfStockText = document.createElement('span');
+                        productOutOfStockText.className ='out-of-stock-text';
+                        productOutOfStockText.appendChild(document.createTextNode('{!$Label.wk_wedge__out_of_stock}'))
+                        
+                        if(products[j][wkNSpace+'Amount__c']==0){
+                            productImgWrap.appendChild(productOutOfStockWrap);
+                            productImgWrap.appendChild(productOutOfStockText);
+                        }
+                        
+                        var productImg=document.createElement("IMG");
+                        productImg.className="product-image img img-responsive";
+                        productImg.src="/servlet/servlet.FileDownload?file="+products[j][wkNSpace+"Image_Id__c"];
+                        var tempname = products[j]["Name"];
+                        if(tempname.length > 50)
+                            tempname = tempname.substring(0.25)+'...';
+                        text=document.createTextNode(tempname);
+                        productImgWrap.appendChild(productImg);
+                        var Productdetails=document.createElement("DIV");
+                        Productdetails.className="product-details";
+                        
+                        
+                        var Productlink=document.createElement("a");
+                        Productlink.className="productlabel";
+                        //Productlink.href=siteurl+"/productdetail?productid="+products[j]["Id"]
+                        //Productlink.href=siteurl+"/products/"+products[j][wkNSpace+"alias__c"];
+                        Productlink.href = window.siteurl + '/' + products[j]["Description"];
+                        productlabel=document.createElement("label");
+                        if(products[j]["Name"].length < 25)
+                            productlabel.appendChild(document.createTextNode(products[j]["Name"]))
+                            else
+                                productlabel.appendChild(document.createTextNode(products[j]["Name"].substring(0,25)+'...'))
+                                Productlink.appendChild(productlabel);
+                        
+                        
+                        var productPrice=document.createElement("SPAN");
+                        productPrice.className="product-price";
+                        /*console.log(products[j][wkNSpace+"List_price__c"].toFixed(2).replace(/./g, function(c, i, a) {
+                            return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                        }));*/
+                        productPrice.appendChild(document.createTextNode('{!Currsymbol} '+products[j][wkNSpace+"List_price__c"].toFixed(2).replace(/./g, function(c, i, a) {
+                            return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                        })));
+                        var productDetailsBtnGroup=document.createElement("DIV");
+                        productDetailsBtnGroup.className="p-detail-btn-group";
+                        var qvlink=document.createElement("a");
+                        qvlink.href="javascript:void(0)";
+                        qvlink.className="quickzoom";
+                        qvlink.title="{!$Label.wk_wedge__quickview_button}"
+                        qvlink.addEventListener("click",function(){window.qView(products[j]["Id"]);});
+                        productDetailsBtnGroup.appendChild(qvlink);
+                        if(!products[j]['wk_wedge__Sold_By_Retailer__c'] ){
+                            if(products[j][wkNSpace+'Amount__c']!=0){
+                                var addToCart=document.createElement("a");
+                                addToCart.href="javascript:void(0)";
+                                addToCart.className="addcart-info-group";
+                                addToCart.title="{!$Label.wk_wedge__category_view_add_to_cart}";
+                                addToCart.addEventListener("click",function(){ window.addToCart(products[j]["Id"],products[j]["Name"],products[j][wkNSpace+"Image_Id__c"],products[j][wkNSpace+"List_price__c"]); });
+                                var addToCartText=document.createElement("SPAN");
+                                addToCartText.appendChild(document.createTextNode("Add to cart"));
+                                //addToCart.appendChild(addToCartText);
+                                productDetailsBtnGroup.appendChild(addToCart)
+                            }
+                            if(userregenbale=='true'){
+                                if(!(products[j][wkNSpace+"Returnable__c"])){
+                                    var wishlist=document.createElement("a");
+                                    wishlist.href="javascript:void(0)";
+                                    wishlist.className="addwishlist";
+                                    wishlist.title="{!$Label.wk_wedge__category_view_add_to_wishlist}";
+                                    wishlist.addEventListener("click",function(){ window.addToWishList(products[j]["Id"],products[j]["Name"],products[j][wkNSpace+"Image_Id__c"]); });
+                                    productDetailsBtnGroup.appendChild(wishlist)
+                                }else{
+                                    var wishlist=document.createElement("a");
+                                    wishlist.href="javascript:void(0)";
+                                    wishlist.className="addwishlistDisabled";
+                                    wishlist.title="{!$Label.wk_wedge__product_already_added_in_wishlist}";
+                                    productDetailsBtnGroup.appendChild(wishlist);
+                                }
+                            }                    
+                        }else{
+                            var retailerlink=document.createElement("a");
+                            retailerlink.href=window.siteurl + '/' + products[j]["Description"];
+                            retailerlink.title="{!$Label.wk_wedge__category_view_retailers}";
+                            retailerlink.className="retailer";
+                            productDetailsBtnGroup.appendChild(retailerlink);
+                        }
+                        Productdetails.appendChild(Productlink);
+                        Productdetails.appendChild(productPrice);
+                        Productdetails.appendChild(productDetailsBtnGroup);
+                        Productwrap.appendChild(productImgWrap);
+                        Productwrap.appendChild(Productdetails);
+                        return Productwrap;
+                    }
+                    
+                    window.createSearchView=function(){
+                        wk("[Id$='Product-catalogue']").empty();
+                        for(var i=0;i<products.length;i=i+4 ){
+                            var row=window.createRow();
+                            wk("[Id$='Product-catalogue']").append(row);
+                            var n=products.length>i+4?i+4:products.length;
+                            for(var j=i;j<n;j++){
+                                var col=window.createCol();
+                                var Product=window.createProduct(j);
+                                col.appendChild(Product);
+                                row.appendChild(col);
+                            }
+                        }
+                    }
+                    wk(".searched-product-wrap").on("mouseenter" ,' .product-details-container', function(){
+                        wk('.product-image-wrapper',this).css({'background-color':'#EBEBEB'});
+                        wk('.addcart-info-group ',this).addClass("white-text");
+                        
+                        //wk(".quickzoom,.addwishlist",this).addClass("visible");
+                        
+                    }).on("mouseleave" ,' .product-details-container', function(){
+                        wk('.product-image-wrapper',this).css({'background-color':'#fff'})
+                        wk('.addcart-info-group ',this).removeClass("white-text");
+                        //wk(".quickzoom,.addwishlist",this).removeClass("visible");
+                        
+                    });
+                    wk("[Id$='filterOpt']").on('click', ' span',function(){
+                        wk("[Id$='filterVal']").text(wk(this).text());
+                        var str=wk(this).attr('id')
+                        parseProduct(str);
+                        
+                    });
+                    
+                    
+                })(jQuery);
+                </script>
+                </div>
+     </apex:define>
+    </apex:composition>
+</apex:page>

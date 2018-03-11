@@ -1,0 +1,57 @@
+<apex:page Controller="ATC.AvUtilityController" cache="true" expires="86400" sidebar="false" showHeader="false">
+    <apex:stylesheet value="{!URLFOR($Resource.ATC__ext312, 'resources/css/ext-all.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ATC__JSUtilResourcesMin, 'JSResources/css/style.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ATC__ext312, 'ext-base.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ATC__ext312, 'ext-all.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ATC__JSUtilResourcesMin, 'JSResources/js/avutility-all-min.js')}" /> 
+  <!--initial loading progress bar-->
+<script type="text/javascript">
+    document.title = 'Avata Utility';
+</script>
+<div id="loading-mask" class="ext-el-mask" style=""></div>
+<div id="loading">
+    <div id="loading-msg" class="ext-el-mask-msg x-mask-loading"> 
+        <div>Loading Avata Admin Utility</div>
+    </div>
+</div>
+  <script>    
+    var SFORGPFX = "ATC";
+    function gup(name)
+    {
+      name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+      var regexS = "[\\?&]"+name+"=([^&#]*)";
+      var regex = new RegExp( regexS );
+      var results = regex.exec( window.location.href );
+      if( results == null )
+        return "";
+      else
+        return results[1];
+    }
+    //
+    Ext.onReady(AvataUtility.init,AvataUtility,{single:true});
+    var SFSessionConnected = false;
+    function AvataMakeSforceConnection()
+    {
+        
+        if (sforce.connection) 
+        {
+           //check session Id in URL
+           var sid = gup('_sId');
+           if (typeof sid !== "undefined") {
+               sforce.connection.sessionId = sid;
+           } else {
+               sforce.connection.sessionId = '{!SessionId}'  
+           }
+            SFSessionConnected = true;
+            Avata.dbUtils.init();   
+           return true;
+        }
+        else return false;
+    }
+   
+    var AvataImagePath = "{!URLFOR($Resource.JSUtilResourcesMin, 'JSResources/images/icons')}";
+    var BlankImagePath = "{!URLFOR($Resource.ext312, 'resources/images/default')}";
+    Ext.BLANK_IMAGE_URL = BlankImagePath+'/s.gif'; 
+    var SFHost = '{!$Api.PARTNER_SERVER_URL_140}';
+</script>
+</apex:page>

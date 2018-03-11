@@ -1,0 +1,94 @@
+.THIS .slds-table th.column{
+    font-weight:600;
+    padding: 15px 0;
+    text-align: center;
+}
+.THIS .slds-table td.column{
+    padding: 12px 0;
+    text-align: center;
+}
+.THIS .tableHeader{
+    background: #037BD8;
+}
+.THIS .slds-text-heading--label.tableHeaderRow{
+    color: #fff;
+    font-size: 14px;
+}
+.THIS .heading{
+	font-size: 20px;	
+}
+.THIS .con{
+	padding: 0.2rem;
+}
+.THIS input.uiInput--checkbox.check{
+    display:inline-block;
+	margin-left: 1.25rem;
+    border-radius: 0px;  
+}
+.THIS .cartwishlistlarge{
+    padding-top:4px;
+}
+.THIS .widt{
+	width: 100px;	
+}
+.THIS .pos{
+    width: 100%;
+}
+.THIS .disp{
+    display:none;
+}
+.THIS .slds-modal{
+    top:80px;    
+}
+.THIS .slds-page-header.pageHeader{
+    background: #35A3DC;
+    color: #fff;
+}
+.THIS .container{
+	padding: 0.5rem;
+}
+.THIS .searchicon{
+    display: inline-block;
+    cursor:pointer;
+    background: #3BA9E2;
+    padding: 13px 12px 12px;
+}
+.THIS .searchicon:hover{
+    background: #037BD8;
+}
+.THIS .searchbox{
+    padding: 13px;
+    border: none;
+    outline: none;
+    width: 260px;
+    line-height: 20px;
+    background: #3ba9e2;
+    color: #fff;
+}
+.THIS .searchbox::placeholder{
+    color: #fff;
+}
+.THIS .deleteicon{
+    display: inline-block;
+    cursor:pointer;
+    padding: 13px 12px 12px;
+}
+.THIS .deleteicon:hover{
+    background: #037BD8;
+}
+.THIS .slds-backdrop{
+   background: rgba(0, 0, 0, 0.8);
+}
+.THIS .cp-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: 15px;
+    margin-left: -24px;
+}
+@media screen and (max-width: 980px)
+{
+    .THIS .container{
+        padding: 0;
+    }
+}

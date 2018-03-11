@@ -1,0 +1,5 @@
+<aura:component >
+    <aura:attribute name="TemplateId" type="String"/>
+    <aura:attribute name="TempId" type="String"/>
+    <iframe id="myFrame" ref="myFrame" style="height: 100%;width: 100%;margin:0 auto;border: none;" src="{!'/apex/LightningLogo?tcompid='+v.TempId}"/>        
+</aura:component>

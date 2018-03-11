@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event template">
+	<aura:attribute name="smsConfig" type="gkn_sms__GirikonSMSConfig2__c" description="Pass an object of GirikonSMSConfig2__c to update"/>	
+	<aura:attribute name="activeTab" type="String" default="RightBarContainer"/>		
+</aura:event>

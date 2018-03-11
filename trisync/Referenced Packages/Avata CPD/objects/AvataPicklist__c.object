@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>This is a &quot;special&quot; object. The fields will be of type picklist. This is for picklists like Note category.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>AWSRegion__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Regions and endpoints for S3 Amazon Web Services</description>
+        <externalId>false</externalId>
+        <label>AWSRegion</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>US Standard@s3</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Oregon@s3-us-west-2</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Northern California@s3-us-west-1</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Ireland@s3-eu-west-1</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Singapore@s3-ap-southeast-1</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Tokyo@s3-ap-northeast-1</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Sao Paulo@s3-sa-east-1</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>ItemRelationship__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Categories of relationships from one item to another</description>
+        <externalId>false</externalId>
+        <label>Item Relationship</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Finish-to-Start dependency</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Predecessor</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Prerequisite</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Use Case</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Test Scenario</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Start-To-Start dependency</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Start-To-Finish dependency</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Finish-To-Finish dependency</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Reserved 1</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Reserved 2</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>NoteCategory__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>NoteCategory</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Link</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>File</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Issue</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Discussion</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Audience</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>SharePoint</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>SP Document</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>SP File</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>SP TeamSite</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>ProjectApprovalRating__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>ProjectApprovalRating</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>-None-</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Approved</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Not Approved</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Need More Information</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>ProjectPhaseDecision__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>ProjectPhaseDecision</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>-None-</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Go Forward</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Hold</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Re-do</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Roll Back</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Kill</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <label>Avata Picklist</label>
+    <nameField>
+        <label>AvataPicklist Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Avata Picklists</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

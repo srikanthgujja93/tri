@@ -1,0 +1,3 @@
+<aura:component >
+	<iframe id="myFrame" ref="myFrame" style="height: 100%;width: 100%;margin:0 auto;border: none;" src="/apex/AddCategoriesLightning"/>
+</aura:component>

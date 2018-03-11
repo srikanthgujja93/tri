@@ -1,0 +1,135 @@
+<aura:component controller="gkn_sms.ScheduleSMSctr"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                access="global">
+    
+    <aura:attribute name="smslist"
+                    type="gkn_sms.WrapperForScheduleDetails[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="SmsPaginationList" type="gkn_sms__SMS_Schedule_Detail__c" />
+    <aura:attribute name="SmsListStartIndex" type="Integer" />
+    <aura:attribute name="SmsListLastIndex" type="Integer" />
+    <aura:attribute name="SmsListTotalSize" type="Integer" />
+    <aura:attribute name="SmsListPageSize" type="Integer" default="9" />
+    <aura:attribute name="viewObject" type="Object" default="null"/>
+    
+    <aura:handler event="gkn_sms:smsApp" action="{!c.doInit}"/>
+    
+    <div aura:id="viewDetailModalBackdrop" class="slds-backdrop"></div>
+    
+    <lightning:card iconName="utility:table" class="scheduled-list">
+        <aura:set attribute="title">
+            SMS Scheduler List
+        </aura:set>
+        <table class="slds-table slds-table_bordered  slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Account Name">Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Start Time">Next Run</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Start Time">Status</div>
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.smslist}" var="smsdetails"
+                                indexVar="smsid">
+                    <tr>
+                        <td data-label="Object Name">
+                            <div class="slds-truncate">{!smsdetails.SMSSchedule.gkn_sms__Title__c}
+                            </div>
+                        </td>						
+                        <td data-label="Next FireTime">
+                            <div class="slds-truncate">
+                                <ui:outputDateTime value="{!smsdetails.CronTriggerDetails.NextFireTime}"/>
+                            </div>
+                        </td>
+                        <td data-label="Status">
+                            <aura:if isTrue="{!smsdetails.CronTriggerDetails.Id ==null }">
+                                <div class="slds-truncate"> Schedule job is deleted  </div>
+                                
+                                <aura:set attribute="else">
+                                    <div class="slds-truncate"> {!smsdetails.CronTriggerDetails.State}
+                                    </div>
+                                </aura:set>
+                            </aura:if>   
+                        </td>
+                        <td>
+                            <lightning:button value="{!smsdetails}" onclick="{!c.viewDetail}" iconName="action:preview" label="View"/>
+                        </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </lightning:card>
+    
+    <!-- detail view Modal -->
+    <!-- {!v.viewObject.} -->
+    
+    <section aura:id="viewDetailModal" role="dialog" tabindex="-1"
+             aria-labelledby="modal-heading-01"
+             aria-describedby="modal-content-id-1"
+             class="slds-modal">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick="{!c.hideDetailModal}" title="Close">
+                    <lightning:icon variant="bare" class="slds-icon slds-icon_small" iconName="utility:close" size="small"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+               <!-- <lightning:buttonIcon iconName="utility:close" variant="bare" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse " onclick="{!c.hideDetailModal}" alternativeText="Close window." /> -->
+                <!-- close icon -->
+                <span class="slds-assistive-text">Close</span>
+                <h2 id="modal-heading-01"
+                    class="slds-text-heading_medium slds-hyphenate">Scheduler Detail</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium"
+                 id="modal-content-id-1">
+                <table border="0">
+                    <tr>
+                        <td width="20%" class="slds-p-right_x-small slds-p-bottom_x-small" style="font-weight: bold;text-align: right;">Job Name:</td>
+                        <td width="30%" style="text-align: left;" class="slds-p-bottom_x-small slds-p-right_x-small" ><ui:outputText value="{!v.viewObject.SMSSchedule.gkn_sms__Title__c}"/></td>
+                        <td  width="20%" class="slds-p-right_x-small slds-p-bottom_x-small"  style="font-weight: bold;text-align:right;">From: </td>
+                        <td width="30%" style="text-align: left;" class="slds-p-bottom_x-small slds-p-right_x-small "> <ui:outputText value="{!v.viewObject.SMSSchedule.gkn_sms__FromNumber__c}"/></td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="slds-p-right_x-small slds-p-bottom_x-small"  width="20%" style="font-weight: bold;text-align:right;">To Field: </td>
+                        <td align="left" style="text-align:left;" class="slds-p-bottom_x-small slds-p-right_x-small" width="30%"><ui:outputText value="{!v.viewObject.SMSSchedule.gkn_sms__ToField__c}"/></td>
+                        <td align="right" class="slds-p-right_x-small slds-p-bottom_x-small"  width="20%" style="font-weight: bold;text-align:right;">Object: </td>
+                        <td align="left" width="30%" style="text-align:left;" class="slds-p-bottom_x-small slds-p-right_x-small "> <ui:outputText value="{!v.viewObject.SMSSchedule.gkn_sms__Object__c}"/></td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="20%" class="slds-p-right_x-small slds-p-bottom_x-small"  style="font-weight: bold;text-align:right;">View: </td>
+                        <td align="left" width="30%" style="text-align:left;" class="slds-p-bottom_x-small slds-p-right_x-small"  ><ui:outputText value="{!v.viewObject.SMSSchedule.gkn_sms__View__c}"/></td>
+                        <td align="right" width="20%" class="slds-p-right_x-small slds-p-bottom_x-small"  style="font-weight: bold;text-align:right;">Template : </td>
+                        <td align="left" width="30%" style="text-align:left;" class="slds-p-bottom_x-small slds-p-right_x-small " ><ui:outputText value="{!v.viewObject.SMSSchedule.gkn_sms__Template__c}"/></td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="20%" class="slds-p-right_x-small slds-p-bottom_x-small"  style="font-weight: bold;text-align:right;">Template Body: </td>
+                        <td align="left" width="80%" colspan="3" style="text-align:left;" class="slds-p-bottom_x-small slds-p-right_x-small " ><ui:outputText value="{!v.viewObject.SMSSchedule.gkn_sms__TemplateBody__c}"/></td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="20%" class="slds-p-right_x-small slds-p-bottom_x-small"  style="font-weight: bold;text-align:right;">Scheduling Type: </td>
+                        <td align="left" width="30%" style="text-align:left;" class="slds-p-bottom_x-small slds-p-right_x-small" > <ui:outputText value="{!v.viewObject.SMSSchedule.gkn_sms__ScheduleType__c}"/></td>
+                        <td align="right" width="20%" class="slds-p-right_x-small slds-p-bottom_x-small"  style="font-weight: bold;text-align:right;">Start Time:</td>
+                        <td align="left" width="30%"  style="text-align:left;" class="slds-p-bottom_x-small slds-p-right_x-small "> <ui:outputDateTime value="{!v.viewObject.CronTriggerDetails.StartTime}"/></td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="20%" class="slds-p-right_x-small slds-p-bottom_x-small"  style="font-weight: bold;text-align:right;">Start Date:</td>
+                        <td align="left" width="30%" style="text-align:left;" class="slds-p-bottom_x-small slds-p-right_x-small"  > <ui:outputDate value="{!v.viewObject.SMSSchedule.gkn_sms__StartDate__c}"/></td>
+                        <td align="right" width="20%" class="slds-p-right_x-small slds-p-bottom_x-small"  style="font-weight: bold;text-align:right;">End Date :</td>
+                        <td align="left" width="30%" style="text-align:left;"  class="slds-p-bottom_x-small slds-p-right_x-small "> <ui:outputDate value="{!v.viewObject.SMSSchedule.gkn_sms__EndDate__c}"/></td>
+                    </tr>
+                </table>
+            </div>
+            <footer class="slds-modal__footer">					
+                <lightning:button onclick="{!c.hideDetailModal}" variant="brand" label="Close"/>
+            </footer>
+        </div>
+    </section>
+</aura:component>

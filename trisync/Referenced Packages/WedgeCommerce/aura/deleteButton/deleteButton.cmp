@@ -1,0 +1,14 @@
+<aura:component controller="wk_wedge.deleteSingleRecordClass">
+    <aura:attribute name="delThisId" type="String"/>
+    <aura:attribute name="objectName" type="String"/>
+    <aura:registerEvent name="UpdateEvent" type="wk_wedge:WedgePopupEvent"/>
+    <div class="slds-backdrop" aura:id="MB-Back-del">
+    	<div class="cp-spinner cp-balls"></div>
+    </div>
+    <ui:button class="slds-button slds-button--destructive slds-p-horizontal--x-small slds-vertical-align--middle" press="{!c.deletethis}">
+    	<span>
+        	<wk_wedge:SVG class="slds-button__icon" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/action-sprite/svg/symbols.svg#delete'}" />
+            <span class="slds-assistive-text">Delete</span>
+        </span>                	
+    </ui:button>
+</aura:component>

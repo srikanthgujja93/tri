@@ -1,0 +1,52 @@
+<aura:component controller="wk_wedge.WedgeTemplateLightning" implements="force:appHostable">
+	<ltng:require styles="{!$Resource.wk_wedge__SLDS +'/assets/styles/salesforce-lightning-design-system-ltng.css'}" scripts="{!$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+	<aura:handler name="init" value="{!this}" action="{!c.getTemplates}" />
+    
+    <aura:attribute name="templateId" type="String"/>    
+	<aura:attribute name="TemplateList" type="wk_wedge__Templates__c[]"/>
+    
+    
+    
+	<div class="wk_static pos">
+		<div class="slds-page-header pageHeader slds-p-around--x-small" role="banner">
+			<div class="slds-has-flexi-truncate">
+				<div class="slds-media">
+					<div class="templatelarge slds-m-left--medium">
+						<span ></span>
+					</div>
+					<div class="slds-media__body slds-m-left--x-small">
+						<p class="heading">Templates</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+        	<table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                <thead class="tableHeader">
+                    <tr class="slds-text-heading--label tableHeaderRow">
+                        <th class="action column " scope="col">Name</th>                    
+                        <th class="slds-is-sortable column" scope="col">Visualforce Page</th>
+                        <th class="slds-is-sortable column" scope="col">Configure</th>
+                        <th class="slds-is-sortable column" scope="col">Status</th>
+                    </tr>  
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.TemplateList}" var="key">
+                        <tr class="slds-hint-parent">
+                            <td data-label="Name" class="column">
+                                <wk_wedge:NavigateToTemplateComponent label="{!key.Name}" tempId="{!key.Id}"/>
+                            </td>
+                            <td data-label="Visualforce Page" class="column">{!key.wk_wedge__VisualForcePage__c}</td>
+                            <td data-label="Configure" class="column">
+                                <wk_wedge:NavigateToTemplateComponent label="Configure" tempId="{!key.Id}"/>
+                            </td>
+                            <td data-label="Status" class="column">
+                                <ui:outputCheckbox value="{!key.wk_wedge__Active__c}"/>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+	</div>
+</aura:component>

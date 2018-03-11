@@ -1,0 +1,72 @@
+<aura:component controller="gkn_sms.SMSTemplateListController" access="global">
+    <aura:attribute name="debuglog" type="gkn_sms__Is_Save_Log__c" default="{'sobjectType': 'gkn_sms__Is_Save_Log__c','Name':'','gkn_sms__IsEnable__c':false}" />
+    <aura:attribute name="hasMessage" type="string" default=""/>
+    <aura:attribute name="messageType" type="string" default="info"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <lightning:spinner aura:id="loading" class="slds-show gkn-sms-spiner" alternativeText="Loading" variant="brand" size="small" />
+	
+    <aura:if isTrue="{!!empty(v.hasMessage)?true:false}">
+        <div style="position:absolute" class="{!v.hasMessage==''?'slds-hide':'slds-notify_container slds-is-relative slds-show'}">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.messageType}" role="alert"> 
+                <span class="slds-assistive-text">{!v.messageType}</span>
+                <span class="{!'slds-icon_container slds-icon-utility-'+v.messageType+' slds-m-right_small slds-no-flex slds-align-top'}" title="{!v.messageType}">
+                    <lightning:icon variant="bare" class="slds-icon slds-icon_small" iconName="{!'utility:'+v.messageType}" size="small"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        {!v.hasMessage}
+                    </h2>
+                </div>
+                <button class="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" onclick="{!c.closeToast}" title="Close">
+                    <lightning:icon variant="bare" class="slds-icon slds-icon_small" iconName="utility:close" size="small"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+            </div>
+        </div>
+    </aura:if>
+
+    <article class="slds-card onesetupSetupHeader">
+		<div class="slds-card__header setup-header-element slds-grid">
+			<header class="slds-media slds-media--center slds-has-flexi-truncate">
+				<div class="setup-header-element">
+					<span
+						class="slds-icon_container slds-icon-utility-settings setup-icon"
+						title="Template"> 
+                        <lightning:icon variant="inverse" iconName="utility:success" size="small"/>
+					</span>
+				</div>
+				<div class="slds-media__body">
+					<h2>
+						<div class="slds-p-left--medium">
+							<span class="slds-text-heading--small">SmartSMS Debug</span>
+						</div>
+					</h2>
+				</div>
+			</header>
+		</div> 
+        <div class="slds-p-left--medium">
+			<div class="slds-p-left--x-small">
+                <div class="slds-card__body">Please use "SMSAPP Debug" tab to see all debug logs.</div>
+			</div>
+		</div>
+    </article>
+        
+    <div class="slds-m-around--large"></div>
+    <div class="slds-form-element">
+        <label class="slds-checkbox--toggle slds-grid">                    
+            <input aura:id="isEnable" id="isEnable" checked="{!v.debuglog.gkn_sms__IsEnable__c}" type="checkbox" name="checkbox" aria-describedby="toggle-desc" />
+            <span id="toggle-desc" class="slds-checkbox--faux_container" aria-live="assertive">
+                <span class="slds-checkbox--faux"></span>
+                <span class="slds-checkbox--on">Enabled</span>
+                <span class="slds-checkbox--off">Disabled</span>
+            </span>
+            <span class="slds-form-element__label slds-m-bottom--none">&nbsp; &nbsp;Enable SmartSMS APP Debug Log?</span>
+        </label>
+    </div>
+    <div class="slds-m-around--small"></div>
+    <div class="slds-form-element"> 
+        <lightning:button onclick="{!c.enableLog}" label="Save Log Status"/>
+    </div>
+</aura:component>

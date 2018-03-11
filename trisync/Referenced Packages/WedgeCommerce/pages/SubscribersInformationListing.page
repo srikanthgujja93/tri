@@ -1,0 +1,164 @@
+<apex:page controller="wk_wedge.subscriberinfolisting" title="Subscribers Information Listing" showheader="false" setup="false" standardstylesheets="false" cache="false">
+    <style>
+      .wdg-nav-icon.pushnotification {
+            background-color: #34becd;
+        }
+        .wdg-nav-icon.subscriberinfo {
+            background-color: #34becd;
+        }
+        .cbclass{
+            width:3% !important;
+        }
+        .nameclass{
+            width:10% !important;
+        }
+        .idclass{
+            width:60% !important;
+            text-align:left !important;
+            word-break: break-all;
+        }
+        .ipclass{
+        	
+        }
+        
+		.wdg-body .wdg-dataTable--box{
+            margin-top:5px;
+        }
+        .totalRec{
+            font-size: 14px;
+            color: #777777;
+            margin-top:2px;
+        }
+        .wdg-body-titletext{
+            display:inline-block;
+            vertical-align: top;
+            line-height: 1;
+        }
+        .recperpage{
+            background: #FFF;
+            padding: 4px 8px;
+            border: 2px solid #57BDC2;
+            border-radius: 4px;
+            cursor:pointer;
+        }
+        .recperpage:focus{
+            outline:none;
+            cursor:pointer;
+        }
+    </style>
+    <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+            <apex:form id="theForm">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                            <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                        </apex:outputpanel>
+                    <div class="wdg-body--header">
+                       <div class="wdg-search--box"> 
+                           <apex:inputtext html-placeholder="Search Name"  value="{!searchQuery}"/>
+                           <apex:commandbutton value="Search" styleclass="wdg-submit--btn search" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>
+                        </div> 
+                    </div>
+                    
+                   <div class="wdg-body--titleblock clearfix">
+                         <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo subsciberinfo"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> Subscribers Information Listing </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div> 
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!pagesize}" id="recPerPage" onchange="updatePage()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>
+                          
+                           
+                        </div>
+                    </div>
+                    
+                    <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-dataTable--box">
+                    <apex:datatable value="{!Product2s}" var="Prod" styleclass="wdg-dataTable" id="wdgTable" >
+                        <apex:column styleclass="medium nameclass" >
+                            <apex:facet name="header">
+                                Name
+                            </apex:facet>
+                            <apex:outputLink value="/{!Prod.id}">{!Prod.name}</apex:outputLink>
+                        </apex:column>
+                        <apex:column styleclass="medium idclass" >
+                            <apex:facet name="header">
+                                Registration ID
+                            </apex:facet>
+                            <apex:outputtext value="{!Prod.wk_wedge__Registration_Id__c}" styleclass="regId_class"></apex:outputtext>
+                        </apex:column>
+                        <apex:column styleclass="medium ipclass" >
+                            <apex:facet name="header">
+                                Browser Name
+                            </apex:facet>
+                            <apex:outputtext value="{!Prod.wk_wedge__Browser_name__c}"></apex:outputtext>
+                        </apex:column>
+                        <apex:column styleclass="medium ipclass" >
+                            <apex:facet name="header">
+                                IP Address
+                            </apex:facet>
+                            <apex:outputtext value="{!Prod.wk_wedge__Public_IP__c}"></apex:outputtext>
+                        </apex:column>
+                        <apex:facet name="footer">
+                                <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                    <apex:outputpanel rendered='{!Product2s.size>0}'>
+                                        <apex:commandlink value="" action="{!first}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!previous}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate  Prev"><span></span></apex:commandlink>
+                                        <apex:outputText styleclass="wdg-dataTable--pages" value="{!objectBatches.PageNumber} of {!objectBatches.TotalPages} "></apex:outputText>
+                                        <apex:commandlink value="" action="{!next}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!last}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                    </apex:outputpanel> 
+                                    <apex:outputpanel rendered="{!Product2s.size==0}">
+                                        <div class="No-Product">No Records Returned !!!!</div>
+                                    </apex:outputpanel>
+                               </apex:outputpanel>
+                           </apex:facet>
+                      </apex:datatable>
+                      <span class="wdg-Notedata" >
+                         <p class="wdg-note-content">
+                              NOTE: To know about Push Notification and how to use it please follow this <a href="https://wedgecommerce.com/push-notification-in-wedgecommerce/" target="_blank">link</a>.
+                          </p>
+                      </span>
+                </apex:outputpanel> 
+               </div>
+                <apex:actionFunction name="updatePage" action="{!updatedata}" status="waitstatus"/>
+            </apex:form>
+            <script>
+            jQuery(document).ready(function($) {
+              // Get Accounts via the REST API
+              $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Subscriber_Information__c',
+                {
+                  beforeSend: function(xhr) {
+                    // Set the OAuth header from the session ID
+                    xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                  },
+                  success: function(response) {
+                    // Append the records to HTML list
+                    var str=JSON.stringify(response);
+                    var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                    var arr = total.split(',');
+                    document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                            });
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    // Error
+                    console.log(jqXHR.status + ': ' + errorThrown);
+                  }
+                }
+              );
+                $('[class$="regId_class"]').each(function(){
+                    $(this).text($(this).text().substring(0,80)+'...');
+                    //console.log($(this).text());
+                });
+            });
+          </script>
+          </apex:define>
+    </apex:composition>
+</apex:page>

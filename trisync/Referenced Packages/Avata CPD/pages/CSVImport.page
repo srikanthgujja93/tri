@@ -1,0 +1,31 @@
+<apex:page standardController="Document" extensions="ATC.CSVImportController" sidebar="false" showHeader="false">
+  <!--  CSV File import  -->
+     <apex:image url="{!URLFOR($Resource.ATC__TreeGrid5912,'Grid/avata.jpg')}"/>
+     <apex:sectionHeader title="Import a CSV file" />
+    <apex:form id="theForm">
+      <apex:pageBlock >
+      <!-- - 
+          <apex:pageBlockSection >
+          <apex:outputLabel >Create or Update: <p/>
+          <apex:selectRadio value="{!ImportMode}">
+            <apex:selectOptions value="{!Modes}" />
+          </apex:selectRadio>
+           </apex:outputLabel> 
+           </apex:pageBlockSection> 
+          
+          <p/> -->
+          <apex:pageBlockSection >
+            <apex:outputLabel >Select a CSV File to Import : 
+            <apex:inputFile value="{!document.body}" filename="{!document.name}" size="80" />  
+            </apex:outputLabel>          
+          </apex:pageBlockSection>      
+         <apex:facet name="footer">
+             <apex:outputPanel layout="block" style="text-align: center;">
+               <apex:commandButton value="Save" action="{!doSave}"/>
+               <apex:commandButton onclick="window.close();" value="Cancel" styleClass="btn"/>
+              </apex:outputPanel>
+          </apex:facet>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:messages />
+</apex:page>

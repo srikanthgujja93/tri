@@ -1,0 +1,7 @@
+<aura:documentation>
+	<aura:description>SMS Template</aura:description>
+	<aura:example name="ExampleName" ref="exampleComponentName" label="Label">
+		Create SMS Template using Merge Fiels like {!Account.Name} and use while sending sms.
+		Merge Field will be replace by respective record value.
+	</aura:example>
+</aura:documentation>

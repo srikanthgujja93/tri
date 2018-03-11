@@ -1,0 +1,182 @@
+<apex:page controller="gkn_sms.SendSmsCtr" showHeader="false" sidebar="false" standardStylesheets="true">
+    <!--<apex:stylesheet value="{!URLFOR($Resource.gkn_sms__slds_assets,'/assets/styles/salesforce-lightning-design-system.css')}" />-->
+    <apex:slds />
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <head>
+            <title>Send SMS</title>
+            <style>
+                .dim_a {width:400px; height:150px;}
+                .dim_b {width:200px; height:60px;}
+            </style>
+        </head>
+        <body>
+            <apex:form id="send_sms_form" styleClass="slds-form--stacked">      
+                <apex:actionFunction name="uploadDocument" action="{!upload}" reRender="none" status="progressStatus" />
+                <apex:actionFunction name="changeFromNumber" action="{!changeFromNumber}" reRender="countrycode" status="progressStatus" />
+                
+                <apex:actionStatus id="progressStatus" onstart="document.getElementById('progressbar').style.display='block';" 
+                                   onstop="document.getElementById('progressbar').style.display='none';">
+                </apex:actionStatus>
+                <div id="progressbar" style="display:none;background-color: rgba(255, 255, 255, 0.5);height: 550px;position: absolute;width: 100%;z-index: 9999;">
+                    <img src ="{!URLFOR($Resource.gkn_sms__slds_assets,'/assets/images/spinners/slds_spinner_brand.gif')}" 
+                     width="45px" style="background-color: #ffffff;left: 50%;position: absolute;top: 50%;z-index: 99;"/>
+                </div>
+                <article class="slds-card">
+                    <apex:pagemessages />
+                    <div class="slds-grid">
+                        
+                        <div class="slds-p-around--small slds-p-horizontal--small slds-small-size--5-of-12">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="select-01">From Number</label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <apex:selectList onchange="changeFromNumber();" styleClass="slds-select" value="{!fromNumber2}" size="1">
+                                            <apex:selectOptions value="{!NumberList}"/>
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <apex:outputPanel rendered="{!toCountryCode!=null}">
+                            <!--<div class="slds-form-element">
+                                <label class="slds-form-element__label" for="text-input-01">Country Code</label>
+                                <div class="slds-form-element__control">
+                                    <apex:inputText id="countrycode" value="{!toCountryCode}" styleClass="slds-input" style="width:70px" />                                    
+                                </div>
+                            </div>-->
+                            </apex:outputPanel>
+                            
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="text-input-01">SMS To Number</label>
+                                <div class="slds-form-element__control">                                
+                                    <input disabled="true" type="text" value="{!ToNumber} : {!sendToNumber}" class="slds-input" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="select-01">Select Template</label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <apex:selectList styleClass="slds-select" id="template" value="{!selectedTemplate}" size="1" onChange="templateSelectAF(this.value)">
+                                            <apex:selectOptions value="{!templateList}"/> 
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="textarea-input-01">Compose</label>
+                                <div class="slds-form-element__control">                                
+                                    <apex:inputTextarea html-maxlength="1550" styleClass="slds-textarea" id="messageText" value="{!messageBody}" rows="6" cols="70"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">                            
+                                <!--<apex:commandButton id="sendsmsbtn" styleClass="slds-button slds-button--brand" action="{!sendSMS}" value="Send SMS" />-->
+                                <input type="button" value="Send SMS" onclick="sendSMS()" id="sendsmsbtn" class="slds-button giri-button slds-button--brand"/>
+                            </div>
+                        </div>
+                        <div id="MMSBox" class="slds-p-around--small slds-p-horizontal--small slds-small-size--7-of-12">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Upload an Image</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-file-selector slds-file-selector--images">
+                                        <div class="slds-file-selector__dropzone" style="height:100px;">                                            
+                                            <input type="file" onchange="uploadFileOnChange()" 
+                                                   class="slds-file-selector__input slds-assistive-text"
+                                                   id="file_upload_input_01" accept="audio/*,video/*,image/*"/>
+                                            <apex:inputHidden value="{!documentName}" id="documentName"/>
+                                            <apex:inputHidden value="{!documentBody}" id="documentBody"/>
+                                            <apex:inputHidden value="{!documentExtension}" id="documentExtension"/>
+                                            <label class="slds-file-selector__body" for="file_upload_input_01">
+                                                <span class="slds-file-selector__button slds-button slds-button--neutral">
+                                                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                                        <use xlink:href="{!URLFOR($Resource.gkn_sms__slds_assets,'/assets/icons/utility-sprite/svg/symbols.svg#upload')}"/>
+                                                    </svg>Upload Image</span>
+                                            </label>
+                                        </div>
+                                        <div id="preview" style="display:none">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <div style="width: 100%; height: 40px; border-bottom: 1px solid e1e1e1; text-align: center">
+                                    <span style=" background-color: #f3f5f6; font-weight: bold; margin-top: 10px; position: absolute;">
+                                        OR
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Provide publicly accessible file URL</span>
+                                <div class="slds-form-element__control">
+                                    <apex:inputText styleClass="slds-input" id="mediaUrl" html-placeholder="Publicly Accessible URL" value="{!mediaUrl}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>                
+                <apex:actionFunction name="templateSelectAF" action="{!gettempBody}" reRender="messageText" status="progressStatus" />
+                <apex:actionFunction name="sendSMS" action="{!SendSMS}" reRender="send_sms_form" status="progressStatus" />
+                <script>            
+                function uploadFileOnChange(){
+                    var reader = new FileReader();  
+                    var file = document.querySelector('input[type=file]').files[0];          
+                    var preview = document.getElementById('preview');
+                    reader.readAsDataURL(file);
+                    reader.onload = function () {
+                        var fileContents = reader.result;
+                        var base64Mark = 'base64,';
+                        var dataStart = fileContents.indexOf(base64Mark) + base64Mark.length;        
+                        fileContents = fileContents.substring(dataStart);
+                        document.getElementById('{!$Component.documentName}').value = file.name;
+                        document.getElementById('{!$Component.documentBody}').value = fileContents;
+                        document.getElementById('{!$Component.documentExtension}').value =file.name.split('.').pop();
+                        uploadDocument();
+                    };
+                    reader.addEventListener("load", function () { 
+                        
+                        if(file.type.indexOf('image')>=0){                                  
+                            document.getElementById('preview').style.display='block';
+                            var imgTag = document.createElement("img");
+                            imgTag.setAttribute("src", reader.result);
+                            imgTag.setAttribute("style", "width:150px;padding:5px;border:1px dashed #d8dde6");
+							preview.appendChild(imgTag);
+                        }
+                        else{                                        
+                            document.getElementById('preview').style.display='none';
+                        }
+                        /*
+                        if(file.type.indexOf('audio')>=0){                                  
+                            document.getElementById('audio').style.display='block';
+                        }
+                        else{                                        
+                            document.getElementById('audio').style.display='none';
+                        }*/
+                        
+                    }, false);
+                    reader.onerror = function (error) {
+                        console.log('Error: ', error);
+                    };
+                }
+                
+                function closeWindow(){
+                    var abc = '{!isSmsSent}';
+                    if(abc=='true'){
+                        document.getElementsByClassName('giri-button')[0].disabled=true;
+                        setTimeout(function(){window.close(); window.opener.location.href='/{!recordId}';},5000);
+                    }
+                }
+                closeWindow();                
+                </script>
+            </apex:form>
+            <style>
+            	.slds-scope .slds-form-element__label{font-size:14px;}
+            </style>
+            <script>            
+            function removeBtnClass(){                    
+                document.getElementsByClassName('giri-button')[0].className ='slds-button slds-button--brand';
+            }
+            removeBtnClass();
+            </script>
+        </body>
+    </html>
+</apex:page>

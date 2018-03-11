@@ -1,0 +1,975 @@
+<apex:page showheader="False" controller="wk_wedge.addNEWProduct" standardStylesheets="false" cache="false" title="Add Product">
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'></link>
+  <apex:includescript value="{!URLFOR($Resource.wk_wedge__SFResources,'EcomResources/exterfiles/jquery.min.js')}"/>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <apex:stylesheet value="{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/css/backend/style.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/css/backend/style-lightning.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.wk_wedge__SLDS,'assets/styles/salesforce-lightning-design-system-ltng.css')}"/>
+  <style>
+      .wdg-body--titleblock{
+          padding:15px 0 0;
+      }
+      .wdg-addOption--btn{
+          margin-right:15px;
+      }
+        .wdg-form--box{
+            margin-top: 20px;
+        }
+        .wk_static .heading{
+            font-size: 20px;    
+        }
+        .wk_static .con{
+            padding: 0.2rem;
+        }
+        .wk_static .productlarge{
+            padding-top: 5px;
+        }
+        .wk_static .pageHeader{
+            background: #3BA9E2;
+            color: #fff;
+        }
+        .wk_static .cp-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: 15px;
+            margin-left: -24px;
+        }
+        .wk_static .saveicon{
+            cursor:pointer;
+            display: inline-block;
+            background: #3BA9E2;
+            padding: 13px 12px 12px;
+        }
+        .wk_static .saveicon:hover{
+            background: #037BD8;
+        }
+        .wk_static .deleteicon{
+            display: inline-block;
+            cursor:pointer;
+            padding: 13px 12px 12px;
+        }
+        .wk_static .deleteicon:hover{
+            background: #037BD8;
+        }
+        .wdg-popup .wdg-popup--modal{
+            height: 450px;
+            top: 350px;
+        }
+        .wdg-popup--modal .wdg-modal--content{
+            height: 360px;
+        }
+        .wdg-form--headeroptions li.active a,.wdg-form--headeroptions a{
+            text-decoration:none;
+        }
+        
+                .wdg-file--box.sleek{
+                    width:150px;
+                    height:38px;
+                    line-height:2.5;
+                }
+                .wdg-attachments{
+                    border:1px solid #ccc;
+                }
+                .justify{
+                    text-align:justify !important;
+                }
+                .wdg-form--block.wdg-gap--top{
+                    margin-top:60px;
+                }
+                .wdg-attachment--wrap{
+                    margin:15px;
+                    display:inline-block;
+                    padding:12px;
+                    border:1px solid #ccc;
+                    position:relative;
+                }
+                .wdg-attachment--title .wdg-AttachentTitle{
+                    margin-top:8px;
+                }
+                
+                .no-margin{
+                    margin:0 !important;
+                }
+                .display--block{
+                    display:block !important;
+                }
+                .wdg-attach--checkboxwrap{
+                        box-sizing: border-box;
+                        display: inline-block;
+                        height: 15px;
+                        width: 15px;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        z-index: 255;
+                        margin-top: -1px;
+                        margin-left: -1px;
+                }
+                .float--right{
+                    float:right;
+                }
+                .filename{
+                    color:#555555;
+                    font-size:14px;
+                }
+                .wdg-nav-icon.productcatalog, .wdg-nav-icon.product {
+                    background-color: #34becd;
+                }
+                .wdg-addOption--btn{
+                     cursor: pointer;
+                    
+                     padding: 8px;
+                     background: #7DC37D;
+                     color: #fff;
+                     display: inline-block;
+                     text-align: center;
+                     text-decoration: none;
+                     border-radius: 2px;
+                     border: none;
+                     font-size: 13px;
+                     font-weight: 600;
+                     box-shadow: none;
+                     outline: none;
+                 }
+                  .selectType {
+                    padding: 6px;
+                    border-radius: 3px;
+                    font-size: 14px;
+                    color: #222;
+                    background: #fff;
+                    border: 1px solid #adadad;
+                    outline: none;
+                    box-shadow: none;
+                    display: inline-block;
+                    width:150px;
+                    box-sizing: border-box;
+                }
+                .wdg-modal--content .wdg-ctrl--btn {
+                    position: relative;
+                    width: 30px;
+                    height: 30px;
+                    outline:none;
+                    border:none;
+                    border-radius: 3px;
+                    cursor: pointer;
+                    margin-left: 5px;
+                    vertical-align: middle;
+                    display: inline-block;
+                }
+                .wdg-modal--content .wdg-ctrl--btn > span {
+                    background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite-icon.png')}') no-repeat;
+                    width: 15px;
+                    height: 15px;
+                    position: absolute;
+                    display: inline-block;
+                    z-index: 1;
+                }
+                .wdg-ctrl--btn.addRow>span{
+                    background-position: -45px -120px;
+                    left: 9px;
+                    top: 7px;
+                }
+                .wdg-ctrl--btn.deleteRow>span{
+                    background-position: -105px -105px;
+                    left: 9px;
+                    top: 7px;
+                }
+                .Opname , .Opname:hover , .Opname:Active{
+                    color: #0066cc;
+                    text-decoration:underline;
+                }
+             </style>
+             <apex:form > 
+                 <apex:outputpanel layout="block" id="theOptionEditPopup">  
+                    <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!fadeEdit}" >
+                        <div class="wdg-popup--modal">
+                             <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">Edit Option </div>
+                                <apex:outputlink styleclass="wdg-modal--close"  value="{!URLFOR($Page.wk_wedge__AddProductLightning,null,['id'=$CurrentPage.parameters.id])}"></apex:outputlink>
+                            </div>
+                             <div class="wdg-modal--content "> 
+                                <div class="wdg-form--block"> 
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Add Variants </span>
+                                    </div>                                
+                                    <div class="wdg-form--blockfields">
+                                        <apex:inputhidden value="{!Pvariants}" id="ip_variants"/>                                    
+                                        <table class="wdg-variant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Position </th>
+                                                    <th>Value</th>
+                                                    <th>Modifier</th>
+                                                    <th>Type</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="PrimeRow">
+                                                    <td class="Xsmall position"><input type="text"/></td>
+                                                    <td class=" large variant"><input type="text" /></td>
+                                                    <td class=" Xsmall modifier"><input type="text"/></td>
+                                                    <td class=" large typeval">
+                                                        <select name="singleSelect" class="selectType">
+                                                            <option value="Absolute" >Absolute</option>
+                                                            <option value="Percent">Percent</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class=" Xsmall option">
+                                                        <div class="option_btn" style="display:inline-flex;">
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn addNew addRow"><span></span></a>
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn delete deleteRow" ><span></span></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wdg-modal--footer">
+                                <apex:inputhidden id="variants" value="{!selectedvariants}"/>
+                                <a href="javascript:void(0)" id="upbtn" class="wdg-modal--btn">Update</a>
+                                <apex:actionFunction name="saveFeatures" action="{!updateProductValue}" status="waitstatus" rerender="wdgerrorBlock,theOptionEditPopup"/>
+                            </div> 
+                        </div> 
+                    
+                    <div class="wdg-popup--bg fadein"></div>       
+                  </apex:outputpanel>   
+               </apex:outputpanel> 
+             
+               <apex:outputpanel layout="block" id="thepopup">  
+                <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!fadein}">
+                    <div class="wdg-popup--modal">
+                         <div class="wdg-modal--header clearfix">
+                            <div class="wdg-modal--title">Add Global Option </div>
+                            <apex:outputlink styleclass="wdg-modal--close"  value="{!URLFOR($Page.wk_wedge__AddProductLightning,null,['id'=$CurrentPage.parameters.id])}"></apex:outputlink>
+                        </div>
+                        <div class="wdg-modal--content">
+                            <apex:outputPanel layout="block" rendered="{!productSel.size==0}">
+                                No Record(s) Returned
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" rendered="{!productSel.size>0}" styleclass="wdg-modal--fieldbox">
+                                <label class="edit-label">Select Option :</label>
+                                <apex:selectList size="1" value="{!globalOptionId}">
+                                    <apex:selectOptions value="{!productSel}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </div> 
+                         <div class="wdg-modal--footer">
+                            <apex:commandbutton value="Add" onclick="javascript:this.disabled= true;" id="upbtn" action="{!updateOptionList}" styleclass="wdg-modal--btn" status="waitstatus" rerender="thepopup,wdgerrorBlock,ProductOptionblock,thefeatureform"/>
+                          </div>
+                     </div>  
+                    <div class="wdg-popup--bg fadein"></div>      
+                  </apex:outputpanel>   
+            </apex:outputpanel> 
+               <div class="wdg-popup wdg-hide" id="imagePopUp">
+                <div class="wdg-popup--modal" id="doc-pop">
+                    <div class="wdg-modal--header clearfix">
+                        <div class="wdg-modal--title">Images</div>
+                         <apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+                    </div>   
+                    <div class="wdg-modal--content padding-0">
+                        <div class="wdg-imagepop--box">
+                            <div class="wdg-imagepop--folder">
+                                <div class="wdg-images--container">
+                                <apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+                                    <div class="wdg-checkbox--box">
+                                        <apex:inputcheckbox html-targetvalue="{!folder.value}"  styleclass="folder-checkbox"/>
+                                    </div>
+                                    <apex:outputlabel value="{!folder.label}"/>
+                                </apex:datalist>
+                                <apex:inputhidden value="{!documentfolder}" id="docfolder" />
+                            </div>
+                            </div>
+                            <apex:outputpanel layout="block" id="imageSet" styleclass="wdg-imagepop--images">
+                                 <div class="wdg-images--container">
+                                    <apex:repeat value="{!Images}" var="imgs">
+                                        <apex:image url="/servlet/servlet.FileDownload?file={!Imgs.id}" html-targetId="{!Imgs.id}" alt="{!Imgs.name}"/>
+                                    </apex:repeat>
+                                    <apex:outputpanel layout="block" styleclass="selectFolder" rendered="{!Images.size==0}">
+                                        <apex:outputpanel >
+                                            <apex:outputtext value="Please select a folder from left" rendered="{!OR(documentfolder==null,documentfolder=='')}" />
+                                            <apex:outputtext value="No images returned" rendered="{!AND(documentfolder!=null,documentfolder!='')}"/>
+                                        </apex:outputpanel>
+                                    </apex:outputpanel>
+                                </div>
+                            </apex:outputpanel>
+                        </div> 
+                        <apex:actionfunction name="newImages" rerender="imageSet" status="waitstatus"/>
+                    </div>
+                    <div class="wdg-modal--footer">
+                    </div> 
+                </div>
+                <div class="wdg-popup--bg fadein"></div> 
+                </div> 
+            </apex:form> 
+             <apex:form id="productform" styleclass="wdg-dataentry--form">
+                
+                   <div class="wdg-popup wdg-hide" id="fileuploadPopUp">
+                    <div class="wdg-popup--modal">
+                            <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">Images</div>
+                                <apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+                            </div>
+                        <div class="wdg-modal--content padding-0">
+                            <div class="wdg-imagepop--box">
+                                <div class="wdg-imagepop--folder">
+                                    <div class="wdg-images--container">
+                                        <apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+                                            <div class="wdg-radio--box">
+                                                <span class="dot"></span>
+                                                <input type="radio" name="folder" value="{!folder.value}" class="folder-radio" />
+                                            </div>
+                                            <apex:outputlabel value="{!folder.label}"/>
+                                        </apex:datalist>
+                                    <apex:inputhidden value="{!uploadfolder}" id="uploadfolder" />
+                                    </div>
+                                </div>
+                                <apex:outputpanel layout="block"  styleclass="wdg-imagepop--images">
+                                    <apex:outputpanel layout="block" styleclass="wgd-uploadImage--box">
+                                        <div class="wdg-upload--image">
+                                            <apex:outputpanel layout="block"></apex:outputpanel>
+                                         </div>
+                                         <div class="wdg-uploadimage--title" id="Image_upload_title">Image.jpg</div>
+                                    </apex:outputpanel>
+                                    <div class="wdg-upload--file">
+                                        <div class="wdg-file--box">
+                                            <span>choose file</span>
+                                            <apex:inputFile value="{!document.body}" filename="{!document.name}" id="Uploadfile" accept="image/*" styleClass="inputupload" />
+                                        </div>
+                                        <div class="wdg-fileupload--error wdg-hide">
+                                            
+                                        </div>
+                                    </div> 
+                                </apex:outputpanel>
+                            </div>
+                        </div>
+                        <div class="wdg-modal--footer">
+                        </div>
+                    </div>
+                    <div class="wdg-popup--bg fadein"></div> 
+                   </div>
+                   <div class="wdg-body">
+                         <div class="wk_static">
+                              <div class="slds-page-header pageHeader slds-p-around--none" role="banner">         
+                                  <div class="slds-grid slds-wrap">
+                                      <div class="slds-size--1-of-2 slds-p-around--x-small">
+                                          <div class="slds-has-flexi-truncate">
+                                              <div class="slds-media">
+                                                  <div class="productlarge slds-m-left--medium">
+                                                      <span ></span>
+                                                  </div>
+                                                  <div class="slds-media__body slds-m-left--x-small">
+                                                      <p class="heading">Product</p>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class="slds-size--1-of-2">
+                                          <div class="slds-float--right">
+                                              <!--<span>
+                                                  <input type="text" class="searchbox" placeholder="Search.." id="searchbox" value="{!v.searchstr}" onkeyup="{!c.searchItems}"/>
+                                                  <div class="searchicon" id="searchicon">
+                                                      <span ></span>
+                                                  </div>
+                                              </span>-->
+                                              <div class="saveicon slds-m-right--medium" style="display:inline-block" onclick="return ValidateSave(event);">
+                                                  <span ></span>
+                                              </div>
+                                              <!--<div class="slds-m-right--large deleteicon" style="display:inline-block">
+                                                  <span ></span>
+                                              </div>-->
+                                          </div>
+                                      </div>                                      
+                                  </div>
+                              </div>  
+                          </div>
+                          <apex:outputpanel id="wdgErrorBlock" layout="block">
+                             <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                         </apex:outputpanel>
+                         <div class="wdg-body--titleblock clearfix">
+                            <!--<div class="wdg-body--title">
+                                <span class="wdg-title--logo products"></span>
+                                <span>Add Product </span>
+                            </div>-->
+                            <div class="wdg-ctrl--btnPanel">
+                                <apex:actionregion >
+                                    <apex:inputhidden value="{!featurevalues}" id="featValues"/>
+                                    <apex:commandButton styleclass=" wdg-addOption--btn" rendered="{!$CurrentPage.parameters.id!=null}" value="Add Global Option" action="{!addOption}" status="waitstatus" rerender="wdgerrorBlock,thepopup">
+                                        <span></span>
+                                    </apex:commandButton>
+                                   <!--<apex:outputlink title="Preview"  target="_blank" value="{!URLFOR($Page.productdetail,null, ['productid'=Prod.id])}" styleclass="wdg-ctrl--btn preview"><span></span></apex:outputlink>
+
+                                    <apex:commandlink styleclass="wdg-ctrl--btn save " immediate="false" onclick="return ValidateSave(event);" action="{!saveData}" >
+                                        <span></span>
+                                    </apex:commandlink>-->
+                                </apex:actionregion>
+                                <!--<a href="{!$page.ProductListting}" class="wdg-ctrl--btn cancel">
+                                    <span></span>
+                                </a>--> 
+                             </div>  
+                        </div>
+                        <apex:actionFunction name="save" action="{!saveDatalightning}"/>
+                       <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                           <div class="wdg-form--header">
+                                <ul class="wdg-form--headeroptions clearfix">
+                                    <li class="active">
+                                       <a href="javascript:void(0)" data-target="productBlock">General</a> 
+                                    </li>
+                                    <li >
+                                       <a href="javascript:void(0)" data-target="ProductImageblock">Images</a> 
+                                    </li>
+                                     <li>
+                                          <apex:outputlink rendered="{!$CurrentPage.parameters.id!=null}" value="javascript:void(0)" html-data-target="ProductFeaturesblock">Features</apex:outputlink>
+                                     </li>
+                                     <li>
+                                          <apex:outputlink rendered="{!$CurrentPage.parameters.id!=null}" value="javascript:void(0)" html-data-target="ProductOptionblock">Options</apex:outputlink>
+                                     </li>
+                               </ul>
+                            </div>
+                            <div id="productTabGroup" class="wdg-form--content">
+                               <div id="productBlock" class="wgd-form--tab show">
+                                   <div class="wdg-form--block">
+                                        <div class="wdg-form--blocktitle">
+                                                <span>Information </span>
+                                        </div>
+                                        <div class="wdg-form--blockfields">
+                                            <table class="wdg-form--table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Name :  " for="prodName"/>
+                                                        </td>
+                                                         <td class="field">
+                                                             <div class="requiredInput">
+                                                                <div class="requiredBlock"></div>
+                                                                <apex:inputfield value="{!prod.name}" id="prodName" styleclass="display-inline--block"/>
+                                                            </div>
+                                                            <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel> 
+                                                            
+                                                         </td>
+                                                     </tr>
+                                                     <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Product Code :  " for="prodcode"/>
+                                                        </td>
+                                                         <td class="field">
+                                                            <apex:inputfield value="{!prod.Productcode}" id="prodcode" styleclass="display-inline--block"/>
+                                                         </td>
+                                                     </tr>
+                                                     <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Categories :  " for="categories"/>
+                                                        </td>
+                                                         <td class="field">
+                                                             <div class="requiredInput">
+                                                                <div class="requiredBlock"></div>
+                                                                 <div class="wdg-categoryTree--box" id="wk_cat_wrap">
+                                                                      <c:TreeView id="treeview" value="{!selectedValues}" />                                                                      
+                                                                </div> 
+                                                            </div>
+                                                            <apex:outputPanel layout="block" Id="validateCat" styleclass="validateClass"></apex:outputPanel> 
+                                                         </td>
+                                                     </tr>
+                                                      <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Prices :  " for="Prices"/>
+                                                        </td>
+                                                         <td class="field">
+                                                              <table class="wdg-allPricebookTable">
+                                                                   <tr> 
+                                                                        <th>Unit Price</th>
+                                                                        <th>Pricebook</th>
+                                                                   </tr>
+                                                                   <tr id="standardPrice">
+                                                                     <td>
+                                                                         <apex:inputfield value="{!standardprice.unitprice}" required="false" id="stdprice" styleclass="field--small display-inline--block"/>
+                                                                     </td> 
+                                                                     <td><apex:outputlabel value="Standard Pricebook" for="stdPrice"/></td>
+                                                                     <td><c:ToolTip helptext="Please Enter the standard price first"/></td>
+                                                                   </tr>
+                                                                   <apex:repeat value="{!PricebookEntries}" var="pBEntry">
+                                                                        <tr class="" id="ListPrice">
+                                                                            <td><apex:inputfield value="{!pBEntry.unitprice}" required="false" styleclass="field--small display-inline--block"/></td>
+                                                                            <td><apex:outputlabel value="{!pricebookList[pBEntry.pricebook2id].name}" /></td>
+                                                                            <td><c:ToolTip helptext="Price for {!pricebookList[pBEntry.pricebook2id].name} Pricebook"/></td>
+                                                                        </tr>
+                                                                    </apex:repeat>
+                                                                </table>
+                                                         </td> 
+                                                     </tr>
+                                                     <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Description :  " for="prodDesc"/>
+                                                        </td>
+                                                         <td class="field">
+                                                            <apex:inputfield value="{!prod.wk_wedge__product_description__c}" id="prodDesc" styleclass="display-inline--block"/>
+                                                         </td>
+                                                     </tr>
+                                                     <tr>
+                                                        
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Status :  " for="prodStatus"/>
+                                                        </td>
+                                                         <td class="field">
+                                                            <div class="custom-checkbox {!IF(prod.IsActive,'checked','')}">
+                                                                <apex:inputfield value="{!prod.IsActive}" id="prodStatus" styleclass="display-inline--block"/>
+                                                            </div>
+                                                         </td>
+                                                     </tr>
+                                                      <tr>
+                                                        <td class="label">
+                                                           <apex:outputlabel value="In Stock :  " for="prodStock"/> 
+                                                        </td>
+                                                         <td class="">
+                                                            <apex:inputfield required="true" value="{!prod.wk_wedge__Amount__c}" id="prodStock" styleclass="display-inline--block"/>
+                                                         </td>
+                                                         <td><c:ToolTip helptext="Inventory in stock"/></td>
+                                                     </tr>
+                                                     <tr>
+                                                        <td class="label"><apex:outputlabel value="Image :"></apex:outputlabel></td>
+                                                        <td class="field">
+                                                             <apex:actionregion >
+                                                                <apex:outputpanel id="ImagesPane" layout="block" styleclass="wgd-uploadImage--box">
+                                                                    <div class="wdg-upload--image display-inline--block">
+                                                                        <apex:outputpanel layout="block" rendered="{!imgSelected==null}"></apex:outputpanel>
+                                                                        <apex:image url="/servlet/servlet.FileDownload?file={!imgSelected}" width="108px" height="90px" rendered="{!NOT(imgSelected==null)}" styleClass="ecm_thum_img"/>
+                                                                    </div>
+                                                                    <apex:inputhidden value="{!imgSelected}" id="Imgsel"/>
+                                                                    <apex:inputhidden value="{!ImageOptionSelected}" id="Imgoptsel"/>
+                                                                     <div class="wdg-uploadimage--title" id="Image_title">Image.jpg</div>
+                                                                </apex:outputpanel>
+                                                                <div class="wdg-uploadImage--btngroup">
+                                                                    <a href="javascript:void(0)" data-target="fileuploadPopUp" value="0" class="ImgSelect">Upload</a>
+                                                                    <a href="javascript:void(0)" data-target="imagePopUp" value="1" class="ImgSelect">Documents</a>
+                                                                     <apex:outputlink value="javascript:void(0)" rendered="{!NOT(imgSelected==null)}" id="removeImages" style="border-left:none">Remove Image</apex:outputlink>
+                                                                </div>
+                                                            </apex:actionregion>
+                                                            <apex:outputPanel layout="block" Id="validateImg" styleclass="validateClass"></apex:outputPanel>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Product Length :  " for="prodlength"/>
+                                                        </td>
+                                                         <td class="field">
+                                                            <apex:inputfield value="{!prod.wk_wedge__Length__c}" id="prodlength" styleclass="display-inline--block"/>
+                                                         </td>
+                                                     </tr>
+                                                     <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Product width :  " for="prodwidth"/>
+                                                        </td>
+                                                         <td class="field">
+                                                            <apex:inputfield value="{!prod.wk_wedge__width__c}" id="prodwidth" styleclass="display-inline--block"/>
+                                                         </td>
+                                                     </tr>
+                                                     <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value=" Product Height:  " for="prodheight"/>
+                                                        </td>
+                                                         <td class="field">
+                                                            <apex:inputfield value="{!prod.wk_wedge__Height__c}" id="prodheight" styleclass="display-inline--block"/>
+                                                         </td>
+                                                     </tr>
+                                                     <tr>
+                                                        <td class="label">
+                                                            <apex:outputlabel value="Product weight :  " for="prodweight"/>
+                                                        </td>
+                                                         <td class="field">
+                                                            <apex:inputfield value="{!prod.wk_wedge__weight__c}" id="prodweight" styleclass="display-inline--block"/>
+                                                         </td>
+                                                     </tr>
+                                                   </tbody>
+                                            </table>
+                                        </div>
+                                  </div>
+                               </div>
+                               <div id="ProductImageblock"  class="wgd-form--tab ">
+                                    <div class="wdg-form--block">
+                                      <div class="wdg-form--blocktitle">
+                                        <span>Additional  Images </span>
+                                      </div>
+                                      <apex:outputpanel layout="block" id="Productattch" styleclass="wdg-form--blockfields">
+                                        <table class="wdg-variant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>files</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                 <apex:repeat value="{!attach}" var="a">
+                                                    <tr>
+                                                        <td class="large variant file">
+                                                            <div class="wdg-upload--file">
+                                                                <div class="wdg-file--box sleek">
+                                                                    <span>choose file</span>
+                                                                  <apex:inputFile value="{!a.body}" filename="{!a.name}"  accept="image/*" styleClass="inputupload" />
+                                                                </div>
+                                                            </div> 
+                                                        </td>
+                                                        <td class="small option">
+                                                            <span>No file Choosen</span>
+                                                        </td>
+                                                        <td class="small option">
+                                                            <div class="option_btn">
+                                                                <apex:actionregion >
+                                                                     <apex:commandlink action="{!addmore}" styleclass="wdg-ctrl--btn addNew"  status="waitstatus" rerender="Productattch" >
+                                                                        <span></span>
+                                                                    </apex:commandlink>
+                                                                    <apex:commandlink action="{!deleterow}" styleclass="wdg-ctrl--btn delete"  status="waitstatus" rerender="Productattch" >
+                                                                        <apex:param name="attchName" value="{!a.name}" assignTo="{!attchName}"/>
+                                                                        <span></span>
+                                                                    </apex:commandlink>
+                                                                </apex:actionregion>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                 </apex:repeat>
+                                            </tbody>
+                                         </table>
+                                       </apex:outputpanel>
+                                      <apex:outputPanel layout="block"  id="existattachments" styleclass="wdg-form--block wdg-gap--top">
+                                          <div class="wdg-form--blocktitle wdg-attachment--title clearfix">
+                                            <span class="wdg-AttachentTitle">Existing Images </span>
+                                            <apex:actionregion > 
+                                                  <apex:inputhidden value="{!removeattach}" id="removeattach"/>
+                                                <apex:commandlink styleclass="wdg-ctrl--btn delete float--right" action="{!deleteAttachment}" rerender="existattachments,wdgErrorBlock" status="waitstatus">
+                                                    <span class="no-margin"></span>
+                                                </apex:commandlink>
+                                            </apex:actionregion>
+                                          </div>
+                                            <apex:outputpanel layout="block" id="exitattch" styleclass="wdg-form--blockfields justify">
+                                                 <apex:repeat value="{!prod.attachments}" var="aimg">
+                                                     <apex:outputpanel id="ImagesPane" layout="block" styleclass="wdg-attachment--wrap">
+                                                        <div class="wdg-attach--checkboxwrap">
+                                                            <div class="custom-checkbox display--block">
+                                                                <input type="checkbox" value="{!aimg.id}" class="attachSelect"/>
+                                                            </div>
+                                                        </div>
+                                                        <apex:image url="/servlet/servlet.FileDownload?file={!aimg.id}"   width="108px" height="90px"/>  
+                                                    </apex:outputpanel>
+                                                 </apex:repeat>
+                                            </apex:outputpanel>
+                                          
+                                       </apex:outputPanel>
+                                    </div>
+                                </div>  
+                                <div id="ProductFeaturesblock"  class="wgd-form--tab">
+                                    <apex:outputpanel id="ProductFeaturesblock" styleclass="wdg-form--block" layout="block">
+                                        <div class="wdg-form--blocktitle">
+                                            <span>Product Feature </span>
+                                        </div>                           
+                                        <div ng-app="app" id="ng-app" class="wdg-form--blockfields">
+                                            <div ng-controller="AppCtrl" ng-cloak="" class="wdg-form--table">
+                                            
+                                                <dynamic-form class="wdg-form--table" template="stdFormTemplate" ng-model="stdFormData">
+                                                </dynamic-form>
+                                            </div>
+                                        </div>
+                                    </apex:outputpanel>
+                               </div>
+                               
+                               
+                                <div id="ProductOptionblock"  class="wgd-form--tab">
+                                                                    
+                                    <apex:outputpanel id="ProductOptionblock" styleclass="wdg-form--block" layout="block">
+                                        <div class="wdg-form--blocktitle">
+                                            <span>Product Option </span>
+                                             
+                                        </div>                                                                   
+                                       <Apex:repeat value="{!productOption}" var="op" >
+                                       <li class="wdg-form--table" style="List-style-type:none;">
+                                        <label>    <apex:outputlink value="javascript:openPopup('{!op.Id}');" id="popup" styleclass="Opname">
+                                              {!op.Name} 
+                                           </apex:outputlink>     </label>                                      
+                                       </li>
+                                       
+                                       </Apex:repeat>
+                                    </apex:outputpanel>
+                               </div>
+                         </div>
+                        </apex:outputpanel>
+                        
+                    </div>
+             </apex:form>
+              <apex:form >
+                 <apex:actionFunction name="openPopup" action="{!openEditPopup}" oncomplete="Validate()" reRender="wdgerrorBlock,theOptionEditPopup">
+                     <apex:param name="optid" value="" />
+                 </apex:actionfunction>
+             </apex:form>
+             <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+             <script src="{!URLFOR($resource.dynaform,'dynamic-forms.js')}"></script> 
+             <script>
+                var ProductFeatures='{!JSENCODE(ProductFeatures)}';
+                var ProductFeaturesR='{!JSENCODE(FeatureValuesResults)}';
+             </script>
+             <script>   
+                 angular.module('app', ['dynform']).controller('AppCtrl', ['$scope', function ($scope) {
+                     $scope.stdFormTemplate =JSON.parse(ProductFeatures);
+                     $scope.stdFormData =JSON.parse(ProductFeaturesR);
+                    }]).filter('pretty', function() {
+                     return function (input) {
+                         var temp;
+                         try {
+                             temp = angular.fromJson(input);
+                         }
+                         catch (e) {
+                              temp = input; 
+                         }
+                         return angular.toJson(temp, true);
+                     };
+                     
+               });
+             </script> 
+             <script>
+                 function Validate(){
+                     ProductVariants=$("[Id$='ip_variants']").val();
+                        if(ProductVariants!=null && ProductVariants!=''){
+                            var variants=JSON.parse(ProductVariants);
+                            for(key in variants){
+                                var arr=$(".wdg-form--blockfields .wdg-variant-table tbody tr");
+                                $(".position input",arr[key]).val(variants[key]['wk_wedge__Order_Index__c']);
+                                $(".variant input",arr[key]).val(variants[key]['Name']);
+                                $(".modifier input",arr[key]).val(variants[key]['wk_wedge__Modifier__c']);
+                                $(".typeval select",arr[key]).val(variants[key]['wk_wedge__Type__c']);
+                                if($(".wdg-form--blockfields .wdg-variant-table tbody tr").length<=variants.length)
+                                    $(".wdg-form--blockfields .wdg-variant-table .addRow").last().trigger("click");
+                            }
+                        }
+
+                        if($(this).text()!='Variants' || ($("[Id$='ip_type_sel']").val()=='M' || $("[Id$='ip_type_sel']").val()=='T')){                            
+                            $(this).parent().addClass("active");
+                            var ids=$(this).attr("data-target");
+                            $("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                            $(this).parent().siblings().removeClass("active");
+                            
+                            
+                        }
+                        else {
+                            alert("variants can not be defined for this Option type");
+                        }
+                 }
+                 $( document ).on("click",".wdg-modal--btn",function(){
+                     var arr=[];
+                        $(".wdg-form--blockfields .wdg-variant-table tbody tr").each(function(){
+                            var obj={"pos":"","val":'',"modif":'',"type":''};
+                            var a=$(".position input",this).val();
+                            var b=$(".variant input",this).val();
+                            var c=$(".modifier input",this).val();
+                            var d=$(".typeval select",this).val();
+                            
+                            obj['pos']=a;
+                            obj['val']=b;
+                            obj['modif']=c;
+                            obj['type']=d;
+                            arr.push(obj);                            
+                        });
+                        arr.pop();
+                        $("[Id$='variants']").val(JSON.stringify(arr));
+                        saveFeatures();                         
+                });
+             
+                 $( document).on("click"," .wdg-form--blockfields .wdg-variant-table .addRow",function(){
+                        $(this).parent().parent().parent().after( "<tr>"+$("[Id$='PrimeRow']").html()+"</tr>");
+                    });
+    
+                    $( document).on("click"," .wdg-form--blockfields .wdg-variant-table .deleteRow",function(){
+                        if($(".wdg-form--blockfields .wdg-variant-table tbody tr").length>1)
+                        $(this).parent().parent().parent().remove();
+                    });
+                    
+                 
+                 
+                 
+                 function ValidateSave(event){
+                     $=jQuery.noConflict();
+                    (function($){
+                 
+                        var str  = $("[Id$='prodName']").val();
+                        var img = $("[Id$='Imgoptsel']").val();
+                        var imgSel = $("[Id$='Imgsel']").val();                      
+                        if (str.match(/^[A-z0-9\d\s]+$/) && ((img!='' && img!=null)||(imgSel!=null && imgSel!=''))) {
+                            $("[Id$='validate']").html('');
+                            $("[Id$='validateImg']").html('');
+                            save();
+                            return true;
+                        }
+                        else{                    
+                            alert("Review all the errors!");
+                            
+                            if(!str.match(/^[A-z0-9\d\s]+$/)){
+                                $("[Id$='validate']").html('Special Characters Are Not Allowed');
+                            }
+                            
+                            if(img=='' || img==null){
+                                $("[Id$='validateImg']").html('Please Upload An Image');
+                            }                       
+                            
+                            event.preventDefault();
+                            return false;
+                        }
+                    }(jQuery));
+                }
+                wk=jQuery.noConflict();
+                (function(wk){
+                    wk( document ).on("blur",".wdg-body .wdg-form--table td [Id$='prodName']",function(){
+                        var str  = wk("[Id$='prodName']").val();                       
+                        if (str.match(/^[A-z0-9\d\s]+$/)) {
+                            wk("[Id$='validate']").html('');
+                        }
+                        else{
+                            wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        }
+                     })
+                    wk( document).ready(function(){
+                        wk("#standardPrice input").trigger("blur");
+                    });
+                    wk( document).on("click",".wdg-form--headeroptions li a ",function(){
+                        wk(this).parent().siblings().removeClass("active");
+                        wk(this).parent().addClass("active");
+                        var ids=wk(this).attr("data-target");
+                        wk("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                      
+                       
+                    }); 
+                 wk(document ).on("click",".custom-checkbox input",function(){
+                 
+                    wk(this).parent().removeClass("checked");
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                    }
+                 });
+                 wk(document ).on("click",".folder-checkbox",function(){
+                    var arr=[];
+                    wk(".folder-checkbox").each(function(){
+                        if(this.checked){
+                            wk(this).parent().addClass("checked");
+                            arr.push(wk(this).attr('targetvalue'));
+                        }
+                        else
+                            wk(this).parent().removeClass("checked");
+                    });
+                    wk("[Id$='docfolder']").val(arr.join(','))
+                    newImages();
+                 });
+                 wk(document ).on("click",".folder-radio",function(){
+                    wk(".folder-radio").parent().removeClass("checked");
+                 
+                        if(this.checked){
+                            wk(this).parent().addClass("checked");
+                            wk("[Id$='uploadfolder']").val(wk(this).val())
+                            
+                        }
+                 });
+                wk(document).on("click","[Id$='wgdPopupClose']", function(){
+                    wk("[Id$='imagePopUp'],[Id$='fileuploadPopUp']").removeClass("wdg-show").addClass("wdg-hide");
+                });
+                wk(document).on("click",".wdg-uploadImage--btngroup a",function(){
+                    var ids=wk(this).attr("data-target");
+                      wk("[Id$='"+ids+"']").addClass("wdg-show").removeClass("wdg-hide");
+                });
+                wk(document).on("click",".wdg-imagepop--box .wdg-images--container img",function(){
+                    var ids=wk(this).attr("targetid");
+                    var name=wk(this).attr("alt");
+                    wk("[Id$='Imgsel']").val(ids);
+                    wk("[Id$='Imgoptsel']").val(0);
+                    wk("[Id$='Image_title']").text(name);
+                    wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                    wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+                    wk("[Id$='wgdPopupClose']").trigger("click");
+                     
+                });
+                wk(document).on("click","[Id$='Uploadfile']",function(event){
+                    var ufolder=wk("[Id$='uploadfolder']").val();
+                    wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");
+                    wk(".wdg-fileupload--error").text("");
+                    if(ufolder==null || ufolder==''){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Please Select a folder from left");
+                        event.preventDefault();
+                    }
+                });
+                wk( document ).on("click"," [Id$='removeImages']", function(){
+                  wk(".wdg-uploadimage--title").text("image.jpg");  
+                  wk("[Id$='Imgsel']").val('');
+                  wk("[Id$='Imgoptsel']").val('');
+                  wk(".wdg-upload--image").html("<div></div>");
+                  wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                  
+                });
+                wk(document).on("change","[Id$='Uploadfile']",function(event){
+                    var ufolder=wk("[Id$='uploadfolder']").val();
+                    wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");
+                    wk(".wdg-fileupload--error").text("");
+                    if(ufolder==null || ufolder==''){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Please Select a folder from left");
+                        event.preventDefault();
+                    }
+                   var fakepath=wk(this).val();
+                   var templist=fakepath.split('\\');
+                   var filename=templist[templist.length-1];  
+                   var tempext=filename.split('.')
+                   var fileext=tempext[tempext.length-1];
+                   if(fileext.toLowerCase()!='jpg' && fileext.toLowerCase()!='jpeg' && fileext.toLowerCase()!='png'){
+                      wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                      wk(".wdg-fileupload--error").text("Only jpeg, jpg and png files are allowed");
+                      wk(this).val('')
+                      
+                   }else{
+                        wk(".wdg-uploadimage--title").text(filename);
+                        wk("[Id$='Imgoptsel']").val(1);
+                        wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                        wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+                        
+                        wk("[Id$='wgdPopupClose']").trigger("click");
+                   }
+                });
+                wk("#standardPrice input").blur(function(){
+                       if(wk("#standardPrice input").val()==''){
+                          wk("#standardPrice input").val('');
+                          wk("#ListPrice input").prop('disabled',true);
+                       }
+                       else{
+                         wk("#ListPrice input").prop('disabled',false);
+                        }
+                });
+                wk( document ).on("mouseover", ".wdg-body .wdg-ctrl--btnPanel .wdg-ctrl--btn.save",function(event){
+                     var scope = angular.element(document.querySelector('[ng-controller="AppCtrl"]')).scope();
+                     wk("[Id$='featValues']").val(JSON.stringify(scope.stdFormData));
+                 });
+               wk(document).on("change","[Id$='ProductImageblock'] .wdg-variant-table td.file input",function(event){
+                       var fakepath=wk(this).val();
+                       var templist=fakepath.split('\\');
+                       var filename=templist[templist.length-1];  
+                       var tempext=filename.split('.')
+                       var fileext=tempext[tempext.length-1];
+                       if(fileext.toLowerCase()!='jpg' && fileext.toLowerCase()!='jpeg' && fileext.toLowerCase()!='png'){
+                          alert("Only jpeg, jpg and png files are allowed");
+                          wk(this).val('')
+                          wk(this).parent().parent().parent().next().html("<span> No file choosen </span>");
+                          
+                       }else{
+                            wk(this).parent().parent().parent().next().html('<span class="filename">'+filename+'</span>');
+                       }
+               });
+               wk(document).on("click","[Id$='existattachments'] .custom-checkbox input",function(event){
+                   var arr=[];
+                   console.log("correct hai ji")
+                   wk("[Id$='existattachments'] .custom-checkbox input").each(function(){
+                        if(wk(this).prop('checked')){
+                            arr.push(wk(this).val());
+                        }
+                   
+                   });
+                   wk("[Id$='removeattach']").val(arr.join(','));
+               });
+               
+               }(jQuery));
+            </script>
+</apex:page>

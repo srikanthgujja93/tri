@@ -1,0 +1,127 @@
+<aura:component controller="wk_wedge.WedgeOrderLightning" implements="force:appHostable">
+	<ltng:require styles="{!$Resource.wk_wedge__SLDS +
+	         '/assets/styles/salesforce-lightning-design-system-ltng.css'}"/>
+	
+	<aura:handler name="init" value="{!this}" action="{!c.getOrders}" />
+	<aura:handler name="UpdateEvent" action="{!c.updatelistmeth}" event="wk_wedge:WedgePopupEvent"/>    
+    <aura:method name="updateList" action="{!c.getOrders}"/>   
+	
+    <aura:attribute name="massDeleteList" type="String[]"/>    
+	<aura:attribute name="OrderList" type="Order[]"/>
+    
+    <aura:attribute name="count" type="Integer"/>
+    <aura:attribute name="delthisid" type="String"/>
+    <aura:attribute name="searchstr" type="String"/>
+	
+	<aura:attribute name="offset" type="integer" />
+    
+	<aura:attribute name="next" type="boolean" />
+	<aura:attribute name="prev" type="boolean" />
+	
+	<aura:attribute name="totalPages" type="Long"/>
+	<aura:attribute name="currentPage" type="Integer"/>
+	
+	<div class="wk_static pos">
+        <div class="slds-backdrop" aura:id="MB-Back">
+        	<div class="cp-spinner cp-balls"></div>
+        </div>
+		<div class="slds-page-header pageHeader slds-p-around--none" role="banner">
+			<div class="slds-grid slds-wrap">
+                <div class="slds-size--1-of-2 slds-p-around--x-small">
+                	<div class="slds-has-flexi-truncate">
+                        <div class="slds-media">
+                            <div class="orderlarge slds-m-left--medium">
+                                <span ></span>
+                            </div>
+                            <div class="slds-media__body slds-m-left--x-small">
+                                <p class="heading">Orders</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size--1-of-2">
+                    <div class="slds-float--right">
+                        <!--<span>
+                            <input type="text" class="searchbox" placeholder="Search.." id="searchbox" value="{!v.searchstr}" onkeyup="{!c.searchItems}"/>
+                            <div class="searchicon" id="searchicon">
+                                <span ></span>
+                            </div>
+                        </span>-->
+                        <div class="slds-m-right--medium deleteicon" onclick="{!c.deleteList}">
+                            <span ></span>
+                        </div>
+                    </div>
+                </div>										
+            </div>
+		</div>		
+		<div class="container">
+        	<table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                <thead class="tableHeader">
+                    <tr class="slds-text-heading--label tableHeaderRow">
+                        <th class="slds-is-sortable column" scope="col">
+                            <ui:inputCheckbox label="" class="check" aura:id="master" click="{!c.checkAll}"/>
+                        </th>
+                        <th class="action column" scope="col">Order Number</th>                    
+                        <th class="slds-is-sortable column" scope="col">Account</th>
+                        <th class="slds-is-sortable column" scope="col">Customer</th>
+                        <th class="slds-is-sortable column" scope="col">Order Amount</th>
+                        <th class="slds-is-sortable column" scope="col">Startdate</th>
+                        <th class="slds-is-sortable column" scope="col">Status</th>
+                        <th class="slds-is-sortable column" scope="col">Action</th>
+                    </tr>  
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.OrderList}" var="key">
+                        <tr class="slds-hint-parent ">
+                            <td class="action column" data-label="Action" >
+                                <ui:inputCheckbox label="" class="check" text="{!key.Id}" aura:id="dependent"/>
+                            </td>
+                            <td data-label="Order Number" class="action column">
+                                <a href="{! '#/sObject/' + key.Id + '/view'}">{!key.OrderNumber}</a>
+                            </td>
+                            <td data-label="Account" class="action column">
+                                <a href="{! '#/sObject/' + key.AccountId + '/view'}">{!key.Account.Name}</a>
+                            </td>
+                            <td data-label="Customer" class="action column">{!key.CreatedBy.Name}</td>
+                            <td data-label="Order Amount" class="action column">{!key.TotalAmount}</td>
+                            <td data-label="Startdate" class="action column">{!key.EffectiveDate}</td>
+                            <td data-label="Status" class="action column">
+                                <aura:if isTrue="{!(key.StatusCode=='D')}">
+                                    Draft
+                                    <aura:set attribute="else">
+                                      Activated
+                                    </aura:set>
+                                </aura:if>
+                            </td>
+                            <td data-label="Action" class="action column">
+                                <span >                                                              
+                                    <wk_wedge:deleteButton delThisId="{!key.Id}" objectName="Order" />                                
+                                </span>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+		<div class="slds-size--1-of-1">
+        	<div class="slds-float--right slds-p-around--small">
+            	<span class="child">
+                    Total Records&nbsp;:&nbsp;{!v.count}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <ui:button class="slds-button slds-button--neutral slds-p-horizontal--xx-small" press="{!c.Previous}" disabled="{!v.prev}">
+                        <span class="slds-icon slds-icon-text-default">
+                            <wk_wedge:SVG class="slds-button__icon slds-button__icon--large" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/utility-sprite/svg/symbols.svg#chevronleft'}" />
+                            <span class="slds-assistive-text">Previous</span>
+                        </span>               
+                    </ui:button>
+                    <span>&nbsp;{!v.currentPage} of {!v.totalPages}&nbsp;</span>
+                    <ui:button class="slds-button slds-button--neutral slds-p-horizontal--xx-small slds-m-right--x-small" press="{!c.Next}" disabled="{!v.next}" >
+                        <span class="slds-icon slds-icon-text-default">
+                            <wk_wedge:SVG class="slds-button__icon slds-button__icon--large" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/utility-sprite/svg/symbols.svg#chevronright'}" />
+                            <span class="slds-assistive-text">Next</span>
+                        </span>                	
+                    </ui:button>    
+                </span>
+            </div>
+        </div>
+	</div>
+</aura:component>

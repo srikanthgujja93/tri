@@ -1,0 +1,13 @@
+.THIS{}
+
+.THIS .hide{display:none !important}
+.THIS .slds-form-element__label.slds-m-bottom--none {
+    margin-left: 60px;
+    margin-top: 4px;
+    position: absolute;
+    vertical-align: middle;
+}
+.THIS .setup-icon {
+    background-color: #0070D2;
+    padding: 7px;
+}

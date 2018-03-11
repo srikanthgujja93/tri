@@ -1,0 +1,104 @@
+<apex:page standardController="wk_wedge__RMA_reasons__c" extensions="wk_wedge.addrmareason" title="Add RMA Reasons" showheader="false" setup="false" standardstylesheets="false" cache="false" id="AddRMAReasons">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <style>
+                .wdg-nav-icon.RMA {
+                    background-color: #34becd;
+                }
+                .wdg-nav-icon.RMAReason {
+                    background-color: #34becd;
+                }
+            </style>
+            <apex:form id="productform">
+                <div class="wdg-body">
+                          <apex:outputpanel id="wdgErrorBlock" layout="block">
+                             <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                         </apex:outputpanel> 
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo rmareason"></span>
+                            <span>Add RMA Reasons</span>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:commandlink styleclass="wdg-ctrl--btn save " immediate="false" onclick="return ValidateSave(event);" action="{!saveData}" >
+                                <span></span>
+                            </apex:commandlink>
+                            <a href="{!URLFOR($page.RMAReasonsListing)}" class="wdg-ctrl--btn cancel">
+                                <span></span>
+                            </a>
+                         </div>  
+                    </div>
+                     <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active"><a href="javascript:void(0)" data-target="productBlock">General</a></li>
+                            </ul>
+                        </div>
+                        <div id="productTabGroup" class="wdg-form--content">
+                            <apex:outputpanel layout="block" id="productBlock" styleclass="wdg-form--block">
+                                 <div class="wdg-form--blocktitle">
+                                    <span>Information </span>
+                                </div>
+                                <div class="wdg-form--blockfields">
+                                   <table class="wdg-form--table">
+                                     <tbody>
+                                        <tr>
+                                            <td class="label"><apex:outputlabel value="Name :" for="prodName"></apex:outputlabel></td>
+                                            <td class="field" id="prod_name_col">
+                                                <div class="requiredInput">
+                                                    <div class="requiredBlock"></div>
+                                                    <apex:inputfield value="{!wk_wedge__RMA_reasons__c.name}" id="prodName" styleclass="field--small display-inline--block"/>
+                                                </div>
+                                                <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>                                               
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                             <td class="label">
+                                                 <apex:outputlabel value="Status :  " for="prodstat"/>
+                                             </td>
+                                             <td class="field">
+                                                  <div class="custom-checkbox {!IF(wk_wedge__RMA_reasons__c.wk_wedge__Status__c,'checked','')}">
+                                                         <apex:inputfield value="{!wk_wedge__RMA_reasons__c.wk_wedge__Status__c}" id="prodstat" styleclass="display-inline--block"/>
+                                                  </div>
+                                             </td>
+                                        </tr>
+                                     </tbody>
+                                 </table>
+                               </div>
+                            </apex:outputpanel> 
+                        </div>
+                  </apex:outputpanel>
+               </div>
+           </apex:form>
+                
+           <script>
+               function ValidateSave(event){
+                    var str  = $("[Id$='prodName']").val();                       
+                    if (str.match(/^[A-z0-9\d\s]+$/)) {
+                        $("[Id$='validate']").html('');
+                        return true;
+                    }
+                    else{
+                        //alert("Review all the errors!");
+                        $("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        event.preventDefault();
+                        return false;
+                    }
+                }
+                wk=jQuery.noConflict();
+                (function(wk){
+                    wk( document ).on("blur",".wdg-body .wdg-form--table td [Id$='prodName']",function(){
+                        var str  = wk("[Id$='prodName']").val();                       
+                        if (str.match(/^[A-z0-9\d\s]+$/)) {
+                            wk("[Id$='validate']").html('');
+                        }
+                        else{
+                            wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        }
+                     });                
+                }(jQuery));
+           </script>
+    
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,31 @@
+.THIS .CustomSelect {
+	width: 80px !important;
+}
+
+.THIS span.slds-checkbox.weekly-days {
+	display: inline !important;
+}
+
+.THIS .slds-select {
+	height: calc(1.875rem + ( 1px * 2)) !important;
+}
+
+.THIS .datePicker-openIcon {
+	position: absolute;
+	top: 8px !important;
+	left: 95%;
+}
+.THIS ul.has-error {
+    position: relative;
+    top: -7px;
+}
+.THIS .slds-scope .slds-select_container:after{
+    top: 21px;
+}
+.THIS .slds-select_container:after {   
+    top: 21px;
+}
+.THIS .scheduled-list > .slds-card__body {
+    height: 570px !important;
+    overflow-y: auto !important;
+}

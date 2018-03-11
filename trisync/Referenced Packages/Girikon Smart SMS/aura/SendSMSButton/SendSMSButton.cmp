@@ -1,0 +1,141 @@
+<aura:component controller="gkn_sms.LightningSMS" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">	
+    
+    <aura:attribute name="uploadedDoc" type="list" default="[]"/>
+    <aura:attribute name="baseurl" type="String" default=""/>
+    <aura:attribute name="orgId" type="String" default=""/>
+    
+    <aura:attribute name="recordId" type="String" default=""/>
+	<aura:attribute name="uploadMediaUrls" type="String" default=""/>
+    <aura:attribute name="documentType" type="String"/>    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="countryCode" type="String" default="+1"/>
+    <aura:attribute name="SMSStatusMessage" type="String" default=""/>    
+    <aura:attribute name="SMSStatus" type="String" default=""/>    
+    <lightning:spinner aura:id="documentUploadingWaiting" class="hide gkn-sms-spiner" alternativeText="Loading" variant="brand" size="small" />
+    
+    <aura:if isTrue="{!v.SMSStatus!=''}">
+        <div class="slds-p-around--small slds-p-horizontal--small slds-small-size--12-of-12">
+            <ui:message title="{!v.SMSStatus}" severity="{!v.SMSStatus=='success'?'success':'error'}" closable="true">
+                {!v.SMSStatusMessage}
+            </ui:message>            
+        </div>
+    </aura:if>
+    <div class="slds-grid">        
+        <div class="slds-p-around--small slds-p-horizontal--small slds-small-size--6-of-12">
+            <div class="slds-form--stacked">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="fromNumber">
+                        <abbr class="slds-required" title="required">*</abbr> Select From Number</label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-text_container">
+                            <ui:inputSelect change="{!c.chagefromNumber}" class="slds-select" aura:id="fromNumber" />
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="slds-form-element">
+                    <label class="slds-form-element__label" for="countryCode">
+                        <abbr class="slds-required" title="required">*</abbr> Country Code
+                    </label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-input_container">
+                            <ui:inputText class="slds-input" value="{!v.countryCode}" aura:id="countryCode" />
+                        </div>
+                    </div>
+                </div>-->				            
+                <div>&nbsp;</div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="toNumber">
+                        <abbr class="slds-required" title="required">*</abbr>SMS will be send to number</label>            
+                    <ui:inputText disabled="true" class="slds-input" aura:id="toNumber" value="" />
+                </div>
+                <div>&nbsp;</div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="tempList">
+                        <abbr class="slds-required" title="required">*</abbr> Select Template</label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-text_container">
+                            <ui:inputSelect class="slds-select"  change="{!c.changeTemplate}" aura:id="tempList" />
+                        </div>
+                    </div>
+                </div>
+                <div>&nbsp;</div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="tempBody">
+                        <abbr class="slds-required" title="required">*</abbr> SMS body which will be send</label>            
+                    <ui:inputTextarea maxlength="1550" aura:id="tempBody" value="" class="smsBody"/>
+                </div>   
+                <div class="slds-form-element">			           
+                    <lightning:button aura:id="sendbtn" variant="brand"
+                                      label="Send" onclick="{!c.sendSMS}"
+                                      iconName="utility:sms" iconPosition="right" disabled="true" />
+                    <lightning:button aura:id="closebtn" variant="neutral"
+                                      label="Cancel" onclick="{!c.closeModal}"
+                                      disabled="false" />
+                    <lightning:spinner aura:id="loading" class="slds-hide gkn-sms-spiner" 
+                                       alternativeText="Sending..." variant="brand" size="small" />
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-around--small slds-p-horizontal--small slds-small-size--6-of-12">
+            <div class="slds-form-element">
+                <span class="slds-form-element__label">Enter the path of the file or click browse to find the file.</span>
+                <div class="slds-form-element__control">
+                    <div class="slds-file-selector slds-file-selector--images">
+                        <div class="slds-file-selector__dropzone" style="height:100px;">                                            
+                            <input type="file" onchange="{!c.uploadDocument}" 
+                                   class="slds-file-selector__input slds-assistive-text"
+                                   id="file_upload_input_01" aura:id="file_upload_input_01" accept="audio/*,video/*,image/*"/>
+                            <ui:inputText value="" aura:id="documentName" class="hide"/>
+                            <ui:inputTextarea value="" aura:id="documentBody" class="hide"/>
+                            <ui:inputText value="" aura:id="documentExtension" class="hide"/>
+                            <label class="slds-file-selector__body" for="file_upload_input_01">
+                                <span class="slds-file-selector__button slds-button slds-button--neutral">                    
+                                    <lightning:icon iconName="utility:upload" class="slds-button__icon slds-button__icon--left" variant="bare"/>
+                                    Upload Image
+                                </span>
+                            </label>
+                        </div>
+                        <div id="preview" style="display:none">
+                            
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <div style="width: 100%; height: 40px; border-bottom: 1px solid e1e1e1; text-align: center">
+                    <span style="font-weight: bold; margin-top: 10px; position: absolute;">
+                        OR
+                    </span>
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <span class="slds-form-element__label">Create a reference link to the file. Enter a file location that others can access.</span>
+                <div class="slds-form-element__control">
+                    <ui:inputText class="slds-input" aura:id="mediaUrl" placeholder="Public Access URL" value=""/>
+                </div>
+            </div>
+        </div>
+        <div>&nbsp;</div>
+    </div>    
+    
+    <!--<fieldset class="slds-form-element">
+        <aura:iteration var="item" items="{!v.uploadedDoc}" indexVar="index">
+            <div class="slds-form-element__control">
+                <div class="slds-visual-picker slds-visual-picker_medium">
+                    <input type="radio" id="{!'visual-picker'+index}" name="options" value="on" />
+                    <label for="{!'visual-picker'+index}">
+                        <span class="slds-visual-picker__figure slds-visual-picker__icon slds-align_absolute-center">
+                            <span class="slds-is-selected">
+                                <lightning:icon iconName="action:check" size="large"/>
+                            </span>
+                            <span class="slds-is-not-selected">
+                                <img src="{!v.baseurl+'/servlet/servlet.ImageServer?id='+item.Id+'&amp;oid='+v.orgId}" style="width:130px;padding:5px;border:1px dashed #d8dde6;margin:2px;"/>
+                            </span>
+                        </span>
+                        <span class="slds-visual-picker__body">{!item.Name}</span>
+                    </label>
+                </div>
+            </div>	
+        </aura:iteration>
+    </fieldset>-->
+</aura:component>

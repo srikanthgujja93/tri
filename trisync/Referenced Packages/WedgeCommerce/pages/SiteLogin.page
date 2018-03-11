@@ -1,0 +1,46 @@
+<apex:page id="loginPage" showHeader="false" title="{!$Label.site.site_login}" cache="false" standardStylesheets="false">
+ <!--
+ 
+ <apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+ <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+ <apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+ 
+  <apex:composition template="siteLeadPage">        
+
+    <apex:define name="body_content">
+    <TITLE>LOGIN</TITLE>
+        <link href='https://fonts.googleapis.com/css?family=Great+Vibes' rel='stylesheet' type='text/css'/>
+        <style>
+          .em_loginimg{
+            background:transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/all-images/image-login.png')}') no-repeat center center;
+            min-height:350px;
+       }
+       .back{
+            text-decoration:none!important;
+        }
+        .arrow{
+            margin-right:5px;
+            }
+        .success {
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px #888;
+            margin: 0 auto;
+            
+            width: 600px;
+        }
+        </style>
+         <div class="content-wrapper">
+          <div class="container">
+              <div class="row success">
+                    <div class="col-md-12 em_loginimg"></div>
+                   <div class="col-sm-12 text-center">
+                      <c:Sitelogincustom id="siteLogin"/>
+                    </div>
+
+              </div>
+            
+            </div>
+          </div>
+   </apex:define>
+</apex:composition> -->
+</apex:page>

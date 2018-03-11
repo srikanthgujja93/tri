@@ -1,0 +1,134 @@
+<aura:component controller="wk_wedge.WedgeSocialIconLightning" implements="force:appHostable">
+	<ltng:require styles="{!$Resource.wk_wedge__SLDS +
+	         '/assets/styles/salesforce-lightning-design-system-ltng.css'}" scripts="{!$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+	<!--<ltng:require styles="{!$Resource.wk_wedge__wedgecommerce+'wedgeCommerce/css/backend/style.css'}"/>-->	
+    
+    <aura:handler name="UpdateEvent" action="{!c.updateSocialIconlist}" event="wk_wedge:WedgePopupEvent"/>
+	<aura:handler name="init" value="{!this}" action="{!c.getSocialIcons}" />    
+    <aura:method name="updateList" action="{!c.getSocialIcons}"/>    
+	
+    <aura:attribute name="TempId" type="String" default=""/>
+    <aura:attribute name="TemplateId" type="String" default=""/>
+    
+    <aura:attribute name="massDeleteList" type="String[]"/>    
+	<aura:attribute name="SocialIconList" type="wk_wedge__Template_Social_Media__c[]"/>
+    
+    <aura:attribute name="count" type="Integer"/>
+    <aura:attribute name="delthisid" type="String"/>
+    <aura:attribute name="searchstr" type="String"/>
+	
+	<aura:attribute name="offset" type="integer" />
+    
+	<aura:attribute name="next" type="boolean" />
+	<aura:attribute name="prev" type="boolean" />
+	
+	<aura:attribute name="totalPages" type="Long"/>
+	<aura:attribute name="currentPage" type="Integer"/>
+	
+	<div class="wk_static pos">
+		<div class="slds-page-header pageHeader slds-p-around--none" role="banner">			
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size--1-of-2 slds-p-around--x-small">
+                	<div class="slds-has-flexi-truncate">
+                        <div class="slds-media">
+                            <div class="templatelarge slds-m-left--medium">
+                                <span ></span>
+                            </div>
+                            <div class="slds-media__body slds-m-left--x-small">
+                                <p class="heading">Social Media</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size--1-of-2">
+                    <div class="slds-float--right">
+                        <!--<span>
+                            <input type="text" class="searchbox" placeholder="Search.." id="searchbox" value="{!v.searchstr}" onkeyup="{!c.searchItems}"/>
+                            <div class="searchicon" id="searchicon">
+                                <span ></span>
+                            </div>
+                        </span>-->
+                        <span style="display: inline-block;">
+                            <wk_wedge:SocialIconForm tcompId="{!v.TempId}" />
+                        </span>
+                        <div class="slds-m-right--medium deleteicon" onclick="{!c.deleteList}">
+                        	<span ></span>
+                        </div>
+                    </div>
+                </div>										
+            </div>
+		</div>		
+		<div class="container">
+            <div class="slds-backdrop" aura:id="MB-Back">
+                <div class="cp-spinner cp-balls"></div>
+            </div>
+        	<table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                <thead class="tableHeader">
+                    <tr class="slds-text-heading--label tableHeaderRow">
+                        <th class="column" scope="col">
+                            <ui:inputCheckbox label="" class="check" aura:id="master" click="{!c.checkAll}"/>
+                        </th>
+                        <th class="column" scope="col">Title</th>                    
+                        <th class="column" scope="col">Social-Keys</th>
+                        <th class="column" scope="col">URL</th>
+                        <th class="column" scope="col">Status</th>
+                        <th class="column" scope="col">Action</th>
+                    </tr>  
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.SocialIconList}" var="key">
+                        <tr class="slds-hint-parent">
+                            <td class="column" data-label="Action" >
+                                <ui:inputCheckbox label="" class="check" text="{!key.Id}" aura:id="dependent"/>
+                            </td>
+                            <td data-label="Title" class="column">
+                                <a href="{! '#/sObject/' + key.Id + '/view'}">{!key.Name}</a>
+                            </td>
+                            <td data-label="Social-Keys" class="column">
+                                <img src="{!'/servlet/servlet.FileDownload?file='+key.wk_wedge__Image_id__c}" class="dimension"/>
+                            </td>
+                            <td data-label="URL" class="column">{!key.wk_wedge__Url__c}</td>
+                            <td data-label="Status" class="column">
+                            	<aura:if isTrue="{!key.wk_wedge__Published__c}">
+                                	Published
+                                    <aura:set attribute="else">
+                                    	Not published
+                                    </aura:set>
+                                </aura:if>
+                            </td>
+                            <td data-label="Action" class="column">
+                                <span style="display: inline-block;">
+                                    <!--<c:ArticleForm ArticleId="{!key.Id}" />-->
+                                </span>
+                                <span class="slds-m-left--small">                                                              
+                                    <wk_wedge:deleteButton delThisId="{!key.Id}" objectName="wk_wedge__Template_Social_Media__c" />                                
+                                </span>                            
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+		<div class="slds-size--1-of-1">
+        	<div class="slds-float--right slds-p-around--small">
+            	<span class="child">
+                    Total Records&nbsp;:&nbsp;{!v.count}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <ui:button class="slds-button slds-button--neutral slds-p-horizontal--xx-small" press="{!c.Previous}" disabled="{!v.prev}">
+                        <span class="slds-icon slds-icon-text-default">
+                            <wk_wedge:SVG class="slds-button__icon slds-button__icon--large" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/utility-sprite/svg/symbols.svg#chevronleft'}" />
+                            <span class="slds-assistive-text">Previous</span>
+                        </span>               
+                    </ui:button>
+                    <span>&nbsp;{!v.currentPage} of {!v.totalPages}&nbsp;</span>
+                    <ui:button class="slds-button slds-button--neutral slds-p-horizontal--xx-small slds-m-right--x-small" press="{!c.Next}" disabled="{!v.next}" >
+                        <span class="slds-icon slds-icon-text-default">
+                            <wk_wedge:SVG class="slds-button__icon slds-button__icon--large" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/utility-sprite/svg/symbols.svg#chevronright'}" />
+                            <span class="slds-assistive-text">Next</span>
+                        </span>                	
+                    </ui:button>    
+                </span>
+            </div>
+        </div>
+        
+	</div>
+</aura:component>

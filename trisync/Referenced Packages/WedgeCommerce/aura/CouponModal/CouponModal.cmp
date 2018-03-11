@@ -1,0 +1,99 @@
+<aura:component controller="wk_wedge.WedgeCouponLightning">
+    <ltng:require styles="{!join(',',$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/css/backend/style-lightning.css',$Resource.wk_wedge__SLDS +'/assets/styles/salesforce-lightning-design-system-ltng.css')}" scripts="{!$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+    <aura:attribute name="CouponId" type="String" />
+    <aura:attribute name="newCoupon" type="wk_wedge__Coupon__c" default="{ 'sobjectType': 'wk_wedge__Coupon__c',
+                         'wk_wedge__Coupon_Code__c': '',
+                         'wk_wedge__Discount__c':0.00,
+                         'wk_wedge__Start_Date__c':'',
+                         'wk_wedge__valid_for_days__c':0,
+                         'wk_wedge__Availbale_For__c':'',
+                         'wk_wedge__minimum_purchase__c':0.00,
+                         'wk_wedge__Maximum_Discount__c':0.00
+                       }"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initialize}"/>
+    <aura:handler name="openPopup" action="{!c.initialize}" event="wk_wedge:WedgePopupEvent"/>
+    <aura:attribute name="Coupons" type="wk_wedge__Coupon__c[]"/> 
+    
+	<aura:registerEvent name="RemoveComponent" type="wk_wedge:RemoveComponentDynamically"/>
+    <aura:registerEvent name="UpdateEvent" type="wk_wedge:WedgePopupEvent"/>    
+	<div role="dialog" tabindex="-1" aura:id="Modalbox" aria-labelledby="header43" class="slds-modal ">
+    	<div>
+        	<div class="slds-modal__container">
+            	<div class="slds-modal__header">                
+                	<button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removeComponent}">
+                    	<span>
+                        	<wk_wedge:SVG class="slds-button__icon slds-button__icon--large" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                            <span class="slds-assistive-text">Close</span>
+                        </span>                	
+                    </button>
+                    <div class="slds-grid">
+                    	<div class="slds-col slds-has-flexi-truncate">
+                        	<div class="slds-media slds-media--center slds-no-space slds-grow">
+                            	<div class="slds-media__figure">
+                                	<span class="slds-icon_container slds-icon-custom-custo31">
+                                    	<wk_wedge:SVG class="slds-icon" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/custom-sprite/svg/symbols.svg#custom31'}" />
+                                        <span class="slds-assistive-text">Event Icon</span>
+                                    </span>
+                                </div>
+                                <div class="slds-media__body">
+                                	<h1 class="slds-page-header__title slds-m-right--small slds-truncate slds-align-middle" title="New Product Feature">New Coupon</h1>
+                                </div>                        
+                            </div>
+                         </div>            	             
+                    </div>
+                </div>                    
+                <div class="modal-body scrollable slds-modal__content slds-p-around--medium parent">
+                	<div class= "slds-form slds-form_stacked">
+                    	<div class="slds-form-element slds-is-required">
+                        	<div class="slds-form-element__control">
+                             	<ui:inputText aura:id="code" label="Coupon Code" class="slds-input" labelClass="slds-form-element__label" value="{!v.newCoupon.wk_wedge__Coupon_Code__c}" required="true"/>
+                                <a href="javascript:void(0)" onclick="{!c.createCouponCode}">Create One For You</a>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                        	<div class="slds-form-element__control">
+                             	<ui:inputNumber aura:id="discount" label="Discount" class="slds-input" labelClass="slds-form-element__label" value="{!v.newCoupon.wk_wedge__Discount__c}"/>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                        	<div class="slds-form-element__control">
+                             	<ui:inputDate aura:id="startDate" label="Start Date" class="slds-input" labelClass="slds-form-element__label" value="{!v.newCoupon.wk_wedge__Start_Date__c}" displayDatePicker="true"/>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                        	<div class="slds-form-element__control">
+                             	<ui:inputNumber aura:id="Validity" label="Valid For Days" class="slds-input" labelClass="slds-form-element__label" value="{!v.newCoupon.wk_wedge__valid_for_days__c}"/>
+                            </div>
+                        </div>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect label="Available For" aura:id="availableFor" class="slds-input" labelClass="slds-form-element__label" value="{!v.newCoupon.wk_wedge__Availbale_For__c}">
+                                <ui:inputselectOption text="" label="--None--"/>
+                                <ui:inputselectOption text="All users" label="All Users"/>
+                                <ui:inputselectOption text="Only Registered User" label="Only Register Users"/>
+                            </ui:inputSelect>
+                        </div>
+                        <div class="slds-form-element">
+                        	<div class="slds-form-element__control">
+                             	<ui:inputNumber aura:id="min" label="Minimum Purchase" class="slds-input" labelClass="slds-form-element__label" value="{!v.newCoupon.wk_wedge__minimum_purchase__c}"/>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                        	<div class="slds-form-element__control">
+                             	<ui:inputNumber aura:id="max" label="Maximum Discount" class="slds-input" labelClass="slds-form-element__label" value="{!v.newCoupon.wk_wedge__Maximum_Discount__c}"/>
+                            </div>
+                        </div>
+                	</div>
+                </div>
+                <div class="slds-modal__footer">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">                            
+                            <ui:button aura:id="button1" class="slds-button slds-button--neutral slds-not-selected wdg-ctrl--btn-save" press="{!c.removeComponent}">Cancel</ui:button>
+                            <ui:button class="slds-button slds-button--neutral slds-button--brand slds-not-selected" press="{!c.createCoupon}">Save</ui:button>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="MB-Back"></div>
+</aura:component>

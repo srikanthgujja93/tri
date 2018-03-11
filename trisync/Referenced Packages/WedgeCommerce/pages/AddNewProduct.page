@@ -1,0 +1,2409 @@
+<apex:page showheader="False" controller="wk_wedge.addNEWProduct" standardStylesheets="false" cache="false" title="Add Product" docType="html-5.0">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <style>
+                .btn-block{
+                position: absolute;
+                right: 20px;
+                top: 0px;
+                }
+                .wdg-file--box.sleek{
+                width:150px;
+                height:38px;
+                line-height:2.5;
+                }
+                .wdg_customSelectList{
+                border: none;
+                border-radius: 3px;
+                padding: 9px 6px;
+                width: 205px !important;
+                font-size: 14px;
+                outline: none;
+                }
+                .wedge_selectListOuter {
+                width: 312px;
+                top : 40px;
+                }
+                .wdg-attachments{
+                border:1px solid #ccc;
+                }
+                .justify{
+                text-align:justify !important;
+                }
+                .wdg-form--block.wdg-gap--top{
+                margin-top:60px;
+                }
+                .wdg-attachment--wrap{
+                margin:15px;
+                display:inline-block;
+                padding:12px;
+                border:1px solid #ccc;
+                position:relative;
+                }
+                .wdg-attachment--title .wdg-AttachentTitle{
+                margin-top:8px;
+                }
+                
+                .no-margin{
+                margin:0 !important;
+                }
+                .display--block{
+                display:block !important;
+                }
+                .wdg-attach--checkboxwrap{
+                box-sizing: border-box;
+                display: inline-block;
+                height: 15px;
+                width: 15px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 255;
+                margin-top: -1px;
+                margin-left: -1px;
+                }
+                .float--right{
+                float:right;
+                }
+                .filename{
+                color:#555555;
+                font-size:14px;
+                }
+                .wdg-nav-icon.productcatalog, .wdg-nav-icon.product {
+                background-color: #34becd;
+                }
+                
+                .selectType {
+                padding: 6px;
+                border-radius: 3px;
+                font-size: 14px;
+                color: #222;
+                background: #fff;
+                border: 1px solid #adadad;
+                outline: none;
+                box-shadow: none;
+                display: inline-block;
+                width:150px;
+                box-sizing: border-box;
+                }
+                .wdg-modal--content .wdg-ctrl--btn {
+                position: relative;
+                width: 30px;
+                height: 30px;
+                outline:none;
+                border:none;
+                border-radius: 3px;
+                cursor: pointer;
+                margin-left: 5px !important;
+                vertical-align: middle;
+                display: inline-block;
+                }
+                .wdg-modal--content .wdg-ctrl--btn > span {
+                background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite-icon.png')}') no-repeat;
+                width: 15px;
+                height: 15px;
+                position: absolute;
+                display: inline-block;
+                z-index: 1;
+                }
+                .wdg-ctrl--btn.addRow>span{
+                background-position: -45px -120px;
+                left: 9px;
+                top: 7px;
+                }
+                .wdg-ctrl--btn.deleteRow>span{
+                background-position: -105px -105px;
+                left: 9px;
+                top: 7px;
+                }
+                .Opname , .Opname:hover , .Opname:Active{
+                color: #0066cc;
+                text-decoration:underline;
+                }
+                .packageCarret {
+                display: inline-block;
+                width: 0;
+                transform: rotate(0deg);
+                transition: transform 0.2s ease-in;
+                -webkit-transform: rotate(0deg);
+                -webkit-transition: transform 0.2s ease-in;
+                -moz-transform: rotate(0deg);
+                -moz-transition: transform 0.2s ease-in;
+                -ms-transform: rotate(0deg);
+                -ms-transition: transform 0.2s ease-in;
+                margin-left: 5px;
+                vertical-align: middle;
+                height: 0;
+                border-top: 6px solid transparent;
+                border-bottom: 6px solid transparent;
+                border-left: 6px solid #54698D;
+                border-right: 0;
+                }
+                .packageCarret.down{
+                -ms-transform: rotate(90deg);
+                -webkit-transform: rotate(90deg);
+                -moz-transform: rotate(90deg);
+                transform: rotate(90deg);
+                }
+                .packageAccordian{
+                margin-top:10px;
+                display:none
+                }
+                .wdg-ctrl--btn.filter>span {
+                background-position: -75px -105px;
+                top: 8px;
+                left: 8px;
+                }    
+                .wdg-filters .wdg-filters-wrap{
+                margin-bottom: 5px;
+                }
+                .wdg-modal--content .wdg-ctrl--btn.paginate > span{
+                width: 12px;
+                height: 10px;
+                }
+                .wdg-dataTable tfoot td {
+                height: 60px;
+                }
+                .wdg-dataTable thead th, .wdg-category--tableheader td, .wdg-dataTable thead a{
+                font-size: 15px;
+                height: 35px;
+                }
+                .wdg-body.popup{
+                width: 100%;
+                transform: none;
+                height: auto;
+                margin: 0;
+                padding: 0;
+                transition: none;
+                }    
+                .wdg-addOption--btn{
+                margin-bottom: 10px;
+                }
+                .wdg-dataTable{
+                border: 1px solid #ccc;
+                }
+                .wdg-full--cov{
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                opacity: 0.3;
+                background: #333;
+                z-index: 9000;
+                }
+                .add-cat--btn, .add-ret--btn, .check-avail--btn{
+                margin-left: 10px;
+                border: 1px solid #adadad;
+                padding: 8px 20px;
+                border-radius: 3px;
+                font-family: 'Open Sans', sans-serif;
+                font-size: 14px;
+                color: #555555;
+                }
+                .add-cat--btn:hover, .add-ret--btn:hover, .sel-cat--btn:hover, .check-avail--btn:hover{
+                color: #fff;
+                background: #34BECD;
+                border-color: #34BECD;
+                }
+                .wdg-cat--add{
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                /*height: 100px;*/
+                width: 800px;
+                background-color:white;
+                z-index:10000;
+                }
+                .wdg-no--show{
+                display:none;
+                }
+                .wdg-cat--add .wdg-modal--header{
+                height: 40px;
+                background-color: #54698D;
+                border-radius: 2px 2px 0px 0px;
+                }
+                .wdg-cat--add .cat-modal--close{
+                float: right;
+                cursor: pointer;
+                display: inline-block;
+                height: 25px;
+                width: 25px;
+                background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/icon-close.png')}') no-repeat center;
+                font-size: 14px;
+                margin-right: 7px;
+                margin-top: 7px;
+                vertical-align: middle;
+                }
+                ul.dynatree-container{
+                width:99.44%;
+                height: 430px;
+                border-bottom: 1px solid #adadad;
+                }
+                .wdg-cat--body{
+                height:500px;
+                overflow-x:hidden;
+                }
+                .sel-cat--btn{
+                position: absolute;
+                right: 35px;
+                bottom: 16px;
+                border: 1px solid #adadad;
+                border-radius: 3px;
+                padding: 4px 15px;
+                color: #555555;
+                }
+                .wdg-sel--cat{
+                list-style-type: none;
+                padding-left: 10px;
+                font-family: 'Open Sans', sans-serif;
+                font-size: 14px;
+                }
+                .retailer-add-table{
+                border-collapse: collapse;
+                }
+                .retailer-add-table thead{
+                background-color: #54698D;
+                }
+                .retailer-add-table thead th{
+                color: #fff;
+                font-size: 16px;
+                font-weight: 500;
+                height: 25px;
+                text-align: center;
+                width:20%;
+                }
+                .wdg-ctrl--btn-wide {
+                position: relative;
+                color: white;
+                padding: 4px;
+                outline: none;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                vertical-align: middle;
+                display: inline-block;
+                background: #0079BC;
+                margin-top: 10px;
+                }
+                .retailer-logo{
+                height: 100px;
+                width: 200px;
+                margin: auto;
+                display: block;
+                }
+                .deleteRow{
+                display: block !important;
+                margin: auto !important;
+                }
+                .prodPrice{
+                width:10%;
+                }
+                #retailer-table-body tr td{
+                padding:5px 10px;
+                }
+                #retailer-table-body tr td select{
+                width: auto;
+                min-width:100px;
+                margin:auto;
+                }
+                .wdg-modal--fieldbox select, .wdg-form--table select{
+                padding: 6px 30px 6px 6px;
+                }
+                .small-width{
+                width:40%;
+                display:inline-block;
+                height:80%;
+                }
+                .check-avail--btn{
+                padding:5px 20px;
+                }
+                .wdg-form--table tbody td.field .green-css{
+                color:green;
+                }
+                .wdg-form--table tbody td.field .red-css{
+                color:red;
+                }
+                .Opname, .Opname:hover, .Opname:Active{
+                    text-decoration:none;
+                }
+                .pro-optn--del{
+                    background: #ef6e64;
+                    width: 15px;
+                    height: 15px;
+                    background-position: -105px -105px;
+                    display: inline-block;
+                    border-radius: 3px;
+                    text-align: center;
+                    color: #fff;
+                    vertical-align: middle;
+                    position: relative;
+                }
+                .pro-optn--del > span{
+                    position: absolute;
+                    top: -3px;
+                    left: 4px;
+                }
+            </style>
+            <apex:form >
+                <div class="wdg-no--show">
+                    <div class="wdg-full--cov"/>
+                    <div class="wdg-cat--add">
+                        <div class="wdg-modal--header">
+                            <div class="wdg-modal--title">Select Categories </div>
+                            <a class="cat-modal--close" href="javascript:void(0)"></a>
+                        </div>
+                        <div class="wdg-cat--body">
+                            <c:TreeView id="treeview" value="{!selectedValues}" />
+                            <a href="javascript:void(0)" class="sel-cat--btn">Select Categories</a>
+                        </div>
+                    </div>
+                </div>
+                <apex:outputpanel layout="block" id="theOptionEditPopup">  
+                    <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!fadeEdit}" >
+                        <div class="wdg-popup--modal">
+                            <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">Edit Option </div>
+                                <apex:outputlink styleclass="wdg-modal--close" value="{!URLFOR($Page.wk_wedge__AddNewProduct,null,['id'=$CurrentPage.parameters.id])}"></apex:outputlink>
+                            </div>
+                            <div class="wdg-modal--content ">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Add Variants </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <apex:inputhidden value="{!Pvariants}" id="ip_variants"/>
+                                        <table class="wdg-variant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Position </th>
+                                                    <th>Value</th>
+                                                    <th>Modifier</th>                                                    
+                                                    <th>Type</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="PrimeRow">
+                                                    <td class="Xsmall position"><input type="text"/></td>
+                                                    <td class="large variant"><input type="text" /></td>
+                                                    <td class="Xsmall modifier"><input type="text"/></td>
+                                                    <td class="large typeval">
+                                                        <select name="singleSelect" class="selectType">
+                                                            <option value="Absolute" >Absolute</option>
+                                                            <option value="Percent">Percent</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="Xsmall option">
+                                                        <div class="option_btn" style="display:inline-flex;">
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn addNew addRow"><span></span></a>
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn delete deleteRow" ><span></span></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wdg-modal--footer">
+                                <apex:inputhidden id="variants" value="{!selectedvariants}"/>
+                                <a href="javascript:void(0)" id="upbtn" class="wdg-modal--btn">Update</a>
+                                <apex:actionFunction name="saveFeatures" action="{!updateProductValue}" status="waitstatus" rerender="wdgerrorBlock,theOptionEditPopup"/>
+                            </div>
+                        </div>
+                        
+                        <div class="wdg-popup--bg fadein"></div>       
+                    </apex:outputpanel>   
+                </apex:outputpanel> 
+                
+                <apex:outputpanel layout="block" id="thepopup">  
+                    <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!fadein}">
+                        <div class="wdg-popup--modal">
+                            <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">Add Global Option </div>
+                                <apex:commandlink styleclass="wdg-modal--close"  action="{!hidePopup}" rerender=""></apex:commandlink>
+                            </div>
+                            <div class="wdg-modal--content">
+                                <apex:outputPanel layout="block" rendered="{!productSel.size==0}" style="margin-left: 10px;color: #555555;">
+                                    No Record(s) Returned
+                                </apex:outputPanel>
+                                <apex:outputPanel layout="block" rendered="{!productSel.size>0}" styleclass="wdg-modal--fieldbox">
+                                    <label class="edit-label">Select Option :</label>
+                                    <apex:selectList size="1" value="{!globalOptionId}">
+                                        <apex:selectOptions value="{!productSel}"/>
+                                    </apex:selectList>
+                                </apex:outputPanel>
+                            </div> 
+                            <div class="wdg-modal--footer">
+                                <apex:commandbutton value="Add" onclick="javascript:this.disabled= true;" id="upbtn" action="{!updateOptionList}" styleclass="wdg-modal--btn" status="waitstatus" rerender="thepopup,wdgerrorBlock,ProductOptionblock"/>
+                            </div>
+                        </div>  
+                        <div class="wdg-popup--bg fadein"></div>      
+                    </apex:outputpanel>   
+                </apex:outputpanel> 
+                <apex:outputpanel layout="block" id="AddPackagePopup">  
+                    <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!packageFadeEdit}" >
+                        <div class="wdg-popup--modal">
+                            <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">Edit Option </div>
+                                <a class="wdg-modal--close" href="javascript:void(0);" onclick="closeProductPopup()"></a>
+                            </div>
+                            <div class="wdg-modal--content " style="padding:0 10px;">
+                                <div class="wdg-body popup">
+                                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                                    </apex:outputpanel>
+                                    <div class="wdg-body--header">
+                                        
+                                        <div class="wdg-filter--box">
+                                            <span id="openfilter" class="wdg-ctrl--btn filter" title="Filter Here"><span></span></span>
+                                        </div>
+                                        <div class="wdg-search--box"> 
+                                            <apex:inputtext html-placeholder="Search"  value="{!searchQuery}"/>
+                                            <apex:commandbutton value="Search" styleclass="wdg-submit--btn search" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>
+                                        </div> 
+                                    </div>
+                                    <div class="wdg-filters">
+                                        <div class="wdg-filter--title">Filter Here</div>
+                                        <div class="wdg-filters-wrap">
+                                            <div class="wdg-filter--options">
+                                                <span> Filter By Price Range</span>
+                                                <div class="priceFilter">
+                                                    <apex:inputtext value="{!startprice}" />
+                                                    <span></span>
+                                                    <apex:inputtext value="{!Endprice}" />
+                                                </div>
+                                            </div>
+                                            <div class="wdg-filter--options">
+                                                <span> Filter By Product Code</span>
+                                                <apex:inputtext value="{!ProdCode}"/>
+                                            </div>
+                                            <div class="wdg-filter--options">
+                                                <span> Filter By Categories</span>
+                                                <!-- <apex:selectlist value="{!categoryselect}" size="1">
+<apex:selectoptions value="{!catOptions}"/>
+</apex:selectlist> -->
+                                                <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                    <apex:inputText value="{!queryCatName}"  onkeypress="return noenter(event, 'clickCat');"
+                                                                    onkeyup="delay('clickCat');"
+                                                                    styleclass=" field--small display-inline--block accountList wdg_customSelectList wdg_searchBox"
+                                                                    onclick="showList('#catList');" onblur="hideList('#catList');"
+                                                                    id="queryCatName"
+                                                                    style="width: 270px !important;">
+                                                    </apex:inputText>
+                                                    <span class="wedgeSelectListDropIcon"></span>
+                                                    <apex:inputHidden value="{!categoryselect}" id="queryCatId" /> 
+                                                    
+                                                    <div class="wedge_selectListOuter field--small" id="catList">
+                                                        <apex:outputPanel id="cattable">
+                                                            <a class="wedge_SelectListInner" 
+                                                               href="javascript:addAccount('all','All Categories','queryCatName', 'queryCatId');">
+                                                                All Categories</a>
+                                                            <apex:repeat value="{!catList}" var="a">
+                                                                <a class="wedge_SelectListInner" 
+                                                                   href="javascript:addAccount('{!a}','{!a.Name}','queryCatName', 'queryCatId');">
+                                                                    {!a.Name}</a>
+                                                            </apex:repeat>
+                                                            <apex:outputText value="No Category Return"
+                                                                             styleClass="wedge_SelectListInner"
+                                                                             rendered="{!isCatList}"> </apex:outputText>
+                                                        </apex:outputPanel>
+                                                    </div>
+                                                </apex:outputPanel>
+                                            </div>
+                                            <div class="wdg-filter--options">
+                                                <span> Filter By Status</span>
+                                                <apex:selectlist value="{!prodstatus}" size="1">
+                                                    <apex:selectoptions value="{!stOptions}"/>
+                                                </apex:selectlist>
+                                            </div> 
+                                            <div class="wdg-filter--options">
+                                                <apex:commandbutton value="Apply" styleclass="wdg-submit--btn apply" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <apex:actionfunction name="deleteSelectedRecords" action="{!deletesel}" rerender="AddPackagePopup,packageProductsPanel" status="waitstatus"></apex:actionfunction>
+                                    <!--<apex:actionfunction name="deleteoneRecord" action="{!deletethis}" rerender="packageProductsPanel" status="waitstatus"></apex:actionfunction>-->
+                                    <apex:inputHidden value="{!delID}" id="deleteID"/>
+                                    <apex:outputpanel layout="block"  id="wdgTablebox" styleclass="wdg-dataTable--box">
+                                        <apex:datatable value="{!Product2s}" var="Prod" styleclass="wdg-dataTable"  id="wdgTable">
+                                            <apex:column >
+                                                <apex:facet name="header">
+                                                    <div class="custom-checkbox">
+                                                        <input type="checkbox" id="headerCB" />
+                                                    </div>
+                                                </apex:facet>
+                                                
+                                                <div class="custom-checkbox">
+                                                    <input type="checkbox" class="eachselect" value="{!Prod.id}"/>                                                        
+                                                </div>
+                                            </apex:column>
+                                            <apex:column >
+                                                <apex:facet name="header">Image</apex:facet>
+                                                <apex:image styleclass="thumbnail" alt="{!Prod.name}" url="/servlet/servlet.FileDownload?file={!Prod.wk_wedge__Image_Id__c}"/>
+                                                
+                                            </apex:column>
+                                            <apex:column >
+                                                <apex:facet name="header">
+                                                    <apex:commandlink value="Name {!IF(fieldName=='name',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                                        <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                                    </apex:commandlink>
+                                                </apex:facet>
+                                                <apex:outputLink value="/{!Prod.id}">{!Prod.name}</apex:outputLink>
+                                                <apex:outputPanel layout="block" rendered="{!Prod.Product_Options__r.size>0}">
+                                                    <!--<input type="checkbox" class="optionVariants any" value="Any Combination"/>&nbsp;Any Combination-->
+                                                    <apex:repeat value="{!Prod.Product_Options__r}" var="key">
+                                                        <apex:outputPanel layout="block">
+                                                            <input type="checkbox" class="optionVariants" value="{!key.Id}" var-name="{!key.Name}"/>
+                                                            &nbsp;{!key.Name}
+                                                            <apex:outputPanel id="optionVar"><span id="{!key.Id}"></span></apex:outputPanel>
+                                                        </apex:outputPanel>                                                        
+                                                    </apex:repeat>                                                    
+                                                </apex:outputPanel>
+                                                <apex:inputHidden value="{!Prod.id}" />
+                                                <!--<apex:inputHidden value="{!Prod.product_description__c}" />
+<apex:inputHidden value="{!Prod.description}" />-->
+                                            </apex:column>                                   
+                                            
+                                            <apex:facet name="footer">
+                                                <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                                    <apex:outputpanel rendered='{!Product2s.size>0}'>
+                                                        <apex:commandlink value="" title="First" action="{!first}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first "><span></span></apex:commandlink>
+                                                        <apex:commandlink value="" title="Previous" action="{!previous}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                                        <apex:outputText styleclass="wdg-dataTable--pages" value="{!pagenumber} of {!totalPages} "></apex:outputText>
+                                                        <apex:commandlink title="Next" value="" action="{!next}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                                        <apex:commandlink title="Last" value="" action="{!last}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                                    </apex:outputpanel> 
+                                                    <apex:outputpanel rendered="{!Product2s.size==0}">
+                                                        <div class="No-Product">No Records Returned !!!!</div>
+                                                    </apex:outputpanel>
+                                                </apex:outputpanel>
+                                            </apex:facet>
+                                        </apex:datatable>
+                                        <apex:inputhidden value="{!deleteAll}" id="deletable"/>
+                                    </apex:outputpanel> 
+                                </div>
+                                
+                                <!--<apex:actionfunction name="changeRecordstatus" action="{!savestatus}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>-->
+                                
+                            </div>
+                            <div class="wdg-modal--footer">
+                                <apex:outputPanel >                                    
+                                    <a href="javascript:void(0);" class="wdg-addOption--btn" onclick="triggerCarretClick()">Add Product</a>                                    
+                                </apex:outputPanel>
+                            </div> 
+                        </div> 
+                        
+                        <div class="wdg-popup--bg fadein"></div>       
+                    </apex:outputpanel>   
+                </apex:outputpanel>   
+                
+                <div class="wdg-popup wdg-hide" id="imagePopUp">
+                    <div class="wdg-popup--modal" id="doc-pop">
+                        <div class="wdg-modal--header clearfix">
+                            <div class="wdg-modal--title">Images</div>
+                            <apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+                        </div>
+                        <div class="wdg-modal--content padding-0">
+                            <div class="wdg-imagepop--box">
+                                <div class="wdg-imagepop--folder">
+                                    <div class="wdg-images--container">
+                                        <apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+                                            <div class="wdg-checkbox--box">
+                                                <apex:inputcheckbox html-targetvalue="{!folder.value}"  styleclass="folder-checkbox"/>
+                                            </div>
+                                            <apex:outputlabel value="{!folder.label}"/>
+                                        </apex:datalist>
+                                        <apex:inputhidden value="{!documentfolder}" id="docfolder" />
+                                    </div>
+                                </div>
+                                <apex:outputpanel layout="block" id="imageSet" styleclass="wdg-imagepop--images">
+                                    <div class="wdg-images--container">
+                                        <apex:repeat value="{!Images}" var="imgs">
+                                            <apex:image url="/servlet/servlet.FileDownload?file={!Imgs.id}" html-targetId="{!Imgs.id}" alt="{!Imgs.name}"/>
+                                        </apex:repeat>
+                                        <apex:outputpanel layout="block" styleclass="selectFolder" rendered="{!Images.size==0}">
+                                            <apex:outputpanel >
+                                                <apex:outputtext value="Please select a folder from left" rendered="{!OR(documentfolder==null,documentfolder=='')}" />
+                                                <apex:outputtext value="No images returned" rendered="{!AND(documentfolder!=null,documentfolder!='')}"/>
+                                            </apex:outputpanel>
+                                        </apex:outputpanel>
+                                    </div>
+                                </apex:outputpanel>
+                            </div> 
+                            <apex:actionfunction name="newImages" rerender="imageSet" status="waitstatus"/>
+                        </div>
+                        <div class="wdg-modal--footer">
+                        </div> 
+                    </div>
+                    <div class="wdg-popup--bg fadein"></div> 
+                </div> 
+            </apex:form>
+            <div class="wdg-body">
+                <apex:outputpanel id="wdgErrorBlock" layout="block">
+                    <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                </apex:outputpanel>
+                <div class="wdg-body--titleblock clearfix">
+                    <div class="wdg-body--title">
+                        <span class="wdg-title--logo products"></span>
+                        <span>Add Product </span>
+                    </div>
+                    <apex:form >
+                        <div class="wdg-filter--options" style="display:inline-block">
+                            <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!activatedLanguage.size>1}">
+                                <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                <apex:selectOptions value="{!activatedLanguage}">
+                                    <span class="caret multidropdownsymbol"></span>
+                                </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                    </apex:form>
+                </div>
+                <apex:form id="productform" styleclass="wdg-dataentry--form">
+                    <div class="wdg-body--titleblock clearfix btn-block">
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:actionregion >
+                                <apex:inputhidden value="{!featurevalues}" id="featValues"/>
+                                <apex:commandButton styleclass=" wdg-addOption--btn" rendered="{!$CurrentPage.parameters.id!=null}" value="Add Global Option" action="{!addOption}" status="waitstatus" rerender="wdgerrorBlock,thepopup">
+                                    <span></span>
+                                </apex:commandButton>
+                                <apex:outputlink title="Preview"  target="_blank" value="{!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=Prod.id])}" styleclass="wdg-ctrl--btn preview"><span></span></apex:outputlink>
+                                
+                                <a href="javascript:void(0);" class="wdg-ctrl--btn save "  >
+                                    <span></span>
+                                </a>
+                                <apex:actionFunction name="saveData" action="{!saveData}"/> <!--reRender="notice" oncomplete="closenotifications()"-->
+                            </apex:actionregion>
+                            <a href="{!$page.ProductListting}" class="wdg-ctrl--btn cancel"> 
+                                <span></span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="wdg-popup wdg-hide" id="fileuploadPopUp">
+                        <div class="wdg-popup--modal">
+                            <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">Images</div>
+                                <apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+                            </div>
+                            <div class="wdg-modal--content padding-0">
+                                <div class="wdg-imagepop--box">
+                                    <div class="wdg-imagepop--folder">
+                                        <div class="wdg-images--container">
+                                            <apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+                                                <div class="wdg-radio--box">
+                                                    <span class="dot"></span>
+                                                    <input type="radio" name="folder" value="{!folder.value}" class="folder-radio" />
+                                                </div>
+                                                <apex:outputlabel value="{!folder.label}"/>
+                                            </apex:datalist>
+                                            <apex:inputhidden value="{!uploadfolder}" id="uploadfolder" />
+                                        </div>
+                                    </div>
+                                    <apex:outputpanel layout="block"  styleclass="wdg-imagepop--images">
+                                        <apex:outputpanel layout="block" styleclass="wgd-uploadImage--box">
+                                            <div class="wdg-upload--image">
+                                                <apex:outputpanel layout="block"></apex:outputpanel>
+                                            </div>
+                                            <div class="wdg-uploadimage--title" id="Image_upload_title">Image.jpg</div>
+                                        </apex:outputpanel>
+                                        <div class="wdg-upload--file">
+                                            <div class="wdg-file--box">
+                                                <span>choose file</span>
+                                                <apex:inputFile value="{!document.body}" filename="{!document.name}" id="Uploadfile" accept="image/*" styleClass="inputupload" />
+                                            </div>
+                                            <div class="wdg-fileupload--error wdg-hide">
+                                                
+                                            </div>
+                                        </div> 
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            <div class="wdg-modal--footer">
+                            </div>
+                        </div>
+                        <div class="wdg-popup--bg fadein"></div> 
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions clearfix">
+                                <li class="active">
+                                    <a href="javascript:void(0)" data-target="productBlock">General</a> 
+                                </li>
+                                <li >
+                                    <a href="javascript:void(0)" data-target="pageSEO">SEO</a> 
+                                </li>
+                                <li >
+                                    <a href="javascript:void(0)" data-target="ProductImageblock">Images</a> 
+                                </li>
+                                <li >
+                                    <a href="javascript:void(0)" data-target="ProductRMAblock">RMA </a> 
+                                </li>
+                                <li style="display:{!if(AND(prod!=null,prod.Sold_By_Retailer__c),'inline-block','none')}" id="liRetailer">
+                                    <apex:outputlink value="javascript:void(0)" html-data-target="RetailerBlock">Product Retailers</apex:outputlink>
+                                </li>
+                                <li>
+                                    <apex:outputlink rendered="{!$CurrentPage.parameters.id!=null}" value="javascript:void(0)" html-data-target="ProductFeaturesblock">Features</apex:outputlink>
+                                </li>
+                                <li>
+                                    <apex:outputlink rendered="{!$CurrentPage.parameters.id!=null}" value="javascript:void(0)" html-data-target="ProductOptionblock">Options</apex:outputlink>
+                                </li>
+                                <li>
+                                    <apex:outputlink rendered="{!$CurrentPage.parameters.id!=null}" value="javascript:void(0)" html-data-target="PackageBuilderBlock">Package Builder</apex:outputlink>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="productTabGroup" class="wdg-form--content">
+                            <div id="productBlock" class="wgd-form--tab show">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Information </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Name :  " for="prodName"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputtext value="{!prod.name}" id="prodName" styleclass="display-inline--block" rendered="{!metaname==null}"/>
+                                                            <apex:inputtext value="{!metaname}" id="prodNameMeta" styleclass="display-inline--block" rendered="{!metaname!=null}"/>
+                                                        </div>
+                                                        <span id="nameErr" class="wdg-Notedata"></span>
+                                                        <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Product Code :  " for="prodcode"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!prod.Productcode}" id="prodcode" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Supplier :  " for="suppli"/>
+                                                    </td>
+                                                    <td class="field" >
+                                                        <apex:outputPanel styleClass="wedgeSelectListSearch" id="suppli">
+                                                            <apex:inputText value="{!querySupName}"  onkeypress="return noenter(event, 'clickSup');"
+                                                                            onkeyup="delay('clickSup');"
+                                                                            styleclass=" field--small display-inline--block accountList wdg_customSelectList"
+                                                                            onclick="showList('#supList');" onblur="hideList('#supList');"
+                                                                            id="querySupName" html-autocomplete="off">
+                                                            </apex:inputText>
+                                                            <span class="wedgeSelectListDropIcon"></span>
+                                                            <apex:inputHidden value="{!querySupId}" id="querySupId" /> 
+                                                            
+                                                            <div class="wedge_selectListOuter field--small" id="supList">
+                                                                <apex:outputPanel id="suptable">
+                                                                    <a class="wedge_SelectListInner" 
+                                                                       href="javascript:addAccount('','--None--','querySupName', 'querySupId');">
+                                                                        --None--</a>
+                                                                    <apex:repeat value="{!supList}" var="a">
+                                                                        <a class="wedge_SelectListInner" 
+                                                                           href="javascript:addAccount('{!a}','{!a.Name}','querySupName', 'querySupId');">
+                                                                            {!a.Name}</a>
+                                                                    </apex:repeat>
+                                                                    <apex:outputText value="No Supplier Return"
+                                                                                     styleClass="wedge_SelectListInner"
+                                                                                     rendered="{!isSupList}"> </apex:outputText>
+                                                                </apex:outputPanel>
+                                                            </div>
+                                                        </apex:outputPanel>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Purchase from Retailers : " for="diffseller"/>
+                                                        <c:ToolTip helptext="Please add Retailers in catalog prior using this option"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="custom-checkbox {!if((prod.wk_wedge__Sold_By_Retailer__c),'checked','')}">
+                                                            <apex:inputfield value="{!prod.wk_wedge__Sold_By_Retailer__c}" id="diffseller" styleclass="display-inline--block"/>
+                                                        </div>
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Categories :  " for="categories"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <a href="javascript:void(0)" class="add-cat--btn">Select Categories</a>
+                                                            <span id="catErr" class="wdg-Notedata"></span>
+                                                        </div>
+                                                        <apex:inputHidden value="{!catjson}" id="categories-json"/>
+                                                        <apex:inputHidden value="{!majorCat}" id="major-cat"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <ul class="wdg-sel--cat">
+                                                            
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Prices ({!currsymbol}):  " for="Prices"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <table class="wdg-allPricebookTable">
+                                                            <tr> 
+                                                                <th></th>
+                                                                <th>Unit Price</th>
+                                                                <th>Pricebook</th>
+                                                            </tr>
+                                                            <tr id="standardPrice">
+                                                                <td><c:ToolTip helptext="Please Enter the standard price first"/></td>
+                                                                <td>                                                                    
+                                                                    <apex:inputtext value="{!standardprice.unitprice}" required="false" id="stdprice" styleclass="field--small display-inline--block"/>
+                                                                </td> 
+                                                                <td><apex:outputlabel value="Standard Pricebook" for="stdPrice"/></td>
+                                                                
+                                                            </tr>
+                                                            <apex:repeat value="{!PricebookEntries}" var="pBEntry">
+                                                                <tr class="" id="ListPrice">
+                                                                    <td><c:ToolTip helptext="Price for {!pricebookList[pBEntry.pricebook2id].name} Pricebook"/></td>
+                                                                    <td><apex:inputtext value="{!pBEntry.unitprice}" required="false" styleclass="field--small display-inline--block"/></td>
+                                                                    <td><apex:outputlabel value="{!pricebookList[pBEntry.pricebook2id].name}" /></td>
+                                                                    
+                                                                </tr>
+                                                            </apex:repeat>
+                                                        </table>
+                                                    </td> 
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Description :  " for="prodDesc"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!prod.wk_wedge__product_description__c}" id="prodDesc" styleclass="display-inline--block" rendered="{!metadesc==null}" html-tinymce="true"/>
+                                                        <apex:inputtextarea value="{!metadesc}" id="prodDescmeta" styleclass="display-inline--block" rendered="{!metadesc!=null}" html-tinymce="true"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Status :  " for="prodStatus"/>
+                                                        <c:ToolTip helptext="Inventory in stock"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="custom-checkbox {!IF(prod.IsActive,'checked','')}">
+                                                            <apex:inputfield value="{!prod.IsActive}" id="prodStatus" styleclass="display-inline--block"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="In Stock : " for="prodStock"/>      
+                                                    </td>
+                                                    
+                                                    <td class="field">
+                                                        <apex:inputfield required="true" value="{!prod.wk_wedge__Amount__c}" id="prodStock" styleclass="display-inline--block"/>
+                                                        <span id="stockErr" class="wdg-Notedata"></span>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Image :"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <div class="wdg-warning--box">
+                                                            <div class="wdg-warning">Image dimensions should be a maximum of 1280 pixels wide by 1025 pixels high for best results. Larger images will be resized and may appear distorted.</div>
+                                                        </div>
+                                                        <apex:actionregion >
+                                                            <apex:outputpanel id="ImagesPane" layout="block" styleclass="wgd-uploadImage--box">
+                                                                <div class="wdg-upload--image display-inline--block">
+                                                                    <apex:outputpanel layout="block" rendered="{!imgSelected==null}"></apex:outputpanel>
+                                                                    <apex:image url="/servlet/servlet.FileDownload?file={!imgSelected}" width="108px" height="90px" rendered="{!NOT(imgSelected==null)}" styleClass="ecm_thum_img"/>
+                                                                </div>
+                                                                <apex:inputhidden value="{!imgSelected}" id="Imgsel"/>
+                                                                <apex:inputhidden value="{!ImageOptionSelected}" id="Imgoptsel"/>
+                                                                <div class="wdg-uploadimage--title" id="Image_title">Image.jpg</div>
+                                                            </apex:outputpanel>
+                                                            <div class="wdg-uploadImage--btngroup">
+                                                                <a href="javascript:void(0)" data-target="fileuploadPopUp" value="0" class="ImgSelect">Upload</a>
+                                                                <a href="javascript:void(0)" data-target="imagePopUp" value="1" class="ImgSelect">Documents</a>
+                                                                <apex:outputlink value="javascript:void(0)" rendered="{!NOT(imgSelected==null)}" id="removeImages" style="border-left:none">Remove Image</apex:outputlink>
+                                                            </div>
+                                                        </apex:actionregion>
+                                                        <!--     <apex:outputPanel layout="block" Id="validateImg" styleclass="validateClass"></apex:outputPanel> -->
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Product Length (cm):  " for="prodlength"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!prod.wk_wedge__Length__c}" id="prodlength" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Product Width (cm):  " for="prodwidth"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!prod.wk_wedge__width__c}" id="prodwidth" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value=" Product Height (cm):  " for="prodheight"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!prod.wk_wedge__Height__c}" id="prodheight" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Product Weight (g):  " for="prodweight"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!prod.wk_wedge__weight__c}" id="prodweight" styleclass="display-inline--block"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="pageSEO" class="wgd-form--tab">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Information </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>                                                
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="SEO Alias :  " for="prodAlias"/>
+                                                        <c:ToolTip helptext="Enter the alias which will be present in the url of the page"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput small-width">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield value="{!prod.wk_wedge__Editable_Alias__c}" id="prodAlias" styleclass="display-inline--block"/>
+                                                        </div>
+                                                        <!--<a class="check-avail--btn" href="javascript:void(0)">Check Availability</a>-->
+                                                        <span id="availableCheck" class="wdg-Notedata"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Page Title :  " for="pagetitle"/>
+                                                        <c:ToolTip helptext="Enter the title of the product page"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <apex:inputtext value="{!prod.wk_wedge__Page_Title__c}" id="pagetitle" styleclass="display-inline--block" rendered="{!metapagetitle==null}"/>
+                                                            <apex:inputtext value="{!metapagetitle}" id="pagetitleMeta" styleclass="display-inline--block" rendered="{!metapagetitle!=null}"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Meta Description :  " for="metapagedescription"/>
+                                                        <c:ToolTip helptext="Enter the meta description of this page"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <apex:inputtext value="{!prod.wk_wedge__Meta_Description__c}" id="metapagedescription" styleclass="display-inline--block" rendered="{!metapagedesc==null}"/>
+                                                            <apex:inputtext value="{!metapagedesc}" id="pagedescMeta" styleclass="display-inline--block" rendered="{!metapagedesc!=null}"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Meta Keywords :  " for="metakeyword"/>
+                                                        <c:ToolTip helptext="Enter comma separated values"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <apex:inputtext value="{!prod.wk_wedge__Meta_Keywords__c}" id="metakeyword" styleclass="display-inline--block" rendered="{!metakeywords==null}"/>
+                                                            <apex:inputtext value="{!metakeywords}" id="keywordsMeta" styleclass="display-inline--block" rendered="{!metakeywords!=null}"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="ProductImageblock"  class="wgd-form--tab ">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Additional  Images </span>
+                                    </div>
+                                    <apex:outputpanel layout="block" id="Productattch" styleclass="wdg-form--blockfields">
+                                        <table class="wdg-variant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>files</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <apex:repeat value="{!attach}" var="a">
+                                                    <tr>
+                                                        <td class="large variant file">
+                                                            <div class="wdg-upload--file">
+                                                                <div class="wdg-file--box sleek">
+                                                                    <span>choose file</span>
+                                                                    <apex:inputFile value="{!a.body}" filename="{!a.name}"  accept="image/*" styleClass="inputupload" />
+                                                                </div>
+                                                            </div> 
+                                                        </td>
+                                                        <td class="small option">
+                                                            <span>No file Choosen</span>
+                                                        </td>
+                                                        <td class="small option">
+                                                            <div class="option_btn">
+                                                                <apex:actionregion >
+                                                                    <apex:commandlink action="{!addmore}" styleclass="wdg-ctrl--btn addNew"  status="waitstatus" rerender="Productattch" >
+                                                                        <span></span>
+                                                                    </apex:commandlink>
+                                                                    <apex:commandlink action="{!deleterow}" styleclass="wdg-ctrl--btn delete"  status="waitstatus" rerender="Productattch" >
+                                                                        <apex:param name="attchName" value="{!a.name}" assignTo="{!attchName}"/>
+                                                                        <span></span>
+                                                                    </apex:commandlink>
+                                                                </apex:actionregion>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </apex:repeat>
+                                            </tbody>
+                                        </table>
+                                    </apex:outputpanel>
+                                    <apex:outputPanel layout="block"  id="existattachments" rendered="{!prod.attachments.size>0}" styleclass="wdg-form--block wdg-gap--top">
+                                        <div class="wdg-form--blocktitle wdg-attachment--title clearfix">
+                                            <span class="wdg-AttachentTitle">Existing Images </span>
+                                            <apex:actionregion > 
+                                                <apex:inputhidden value="{!removeattach}" id="removeattach"/>
+                                                <apex:commandlink styleclass="wdg-ctrl--btn delete float--right" action="{!deleteAttachment}" rerender="existattachments,wdgErrorBlock" status="waitstatus">
+                                                    <span class="no-margin"></span>
+                                                </apex:commandlink>
+                                            </apex:actionregion>
+                                        </div>
+                                        <apex:outputpanel layout="block" id="exitattch" styleclass="wdg-form--blockfields justify">
+                                            <apex:repeat value="{!prod.attachments}" var="aimg">
+                                                <apex:outputpanel id="ImagesPane" layout="block" styleclass="wdg-attachment--wrap">
+                                                    <div class="wdg-attach--checkboxwrap">
+                                                        <div class="custom-checkbox display--block">
+                                                            <input type="checkbox" value="{!aimg.id}" class="attachSelect"/>
+                                                        </div>
+                                                    </div>
+                                                    <apex:image url="/servlet/servlet.FileDownload?file={!aimg.id}"   width="108px" height="90px"/>  
+                                                </apex:outputpanel>
+                                            </apex:repeat>
+                                        </apex:outputpanel>
+                                        
+                                    </apex:outputPanel>
+                                </div>
+                            </div>  
+                            
+                            <div id="ProductRMAblock"  class="wgd-form--tab ">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>RMA System </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Returnable :  " for="prodreturn"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="custom-checkbox {!IF(prod.wk_wedge__Returnable__c,'checked','')}">
+                                                            <apex:inputfield value="{!prod.wk_wedge__Returnable__c}" id="prodreturn" styleclass="display-inline--block"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel for="prodreturnduration"> Return Duration <br/>(No. of Days) : </apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <apex:inputfield value="{!prod.wk_wedge__Return_Period__c}" id="prodreturnduration" styleclass="display-inline--block"/>
+                                                        </div>
+                                                        
+                                                    </td>
+                                                </tr>                                                     
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="RetailerBlock" class="wgd-form--tab ">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Retailers </span>
+                                    </div>
+                                    <table class="wdg-form--table retailer-add-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Retailer</th>
+                                                <th>Image</th>
+                                                <th>Link</th>
+                                                <th>Target</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="retailer-table-body">
+                                            
+                                        </tbody>
+                                    </table>
+                                    <a class="wdg-ctrl--btn-wide addNew addRow" href="javascript:void(0)">Add New Row</a>
+                                </div>
+                                <apex:inputHidden value="{!retailerJson}" id="retjson"/>
+                            </div>
+                            
+                            <div id="ProductFeaturesblock"  class="wgd-form--tab">
+                                <apex:outputpanel id="ProductFeaturesblock" styleclass="wdg-form--block" layout="block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Product Feature </span>
+                                    </div>                           
+                                    <div ng-app="app" id="ng-app" class="wdg-form--blockfields">
+                                        <div ng-controller="AppCtrl" ng-cloak="" class="wdg-form--table">
+                                            
+                                            <dynamic-form class="wdg-form--table" template="stdFormTemplate" ng-model="stdFormData">
+                                            </dynamic-form>
+                                        </div>
+                                    </div>
+                                </apex:outputpanel>
+                            </div>
+                            
+                            
+                            <div id="ProductOptionblock"  class="wgd-form--tab">
+                                
+                                <apex:outputpanel id="ProductOptionblock" styleclass="wdg-form--block" layout="block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Product Option </span>
+                                        
+                                    </div>                                                                   
+                                    <Apex:repeat value="{!productOption}" var="op" id="opbloack">
+                                        <li class="wdg-form--table" style="List-style-type:none;">
+                                            <apex:commandLink value="" action="{!deleteOption}" styleClass="pro-optn--del">
+                                                <apex:outputPanel ><sup>x</sup></apex:outputPanel>
+                                                <apex:param name="delOpId" value="{!op.id}"/>
+                                            </apex:commandLink>
+                                            <label>
+                                                <apex:outputlink value="javascript:openPopup('{!op.Id}');" id="popup" styleclass="Opname">
+                                                {!op.Name} 
+                                                </apex:outputlink>
+                                            </label>                                      
+                                        </li>
+                                        
+                                    </Apex:repeat>
+                                </apex:outputpanel>
+                            </div>
+                            <div id="PackageBuilderBlock"  class="wgd-form--tab">
+                                
+                                <apex:outputpanel id="PackageBuilderBlock" styleclass="wdg-form--block" layout="block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Package Builder </span>                                             
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Enable Package Builder:  " for="packageCheckbox"/>
+                                                        <c:ToolTip helptext="Enable Package Builder for packaging your product."/> 
+                                                    </td>
+                                                    <td class="field">
+                                                          
+                                                        <div class="custom-checkbox {!IF(prod.wk_wedge__Enable_Package_Builder__c,'checked','')}">
+                                                            <apex:inputfield value="{!prod.wk_wedge__Enable_Package_Builder__c}" id="packageCheckbox" styleclass="display-inline--block"/>                                                                
+                                                        </div>                                                                                                                     
+                                                    </td>
+                                                </tr>
+                                                <tr class="renderRow">
+                                                    <td class="label">                                                        
+                                                        <apex:outputlabel value="Package Building:  " for="packageBundling"/>
+                                                        <c:ToolTip helptext="Provide discount either on entire package or per product"/>
+                                                    </td>
+                                                    <td class="field">                                                                 
+                                                        <div class="requiredInput">                                                            
+                                                            <apex:inputfield value="{!packageInfo.wk_wedge__Package_Bundling__c}" id="packageBundling" style="margin-left:4px" styleclass="display-inline--block"/>                                                                    
+                                                        </div>                                                                
+                                                    </td>
+                                                </tr>
+                                                <tr class="renderRow minProduct">
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Minimum Required Product:  " for="minimumProduct"/>
+                                                    </td>
+                                                    <td class="field">                                                                 
+                                                        <div class="requiredInput">
+                                                            <apex:inputfield value="{!packageInfo.wk_wedge__Minimum_Required_Product__c}" id="minimumProduct"  styleclass="display-inline--block"/>                                                                    
+                                                        </div>                                                                
+                                                    </td>
+                                                </tr>                                                                                                       
+                                                <tr class="renderRow " >
+                                                    <td colspan="2" class="label" style="text-align: left">
+                                                        <apex:outputPanel layout="block" >
+                                                            <apex:outputPanel id="packageInfoHeading">
+                                                                <span>Package Product Information</span>
+                                                                <span class="packageCarret"></span>
+                                                            </apex:outputPanel>                                                                      
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel layout="block"  styleclass="packageAccordian">
+                                                            <apex:outputPanel layout="block">
+                                                                <a href="javascript:void(0);" class=" wdg-addOption--btn addProduct" onclick="addProductPopup()">Add Product</a>
+                                                                <a href="javascript:void(0);" class=" wdg-addOption--btn applyDiscount">Recalculate</a>
+                                                            </apex:outputPanel>
+                                                            <apex:outputPanel >
+                                                                <apex:outputPanel id="packageProductsPanel">
+                                                                    <table class="wdg-dataTable">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Name</th>
+                                                                                <th>Quantity</th>
+                                                                                <th>Price</th>
+                                                                                <th>Discount</th>
+                                                                                <th>Value</th>
+                                                                                <th>Price After Discount</th>
+                                                                                <!--<th>Remove</th>-->
+                                                                            </tr>
+                                                                        </thead>
+                                                                        
+                                                                        <tbody>
+                                                                            <apex:repeat value="{!prodlist}" var="key">
+                                                                                <tr class="packageproducts">
+                                                                                    <td class="prodname"><a href="/{!key.Id}" >{!key.Name}<apex:outputpanel rendered="{!key.description!=null}"> ({!key.description})</apex:outputpanel></a></td>
+                                                                                    
+                                                                                    <td class="Xsmall prodQuantity"><apex:inputfield value="{!key.wk_wedge__Amount__c}"/></td>
+                                                                                    <td class="prodPrice">
+                                                                                        {!currsymbol}<apex:outputpanel >
+                                                                                        <apex:outputText value="{0,number,###,##0.00}"><apex:param value="{!key.wk_wedge__List_price__c}"/></apex:outputtext>
+                                                                                        </apex:outputpanel></td>
+                                                                                    <td class="large discounttype">
+                                                                                        <apex:selectlist size="1"  value="{!key.wk_wedge__eBay_Quick_Price__c}">
+                                                                                            <apex:selectOptions value="{!DiscountType}"/>
+                                                                                        </apex:selectlist>
+                                                                                    </td>
+                                                                                    <td class="medium discountValue">
+                                                                                        <apex:inputField value="{!key.wk_wedge__Height__c}" styleclass="wdg-pkgbldr--key"/>
+                                                                                    </td>
+                                                                                    <td class="medium priceAfterdiscount" ><apex:inputfield value="{!key.wk_wedge__Return_Period__c}" html-disabled="true"/></td>
+                                                                                    <!--<td class="Xsmall delete" ><div class="wdg-ctrl--btn delete " title="Delete" targetid="{!key.id}"><span></span></div></td>-->
+                                                                                </tr>                                                                             
+                                                                            </apex:repeat>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </apex:outputPanel>
+                                                                
+                                                            </apex:outputPanel>                                                                      
+                                                        </apex:outputPanel>                                                                  
+                                                    </td>
+                                                </tr>
+                                                <tr class="renderRow sharedDisc">
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Shared Discount ($): " for="discountAmount"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <apex:inputfield value="{!packageInfo.wk_wedge__Discount_Amount__c}" id="discountAmount" styleclass="display-inline--block"/>
+                                                        </div>
+                                                        
+                                                    </td>
+                                                </tr>                                                             
+                                                <tr class="renderRow">
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Apply Shared Discount:  " for="sharedDiscount"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <div class="custom-checkbox {!IF(packageInfo.wk_wedge__Apply_Shared_Discount__c,'checked','')}">
+                                                                <apex:inputfield value="{!packageInfo.wk_wedge__Apply_Shared_Discount__c}" id="sharedDiscount" styleclass="display-inline--block"/>
+                                                            </div>                                                                     
+                                                        </div>                                                                
+                                                    </td>
+                                                </tr>                                                          
+                                                <tr class="renderRow">
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Price Of Package:  " for="packagePrice"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <apex:inputfield value="{!packageInfo.wk_wedge__Price_Of_Package__c}" id="packagePrice" html-disabled="true" styleclass="display-inline--block"/>                                                                   
+                                                        </div>
+                                                        
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </apex:outputpanel>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                </apex:form>
+            </div>
+            <apex:form >
+                <apex:actionFunction name="openPopup" action="{!openEditPopup}" oncomplete="Validate()" reRender="wdgerrorBlock,theOptionEditPopup">
+                    <apex:param name="optid" value="" />
+                </apex:actionFunction>
+                <apex:actionFunction name="clickSup" action="{!getSearchSupResult}" reRender="suptable">
+                    <apex:param value="" name="querySupName"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="addProductPopup" action="{!addProductPopup}" rerender="AddPackagePopup" status="waitstatus"/>
+                <apex:actionFunction name="closeProductPopup" action="{!closeProductPopup}" rerender="AddPackagePopup" status="waitstatus"/>
+            </apex:form>
+            <apex:form >                
+                <apex:actionFunction name="clickCat" action="{!getSearchCatResult}" reRender="cattable">
+                    <apex:param value="" name="queryCatName"/>
+                </apex:actionFunction>
+            </apex:form>
+            <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+            <script src="{!URLFOR($resource.dynaform,'dynamic-forms.js')}"></script> 
+            
+            <script>
+            function triggerCarretClick(){
+                var arr=[];
+                $('input:checked.eachselect').each(function(){
+                    var productOption='';                             
+                    $('input:checked.optionVariants').each(function(){
+                        var namevalue='';
+                        var optId='';
+                        productOption = $(this).val();                                                  
+                        if(productOption!='Any Combination'){
+                            if($('#'+productOption+'>ul>li>input:checked').val()!=undefined){
+                                var obj={'Id':'','namevalue':'','optId':''};
+                                namevalue+=$(this).attr('var-name')+':'+$('#'+productOption+'>ul>li>input:checked').attr('opt-name');
+                                optId+=$('#'+productOption+'>ul>li>input:checked').val();
+                                obj['Id']= $(this).parent().parent().next('input').val();
+                                obj['namevalue']= namevalue;
+                                obj['optId']=optId;
+                                arr.push(obj);                                                         
+                            }else{}
+                        }else{                                 
+                            obj['Id']= $(this).parent().next('input').val();
+                            obj['namevalue']= 'Any Combination';
+                            arr.push(obj);  
+                        }
+                    });
+                    if(productOption==''){
+                        var obj={'Id':'','namevalue':'','optId':''};
+                        obj['Id']= $(this).val();
+                        arr.push(obj); 
+                    }
+                })                 
+                $('[Id$="deletable"]').val(JSON.stringify(arr));
+                deleteSelectedRecords();                         
+            } 
+            $(document).on('click','.optionVariants',function(){
+                var productOption = $(this).val();
+                if(productOption!='Any Combination'){
+                    if($(this).prop('checked')){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.addNEWProduct.getOptionVariants}',
+                            productOption, 
+                            function(result, event){                            
+                                if(event.status) {
+                                    var str=JSON.parse(result);
+                                    var opt='<ul style="list-style-type:none;" class="optionVar">';
+                                    for(var i=0;i<str.length;i++){
+                                        opt+='<li><input type="radio" value='+JSON.stringify(str[i].Id)+' var-type='+JSON.stringify(str[i].wk_wedge__Option_Type__c)+' name ='+JSON.stringify(productOption)+' opt-name='+JSON.stringify(str[i].Name)+' var-mod='+JSON.stringify(str[i].wk_wedge__Modifier__c)+'/>&nbsp;'+str[i].Name+'</li>';
+                                        
+                                    }
+                                    opt+='</ul>';
+                                    $('#'+productOption).html(opt);
+                                }
+                            }, 
+                            {escape: false}
+                        );
+                    }else{
+                        $('#'+productOption).html('');
+                    }
+                }else{                     
+                    if($(this).prop('checked')){
+                        $(this).siblings('div').each(function(){
+                            $(this).children('input').attr('disabled','true').prop('checked',false);
+                            $(this).parent().find('.optionVar').remove();
+                        });                                                    
+                    }else{
+                        $(this).siblings('div').each(function(){
+                            $(this).children('input').removeAttr('disabled');                                                             
+                        });
+                    }
+                }
+            });
+            </script>       
+            
+            <script>
+            var sharedDiscount;
+            $(document).on('change','[Id$="packageBundling"]',function(){
+                var bundling = $(this).val();
+                if(bundling=='Discount on Whole Package'){
+                    $('.minProduct').hide();
+                    $('[Id$="minimumProduct"]').val('');                       
+                }else if(bundling=='Discount on Per Product'){
+                    $('.minProduct').show();
+                }
+            });
+            $(document).on('click','[Id$="sharedDiscount"]',function(){            
+                if(!$(this).parent().hasClass('checked')){
+                    sharedDiscount = (!$(this).parent().hasClass('checked'));
+                    $('.applyDiscount').trigger('click');
+                }
+            })
+            
+            $(document).on('click','.applyDiscount',function(){
+                var packageBundling = $('[Id$="packageBundling"]').val();
+                var discountamount = $('[Id$="discountAmount"]').val();
+                var productCount = $('.packageproducts').length;
+                    
+                    discountamount = parseFloat(discountamount/productCount).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                     });
+                if(packageBundling=='Discount on Per Product'){
+                    var price=0.00;
+                    
+                    console.log(discountamount);
+                    $('.packageproducts').each(function(){
+                        var quantity = $(this).find('td.prodQuantity input').val();                             
+                        var prodPrice = $(this).find('td.prodPrice span').html();
+                        var discountType = $(this).find('td.discounttype select').val();
+                        if(discountType=='to fixed amount'){ 
+                            if(sharedDiscount){
+                                $(this).find('td.discounttype select').val('by fixed amount');                                
+                                $(this).find('td.discountValue input').val(discountamount);
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountamount;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }else{                                
+                                var discountVal = $(this).find('td.discountValue input').val();                                
+                                if(discountVal<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountVal).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountVal.replace(/,/g,''));
+                            }
+                        }
+                        if(discountType=='by fixed amount'){
+                            if(sharedDiscount){
+                                $(this).find('td.discounttype select').val('by fixed amount');                                
+                                $(this).find('td.discountValue input').val(discountamount);
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountamount;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }else{
+                                var discountVal = $(this).find('td.discountValue input').val();
+                                var quantity = $(this).find('td.prodQuantity input').val();                             
+                                var prodPrice = $(this).find('td.prodPrice span').html();
+                                var discountType = $(this).find('td.discounttype select').val();
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountVal;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }
+                        }
+                        if(discountType=='to percentage of the original price'){
+                            if(sharedDiscount){
+                                $(this).find('td.discounttype select').val('by fixed amount');                                
+                                $(this).find('td.discountValue input').val(discountamount);
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountamount;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }else{
+                                var discountVal = $(this).find('td.discountValue input').val();
+                                var quantity = $(this).find('td.prodQuantity input').val();                             
+                                var prodPrice = $(this).find('td.prodPrice span').html();    
+                                var totalPrice = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')));
+                                var discnt = totalPrice*(parseFloat(discountVal)/100);
+                                if(isNaN(discnt))
+                                    $(this).find('td.priceAfterdiscount input').val(0.00);
+                                else{
+                                    if(discnt<0){
+                                        $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                            return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                        }));
+                                    }else{
+                                        $(this).find('td.priceAfterdiscount input').val(parseFloat(discnt).toFixed(2).replace(/./g, function(c, i, a) {
+                                            return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                        }));
+                                    }
+                                }
+                                if(!isNaN(discnt))
+                                    price+=parseFloat(discnt);
+                            }
+                        }
+                        if(discountType=='by percentage of the original price'){
+                            if(sharedDiscount){
+                                $(this).find('td.discounttype select').val('by fixed amount');                                
+                                $(this).find('td.discountValue input').val(discountamount);
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountamount;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }else{
+                                var discountVal = $(this).find('td.discountValue input').val();
+                                var quantity = $(this).find('td.prodQuantity input').val();
+                                var prodPrice = $(this).find('td.prodPrice span').html();
+                                var totalPrice = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')));
+                                var discnt = totalPrice*(discountVal/100);
+                                totalPrice-=discnt;
+                                if(totalPrice<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(totalPrice).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(totalPrice);                                
+                            }
+                        }
+                        
+                        $('[Id$="packagePrice"]').val(price.toFixed(2).replace(/./g, function(c, i, a) {
+                            return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                        }));                    
+                    });
+                }else if(packageBundling=='Discount on Whole Package'){
+                    var price=0.00;
+                    $('.packageproducts').each(function(){
+                        var quantity = $(this).find('td.prodQuantity input').val();                             
+                        var prodPrice = $(this).find('td.prodPrice span').html();
+                        var discountType = $(this).find('td.discounttype select').val();
+                        if(discountType=='to fixed amount'){ 
+                            if(sharedDiscount){
+                                $(this).find('td.discounttype select').val('by fixed amount');                                
+                                $(this).find('td.discountValue input').val(discountamount);
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountamount;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }else{
+                                var discountVal = $(this).find('td.discountValue input').val();
+                                $(this).find('td.priceAfterdiscount input').val(parseFloat(discountVal).toFixed(2).replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                }));
+                                price+=parseFloat(discountVal.replace(/,/g,''));
+                            }
+                        }
+                        if(discountType=='by fixed amount'){
+                            if(sharedDiscount){
+                                $(this).find('td.discounttype select').val('by fixed amount');                                
+                                $(this).find('td.discountValue input').val(discountamount);
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountamount;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }else{
+                                var discountVal = $(this).find('td.discountValue input').val();
+                                var quantity = $(this).find('td.prodQuantity input').val();                             
+                                var prodPrice = $(this).find('td.prodPrice span').html();
+                                var discountType = $(this).find('td.discounttype select').val();
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountVal;
+                                if(discountVal<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountVal).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }
+                        }
+                        if(discountType=='to percentage of the original price'){
+                            if(sharedDiscount){
+                                $(this).find('td.discounttype select').val('by fixed amount');                                
+                                $(this).find('td.discountValue input').val(discountamount);
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountamount;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }else{
+                                var discountVal = $(this).find('td.discountValue input').val();
+                                var quantity = $(this).find('td.prodQuantity input').val();                             
+                                var prodPrice = $(this).find('td.prodPrice span').html();    
+                                var totalPrice = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')));
+                                var discnt = totalPrice*(parseFloat(discountVal)/100);
+                                if(discnt<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discnt).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }                              
+                                price+=parseFloat(discnt);
+                            }
+                        }
+                        if(discountType=='by percentage of the original price'){
+                            if(sharedDiscount){
+                                $(this).find('td.discounttype select').val('by fixed amount');                                
+                                $(this).find('td.discountValue input').val(discountamount);
+                                var discountValue = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')))-discountamount;
+                                if(discountValue<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(discountValue).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(discountValue);
+                            }else{
+                                var discountVal = $(this).find('td.discountValue input').val();
+                                var quantity = $(this).find('td.prodQuantity input').val();
+                                var prodPrice = $(this).find('td.prodPrice span').html();
+                                var totalPrice = (parseFloat(quantity.replace(/,/g,''))*parseFloat(prodPrice.replace(/,/g,'')));
+                                var discnt = totalPrice*(discountVal/100);
+                                totalPrice-=discnt;
+                                if(totalPrice<0){
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(0).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }else{
+                                    $(this).find('td.priceAfterdiscount input').val(parseFloat(totalPrice).toFixed(2).replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    }));
+                                }
+                                price+=parseFloat(totalPrice);
+                            }
+                        }
+                        
+                        $('[Id$="packagePrice"]').val(price.toFixed(2).replace(/./g, function(c, i, a) {
+                            return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                        }));
+                        
+                    });
+                }
+            });
+            </script>
+            <script>
+            var ProductFeatures='{!JSENCODE(ProductFeatures)}';
+            var ProductFeaturesR='{!JSENCODE(FeatureValuesResults)}';
+            function noenter(ev, obj)  {
+                if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+                    if(obj == 'clickSup') {
+                        clickSup($('input[id$="querySupName"]').val()); 
+                    }
+                    
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            function delay(obj){
+                var interval = 0;
+                if (interval)
+                    window.clearTimeout(interval);
+                interval = window.setTimeout(function() {
+                    if(obj == 'clickSup') {
+                        clickSup($('input[id$="querySupName"]').val()); 
+                    }
+                }, 500);
+            }
+            function showList(obj){
+                $(obj).css('visibilty','visible').slideDown(500);
+            }
+            function hideList(obj){
+                $(obj).css('visibilty','hidden').slideUp(1000);        
+            }
+            function addAccount(obj,name, nameId, valueId) {
+                // $(".queryPortalName").val(name);
+                $('[id$="'+valueId+'"]').val(obj);
+                $('[id$="'+nameId+'"]').val(name);
+            }
+            </script>
+            <script>                
+            $(document).ready(function(){
+                
+                var errs = '{!errorsJSON}';
+                console.log(errs);
+                
+                
+                window.enableSave = false;
+                var allret = JSON.parse('{!allretailers}');
+                var retstring='<select>';
+                var curret = JSON.parse('{!currentRetailers}');
+                for(var i=0;i<allret.length;i++){
+                    retstring+='<option value='+allret[i].Id+'>'+allret[i].Name+'</option>';
+                }
+                retstring+='</select>';
+                console.log(curret);
+                window.createRow = function(){
+                    if(allret.length>0){
+                        var inpfeild = '<input type="text"/>';
+                        var delbut = "<div class='option_btn'><a href='javascript:void(0)' class='wdg-ctrl--btn delete deleteRow' ><span></span></a></div>";
+                        $('.retailer-add-table tbody').append('<tr><td>'+retstring+'</td><td><img class="retailer-logo" src="/servlet/servlet.FileDownload?file='+allret[0].wk_wedge__Image_ID__c+'"/></td><td>'+inpfeild+'</td><td><select><option value="_blank">New</option><option value="_self">Self</option></select></td><td>'+delbut+'</td>');
+                        $('#retailer-table-body tr td select').on('change', function() {
+                            $(this).parent().next().children('img').attr('src','/servlet/servlet.FileDownload?file='+allret[$(this)[0].selectedIndex].wk_wedge__Image_ID__c);
+                        });
+                        $('.deleteRow').click(function(){
+                            $(this).parent().parent().parent().remove();
+                        });
+                    }
+                }
+                var cats = JSON.parse('{!SelectedCats}');
+                console.log(cats);
+                var hasMajorMapping = false;
+                for(var i=0;i<cats.length;i++){
+                    if(cats[i].wk_wedge__Major_Mapping__c){
+                        $('.wdg-sel--cat').append('<li><input type="radio" name="major-cat" value="'+cats[i].wk_wedge__Categories__r.Id+'" checked/>'+cats[i].wk_wedge__Categories__r.Name+'</li>');
+                        hasMajorMapping = true;
+                    }else
+                        $('.wdg-sel--cat').append('<li><input type="radio" name="major-cat" value="'+cats[i].wk_wedge__Categories__r.Id+'"/>'+cats[i].wk_wedge__Categories__r.Name+'</li>');
+                }
+                if(!hasMajorMapping)
+                    $('.wdg-sel--cat').find('li').first().find('input').attr('checked','checked');
+                $('.addRow').click(createRow);
+                if(curret.length == 0){
+                    $('.addRow').trigger('click');
+                }else{
+                    var imgMap = [];
+                    if(allret.length>0){
+                        for(var i=0;i<curret.length;i++){
+                            var inpfeild = '<input type="text" value="'+curret[i].wk_wedge__Product_URL__c+'"/>';
+                            var delbut = "<div class='option_btn'><a href='javascript:void(0)' class='wdg-ctrl--btn delete deleteRow' ><span></span></a></div>";
+                            if(curret[i].wk_wedge__Retailer__r!= undefined)
+                                $('.retailer-add-table tbody').append('<tr><td>'+retstring+'</td><td><img class="retailer-logo" src="/servlet/servlet.FileDownload?file='+curret[i].wk_wedge__Retailer__r.wk_wedge__Image_ID__c+'"/></td><td>'+inpfeild+'</td><td><select><option value="_blank">New</option><option value="_self">Self</option></select></td><td>'+delbut+'</td>');
+                            $('.retailer-add-table tbody').last().find('select').first().val(curret[i].wk_wedge__Retailer__c);
+                            $('#retailer-table-body tr td select').on('change', function() {
+                                //console.log(allret[$(this)[0].selectedIndex].wk_wedge__Image_ID__c);
+                                if($(this)[0] != undefined)
+                                    $(this).parent().next().children('img').attr('src','/servlet/servlet.FileDownload?file='+allret[$(this)[0].selectedIndex].wk_wedge__Image_ID__c);
+                            });
+                            if(imgMap[curret[i].wk_wedge__Retailer__c]==undefined){
+                                for(var j=0;j<allret.length;j++){
+                                    if(allret[j].Id == curret[i].wk_wedge__Retailer__c){
+                                        imgMap[curret[i].wk_wedge__Retailer__c] = j;
+                                        break;
+                                    }
+                                }
+                            }
+                            if($('#retailer-table-body tr').last().find('td select').first()[0] != undefined)
+                                $('#retailer-table-body tr').last().find('td select').first()[0].selectedIndex = imgMap[curret[i].wk_wedge__Retailer__c];
+                            //console.log($('#retailer-table-body tr').last().find('td select').first()[0].selectedIndex);
+                            if($('#retailer-table-body tr').last().find('td select').last()[0] != undefined){
+                                if(curret[i].wk_wedge__Target__c == '_blank')
+                                    $('#retailer-table-body tr').last().find('td select').last()[0].selectedIndex = 0;
+                                else
+                                    $('#retailer-table-body tr').last().find('td select').last()[0].selectedIndex = 1;
+                            }
+                            //$('#retailer-table-body tr td select').last().find('option[value='+curret[i].wk_wedge__Retailer__c+']').first().attr('selected','selected');
+                            //$('#retailer-table-body tr td select').val(curret[i].wk_wedge__Retailer__c);
+                            $('.deleteRow').click(function(){
+                                $(this).parent().parent().parent().remove();
+                            });
+                        }
+                    }
+                }
+                $('input[id$="diffseller"]').change(function(){
+                    $('#liRetailer').toggle();
+                });
+                $('.add-cat--btn').click(function(){
+                    $('.wdg-no--show').show();
+                });
+                $('[id$=prodStock]').blur(function(){
+                    if($(this).val() == undefined || $(this).val() == ''){
+                        $('#stockErr').text('Stock is required');
+                        window.enableSave = false;
+                    }else{
+                        $('#stockErr').text('');
+                        window.enableSave = true;
+                    }
+                });
+                $('[id$=prodAlias]').blur(function(){
+                    if($(this).val() == undefined || $(this).val() == ''){
+                        $('#availableCheck').text('SEO alias is Required');
+                        return;
+                    }
+                    $('#availableCheck').text('');
+                    var aliasName = $(this).parent().find('input').val();
+                    if(aliasName != ''){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.addNEWProduct.checkAvailability}',
+                            aliasName, 
+                            function(result, event){
+                                if (event.status) {
+                                    if(result == null || result == '{!CurrentProductId}' || aliasName == 'abc'){
+                                        console.log('available');
+                                        $('#availableCheck').text('');
+                                        /*$('#availableCheck').addClass('green-css');
+                                        $('#availableCheck').removeClass('red-css');*/
+                                        window.enableSave = true;
+                                    }else{
+                                        console.log('Alias already in use');
+                                        $('#availableCheck').text('SEO Alias Unavailable');
+                                        $('#availableCheck').removeClass('green-css');
+                                        $('#availableCheck').addClass('red-css');
+                                        window.enableSave = false;
+                                    }
+                                } else {
+                                    window.enableSave = false;
+                                }
+                            }, 
+                            {escape: true}
+                        );
+                    } else {
+                        //$('#availableCheck').text('Enter value for SEO Alias First');
+                        $('#availableCheck').removeClass('green-css');
+                        $('#availableCheck').addClass('red-css');
+                        window.enableSave = false;
+                    }
+                });
+                $('.cat-modal--close').click(function(){
+                    $('.wdg-no--show').hide();
+                });
+                $('.sel-cat--btn').click(function(){
+                    $('#catErr').text('');
+                    $('.wdg-no--show').hide();
+                    var selectedval = $('.wdg-sel--cat').find('input[type="radio"]:checked').val();
+                    if(selectedval!=undefined && selectedval.length>15)
+                        selectedval = selectedval.substring(0,15);
+                    console.log(selectedval);
+                    $('.wdg-sel--cat').children().remove();
+                    var boolval = false;
+                    //console.log($('.dynatree-container').find('span.dynatree-node'));
+                    $('.dynatree-container').find('span.dynatree-node').each(function(){
+                        if($(this).hasClass('dynatree-selected')){
+                            //console.log($(this).children('a').attr('href').substring(1));
+                            var currval = $(this).children('a').attr('href').substring(1);
+                            if(currval.length > 15)
+                                currval = currval.substring(0,15);
+                            console.log(currval);
+                            if(selectedval == currval){
+                                $('.wdg-sel--cat').append('<li><input type="radio" name="major-cat" value="'+currval+'" checked/>'+$(this).children('a').text()+'</li>');
+                                boolval = true;
+                            }else{
+                                $('.wdg-sel--cat').append('<li><input type="radio" name="major-cat" value="'+currval+'"/>'+$(this).children('a').text()+'</li>');
+                            }
+                        }
+                    });
+                    if(!boolval)
+                        $($('.wdg-sel--cat').find('input')[0]).attr('checked','');
+                    //console.log(catlist);
+                });
+                $('.wdg-pkgbldr--key').each(function(){
+                    if($(this).val().indexOf('.')==-1){
+                        $(this).val($(this).val().replace(/,/g,'')+'.00');
+                    }else{
+                        $(this).val($(this).val().replace(/,/g,''));
+                    }
+                });
+                
+                $('[id$="packagePrice"]').val(parseFloat($('[id$="packagePrice"]').val().replace(/,/g,'')).toFixed(2).replace(/./g, function(c, i, a) {
+                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                }));
+                if($('[id$="packagePrice"]').val()=='NaN'){
+                    $('[Id$="packagePrice"]').val('0');
+                }
+                if($('[Id$="packageCheckbox"]').parent().hasClass('checked')){
+                    $('.renderRow').css('display','table-row');
+                    if($('.packageproducts').length==0){
+                        $('[Id$="packagePrice"]').val('0');
+                    }
+                    
+                }else{
+                    $('.renderRow').css('display','none');
+                    $('[Id$="packagePrice"]').val('0');
+                }    
+                var bundling = $('[Id$="packageBundling"]').val();
+                if(bundling=='Discount on Whole Package'){
+                    $('.renderRow.minProduct').hide();
+                    $('[Id$="minimumProduct"]').val('');                       
+                }else if(bundling=='Discount on Per Product'){
+                    $('.renderRow.minProduct').show();
+                }    
+                $('[Id$="packageInfoHeading"]').css('cursor','pointer');
+                if('{!prodlist.size>0}'=='true'){3423
+                $('[Id$="packageInfoHeading"]').parent().next('div').addClass('current');
+                                                 $('.current').slideToggle();
+                                                 if($('[Id$="packageInfoHeading"]').children('span').hasClass('down')){
+                                                     $('[Id$="packageInfoHeading"]').children('span').removeClass('down');
+                                                 }else{
+                                                     $('.packageCarret').removeClass('down');
+                                                     $('[Id$="packageInfoHeading"]').children('span').addClass('down');
+                                                 }     
+                                                }
+                $('[id*=prodName]').blur(function(){
+                    if($(this).val() == undefined || $(this).val() == ''){
+                        window.enableSave = false;
+                        $('#nameErr').text('Name is required');
+                        return;
+                    }
+                    $('#nameErr').text('');
+                    var SEOAlias = $(this).val().replace(/[^a-zA-Z0-9_\- ]/g, "").toLowerCase();
+                    if($('[id$=prodAlias]').val()=='' && $('[id*=prodName]').val()!=''){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.addNEWProduct.checkAvailability}',
+                            SEOAlias.replace(/ /g,'-'), 
+                            function(result, event){
+                                if (event.status) {
+                                    if((result == null || result == '{!CurrentProductId}') && SEOAlias.replace(/ /g,'-') != 'abc'){
+                                        $('[id$=prodAlias]').val(SEOAlias.replace(/ /g,'-'));
+                                        window.enableSave = true;
+                                    }else{
+                                        $('[id$=prodAlias]').val(SEOAlias.replace(/ /g,'-') +'-'+ Math.floor(Math.random() * 100));
+                                        window.enableSave = false;
+                                    }
+                                    $('#availableCheck').text('');
+                                } else {
+                                    window.enableSave = false;
+                                }
+                            }, 
+                            {escape: true}
+                        );
+                    }
+                });
+            });
+            $(document).on('click','[Id$="packageInfoHeading"]',function(){
+                $(this).parent().next('div').addClass('current');
+                $('.current').slideToggle();
+                if($(this).children('span').hasClass('down')){
+                    $(this).children('span').removeClass('down');
+                }else{
+                    $('.packageCarret').removeClass('down');
+                    $(this).children('span').addClass('down');
+                }     
+            });
+            $(document).on('click','[Id$="packageCheckbox"]',function(){
+                if(!$(this).parent().hasClass('checked'))
+                    $('.renderRow').css('display','table-row');
+                else
+                    $('.renderRow').css('display','none');
+            });   
+            angular.module('app', ['dynform']).controller('AppCtrl', ['$scope', function ($scope) {
+                $scope.stdFormTemplate =JSON.parse(ProductFeatures);
+                $scope.stdFormData =JSON.parse(ProductFeaturesR);
+            }]).filter('pretty', function() {
+                return function (input) {
+                    var temp;
+                    try {
+                        temp = angular.fromJson(input);
+                    }
+                    catch (e) {
+                        temp = input; 
+                    }
+                    return angular.toJson(temp, true);
+                };
+                
+            });
+            </script> 
+            <script>
+            function Validate(){
+                ProductVariants=$("[Id$='ip_variants']").val();
+                if(ProductVariants!=null && ProductVariants!=''){
+                    var variants=JSON.parse(ProductVariants);
+                    for(key in variants){
+                        var arr=$(".wdg-form--blockfields .wdg-variant-table tbody tr");
+                        $(".position input",arr[key]).val(variants[key]['wk_wedge__Order_Index__c']);
+                        $(".variant input",arr[key]).val(variants[key]['Name']);
+                        $(".modifier input",arr[key]).val(variants[key]['wk_wedge__Modifier__c']);
+                        $(".typeval select",arr[key]).val(variants[key]['wk_wedge__Type__c']);
+                        if($(".wdg-form--blockfields .wdg-variant-table tbody tr").length<=variants.length)
+                            $(".wdg-form--blockfields .wdg-variant-table .addRow").last().trigger("click");
+                    }
+                }
+                
+                if($(this).text()!='Variants' || ($("[Id$='ip_type_sel']").val()=='M' || $("[Id$='ip_type_sel']").val()=='T')){                            
+                    $(this).parent().addClass("active");
+                    var ids=$(this).attr("data-target");
+                    $("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                    $(this).parent().siblings().removeClass("active");
+                    
+                    
+                }
+                else {
+                    window.ShowAlert("variants can not be defined for this Option type");
+                }
+            }
+            $( document ).on("click",".wdg-modal--btn",function(){
+                var arr=[];
+                $(".wdg-form--blockfields .wdg-variant-table tbody tr").each(function(){
+                    var obj={"pos":"","val":'',"quan":'',"modif":'',"type":''};
+                    var a=$(".position input",this).val();
+                    var b=$(".variant input",this).val();
+                    var c=$(".modifier input",this).val();
+                    var d=$(".typeval select",this).val();
+                    
+                    obj['pos']=a;
+                    obj['val']=b;
+                    obj['modif']=c;
+                    obj['type']=d;
+                    arr.push(obj);                            
+                });
+                arr.pop();
+                $("[Id$='variants']").val(JSON.stringify(arr));
+                
+                saveFeatures();                         
+            });
+            
+            $( document).on("click"," .wdg-form--blockfields .wdg-variant-table .addRow",function(){
+                $(this).parent().parent().parent().after( "<tr>"+$("[Id$='PrimeRow']").html()+"</tr>");
+            });
+            
+            $( document).on("click"," .wdg-form--blockfields .wdg-variant-table .deleteRow",function(){
+                if($(".wdg-form--blockfields .wdg-variant-table tbody tr").length>1)
+                    $(this).parent().parent().remove();
+            });
+            
+            
+            
+            
+            function ValidateSave(event){
+                var str  = $("[Id*='prodName']").val();
+                
+                if (str.match(/^[A-z0-9\d\s]+$/) ) {
+                    $("[Id$='validate']").html('');
+                    return true;
+                }
+                else{                    
+                    //alert("Review all the errors!");
+                    
+                    if(!str.match(/^[A-z0-9\d\s]+$/)){
+                        $("[Id$='validate']").html('Special Characters Are Not Allowed');
+                    }
+                    
+                    
+                    event.preventDefault();45,450,647.0000
+                    return false;
+                }
+            }
+            wk=jQuery.noConflict();
+            (function(wk){
+                /* wk( document ).on("blur",".wdg-body .wdg-form--table td [Id$='prodName']",function(){
+                        var str  = wk("[Id$='prodName']").val();                       
+                        if (str.match(/^[A-z0-9\d\s]+$/)) {
+                            wk("[Id$='validate']").html('');
+                        }
+                        else{
+                            wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        }
+                     }); */        
+                wk( document).ready(function(){
+                    wk("#standardPrice input").trigger("blur");
+                    wk("[id*=prodName]").trigger("blur");
+                    wk("[id$=prodAlias]").trigger("blur");
+                    $('#nameErr').text('');
+                });
+                wk( document).on("click",".wdg-form--headeroptions li a ",function(){
+                    wk(this).parent().siblings().removeClass("active");
+                    wk(this).parent().addClass("active");
+                    var ids=wk(this).attr("data-target");
+                    wk("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                    
+                    
+                }); 
+                wk(document ).on("click",".custom-checkbox input",function(){
+                    
+                    wk(this).parent().removeClass("checked");
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                    }
+                });
+                wk(document ).on("click",".folder-checkbox",function(){
+                    var arr=[];
+                    wk(".folder-checkbox").each(function(){
+                        if(this.checked){
+                            wk(this).parent().addClass("checked");
+                            arr.push(wk(this).attr('targetvalue'));
+                        }
+                        else
+                            wk(this).parent().removeClass("checked");
+                    });
+                    wk("[Id$='docfolder']").val(arr.join(','))
+                    newImages();
+                });
+                wk(document ).on("click",".folder-radio",function(){
+                    wk(".folder-radio").parent().removeClass("checked");
+                    
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                        wk("[Id$='uploadfolder']").val(wk(this).val())                            
+                    }
+                });
+                wk(document).on("click","[Id$='wgdPopupClose']", function(){
+                    wk("[Id$='imagePopUp'],[Id$='fileuploadPopUp']").removeClass("wdg-show").addClass("wdg-hide");
+                });
+                wk(document).on("click",".wdg-uploadImage--btngroup a",function(){
+                    var ids=wk(this).attr("data-target");
+                    wk("[Id$='"+ids+"']").addClass("wdg-show").removeClass("wdg-hide");
+                });
+                wk(document).on("click",".wdg-imagepop--box .wdg-images--container img",function(){
+                    var ids=wk(this).attr("targetid");
+                    var name=wk(this).attr("alt");
+                    wk("[Id$='Imgsel']").val(ids);
+                    wk("[Id$='Imgoptsel']").val(0);
+                    wk("[Id$='Image_title']").text(name);
+                    wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                    wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+                    wk("[Id$='wgdPopupClose']").trigger("click");
+                    
+                });
+                wk(document).on("click","[Id$='Uploadfile']",function(event){
+                    var ufolder=wk("[Id$='uploadfolder']").val();
+                    wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");
+                    wk(".wdg-fileupload--error").text("");
+                    if(ufolder==null || ufolder==''){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Please Select a folder from left");
+                        event.preventDefault();
+                    }
+                });
+                wk( document ).on("click"," [Id$='removeImages']", function(){
+                    wk(".wdg-uploadimage--title").text("image.jpg");  
+                    wk("[Id$='Imgsel']").val('');
+                    wk("[Id$='Imgoptsel']").val('');
+                    wk(".wdg-upload--image").html("<div></div>");
+                    wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                    
+                });
+                wk(document).on("change","[Id$='Uploadfile']",function(event){
+                    var ufolder=wk("[Id$='uploadfolder']").val();
+                    wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");https://wedgecommerce-main-dev-ed--wk-wedge.ap2.visual.force.com/s.gif
+                    wk(".wdg-fileupload--error").text("");
+                    if(ufolder==null || ufolder==''){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Please Select a folder from left");
+                        event.preventDefault();
+                    }
+                    var fakepath=wk(this).val();
+                    var templist=fakepath.split('\\');
+                    var filename=templist[templist.length-1];  
+                    var tempext=filename.split('.')
+                    var fileext=tempext[tempext.length-1];
+                    if(fileext.toLowerCase()!='jpg' && fileext.toLowerCase()!='jpeg' && fileext.toLowerCase()!='png'){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Only jpeg, jpg and png files are allowed");
+                        wk(this).val('')
+                        
+                    }else{
+                        wk(".wdg-uploadimage--title").text(filename);
+                        wk("[Id$='Imgoptsel']").val(1);
+                        wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                        wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+                        
+                        wk("[Id$='wgdPopupClose']").trigger("click");
+                    }
+                });
+                wk("#standardPrice input").blur(function(){
+                    if(wk("#standardPrice input").val()==''){
+                        wk("#standardPrice input").val('');
+                        wk("#ListPrice input").prop('disabled',true);
+                    }
+                    else{
+                        wk("#ListPrice input").prop('disabled',false);
+                    }
+                });
+                wk( document ).on("click", ".wdg-body .wdg-ctrl--btnPanel .wdg-ctrl--btn.save",function(event){
+                    var catarr = [];
+                    var majorcat = '';
+                    var validated = true;
+                    if($('[id*=prodName]').val() == undefined || $('[id*=prodName]').val() == ''){
+                        $('#nameErr').text('Name is required');
+                        validated = false;
+                    }else{
+                        $('#nameErr').text('');
+                    }
+                    if($('[id$=prodStock]').val() == undefined || $('[id$=prodStock]').val() == ''){
+                        $('#stockErr').text('Stock is required');
+                        validated = false;
+                    }else{
+                        $('#stockErr').text('');
+                    }                    
+                    if($('.wdg-sel--cat').children('li').length == 0){
+                        $('#catErr').text('Atleast 1 category is required');
+                        validated = false;
+                    }else{
+                        $('.wdg-sel--cat').children().each(function(){
+                            catarr.push($(this).children('input').val());
+                            if($(this).children('input').is(':checked'))
+                                majorcat = $(this).children('input').val();
+                        });
+                        $('#catErr').text('');
+                        $('input[id$="categories-json"]').val(JSON.stringify(catarr));
+                        $('input[id$="major-cat"]').val(majorcat);
+                    }
+                    console.log(majorcat);
+                    console.log(catarr);
+                    $('[Id$="packagePrice"]').removeAttr('disabled');
+                    $('.priceAfterdiscount input').each(function(){
+                        $(this).removeAttr('disabled');
+                    });
+                    sharedDiscount = $('[Id$="sharedDiscount"]').parent().hasClass('checked');
+                    $('.applyDiscount').trigger('click');
+                    var objarr = [];
+                    $('#retailer-table-body tr').each(function(){
+                        console.log(this);
+                        var objtemp={};
+                        objtemp.retailer = $(this).find('select').first().val();
+                        objtemp.url = $(this).find('input').val();
+                        objtemp.target = $(this).find('select').last().val();
+                        objarr.push(objtemp);
+                    });
+                    $('input[id$="retjson"]').val(JSON.stringify(objarr));
+                    if(window.enableSave && validated)
+                        saveData();
+                    else{
+                        //alert('Please check availability of SEO alias first');
+                    }
+                });
+                
+                wk( document ).on("mouseover", ".wdg-body .wdg-ctrl--btnPanel .wdg-ctrl--btn.save",function(event){                     
+                    
+                    var scope = angular.element(document.querySelector('[ng-controller="AppCtrl"]')).scope();
+                    wk("[Id$='featValues']").val(JSON.stringify(scope.stdFormData));
+                });
+                wk(document).on("change","[Id$='ProductImageblock'] .wdg-variant-table td.file input",function(event){
+                    var fakepath=wk(this).val();
+                    var templist=fakepath.split('\\');
+                    var filename=templist[templist.length-1];  
+                    var tempext=filename.split('.')
+                    var fileext=tempext[tempext.length-1];
+                    if(fileext.toLowerCase()!='jpg' && fileext.toLowerCase()!='jpeg' && fileext.toLowerCase()!='png'){
+                        window.ShowAlert("Only jpeg,jpg and png files are allowed");
+                        wk(this).val('')
+                        wk(this).parent().parent().parent().next().html("<span> No file choosen </span>");
+                        
+                    }else{
+                        wk(this).parent().parent().parent().next().html('<span class="filename">'+filename+'</span>');
+                    }
+                });
+                wk(document).on("click","[Id$='existattachments'] .custom-checkbox input",function(event){
+                    var arr=[];
+                    console.log("correct hai ji")
+                    wk("[Id$='existattachments'] .custom-checkbox input").each(function(){
+                        if(wk(this).prop('checked')){
+                            arr.push(wk(this).val());
+                        }
+                        
+                    });
+                    wk("[Id$='removeattach']").val(arr.join(','));
+                });
+                
+            }(jQuery));
+            </script>
+            <script>
+            function noenter(ev, obj)  {
+                if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+                    if(obj == 'clickCat') {
+                        clickCat($('input[id$="queryCatName"]').val()); 
+                    }
+                    
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            function delay(obj){
+                var interval = 0;
+                if (interval)
+                    window.clearTimeout(interval);
+                interval = window.setTimeout(function() {
+                    if(obj == 'clickCat') {
+                        clickCat($('input[id$="queryCatName"]').val()); 
+                    }
+                }, 500);
+            }
+            function showList(obj){
+                $(obj).css('visibilty','visible').slideDown(500);
+            }
+            function hideList(obj){
+                $(obj).css('visibilty','hidden').slideUp(1000);        
+            }
+            function addAccount(obj,name, nameId, valueId) {
+                // $(".queryPortalName").val(name);
+                $('[id$="'+valueId+'"]').val(obj);
+                $('[id$="'+nameId+'"]').val(name);
+            }
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

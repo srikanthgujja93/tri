@@ -1,0 +1,1642 @@
+<apex:page controller="wk_wedge.productdetails" standardstylesheets="false" setup="false" showheader="false" doctype="html-5.0" cache="false" >
+    <TITLE>{!proddata.Page_Title__c}</TITLE>
+    <meta name="description" content="{!proddata.Meta_Description__c}"/>
+    <meta name="keywords" content="{!proddata.Meta_Keywords__c}"/>
+    <link rel="canonical" href="{!proddata.Canonical_URL__c}" />
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        
+        <apex:define name="templatebody">
+            <div class="container">                
+                <apex:includescript value="{!URLFOR($Resource.wk_wedge__wedgecommerce, 'wedgeCommerce/js/zoom/jQueryZoomImageonMouseOver/js/jquery-1.8.2.js')}"/>
+                <apex:includescript value="{!URLFOR($Resource.wk_wedge__wedgecommerce, 'wedgeCommerce/js/zoom/jQueryZoomImageonMouseOver/js/jquery.elevatezoom.min.js')}"/>
+                
+                
+                <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'/>
+                
+                <script>
+                var wk = jQuery.noConflict();
+                </script>
+                <style>
+                    .wdg-page--block{
+                    margin-top:15px;
+                    margin-bottom:15px;
+                    }
+                    .wdg-showcase--row{
+                    margin-top:30px;
+                    }
+                    .test--border{
+                    border:1px solid #ccc;
+                    }
+                    .wdg-page--block .show-case--block{
+                    display:inline-block;
+                    position:relative;
+                    box-sizing:border-box;
+                    overflow:hidden;
+                    }
+                    .show-case--block.col--2{
+                    width:95%;
+                    height:330px;
+                    }
+                    .show-case--block.col--3{
+                    width:96%;
+                    height:330px;
+                    }
+                    .show-case--block .show-case--background{
+                    display:block;
+                    posiiton:relative;
+                    }
+                    .show-case--block  .show-case--desc{
+                    background:#fff;
+                    border: 1px solid #ccc;
+                    padding:10px;
+                    box-sizing:border-box;
+                    overflow:hidden;
+                    position:absolute;
+                    bottom:0;
+                    text-align:center;
+                    }
+                    .show-case--center{
+                    padding:10px;
+                    box-sizing:border-box;
+                    overflow:hidden;
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    display:table;
+                    width:355px;
+                    height:262px;
+                    background:transparent;
+                    }
+                    .show-case--center .show-casecenter--desc{
+                    display:table-cell;
+                    vertical-align:middle;
+                    }
+                    .show-casecenter--desc .heading{
+                    font-family: 'Great Vibes', cursive;
+                    font-weight: 400;
+                    text-align: center;
+                    font-size: 51px;
+                    margin: auto;
+                    height: 65px;
+                    overflow: hidden;
+                    
+                    }
+                    .show-casecenter--desc .underline{
+                    background: transparent url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/wave.png')}") no-repeat center;
+                    height: 10px;
+                    margin:auto;
+                    margin-top:10px;
+                    
+                    }
+                    .show-casecenter--desc .description{
+                    margin-top: 10px;
+                    height: 45px;
+                    line-height: 1.8;
+                    overflow: hidden;
+                    
+                    }
+                    .show-casecenter--desc .link{
+                    margin-top: 10px;
+                    display: block;
+                    font-size: 15px;
+                    font-weight: 600;
+                    }
+                    .show-case--block  .show-case--desc.col--2{
+                    margin-left:50px;
+                    margin-right:50px;
+                    width:450px;
+                    height:140px;
+                    
+                    }
+                    .show-case--block  .show-case--desc.col--3{
+                    margin-left:38px;
+                    margin-right:38px;
+                    width:290px;
+                    height:140px;
+                    }
+                    .show-case--desc .message{
+                    height: 44px;
+                    margin-top: 0px;
+                    margin-bottom: 10px;
+                    overflow: hidden;
+                    }
+                    .show-case--desc .link{
+                    color:#429ACA;
+                    text-decoration:none;
+                    font-size:15px;
+                    font-weight:600;
+                    }
+                    .wdg-panel--block{
+                    margin-top:15px;
+                    }
+                    .wdg-panel--block  .panel-title{
+                    font-size: 20px;
+                    font-weight: 600;
+                    padding-left: 10px;
+                    padding-bottom: 10px;
+                    border-bottom: 1px solid #adadad;
+                    }
+                    .panel-product--row .product-details--container{
+                    width: 100%;
+                    margin: 15px auto;
+                    min-height: 210px;
+                    height:auto;
+                    overflow: hidden;
+                    display: block;
+                    color: #333333!important;
+                    }
+                    /*.panel-product--row .product-details--container:hover {
+                    box-shadow: 0px 0px 15px 4px #ccc;
+                    }*/
+                    .panel-product--row .product-details--container .product-image--wrapper{
+                    height: 100px;
+                    width: 100px;
+                    margin: 0 auto;
+                    text-align: center;
+                    text-align: center;
+                    overflow:hidden;
+                    display:block;
+                    padding:18px;
+                    
+                    }
+                    .panel-product--row .product-details--container .product-image--wrapper.shady{
+                    background:#ebebeb;
+                    }
+                    .product-image--wrapper img{
+                    height:100%;
+                    width:100%;
+                    background:#fff;
+                    }
+                    .product-details--container  .product-details *{
+                    display:block;
+                    text-align:center;
+                    margin-bottom: 10px;
+                    margin-top: 10px;
+                    }
+                    .product-details .productlabel{
+                    font-weight: 600;
+                    font-size: 15px;
+                    color: #222;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    }
+                    .product-details .product-wishpanel a{
+                    margin-right:25px;
+                    }
+                    .product-details .product-wishpanel a:last-child{
+                    margin-right:0px;
+                    }
+                    .product-details .product-wishpanel .quickzoom{
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    background: url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -1px -69px;
+                    border-radius: 3px;
+                    border: 1px solid #FF7E00;
+                    vertical-align: middle;
+                    visibility: visible;
+                    }
+                    .product-details .product-wishpanel .quickzoom:hover{
+                    background-position: -40px -69px;
+                    }
+                    .product-details .product-wishpanel .addwishlist {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    background: url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -81px -69px;
+                    border-radius: 3px;
+                    border: 1px solid #999999;
+                    vertical-align: middle;
+                    visibility: visible;
+                    }
+                    .product-details .product-wishpanel .addwishlist:hover{
+                    background-position: -121px -69px;
+                    }
+                </style> 
+                <style>
+                    .prod-detail-panel{
+                    margin-top:20px;
+                    margin-bottom:25px;
+                    }
+                    .em_product_details{
+                    margin-top:20px;
+                    height:500px;
+                    }
+                    .product-image-wrapper {
+                    display: inline-block;
+                    height:400px;
+                    padding: 0px;
+                    
+                    }
+                    .product-image{
+                    width:520px;
+                    height:420px;
+                    }
+                    .em_productname{
+                    font-size:20px;
+                    font-weight:700;
+                    word-break:break-word;
+                    margin: 0;
+                    margin-top: 15px;
+                    }
+                    .em_sku{
+                    padding-left:0px;
+                    border-right:1px solid #ccc;
+                    }
+                    
+                    .em_porddetalsection{
+                    margin-left:30px;
+                    }
+                    .em_row2{
+                    padding:10px 0px;
+                    border-bottom:1px solid #ccc;
+                    margin: 0;
+                    }
+                    .em_productprice{
+                    font-size:20px;
+                    font-weight:700;
+                    padding:10px 0px;
+                    margin: 0;
+                    }
+                    .em_productcolor{
+                    font-size:16px;
+                    font-weight:500;
+                    padding:5px 0px;
+                    margin: 0;
+                    }
+                    .em_productzipcode{
+                    padding:5px 0px;
+                    }
+                    .em_productzipcode div{
+                    height:41px;
+                    width:26px;
+                    background:transparent url('{!URLFOR($Resource.wedgecommerce,'wedgecommerce/images/sprite.png')}') no-repeat -209px -69px;
+                    display:inline-block;
+                    margin: -13px 0;
+                    }
+                    .em_zipinput {
+                    border: 1px solid #bbb;
+                    border-radius: 3px;
+                    color: #bbb;
+                    height: 40px;
+                    margin-left: 15px;
+                    padding: 9px 11px;
+                    width: 240px;
+                    }
+                    .em_zipcheckbtn {
+                    background: #595959 none repeat scroll 0 0;
+                    border: medium none;
+                    border-radius: 3px;
+                    color: #fff;
+                    font-size: 17px;
+                    margin-left: 28px;
+                    padding: 8px 27px;
+                    }
+                    .em_multiplepanel{
+                    padding-right:0px;
+                    }
+                    .em_multipleimg{
+                    border: 1px solid #ccc;
+                    display: inline-block;
+                    height: 141px;
+                    margin-right: 14px;
+                    width: 118px;
+                    margin-bottom:25px;
+                    }
+                    .em_multipleattach{
+                    height:100%;
+                    width:100%;
+                    }
+                    .em_line{
+                    border-bottom:1px #ccc solid;
+                    margin-top:20px; 
+                    margin-bottom:20px;
+                    padding:0px;
+                    } 
+                    
+                    .ecm_popup_bg {
+                    display: none;
+                    width: 100%;
+                    height: 100%;
+                    position: fixed;
+                    z-index: 223;
+                    padding-top: 100px;
+                    left: 0;
+                    top: 0;
+                    overflow: auto;
+                    background-color: rgba(0,0,0,0.4);
+                    }
+                    .ecm_popup {
+                    /*position: fixed;*/
+                    /*top: 50%;*/
+                    /*left: 50%;*/
+                    /*margin-top: -200px;*/
+                    /*margin-left: -250px;*/
+                    background: #fff;
+                    z-index: 55555;
+                    min-height: 200px;
+                    min-width: 500px;
+                    display: none;
+                    border-radius: 6px;
+                    }
+                    .ecm_review_popup{
+                    background: #fff;
+                    z-index: 778;
+                    border-radius: 7px;
+                    width: 50%;
+                    font-size: 14px;
+                    overflow: auto;
+                    box-shadow: 0px 0px 15px 4px #333;
+                    margin: auto;
+                    }
+                    .ecm_close {
+                    float: right;
+                    cursor: pointer;
+                    color: #fff;
+                    font-size: 14px;
+                    margin-top: -3px;
+                    border: 2px solid white;
+                    border-radius: 103px;
+                    padding: 0px 6px;
+                    }
+                    .ecm_close_retailer {
+                    float: right;
+                    cursor: pointer;
+                    font-size: 14px;
+                    margin-top: -2px;
+                    vertical-align: middle;
+                    }
+                    .selectType {
+                    padding: 6px;
+                    border-radius: 3px;
+                    font-size: 14px;
+                    color: #222;
+                    background: #fff;
+                    border: 1px solid #adadad;
+                    outline: none;
+                    box-shadow: none;
+                    display: inline-block;
+                    margin-left:45px;
+                    box-sizing: border-box;
+                    }
+                    .details.detail-footer{
+                    margin-bottom:0;
+                    }
+                    .wdg-offer-selectlist{
+                    margin-left:0;
+                    width:100%;
+                    margin-bottom: 10px;
+                    }
+                    .wdg-offer-multiSelect{
+                    width: 100%;
+                    border-radius: 3px;
+                    margin-bottom: 10px;
+                    }
+                    .wdg-offer-email,.wdg-offer-number,.wdg-offer-textarea,.wdg-offer-inputField,.wdg-offer-Date{
+                    width: 100%;
+                    padding: 6px;
+                    border-radius: 3px;
+                    border: 1px solid #adadad;
+                    margin-bottom: 10px;
+                    }
+                    .wdg-offer-options{
+                    margin-left: 10px;
+                    vertical-align: top;
+                    }
+                    
+                </style>
+                
+                <style type="text/css">
+                    
+                    #gallery_01 img{
+                    display: inline-block;
+                    border: 1px solid #ccc;
+                    width: 102px;
+                    height:102px;
+                    margin-top:10px;
+                    }
+                    .active img{border:2px solid #ccc !important;}
+                    
+                </style>
+                <style type="text/css">
+                    span.stars, span.stars span {
+                    display: block;
+                    background:url('{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/stars.png')}') 0 -16px repeat-x;
+                    
+                    width: 80px;
+                    height: 16px;
+                    }
+                    
+                    span.stars span {
+                    background-position: 0 0;
+                    }
+                    .quickzoom{
+                    height:40px;
+                    width:126px;
+                    border-radius:3px;
+                    background-color:#0087C1;
+                    color:#fff;
+                    padding-top:10px; 
+                    cursor:pointer;
+                    }  
+                    .addreview{
+                    padding:11px;
+                    border-radius:3px;
+                    background-color:#0087C1;
+                    color:#fff!important;
+                    cursor:pointer;
+                    text-decoration:none!important;
+                    margin-bottom:20px;
+                    }
+                    .pop_header{
+                    height: 34px;
+                    margin: 0px;
+                    background: #0087C1;
+                    color: #fff;
+                    padding: 7px;
+                    border-top-left-radius: 6px;
+                    border-top-right-radius: 6px;
+                    }
+                    .pop_header_retail{
+                    text-align: center;
+                    height: 34px;
+                    margin: 0px;
+                    color: #848484;
+                    padding: 7px;
+                    border-top-left-radius: 6px;
+                    border-top-right-radius: 6px;
+                    font-weight: 900;
+                    font-size: 20px;
+                    }
+                    .productQview.offer .productQview-wrap .productQview-details {
+                    height: 479px;
+                    overflow: auto;
+                    }
+                </style>
+                <style>
+                    
+                    .couponform_table{
+                    width:100%;
+                    box-sizing:border-box;
+                    }
+                    .couponform_table .textlabel{
+                    padding:15px;
+                    width:21%;
+                    vertical-align: baseline
+                    }
+                    .couponform_table .field{
+                    padding:10px;
+                    text-align:left;
+                    width:60%;
+                    }
+                    .couponform_table .field *{
+                    clear:left;
+                    }  
+                    .couponform_table .edit-field-ip{
+                    
+                    padding: 6px;
+                    border-radius: 5px;
+                    font-size: 14px;
+                    border: 1px solid #adadad;
+                    outline: none;
+                    box-shadow: none;
+                    display:inline-block;
+                    width:100%;
+                    box-sizing:border-box;
+                    }
+                    textarea.edit-field-ip{
+                    height:300px!important;
+                    }
+                    .couponform_table a.auto-create{
+                    margin-left:10px;
+                    font-size:14px;
+                    color:#45BD86;
+                    display:inline-block;
+                    margin-top:3px;
+                    }
+                    .scrollable-modal{
+                    height:500px;
+                    overflow-y:auto;
+                    overflow-x:hidden;
+                    }
+                    input[type="date"]:active, input[type="date"]:focus, .couponform_table .edit-field-ip:focus, .couponform_table .edit-field-select:active, .couponform_table .edit-field-select:focus, .couponform_table .edit-field-ip:active,.edit-field-position>span>select:active,.edit-field-position>span>select:focus{
+                    border-color: #34becd;
+                    }
+                    .empty_msg{
+                    background-color: #54698D;
+                    width: 70%;
+                    padding: 10px;
+                    margin: 40px auto;
+                    text-align: center;
+                    border-radius: 5px;
+                    color:#fff;
+                    }
+                    .empty_msg a{
+                    color:#fff;ratingval
+                    }
+                    textarea.edit-field-ip {
+                    height: 130px!important;
+                    resize: none;
+                    }
+                    .addbtn{
+                    margin-bottom:20px;
+                    
+                    }
+                    .em_authorname{
+                    margin-top:6px;
+                    font-weight:bold;
+                    text-transform: capitalize;
+                    
+                    }
+                    .em_authorname span{
+                    margin-right:10px;
+                    }
+                    .addcart{
+                    border-radius: 5px;
+                    text-align: center;
+                    cursor: pointer;
+                    display: inline-block;
+                    text-decoration: none;
+                    border: 1px solid #008AB6;
+                    vertical-align: top;
+                    margin-right: 0;
+                    margin-left: 12px;
+                    }
+                    .addcart::before{
+                    content: "";
+                    display: inline-block;
+                    background: url('{!URLFOR($Resource.wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -238px -69px;
+                    background-repeat: no-repeat;
+                    width: 38px;
+                    height: 38px;
+                    vertical-align: middle;
+                    border-radius: 3px;
+                    }
+                    .addcart:hover::before{
+                    background-position: -278px -69px;
+                    } 
+                    .addpackagecart{
+                    border-radius: 5px;
+                    text-align: center;
+                    cursor: pointer;
+                    display: inline-block;
+                    text-decoration: none;
+                    border: 1px solid #005AF7;
+                    vertical-align: top;
+                    margin-left: 12px;
+                    }
+                    .addpackagecart::before{
+                    content: "";
+                    display: inline-block;
+                    background: url('{!URLFOR($Resource.wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -238px -109px;
+                    background-repeat: no-repeat;
+                    width: 38px;
+                    height: 38px;
+                    vertical-align: middle;
+                    border-radius: 3px;
+                    margin-top: unset;
+                    }
+                    .addpackagecart:hover::before{
+                    background-position: -278px -109px;
+                    }
+                    .retailer{
+                    border-radius: 5px;
+                    text-align: center;
+                    cursor: pointer;
+                    display: inline-block;
+                    text-decoration: none;
+                    border: 1px solid #00B570;
+                    vertical-align: top;
+                    margin-left: 12px;
+                    }
+                    .retailer::before{
+                    content: "";
+                    display: inline-block;
+                    background: url('{!URLFOR($Resource.wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -318px -109px;
+                    background-repeat: no-repeat;
+                    width: 38px;
+                    height: 38px;
+                    vertical-align: middle;
+                    border-radius: 3px;
+                    margin-top: unset;
+                    }
+                    .retailer:hover::before{
+                    background-position: -358px -109px;
+                    }
+                    .addrequestQuote{
+                    border-radius: 5px;
+                    text-align: center;
+                    cursor: pointer;
+                    display: inline-block;
+                    text-decoration: none;
+                    border: 1px solid #FFB23A;
+                    vertical-align: top;
+                    margin-left: 12px;
+                    }
+                    .addrequestQuote::before{
+                    content: "";
+                    display: inline-block;
+                    background: url('{!URLFOR($Resource.wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -318px -69px;
+                    background-repeat: no-repeat;
+                    width: 38px;
+                    height: 38px;
+                    vertical-align: middle;
+                    border-radius: 3px;
+                    margin-top: unset;
+                    }
+                    .addrequestQuote:hover::before{
+                    background-position: -357px -69px;
+                    }
+                    .addwishlist{
+                    display:inline-block;
+                    width:40px;
+                    height:40px;
+                    background: transparent url('{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}') no-repeat -81px -69px;    
+                    border-radius:3px;
+                    border:1px solid #999999;     
+                    }
+                    
+                    .addwishlist:hover{
+                    background-position: -121px -69px;    
+                    }
+                    .prodQuantity{
+                    padding: 0px;
+                    display: inline-block;
+                    vertical-align: top;
+                    margin-right: 6px;
+                    }
+                    .em_starrate{
+                    margin-bottom:10px;
+                    }
+                    .em_productfeatures{
+                    margin-bottom:20px;
+                    }
+                    .em_feturename{
+                    margin-left:-15px;
+                    }
+                    .qvPOP .qvcomp-wrap {
+                    padding: 15px;
+                    height: 560px;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                    width: 800px;
+                    }
+                    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+                    color: #fff;
+                    cursor: default;
+                    border: 1px solid #0086C0;
+                    border-bottom-color: transparent;
+                    background: #0086C0;
+                    }
+                    .nav-tabs>li>a{
+                    color: #0086C0;
+                    }
+                    .tab-content{
+                    min-height:150px;
+                    }
+                </style>
+                <style>
+                    @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+                    fieldset, label { margin: 0; padding: 0; }
+                    
+                    h1 { font-size: 1.5em; margin: 10px; }
+                    
+                    /****** Style Star Rating Widget *****/
+                    
+                    .rating { 
+                    border: none;
+                    float: left;
+                    }
+                    
+                    .rating > input { display: none; } 
+                    .rating > label:before { 
+                    margin: 5px;
+                    font-size: 1.25em;
+                    font-family: FontAwesome;
+                    display: inline-block;
+                    content: "\f005";
+                    }
+                    
+                    .rating > .half:before { 
+                    content: "\f089";
+                    position: absolute;
+                    }
+                    
+                    .rating > label { 
+                    color: #ddd; 
+                    float: right; 
+                    }
+                    .productQview .productQview-wrap .productQview-header {
+                    margin-bottom: 0;
+                    background: #0087C1;
+                    color: #fff;
+                    font-weight:600;
+                    }
+                    .productQview-close {
+                    background: #FFFFFF;
+                    color: #0087C1;
+                    height: 22px;
+                    width: 22px;
+                    text-align: center;
+                    vertical-align: middle;
+                    border-radius: 50%;
+                    }
+                    /***** CSS Magic to Highlight Stars on Hover *****/
+                    
+                    .rating > input:checked ~ label, /* show gold star when clicked */
+                    .rating:not(:checked) > label:hover, /* hover current star */
+                    .rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+                    
+                    .rating > input:checked + label:hover, /* hover current star when changing rating */
+                    .rating > input:checked ~ label:hover,
+                    .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+                    .rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
+                    
+                    .wdg-breadcrumbs{
+                    padding-bottom: 20px;
+                    padding-left: 15px;
+                    }
+                    .wdg-retailer--img{
+                    width: 220px;
+                    border: 1px solid #999;
+                    margin: 15% 0;
+                    height: 150px;
+                    border-radius: 5px;
+                    padding:10px;
+                    }
+                    .wdg-retailer--img:hover {
+                    border: 1px solid black;
+                    }
+                    .ecm_popup .margin-top-20 span{
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    color: #898989;
+                    font-size: 20px;
+                    padding-top:15px;
+                    }
+                    .ecm_review_popup .margin-top-20 span{
+                    width:auto !important;
+                    padding-top:0px !important;
+                    }
+                    .open-retailer-btn {
+                    float: right;
+                    margin-right: 20px;
+                    }
+                    .open-retailer-btn::before{
+                    background-image:none !important;
+                    width:0;
+                    height:0;
+                    margin-right:0;
+                    }
+                    .retailer-list--class{
+                    position: fixed;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 111111;
+                    top: 0;
+                    left: 0;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    }
+                    .open-class{
+                    /*display:block !important;*/
+                    }
+                    .retailer-content{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    }
+                    .retailer-link{
+                    margin:auto;
+                    }                    
+                    .nav-mobile{
+                    display: none;
+                    }
+                    .nav-m-tab{
+                    color: #fff;
+                    background-color: #0089BC;
+                    padding: 5px 10px;
+                    font-weight: 700;
+                    margin: 0 -15px;
+                    position: relative;
+                    margin-bottom: 10px;                        
+                    }
+                    .carret {
+                    position: absolute;
+                    top: 10px;
+                    right: 0;
+                    width: 0;
+                    transform: rotate(90deg);
+                    transition: transform 0.2s ease-in;
+                    -webkit-transform: rotate(90deg);
+                    -webkit-transition: transform 0.2s ease-in;
+                    -moz-transform: rotate(90deg);
+                    -moz-transition: transform 0.2s ease-in;
+                    -ms-transform: rotate(90deg);
+                    -ms-transition: transform 0.2s ease-in;
+                    margin-right: 10px;
+                    vertical-align: middle;
+                    height: 0;
+                    border-top: 6px solid transparent;
+                    border-bottom: 6px solid transparent;
+                    border-left: 6px solid #fff;
+                    border-right: 0;
+                    }
+                    .carret.down{
+                    -ms-transform: rotate(-90deg);
+                    -webkit-transform: rotate(-90deg);
+                    -moz-transform: rotate(-90deg);
+                    transform: rotate(-90deg);
+                    }
+                    .nav-m-content{
+                    display: none;
+                    margin: 0 15px;
+                    }
+                    .nav-m-content h3{
+                    margin-top:0;
+                    }
+                    .btnPanel{
+                    text-align: center;
+                    display: inline-block;                      
+                    }
+                    .pop_header  .close {
+                    background: #FFFFFF;
+                    color: #0087C1;
+                    height: 24px;
+                    width: 24px;
+                    text-align: center;
+                    vertical-align: middle;
+                    border-radius: 50%;
+                    font-size: initial;
+                    font-weight: initial;
+                    line-height: initial;
+                    opacity: 1;
+                    padding: 0;
+                    }
+                    
+                    .couponform_table  input.edit-field-ip.errorborder,.couponform_table  .edit-field-ip.errorborder{
+                        border-color:#C23934;
+                    }
+                    .couponform_table .err{
+                        color:#C23934;
+                    }
+                    @media screen and (max-width: 991px){
+                    .productImg{
+                    text-align: center;
+                    }
+                    .product-image{
+                    margin: 0 auto;
+                    height: unset;
+                    width: unset;
+                    }
+                    .zoomContainer{
+                    width: unset;
+                    }
+                    .nav-desktop{
+                    display:none;
+                    }
+                    .nav-mobile{
+                    display: block;
+                    }
+                    .ecm_popup{
+                    min-height: unset;
+                    min-width: unset;
+                    }
+                    .nav-m-tab{
+                    margin: 0;
+                    margin-bottom: 10px;
+                    }
+                    
+                    }
+                    @media screen and (max-width: 594px){
+                    .couponform_table tbody,.couponform_table tr,.couponform_table .textlabel,.couponform_table .field{
+                    display: block;
+                    width:100%
+                    }
+                    .couponform_table .textlabel{
+                    padding: 0 10px;
+                    }
+                    .couponform_table .field{
+                    padding-top: 0;
+                    }
+                    .couponform_table .field *::after{
+                    clear: both;
+                    }
+                    .ecm_review_popup{
+                    width: 85%;
+                    }
+                    .ecm_review_popup .margin-top-20 span{
+                    padding-right: 50%;
+                    }
+                    .couponform_table tr:first-child{
+                    padding-top:10px;
+                    }
+                    #gallery_01 img{
+                    width: 80px;
+                    height: 80px;
+                    }
+                    }
+                    @media screen and (max-width: 517px){
+                    .ecm_review_popup .margin-top-20 span{
+                    padding-right: 40%;
+                    }
+                    .ecm_popup_bg{
+                    padding-top: 30px;
+                    }
+                    }
+                    @media screen and (max-width: 430px){
+                    .ecm_review_popup .margin-top-20 span{
+                    padding-right: 20%;
+                    }
+                    .ecm_popup_bg{
+                    padding-top: 30px;
+                    }
+                    .prodQuantity{
+                    display: block;
+                    margin-bottom: 10px;
+                    text-align: center;
+                    }
+                    .btnPanel{
+                    width: 100%;
+                    }
+                    }
+                    @media screen and (max-width: 320px){
+                    .ecm_review_popup{
+                    width: 95%;
+                    }
+                    .ecm_review_popup .margin-top-20 span{
+                    padding-right: 15%;
+                    }
+                    .prodQuantity{
+                    display: block;
+                    margin-bottom: 10px;
+                    text-align: center;
+                    }
+                    .ecm_popup_bg{
+                    padding-top: 28px;
+                    }
+                    
+                    #gallery_01 img{
+                    width: 66px;
+                    height: 66px;
+                    }
+                    
+                    }
+                    
+                </style>
+                <apex:form id="theform">
+                    <!-------- popup quick ------->
+                    
+                    <div class="ecm_popup_bg">
+                        <div class="ecm_popup ecm_review_popup" id="img-pop">
+                            
+                            <div class="pop_header">
+                                <span>{!$Label.ProductDetail_Write_a_Review}</span>
+                                <span class="ecm_close close">×</span>
+                            </div>
+                            <div class="margin-top-20">
+                                <table class="couponform_table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="textlabel"><label class="edit-label">{!$Label.ProductDetail_Your_Rating}&nbsp;<sup style="color: #ff0000; Display:inline;">*</sup></label></td>
+                                            <td class="field">
+                                                <span class="rating" >
+                                                    <input type="radio" id="star5" name="rating" value="5" class="ac" /><label class = "full" for="star5" title="Awesome - 5 stars"></label>
+                                                    <input type="radio" id="star4half" name="rating" value="4.5"  class="ac" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
+                                                    <input type="radio" id="star4" name="rating" value="4" class="ac" /><label class = "full" for="star4" title="Pretty good - 4 stars"></label>
+                                                    <input type="radio" id="star3half" name="rating" value="3.5"  class="ac" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label>
+                                                    <input type="radio" id="star3" name="rating" value="3" class="ac" /><label class = "full" for="star3" title="Meh - 3 stars"></label>
+                                                    <input type="radio" id="star2half" name="rating" value="2.5" class="ac" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
+                                                    <input type="radio" id="star2" name="rating" value="2" class="ac" /><label class = "full" for="star2" title="Kinda bad - 2 stars"></label>
+                                                    <input type="radio" id="star1half" name="rating" value="1.5" class="ac" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>
+                                                    <input type="radio" id="star1" name="rating" value="1" class="ac" /><label class = "full" for="star1" title="Sucks big time - 1 star"></label>
+                                                    <input type="radio" id="starhalf" name="rating" value=".5" class="ac" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
+                                                </span>
+                                                <apex:inputhidden value="{!ratingval}" id="reviewvalue" />
+                                                <div class="err"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="textlabel"><label class="edit-label"> {!$Label.ProductDetail_Your_Name}&nbsp;<sup style="color: #ff0000; Display:inline;">*</sup></label></td>
+                                            <td class="field">
+                                                <div class="requiredInput">
+                                                    <div class="requiredBlock"></div>                                                
+                                                    <apex:inputtext styleclass="edit-field-ip" value="{!author}" id="ip_Discount" required="true"/>
+                                                    <div class="err"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!--
+                                        <tr>
+                                        <td class="textlabel"><label class="edit-label"> {!$Label.ProductDetail_Your_Email}</label></td>
+                                        <td class="field">
+                                        <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        
+                                        <apex:inputtext styleclass="edit-field-ip" value="{!youremail}" id="yo_em" required="false"/>
+                                        </div>
+                                        </td>
+                                        </tr>-->
+                                        
+                                        <tr>
+                                            <td class="textlabel"><label class="edit-label">{!$Label.ProductDetail_Your_Message}&nbsp;<sup style="color: #ff0000; Display:inline;">*</sup></label></td>
+                                            <td class="field">
+                                                <div class="requiredInput">
+                                                    <div class="requiredBlock"></div>
+                                                    <apex:inputTextarea styleclass="edit-field-ip" value="{!message}" id="ip_Days" required="true"/>
+                                                    <div class="err"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="textlabel"></td>
+                                            <td class="field">
+                                                <div class="addbtn">
+                                                    <apex:outputLink id="addreviewbtn"   styleclass="addreview" >{!$Label.wk_wedge__productdetail_add_review_button}</apex:outputlink>
+                                                    <apex:actionFunction name="addreview" action="{!createreview}" status="docSearch" rerender="theform,notice,prodpanel" oncomplete="closenotifications()"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <apex:outputPanel layout="block" style="padding: 10px 15px">
+                                    <sup class="req" style="color: #ff0000; Display:inline;font-weight:700">*</sup> {!$Label.wk_wedge__these_information_are_required}
+                                </apex:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </apex:form>
+                
+                <div id="retailerLinks" class="retailer-list--class">
+                    <!-------- popup quick ------->
+                    
+                    <div class="ecm_popup_bg open-class"></div>
+                    <div class="ecm_popup open-class" id="retailer-pop">
+                        
+                        <div class="pop_header">
+                            <span>{!$Label.ProductDetail_Purchase_Channel}</span>
+                            <span class="ecm_close ecm_close_retailer close">×</span>
+                        </div>
+                        <div class="margin-top-20 retailer-content">
+                            <span>{!$Label.Retailer_Box_Heading}</span>
+                            <span style="font-size: 18px;">{!$Label.ProductDetail_Choose_your_Purchase_Channel}</span>
+                            <apex:repeat value="{!Retailers}" var="rets">
+                                <a href="{!rets.Product_URL__c}" target="{!rets.target__c}" class="retailer-link">
+                                    <img src = "/servlet/servlet.FileDownload?file={!rets.Retailer__r.Image_ID__c}" alt="{!rets.Retailer__r.name}" class="wdg-retailer--img"/>
+                                </a>
+                            </apex:repeat>
+                            <apex:outputPanel rendered="{!Retailers.size == 0}">
+                                <script>
+                                    window.retailers = false;
+                                </script>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </div>
+                
+                <apex:form >
+                    <div class="prod-detail-panel" id="prodpanel">
+                        <div class="row">
+                            <apex:outputPanel layout="block" rendered="{!if(($CurrentPage.parameters.productid != null),true,false)}" styleClass="wdg-breadcrumbs">
+                                <apex:outputLink value="{!$Site.baseurl}"><i class="wdg-home--logo"></i></apex:outputLink>
+                                <!--<apex:outputText >&nbsp;/&nbsp;</apex:outputText>-->
+                                <apex:repeat value="{!breadcrumbs}" var="bread">
+                                    <apex:outputText >&nbsp;/&nbsp;</apex:outputText>
+                                    <apex:outputLink value="{!urlfor($Page.wk_wedge__CategoryView,null, ['c_id'=bread.id])}">
+                                        <apex:outputText value="{!bread.name}"/>
+                                    </apex:outputLink>
+                                </apex:repeat>
+                                <apex:outputText >&nbsp;/&nbsp;</apex:outputText>
+                                <!--<apex:outputText value="{!proddata.name}"/>-->
+                                <apex:outputText value="{!prodmetaname}"/>
+                            </apex:outputPanel> 
+                            <div class="col-md-6 col-sm-12 productImg">
+                                <img id="img1" src="/servlet/servlet.FileDownload?file={!proddata.wk_wedge__Image_Id__c}" data-zoom-image="/servlet/servlet.FileDownload?file={!proddata.wk_wedge__Image_Id__c}" class="product-image img img-responsive"/>
+                                <div id="gallery_01" class="clearfix">
+                                    <a href="#"  data-image="/servlet/servlet.FileDownload?file={!proddata.wk_wedge__Image_Id__c}" class="active"  data-zoom-image="/servlet/servlet.FileDownload?file={!proddata.wk_wedge__Image_Id__c}">  
+                                        <img  src="/servlet/servlet.FileDownload?file={!proddata.wk_wedge__Image_Id__c}" class="img img-responsive" />
+                                    </a>
+                                    <apex:repeat value="{!proddata.attachments}" var="att">
+                                        <a   href="#"  data-image="/servlet/servlet.FileDownload?file={!att.id}" data-zoom-image="/servlet/servlet.FileDownload?file={!att.id}">
+                                            <img src="/servlet/servlet.FileDownload?file={!att.id}" Class="em_multipleattach img img-responsive" />
+                                        </a>
+                                    </apex:repeat>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <apex:outputpanel layout="block" styleclass="em_productname row">
+                                    <apex:outputText value="{!prodmetaname}"></apex:outputText>
+                                </apex:outputpanel>
+                                <apex:outputpanel layout="block" styleclass="row em_row2">
+                                    <apex:outputpanel layout="block" styleclass="col-md-6 col-sm-6 col-xs-6 em_sku">
+                                        <apex:outputtext >{!$Label.wk_wedge__productdetail_sku} : </apex:outputtext>&nbsp;
+                                        <apex:outputText value="{!proddata.ProductCode}"></apex:outputText>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel layout="block" styleclass="col-md-6 col-sm-6 col-xs-6">
+                                        <apex:outputText value="{!Floor(proddata.Reviews__r.Size)}"/> &nbsp;
+                                        <apex:outputText value="Reviews"/>
+                                        
+                                    </apex:outputpanel>
+                                    
+                                </apex:outputpanel>
+                                <apex:outputpanel layout="block" styleclass="em_productprice row">
+                                    {!currsymbol}&nbsp;
+                                    <apex:outputText id="prodListPrice" value="{0,number,###,##0.00}">
+                                        <apex:param value="{!proddata.wk_wedge__List_price__c}"/>
+                                    </apex:outputText>
+                                </apex:outputpanel> 
+                                
+                                <apex:outputPanel layout="block" id="ProductOptions" styleClass="em_productfeatures">
+                                    <apex:repeat value="{!prodOptList}" var="key">                        
+                                        <apex:outputpanel rendered="{!key.wk_wedge__Option_Type__c=='M'  && key.Product_Option_Variants__r.size>0}">
+                                            <ul style="list-style-type : none;">
+                                                <li>
+                                                    <div class="em_feturename">
+                                                        <b><apex:outputText value="{!key.Name} :"></apex:outputText></b> 
+                                                    </div> 
+                                                    <ul style="list-style-type : none;">
+                                                        <li>
+                                                            <input type="radio" name="variant-{!key.Id}" class="variants" value="--None--"/>&nbsp;None
+                                                        </li>                                   
+                                                        <apex:repeat value="{!key.Product_Option_Variants__r}" var="sub" rendered="{!key.wk_wedge__Option_Type__c=='M'}">
+                                                            <li>
+                                                                <input type="radio" name="variant-{!key.Id}" class="variants" var-type="{!sub.Type__c}" opt-name="{!key.name}" opt-value="{!sub.name}"  var-mod="{!sub.wk_wedge__Modifier__c}" value="{!sub.Id}"/>
+                                                                {!sub.name} &#x00028; {!If(sub.Modifier__c >=0 , '+','-')}   <apex:outputPanel rendered="{!sub.wk_wedge__Type__c=='Absolute'}">{!Currsymbol}</apex:outputPanel>
+                                                                <apex:outputPanel styleclass="modifier" >
+                                                                    <apex:outputtext value="{0,number,###,###.00}">
+                                                                        <apex:param value="{!sub.wk_wedge__Modifier__c}"/>
+                                                                    </apex:outputtext>
+                                                                </apex:outputPanel>  
+                                                                <apex:outputPanel rendered="{!sub.wk_wedge__Type__c=='Percent'}">%</apex:outputPanel>&#x00029;
+                                                            </li>
+                                                        </apex:repeat> 
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </apex:outputpanel>
+                                        <apex:outputpanel rendered="{!key.wk_wedge__Option_Type__c=='T' && key.Product_Option_Variants__r.size>0}">
+                                            <ul style="list-style-type : none;">
+                                                <li>
+                                                    <div class="em_feturename">
+                                                        <b><apex:outputText value="{!key.Name} :"></apex:outputText></b> 
+                                                    </div>                               
+                                                    <select class="variants selectType " name="variant-{!key.Id}" >
+                                                        <option value="--None--">--None--</option>
+                                                        <apex:repeat value="{!key.Product_Option_Variants__r}" var="sub" >                                
+                                                            <option  value="{!sub.Id}" var-type="{!sub.Type__c}"  var-mod="{!sub.wk_wedge__Modifier__c}" opt-name="{!key.name}" opt-value="{!sub.name}">{!sub.name} &#x00028; {!If(sub.Modifier__c >=0 , '+','-')} <apex:outputPanel rendered="{!sub.wk_wedge__Type__c=='Absolute'}">{!str.wk_wedge__Currecy_Symbol__c}</apex:outputPanel><apex:outputPanel rendered="{!sub.wk_wedge__Type__c=='Percent'}">%</apex:outputPanel> <apex:outputPanel styleclass="modifier"><apex:outputtext value="{0,number,###,##0.00}"><apex:param value="{!sub.wk_wedge__Modifier__c}"/></apex:outputtext></apex:outputPanel> &#x00029;</option>                                
+                                                        </apex:repeat>
+                                                    </select>                               
+                                                </li>
+                                            </ul>
+                                        </apex:outputpanel>
+                                    </apex:repeat>
+                                    <apex:inputhidden id="cost" value="{!cost}"/>
+                                    <apex:inputhidden id="variantDescription" value="{!variantDescription}"/>
+                                </apex:outputPanel>
+                                <apex:outputpanel layout="block" styleclass="wdg-page--block" id="wdg-bottom--panels" rendered="{!PackageProducts.size>0}">                   
+                                    <apex:outputpanel styleclass="row panel-product--row" layout="block">
+                                        <apex:repeat value="{!PackageProducts}" var="prod">
+                                            <apex:outputpanel styleclass="col-md-4 col-sm-6 col-xs-12 panel-product--wrapper" layout="block">
+                                                <apex:outputpanel layout="block" styleclass="product-details--container">
+                                                    <apex:outputlink styleclass="product-image--wrapper" value="/products/{!prod.Product__r.wk_wedge__alias__c}" > <!-- {!URLFOR($Page.productdetail,null, ['productid'=prod.id])}-->
+                                                        <apex:image url="/servlet/servlet.FileDownload?file={!prod.Product__r.wk_wedge__Image_Id__c}" styleClass="product-image"></apex:image>
+                                                    </apex:outputlink>
+                                                    <apex:outputpanel layout="block" styleclass="product-details">
+                                                        <apex:outputlink value="/products/{!prod.Product__r.wk_wedge__alias__c}" styleclass="productlabel">{!prod.Product__r.name} </apex:outputlink>
+                                                        <apex:outputPanel rendered="{!prod.wk_wedge__Product_Option_Description__c!=null && prod.wk_wedge__Product_Option_Description__c!='Any Combination'}">({!prod.wk_wedge__Product_Option_Description__c})</apex:outputPanel>                                    
+                                                        <!--<apex:outputPanel rendered="{!prod.Product_Option_Description__c!=null && prod.Product_Option_Description__c=='Any Combination'}"><apex:commandlink action="{!ViewSpecifyOptionPopup}" style="margin:10px auto;" id="specifyOption" styleclass="wdg-btn green medium" value="Specify Options" rerender="SpecifyOptionView"/></apex:outputPanel>-->
+                                                        <apex:outputpanel styleclass="product-price">{!currsymbol}&nbsp;
+                                                            <apex:outputtext value="{0,number,###,###.00}">
+                                                                <apex:param value="{!prod.wk_wedge__Price_After_Discount__c}"/>
+                                                            </apex:outputtext>
+                                                        </apex:outputpanel>
+                                                        <apex:outputpanel styleclass="product-wishpanel">
+                                                            <!--<apex:commandLink styleclass="quickzoom" value="" action="{!qViewopen}" status="docSearch" rerender="cart,cart,QuickproductView">
+<apex:param name="prodid" value="{!prod.Product__c}" assignto="{!prodid}"/> 
+</apex:commandLink>  
+<apex:commandLink styleclass="addwishlist" value="" action="{!addtowishlist}" rendered="{!userregenbale}" status="docSearch" rerender="cart,QuickwishlistView,wishcount" oncomplete="closenotifications()">
+<apex:param name="prodid" value="{!prod.Product__r}" assignto="{!prodid}"/> 
+<apex:param name="prodName" value="{!prod.Product__r.name}" assignto="{!prodName}"/>  
+<apex:param name="prodimg" value="{!prod.Product__r.Image_Id__c}" assignto="{!prodimg}"/>  
+</apex:commandLink>-->  
+                                                        </apex:outputpanel>
+                                                    </apex:outputpanel>
+                                                </apex:outputpanel> 
+                                            </apex:outputpanel>
+                                        </apex:repeat>
+                                    </apex:outputpanel>
+                                </apex:outputpanel>
+                                <apex:outputpanel layout="block" styleclass="row em_productcolor" id="wishlistbuttons">
+                                    <apex:outputPanel layout="block"  style="    margin: 12px;margin-top: 0;">{!$Label.wk_wedge__site_template_product_popup_product_availability} : {!IF(proddata.wk_wedge__Stock_Availability__c,$Label.wk_wedge__available, $Label.wk_wedge__out_of_stock)}</apex:outputPanel>
+                                    <apex:outputPanel layout="block" styleclass="prodQuantity" rendered="{!AND(NOT(proddata.wk_wedge__Sold_By_Retailer__c),NOT(proddata.wk_wedge__Amount__c==0))}">
+                                        <div>
+                                            <apex:inputhidden value="{!Pquant}" id="prodQuantity"/>
+                                            
+                                            <span>{!$Label.ProductDetail_Quantity} :</span>
+                                            <span class="quant-group">
+                                                <input type ="text" class="quant-box" value="1" max="{!proddata.amount__C}" id="quantval" disabled="true"/>
+                                                <a href="javascript:void(0)" class="quant-controller">
+                                                    <i id="add">&#43;</i>
+                                                    <i id="reduce">&#x2212;</i>
+                                                </a>
+                                            </span> 
+                                        </div>
+                                    </apex:outputPanel>                  
+                                    <apex:outputpanel layout="block" styleClass="btnPanel">
+                                        <apex:outputpanel rendered="{!AND(!proddata.wk_wedge__Enable_Package_Builder__c,not(proddata.wk_wedge__Sold_By_Retailer__c),NOT(proddata.wk_wedge__Amount__c==0))}" >
+                                            <apex:commandlink value="" action="{!addtocart}" title="{!$Label.wk_wedge__productdetail_add_to_cart_button}"  status="docSearch" rerender="cartItems,QuickcartView,rerenderNav,notice" onclick="javascript:assignValues();" oncomplete="closenotifications()" styleclass="addcart">
+                                                <apex:param name="prodid" value="{!proddata.id}" assignto="{!prodid}"/> 
+                                                <apex:param name="prodName" value="{!proddata.name}" assignto="{!prodName}"/> 
+                                                <apex:param name="prodimage" value="{!proddata.wk_wedge__Image_Id__c}" assignto="{!prodimage}"/>
+                                            </apex:commandlink>
+                                        </apex:outputpanel>
+                                        <apex:outputpanel rendered="{!AND(proddata.wk_wedge__Enable_Package_Builder__c,not(proddata.wk_wedge__Sold_By_Retailer__c))}">
+                                            <apex:commandlink value="" title="{!$Label.wk_wedge__productdetail_add_package_to_cart_button}" action="{!addpackagetocart}"  status="docSearch" rerender="cartItems,QuickcartView,notice" onclick="javascript:assignValues();" oncomplete="closenotifications()" styleclass="addpackagecart">
+                                                <apex:param name="prodid" value="{!proddata.id}" assignto="{!prodid}"/> 
+                                                <apex:param name="prodName" value="{!proddata.name}" assignto="{!prodName}"/> 
+                                                <apex:param name="prodimage" value="{!proddata.wk_wedge__Image_Id__c}" assignto="{!prodimage}"/>
+                                            </apex:commandlink>
+                                        </apex:outputpanel>
+                                        
+                                        <apex:outputpanel rendered="{!proddata.wk_wedge__Sold_By_Retailer__c}">
+                                            <apex:outputlink title="{!$Label.wk_wedge__retailers_label}" styleclass="retailer" value="javascript:void(0)" id="retailer-opn-btn" ></apex:outputlink>
+                                        </apex:outputpanel>
+                                        <apex:outputPanel rendered="{!str.wk_wedge__Request_Quote_key__c!=null && str.wk_wedge__Request_Quote_key__c!='' && str.wk_wedge__Enable_Request_Quote__c==true && proddata.wk_wedge__Sold_By_Retailer__c==false}" >
+                                            <apex:commandlink value="" title="{!$Label.wk_wedge__productdetail_request_quote}" action="{!ViewMakeAnOfferPopup}" styleClass="addrequestQuote" rerender="makeanofferview"/>
+                                        </apex:outputPanel>
+                                        <apex:outputpanel >
+                                            
+                                            <apex:commandLink styleclass="addwishlist" value="" action="{!addtowishlist}"  status="docSearch" title="{!$Label.wk_wedge__site_template_product_popup_add_to_wishlist_button}" rendered="{!AND(AND(userregenbale,NOT(proddata.wk_wedge__Sold_By_Retailer__c)),NOT(proddata.isActive))}" rerender="cart,QuickproductView,QuickwishlistView,wishcount,rerenderNav,notice,wishlistbuttons" oncomplete="closenotifications()">
+                                                <apex:param name="prodid" value="{!proddata.id}" assignto="{!prodid}"/> 
+                                                <apex:param name="prodName" value="{!proddata.name}" assignto="{!prodName}"/> 
+                                                <apex:param name="prodimage" value="{!proddata.wk_wedge__Image_Id__c}" assignto="{!prodimage}"/>
+                                            </apex:commandLink>
+                                            <apex:outputlink rendered="{!AND(AND(userregenbale,NOT(proddata.wk_wedge__Sold_By_Retailer__c)),proddata.isActive)}" value="javascript:void(0);" styleclass="addwishlistDisabled" title="{!$Label.wk_wedge__product_already_added_in_wishlist}"/>                                            
+                                        </apex:outputpanel>
+                                    </apex:outputpanel>
+                                </apex:outputpanel>            
+                            </div>
+                            
+                        </div>
+                        <!--
+                        <div class="row">
+                        <div class="col-md-12">
+                        <h3>Product Detail</h3> 
+                        </div>
+                        <div class="col-md-12">
+                        <div class="row em_line"></div>
+                        </div>
+                        <div class="col-md-12">
+                        <apex:outputText value="{!proddata.wk_wedge__product_description__c}" escape="false" style="word-wrap:break-word;"></apex:outputText>
+                        </div>
+                        </div>-->
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <b><h3>{!$Label.Product_Details}</h3></b>
+                                <hr/>
+                            </div>
+                            <div class="col-md-12 nav-desktop">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#descrip">{!$Label.ProductDetail_Description}</a></li>
+                                    <li><a data-toggle="tab" href="#fea" id="featuretab">{!$Label.ProductDetail_Features}</a></li>
+                                    <li><a data-toggle="tab" href="#rate">{!$Label.ProductDetail_Rating_Reviews}</a></li>
+                                </ul>
+                                
+                                <div class="tab-content">
+                                    <div id="descrip" class="tab-pane fade in active">
+                                        <h3>{!$Label.ProductDetail_Description}</h3>
+                                        <apex:outputText value="{!proddata.wk_wedge__product_description__c}" escape="false" style="word-wrap:break-word;"></apex:outputText>
+                                    </div>
+                                    <div id="fea" class="tab-pane fade">
+                                        <apex:outputPanel layout="block" id="ProductFeatures" styleClass="em_productfeatures">
+                                            <apex:repeat value="{!vaccConMap}" var="ma" >
+                                                <div class="col-sm-4 em_feturename"><b><apex:outputText value="{!ma} :" rendered="{!listSizeMap[ma]>0}"></apex:outputText></b> </div> 
+                                                <div class="col-sm-8 featureVariants">                           
+                                                    <apex:repeat value="{!vaccConMap[ma]}" var="ca" >                               
+                                                        <span>
+                                                            <apex:outputText value="{!ca + ','}" ></apex:outputText>
+                                                        </span>
+                                                    </apex:repeat>
+                                                </div>
+                                            </apex:repeat>  
+                                        </apex:outputPanel>
+                                    </div>
+                                    <div id="rate" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h5>{!$Label.wk_wedge__reviews}:&nbsp;<apex:outputText value="{!Floor(proddata.Reviews__r.Size)}"/> </h5>                       
+                                            </div>                      
+                                        </div>
+                                        
+                                        <apex:repeat value="{!proddata.reviews__r}" var="revi">                                            
+                                            <div class="col-md-12">
+                                                <apex:outputpanel layout="block" styleclass=" em_starrate">
+                                                    <span class="stars">{!revi.wk_wedge__Rating__c}</span>
+                                                </apex:outputpanel>
+                                                <apex:outputpanel layout="block" styleclass="">
+                                                    <apex:outputText value="{!revi.wk_wedge__Message__c}" style="word-wrap:break-word;"></apex:outputText>
+                                                </apex:outputpanel>
+                                                <apex:outputpanel layout="block" styleclass=" em_authorname">
+                                                    <apex:outputText value="{!revi.wk_wedge__Author__c}" styleClass=""></apex:outputText>
+                                                    <apex:outputText value="{0,date,MM/dd/yy}" styleClass="">
+                                                        <apex:param value="{!revi.CreatedDate}" />
+                                                    </apex:outputText>
+                                                </apex:outputpanel>
+                                            </div> 
+                                            <div class="col-md-12">
+                                                <div class="em_line"></div>          
+                                            </div>
+                                            
+                                        </apex:repeat>
+                                        
+                                        <div class="col-md-12">
+                                            <b><h3>{!$Label.ProductDetail_Write_a_Review}</h3></b> 
+                                            <p>{!$Label.ProductDetail_We_feel_glad_If_you_share_your_thoughts_with_our_customers}</p>
+                                            <div Class="quickzoom text-center">
+                                                {!$Label.ProductDetail_Write_a_Review}
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="nav-mobile">
+                                <div class="nav-m-tab">
+                                    {!$Label.wk_wedge__productdetail_description}
+                                    <span class="carret"></span>    
+                                </div>
+                                <div class="nav-m-content">
+                                    <h3>{!$Label.wk_wedge__productdetail_description}</h3>
+                                    <apex:outputText value="{!proddata.wk_wedge__product_description__c}" escape="false" style="word-wrap:break-word;"></apex:outputText>
+                                </div>
+                                <div class="nav-m-tab">
+                                    {!$Label.ProductDetail_Features}
+                                    <span class="carret"></span>
+                                </div>                                
+                                <div class="nav-m-content">
+                                    <apex:outputPanel layout="block"  styleClass="em_productfeatures">
+                                        <apex:repeat value="{!vaccConMap}" var="ma" >
+                                            <div class="col-sm-4 em_feturename"><b><apex:outputText value="{!ma} :" rendered="{!listSizeMap[ma]>0}"></apex:outputText></b> </div> 
+                                            <div class="col-sm-8 featureVariants">                           
+                                                <apex:repeat value="{!vaccConMap[ma]}" var="ca" >                               
+                                                    <span>
+                                                        <apex:outputText value="{!ca + ','}" ></apex:outputText>
+                                                    </span>
+                                                </apex:repeat>
+                                            </div>
+                                        </apex:repeat>  
+                                    </apex:outputPanel>
+                                </div>
+                                <div class="nav-m-tab review">
+                                    {!$Label.ProductDetail_Rating_Reviews}
+                                    <span class="carret"></span>
+                                </div>
+                                <div class="nav-m-content">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5>There are &nbsp; <apex:outputText value="{!Floor(proddata.Reviews__r.Size)}"/> reviews for this product.</h5>                       
+                                        </div>                      
+                                    </div>                                        
+                                    <apex:repeat value="{!proddata.reviews__r}" var="revi">                                            
+                                        <div class="col-md-12">
+                                            <apex:outputpanel layout="block" styleclass=" em_starrate">
+                                                <span class="stars">{!revi.wk_wedge__Rating__c}</span>
+                                            </apex:outputpanel>
+                                            <apex:outputpanel layout="block" styleclass="">
+                                                <apex:outputText value="{!revi.wk_wedge__Message__c}" style="word-wrap:break-word;"></apex:outputText>
+                                            </apex:outputpanel>
+                                            <apex:outputpanel layout="block" styleclass=" em_authorname">
+                                                <apex:outputText value="{!revi.wk_wedge__Author__c}" styleClass=""></apex:outputText>
+                                                <apex:outputText value="{0,date,MM/dd/yy}" styleClass="">
+                                                    <apex:param value="{!revi.CreatedDate}" />
+                                                </apex:outputText>
+                                            </apex:outputpanel>
+                                        </div> 
+                                        <div class="col-md-12">
+                                            <div class="em_line"></div>          
+                                        </div>                                            
+                                    </apex:repeat>                                      
+                                    <div class="col-md-12" style="padding: 0;">
+                                        <b><h3>{!$Label.wk_wedge__productdetail_write_a_review}</h3></b> 
+                                        <p>{!$Label.wk_wedge__productdetail_we_feel_glad_if_you_share_your_thoughts_with_our_customers}</p>
+                                        <div Class="quickzoom text-center">
+                                            {!$Label.wk_wedge__productdetail_write_a_review}
+                                        </div>                                            
+                                    </div>
+                                </div>                              
+                            </div>
+                        </div>                     
+                        
+                    </div>
+                </apex:form>
+                <apex:form >
+                    <!--<apex:actionFunction name="createquote" action="{!createquote}" rerender="makeanofferview,notice,temp" status="docSearch" oncomplete="closenotifications()"/>-->
+                    <apex:inputhidden value="{!quoteInfo}" id="quoteInfo"/>
+                    <apex:inputhidden value="{!productOpt}" id="productOpt"/>
+                </apex:form>
+                <script>
+                $('.modifier').each(function(){
+                    var regex = '-';
+                    var str = $(this).html();
+                    if(str.includes(regex)){
+                        str=str.replace(regex,'');
+                        console.log(str);
+                    }
+                    $(this).html(str);
+                });
+                 $(document).on("blur","[Id$='ip_Discount'],[Id$='ip_Days']",function(){                        
+                        
+                        if($(this).val()==null || $(this).val()== ''){
+                            wk(this).addClass("errorborder");
+                            wk(this).next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                            
+                        }else{
+                           $(this).next('div').html('');
+                           wk(this).removeClass("errorborder");
+                        }
+                        
+                    });
+                    $(document).on("click",".ac",function(){
+                        if($("[Id$='reviewvalue']").val()==null && $("[Id$='reviewvalue']").val()==''){
+                            wk("[Id$='reviewvalue']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                        }else{
+                            wk("[Id$='reviewvalue']").next('div').html('');
+                        }
+                    });
+                $(document).ready(function(){
+                    var listPrice = '{!proddata.wk_wedge__List_price__c}';
+                    $("[id$='cost']").val(listPrice.toString());
+                    
+                    
+                    $("a[id$='retailer-opn-btn']").click(function(){
+                        if(window.retailers== false){
+                            window.ShowAlert('No retailers added for this product');
+                        }else{
+                            $("#retailerLinks").css("display","flex");
+                            $("#retailerLinks .ecm_popup").show();
+                            $("#retailerLinks .ecm_popup_bg").show();
+                        }
+                    });
+                });
+                $(document).on('click','.nav-m-tab',function(){
+                    $(this).next('div').slideToggle();
+                    $(this).find('span').toggleClass('down');
+                });
+                $(document).on('click','.variants',function(){
+                    var listPrice = '{!proddata.wk_wedge__List_price__c}';         
+                    var existing =parseFloat(listPrice);
+                    $(".em_productfeatures input:checked").each(function(){
+                        var id = $(this).val();
+                        if(id!='--None--'){
+                            var typ = $(this).attr('var-type');
+                            if(typ == 'Percent'){
+                                var value = existing * parseFloat($(this).attr('var-mod').replace(/,/g,''))/100;
+                                existing += value;
+                            }else{
+                                existing += parseFloat($(this).attr('var-mod').replace(/,/g,''));
+                            }
+                        }
+                        
+                        
+                    });                       
+                    $(".em_productfeatures select").each(function(){
+                        var id = $(this).val();
+                        if(id!='--None--'){
+                            var typ = $(this).find('option:selected').attr('var-type');
+                            if(typ == 'Percent'){
+                                var value = existing * parseFloat($(this).find('option:selected').attr('var-mod').replace(/,/g,''))/100;
+                                existing += value;                      
+                            }else{
+                                existing += parseFloat($(this).find('option:selected').attr('var-mod').replace(/,/g,''));
+                            }
+                            
+                        }                
+                    });
+                    $("[id$='prodListPrice']").html(existing.toFixed(2).replace(/./g, function(c, i, a) {
+                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                    }));
+                    $("[id$='cost']").val(existing.toString());
+                });
+                function assignValues(){
+                    $("[id$='variantDescription']").val('');
+                    var variant = $("[id$='variantDescription']").val();
+                    
+                    $(".em_productfeatures input:checked").each(function(){                
+                        variant += $(this).val()+';';             
+                    });                       
+                    $(".em_productfeatures select").each(function(){
+                        var id = $(this).val();
+                        if(id!='--None--'){
+                            variant += $(this).val()+';';       
+                        }            
+                    });
+                    variant = variant.substring(0,variant.length-1);
+                    if(variant!=''){
+                        $("[id$='variantDescription']").val(variant);            
+                    }else{
+                        $("[id$='variantDescription']").val('');             
+                    }
+                    var cost = $("[id$='cost']").val();
+                    cost = cost/{!exchangeRate}
+                    if(cost!=null && cost!=''){}else{
+                        $("[id$='cost']").val('{!proddata.wk_wedge__List_price__c}');
+                    }       
+                    
+                }
+                
+                </script>
+                <script type="text/javascript">
+                var $ = jQuery.noConflict();
+                
+                $.fn.stars = function() {
+                    return $(this).each(function() {
+                        var val = parseFloat($(this).html());
+                        var size = Math.max(0, (Math.min(5, val))) * 16;
+                        var $span = $('<span />').width(size);
+                        $(this).html($span);
+                    });
+                }
+                
+                
+                wk(function() {
+                    wk('span.stars').stars();
+                    
+                    wk('.quickzoom').on("click",function(){
+                        wk('[id$=theform] .ecm_popup_bg').css({'display':'block'});
+                        wk('[id$=theform] .ecm_popup').css({'display':'block'});
+                    });
+                    wk('.ecm_close').on("click",function(){
+                        wk('.ecm_popup_bg').css({'display':'none'});
+                        wk('.ecm_popup').css({'display':'none'});
+                    })
+                    wk('.rating').on("click",function(){
+                        $(this).next('div').html('');
+                    });
+                    wk('.addreview').on("click",function(){                        
+                        
+                        if(wk("[Id$='reviewvalue']").val()==null || wk("[Id$='reviewvalue']").val()== ''){
+                            wk("[Id$='reviewvalue']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                            wk("[Id$='reviewvalue']").addClass("errorborder");
+                            event.preventDefault();
+                       }else if(wk("[Id$='ip_Discount']").val()==null || wk("[Id$='ip_Discount']").val()== ''){
+                            wk("[Id$='ip_Discount']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                            wk("[Id$='ip_Discount']").addClass("errorborder");
+                            event.preventDefault();
+                       }else if(wk("[Id$='ip_Days']").val()==null || wk("[Id$='ip_Days']").val()== ''){
+                           
+                            wk("[Id$='ip_Days']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                            wk("[Id$='ip_Days']").addClass("errorborder");
+                            event.preventDefault();
+                       }else{
+                           wk('.err').html('');
+                           wk('.ecm_popup_bg').css({'display':'none'});
+                            wk('.ecm_popup').css({'display':'none'});
+                            addreview();
+                       }
+                       
+                        
+                    });
+                    wk('.ecm_close_retailer').click(function(){
+                        wk('#retailerLinks').hide();
+                    });
+                    if($(window).width()>992){
+                        wk("#img1").elevateZoom({ gallery: 'gallery_01', cursor: 'pointer', galleryActiveClass: "active" });
+                    }else{                      
+                        wk("#img1").elevateZoom({ zoomLevel: 0, gallery: 'gallery_01', cursor: 'pointer', galleryActiveClass: "active", zoomWindowWidth: 0, zoomWindowHeight: 0, borderColour: '#fff' });                           
+                    }
+                    
+                    wk("#img1").bind("click", function(e) {
+                        var ez = wk('#img1').data('elevateZoom');
+                        ez.closeAll();
+                        wk.fancybox(ez.getGalleryList());
+                        return false;
+                    });
+                    
+                    wk('.hover-star').click(function (){
+                        //alert(wk(this).val());
+                    });
+                    
+                    wk('body').on('click','.ac',function(){
+                        var ratestar = wk(this).val();
+                        var cj= wk('[id$=reviewvalue]').val(ratestar);
+                    });
+                    wk(document ).on("click",".custom-checkbox input",function(){
+                        wk(this).parent().removeClass("checked");
+                        if(this.checked){
+                            wk(this).parent().addClass("checked");
+                        }     
+                    });
+                    
+                }(jQuery));
+                </script>
+            </div>
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

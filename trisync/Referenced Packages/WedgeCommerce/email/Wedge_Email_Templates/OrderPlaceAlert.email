@@ -1,0 +1,17 @@
+<messaging:emailTemplate subject="Order Placed Sucessfully" recipientType="Contact" relatedToType="Order">
+    <messaging:htmlEmailBody >
+        Dear {!recipient.name},<br/><br/>
+            
+            Thank You for buying product from us. Your Order Number is {!relatedTo.orderNumber}.<br/>
+            Your Order Key is {!relatedTo.wk_wedge__Order_Key__c}<br/>
+            Your total is {!relatedTo.TotalAmount}.<br/>
+            To view your order follow this url {!relatedTo.wk_wedge__Order_Full_URL__c}<br/><br/>
+            
+            <apex:datatable value="{!relatedto.orderitems}" var="odi">
+                <apex:column value="{!odi.product2.name}" headerValue="Product name"/>
+                <apex:column value="{!odi.unitprice}" headerValue="Product price"/>
+            </apex:datatable>
+        
+        Thank You,
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>

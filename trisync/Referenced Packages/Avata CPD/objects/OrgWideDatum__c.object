@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>A bucket to store org wide information. There should be only one record of this class</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>AllowEdits__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enable Read/Write privileges when automatically shared</description>
+        <externalId>false</externalId>
+        <label>Allow Edits</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AutoEnableNotifications__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Automatically set Enable Notifications flag for Lists to permit notifications</description>
+        <externalId>false</externalId>
+        <label>Auto Enable Notifications</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AutomaticallyShare__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Automatically share records wit Core Team or default team</description>
+        <externalId>false</externalId>
+        <label>Automatically Share</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>BLVNextIndex__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Next available BLV index</description>
+        <externalId>false</externalId>
+        <label>BLVNextIndex</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ClonedObjectNamePrefix__c</fullName>
+        <defaultValue>&quot;Copy of &quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Prefix to be applied to the object name when cloned.</description>
+        <externalId>false</externalId>
+        <label>Cloned Object Name Prefix</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DocAttr__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Document Attributes</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>DocumentAttr__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Preferred attributes to display or report on</description>
+        <externalId>false</externalId>
+        <label>Document Attributes</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>EditGroup__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Core Team</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>HlistItemNextUid__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Next available UID for Item - for ORG specific custom field</description>
+        <externalId>false</externalId>
+        <label>HlistItemNextUid</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>HlistNextUid__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Next available UID for Hlist ORG specific custom field</description>
+        <externalId>false</externalId>
+        <label>HlistNextUid</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>IssueAttr__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Default Issue fields</description>
+        <externalId>false</externalId>
+        <label>Issue Attributes</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>IssueNextUid__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>IssueNextUid</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>IssueNotification__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Issue Notification</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ItemAttrAgile__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Default Fields of Item in Agile Perspective</description>
+        <externalId>false</externalId>
+        <label>Item Attributes Agile</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ItemAttrConv__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Default Item fields to display in conventional (or Waterfall) model</description>
+        <externalId>false</externalId>
+        <label>Item Attributes Conventional</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ItemAttrDefault__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Default  default for list item</description>
+        <externalId>false</externalId>
+        <label>Item Attributes Default</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ItemAttrMR__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Attributes for a Market Req List</description>
+        <externalId>false</externalId>
+        <label>Item Attributes Market Requirements</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ItemAttrPR__c</fullName>
+        <deprecated>false</deprecated>
+        <description>List Attributes for a Product Requirements list</description>
+        <externalId>false</externalId>
+        <label>Item Attributes Product Requirements</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ListAttr__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Default List Attributes</description>
+        <externalId>false</externalId>
+        <label>List Attributes</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ListViewOnOpen__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Default view for a user for a List</description>
+        <externalId>false</externalId>
+        <label>List View On Open</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Grid View</fullName>
+                    <default>true</default>
+                </value>
+                <value>
+                    <fullName>Tree View</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>MapAttr__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Default fields for Map display</description>
+        <externalId>false</externalId>
+        <label>Map Attributes</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>MapColExtListRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>&quot;Importance&quot; or other extensions</description>
+        <externalId>false</externalId>
+        <label>Map Column List Extension</label>
+        <referenceTo>Hlist__c</referenceTo>
+        <relationshipName>OrgWideDataMapColExtListRef</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>MapNextUid__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>MapNextUid</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>MapRowExtListRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>&quot;Score&quot; or other list</description>
+        <externalId>false</externalId>
+        <label>Map Row List Extension</label>
+        <referenceTo>Hlist__c</referenceTo>
+        <relationshipName>OrgWideDataMapRowExtListRef</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>MapType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Default type of map</description>
+        <externalId>false</externalId>
+        <label>Map Type</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Binary Relationship</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>H/M/L Relationship</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Rating Relationship</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>H/M/L Prioritization</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Rating Prioritization</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>OverviewPageLookBack__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Overview Page Look Back</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ProjectAttr__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Project Attributes</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ProjectNextUid__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>ProjectNextUid</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SessionTimeout__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Duration in hours</description>
+        <externalId>false</externalId>
+        <label>Session Timeout</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SharingNotification__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Sharing Notification</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>SprintAttr__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Preferred attributes to display</description>
+        <externalId>false</externalId>
+        <label>Sprint Attributes</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SprintNextUid__c</fullName>
+        <defaultValue>6501</defaultValue>
+        <deprecated>false</deprecated>
+        <description>next unique Id when adding custom fields</description>
+        <externalId>false</externalId>
+        <label>SprintNextUid</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SubscriberEmail__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Task Email Notification</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>TaskNotification__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Task In-system Notification</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>Org-wide Preference</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>OW-{0}</displayFormat>
+        <label>OrgWideDatum ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Org-wide Preferences</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

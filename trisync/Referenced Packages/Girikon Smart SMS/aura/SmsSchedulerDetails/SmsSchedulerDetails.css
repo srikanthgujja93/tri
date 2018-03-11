@@ -1,0 +1,7 @@
+.THIS{}
+
+
+.THIS .scheduled-list > .slds-card__body {
+    height: 570px !important;
+    overflow-y: auto !important;
+}

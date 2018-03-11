@@ -1,0 +1,327 @@
+<apex:page showheader="false" setup="false" title="Add Supplier" standardstylesheets="false" controller="wk_wedge.supplieradd" cache="false">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+        <style>
+            .wdg-nav-icon.customerlisting {
+                background-color: #34becd;
+            }
+            .wdg-nav-icon.supplier {
+                background-color: #34becd;
+            }
+            .wdg-form--box .wdg-form--header{
+                height:43px;
+            }
+            .variants--headeroptions {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                //height: 100%;
+            }
+            .variants--headeroptions li {
+                //height: 100%; 
+                float: left;
+                display: inline-block;
+                vertical-align: middle;
+            }
+            .variants--headeroptions a {
+            display: block;
+            color: #fff;
+            cursor: pointer;
+            box-sizing: border-box;
+            height: 100%;
+            line-height: 2.6;
+            padding: 0px 20px;
+        }
+        .variants--headeroptions li.active a {
+            background: #fff;
+            border: 1px solid #adadad;
+            border-left: none;
+            border-right: none;
+            color: #555555;
+        }
+        .selectType{
+            padding: 6px;
+            border-radius: 3px;
+            font-size: 14px;
+            color: #222;
+            background: #fff;
+            border: 1px solid #adadad;
+            outline: none;
+            box-shadow: none;
+            display: inline-block;
+            width: 200px;
+            box-sizing: border-box;
+        }
+        </style>
+            <apex:form id="thepopblock" styleclass="wdg-dataentry--form">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                        <div class="wdg-body--titleblock clearfix">
+                            <div class="wdg-body--title">
+                                <span class="wdg-title--logo customer"></span>
+                                <span>Add Supplier</span>
+                            </div>
+                            <div class="wdg-ctrl--btnPanel">
+                                <a href="javascript:void(0);" class="wdg-ctrl--btn save">
+                                    <span></span>
+                                </a>
+                              <apex:actionfunction name="saveFeatures" action="{!saveData}"/> 
+                                 <a href="{!$page.Suppliers}" class="wdg-ctrl--btn cancel"> 
+                                    <span></span>
+                                 </a> 
+                            </div>
+                        </div>
+                        <div class="wdg-form--box">
+                            <div class="wdg-form--header">
+                            <ul class="variants--headeroptions clearfix">
+                                <li class="active">
+                                    <a href="javscript:void(0)"  data-target="InformationBlock">General </a>
+                                </li>
+                              
+                                <li >
+                                    <a href="javscript:void(0)"  data-target="Productblock">Products </a>
+
+                                </li>
+                               <!--
+                               <li >
+                                    <a href="javscript:void(0)"  data-target="shippingblock">Shipping Methods </a>
+
+                                </li>
+                                -->
+                            </ul>
+                        </div>
+                        <apex:outputpanel layout="block" id="thefeatureform" styleclass="wdg-form--content">
+                            <div id="InformationBlock" class="wgd-form--tab show">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Information </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Supplier Name :" for="ipname"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                                <apex:inputfield value="{!productF.name}" id="ipname"/>                                                                
+                                                            </div>
+                                                            <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>
+                                                    </td>
+                                                </tr>
+                                                 
+                                               
+                                                 <tr>
+                                                     <td class="label">
+                                                         <apex:outputlabel value="Status :  " for="ips"/>
+                                                     </td>
+                                                     <td class="field">
+                                                         <div class="custom-checkbox {!IF(productF.wk_wedge__Status__c,'checked','')}">
+                                                              <apex:inputfield value="{!productF.wk_wedge__Status__c}" id="ips"  styleclass="display-inline--block"/>
+                                                         </div>
+                                                      </td>
+                                                 </tr> 
+                                                 <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Email :" for="ipemail"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__Supplier_email__c}" id="ipemail"/>
+                                                    </td>
+                                                </tr>                                             
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Phone :" for="ipPhone"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__Supplier_Phone__c}" id="ipPhone"/>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="URL :" for="ipurl"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__URL__c}" id="ipurl"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Fax :" for="ipfax"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__FAX__c}" id="ipfax"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Street :" for="ipstreet"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__Supplier_Street__c}" id="ipstreet"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="City :" for="ipcity"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__Supplier_City__c}" id="ipcity"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="State :" for="ipstate"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__Supplier_State__c}" id="ipstate"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Country :" for="ipcountry"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__Supplier_Country__c}" id="ipcountry"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Zipcode :" for="ipzip"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!productF.wk_wedge__Supplier_ZipCode__c}" id="ipzip"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                           
+                            <div id="Productblock" class="wgd-form--tab ">
+                                <div class="wdg-form--block"> 
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Add Product </span>
+                                    </div>
+                                   <div class="wdg-form--blockfields">
+                                   <apex:inputHidden value="{!variants}" id="variants"/>
+                                        <table class="wdg-variant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Products </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="PrimeRow">
+                                                    <td class=" large typeval">
+                                                        <select name="singleSelect" class="selectType">
+                                                             <option value="">--None--</option>
+                                                             <apex:repeat value="{!allproducts}" var="key">
+                                                                 <option value="{!key.Id}">{!key.name}</option>
+                                                             </apex:repeat>       
+                                                        </select>
+                                                         
+                                                    </td>
+                                                    <td class=" Xsmall option">
+                                                        <div class="option_btn">
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn addNew addRow"><span></span></a>
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn delete deleteRow" ><span></span></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                              
+                            </div>
+                             
+                        </apex:outputpanel>
+                    </div>
+                </div>
+            </apex:form>
+            <script>
+                var ProductVariants='{!JSENCODE(variants)}';
+            </script>
+            <script>
+               function ValidateSave(event){
+                    var str  = $("[Id$='ipname']").val();
+                    if (str!=null && str!='') {                        
+                        $("[Id$='validate']").html('');
+                        return true;
+                    }
+                    else{
+                        //alert("Review all the errors!");
+                         if(str==null || str==''){
+                            $("[Id$='validate']").html('Required');
+                        }else{
+                            $("[Id$='validate']").html('');
+                        }
+                         
+                         event.preventDefault();                        
+                        return false;
+                    }
+                }
+           </script>
+           <script>
+             wk=jQuery.noConflict();
+                (function(wk){
+                
+                
+                 wk( document ).ready(function(){              
+                
+                
+                    if(ProductVariants!=null && ProductVariants!=''){
+                        var variants=JSON.parse(ProductVariants);
+                        for(key in variants){
+                            var arr=$(".wdg-variant-table tbody tr");
+                            wk(".typeval select",arr[key]).val(variants[key]);
+                            if(wk(".wdg-form--blockfields .wdg-variant-table tbody tr").length<variants.length)
+                                wk(".wdg-form--blockfields .wdg-variant-table .addRow").last().trigger("click");
+                        }
+                    }
+                });
+               
+               wk( document).on("click",".variants--headeroptions li a ",function(){
+                        wk(this).parent().siblings().removeClass("active");
+                        wk(this).parent().addClass("active");
+                        var ids=wk(this).attr("data-target");
+                        wk("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                      
+                       
+                    });
+                    
+                    
+                     wk( document ).on("click",".wdg-ctrl--btn.save",function(e){
+                     var arr=[];
+                        wk(".wdg-form--blockfields .wdg-variant-table tbody tr").each(function(){
+                            var d=$(".typeval select",this).val();
+                            if(d!='--None--')
+                                arr.push(d);                            
+                        })
+                        
+                        wk("[Id$='variants']").val(JSON.stringify(arr));
+                        if(ValidateSave(e))
+                            saveFeatures();                         
+                });
+                
+                wk( document).on("click",".wdg-variant-table .addRow",function(){
+                        wk(this).parent().parent().parent().after( "<tr>"+wk("[Id$='PrimeRow']").html()+"</tr>");
+                    });
+    
+                    wk( document).on("click",".wdg-variant-table .deleteRow",function(){
+                        if(wk(".wdg-form--blockfields .wdg-variant-table tbody tr").length>1)
+                        wk(this).parent().parent().parent().remove();
+                    });
+               }(jQuery));
+           </script>
+     
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,133 @@
+<apex:page id="loginPage" controller="wk_wedge.wedgeActiveIndexpagecontroller" showHeader="false" title="{!$Label.site.site_login}" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" >
+     <html  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+ <head >          
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+          <link rel="manifest" href="{!URLFOR($Resource.pushnotification,'pushnotification/manifest.json')}"/> 
+            <!--       <link rel="manifest" href="{!URLFOR($Resource.manifest)}"/>-->
+
+<style>
+.info{
+    position:fixed;
+    top:0;
+    right:0;
+    width:400px;
+    height:100px;
+    border:1px solid red;
+    background:green;
+    display:none;
+    
+}
+
+</style>
+      </head>
+      
+       <body>
+        <div class="info"></div>
+        <div class="container">
+        <a href="{!$page.SiteLogin}">Login</a>
+          <!-- Trigger the modal with a button -->
+          <button type="button" class="btn btn-info btn-lg" id="openButton" data-toggle="modal" data-target="#myModal" style="display:none;">Open Modal</button>
+        
+          <!-- Modal -->
+          <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+            
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Subscribe Form</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Do you want to subscribe??</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="subscribe" class="btn btn-default" data-dismiss="modal">Subscribe</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          
+        </div>
+    
+     
+      
+          <apex:form >
+              <apex:inputText id="registeredId" value="{!regId}"/>
+              <apex:inputhidden id="endptUrl" value="{!endptUrl}"/>
+              <apex:actionfunction name="createEntry" action="{!send}" rerender="loginPage"/>
+          </apex:form>
+          <script>
+                function send_reg_id_to_file(regid) {
+                 // alert("This is reg id"+regid);
+                    $.get("write_reg_id.php?reg_id="+regid, function(data, status){
+                  //     alert("Data: " + data + "\nStatus: " + status);
+                    });
+                }
+                
+                $(document).ready(function(){                   
+                           
+                     if ('serviceWorker' in navigator) {
+                         console.log('Service Worker is supported');
+                         navigator.serviceWorker.register('{!URLFOR($Resource.serviceworker)}').then(function(reg) {                                
+                            reg.pushManager.getSubscription().then(function(sub){
+                            console.log(reg);
+                                if(sub){
+                                    return true;
+                                }else{
+                                    $('#openButton').trigger('click');
+                                     $('#subscribe').click(function(){
+                                        reg.pushManager.subscribe({
+                                            userVisibleOnly: true
+                                            }).then(function(sub) {  
+                                            var reg_id = sub.endpoint.split("/").slice(-1)[0]; 
+                                            $("[id$='registeredId']").val(reg_id);
+                                            $("[id$='endptUrl']").val(sub.endpoint);
+                                            createEntry();
+                                            new Notification('Welcome', {
+                                            body: 'You have sucessfully subscribed.',
+                                            vibrate: [200, 100, 200, 100, 200, 100, 200],
+                                            tag: 'Notification-sample'                           
+                                         });
+                                        }).catch(function(error) {
+                                            console.log(':^(', error);
+                                        });                              
+                                        
+                                        
+                                    });                                     
+                                    
+                                   
+                                    
+                                }
+                            });
+                                                     
+                            
+                            
+                            
+                         }); 
+                     } else {                        
+                        console.warn('Service workers aren\'t supported in this browser.');                           
+                        $( ".container" ).append('Service workers aren\'t supported in this browser.');
+                     } 
+                    /*
+                    if(reg_id!=null){
+                        if(confirm('Do you want to subscribe?')){
+                            createEntry();
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    } */
+                });
+                
+            
+           </script>
+           <h1>This is the test page for the Push notification</h1>
+           <div class="container"></div>
+      </body>
+    </html>
+</apex:page>

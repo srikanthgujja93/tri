@@ -1,0 +1,18 @@
+<aura:component >
+    <ltng:require scripts="{!$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+    <aura:attribute name="label" type="String"/>
+    <aura:attribute name="TemplateId" type="String" />
+    <aura:attribute name="tcompId" type="String"/>
+    <aura:attribute name="tcompName" type="String"/>
+    <aura:handler name="RemoveComponent" action="{!c.removeComponent}" event="wk_wedge:RemoveComponentDynamically"/>
+    <aura:registerEvent name="createTemplateVariants" type="wk_wedge:TemplateComponentsEvent"/>
+    <aura:if isTrue="{!v.label!='Configure'}">
+    	<a href="javascript:void(0);" class="navigate" onclick="{!c.navigate}">{!v.label}</a>
+        <aura:set attribute="else">
+            <ui:button class="slds-button slds-p-horizontal--x-small slds-vertical-align--middle configure" press="{!c.navigate}">
+            	<span></span>                	
+            </ui:button>
+        </aura:set>
+    </aura:if>
+    {!v.body}
+</aura:component>

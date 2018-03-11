@@ -1,0 +1,236 @@
+<apex:page controller="wk_wedge.socialmedialist" showheader="false" setup="false" standardstylesheets="false" cache="false" title="Social Media" docType="HTML-5.0">
+    <style>
+        .wdg-nav-icon.template {
+            background-color: #34becd;
+        }
+         .wdg-addOption--btn{
+                     cursor: pointer;
+                    
+                     padding: 8px;
+                     background: #7DC37D;
+                     color: #fff;
+                     display: inline-block;
+                     text-align: center;
+                     text-decoration: none;
+                     border-radius: 2px;
+                     border: none;
+                     font-size: 13px;
+                     font-weight: 600;
+                     box-shadow: none;
+                     outline: none;
+                 }
+                 .wdg-body .wdg-dataTable--box{
+            margin-top:5px;
+        }
+        .totalRec{
+            font-size: 14px;
+            color: #777777;
+            margin-top:2px;
+        }
+        .wdg-body-titletext{
+            display:inline-block;
+            vertical-align: top;
+            line-height: 1;
+        }
+        .recperpage{
+            background: #FFF;
+            padding: 4px 8px;
+            border: 2px solid #57BDC2;
+            border-radius: 4px;
+            cursor:pointer;
+            margin-right:10px;
+        }
+        .recperpage:focus{
+            outline:none;
+            cursor:pointer;
+        }
+    </style>
+     <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+            <apex:form id="productform">
+               <div class="wdg-body">
+                  <apex:outputpanel layout="block" id="wdgerrorBlock">
+                    <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                  </apex:outputpanel>
+                  <div class="wdg-body--header">
+                        <div class="wdg-search--box"> 
+                           <apex:inputtext html-placeholder="Search"  value="{!searchQuery}"/>
+                           <apex:commandbutton value="Search" styleclass="wdg-submit--btn search" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,urlstr" status="waitstatus" oncomplete="recordcount()"/>
+                            <apex:outputPanel id="urlstr"><apex:inputHidden id="urlval" value="{!url}"/></apex:outputPanel>
+                        </div> 
+                 </div>
+                 <div class="wdg-body--titleblock clearfix">
+                       <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo social"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> Social Media </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div>  
+                      <div class="wdg-ctrl--btnPanel">
+                          <apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!pagesize}" id="recPerPage" onchange="updatePage()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>
+                           <apex:commandButton styleclass=" wdg-addOption--btn"  value="Template Menus" action="{!cancelpage}">
+                                        <span></span>
+                           </apex:commandButton>
+                           <apex:outputlink value="{!$Page.wk_wedge__AddSocialMedia}?tcompid={!$CurrentPage.parameters.tcompid}" styleclass="wdg-ctrl--btn addNew">
+                              <span></span>
+                           </apex:outputlink>
+                           <apex:commandLink action="{!cancelpage}" styleclass="wdg-ctrl--btn cancel"> 
+                                    <span></span>
+                         </apex:commandLink>
+                           <div class="wdg-ctrl--btngroup clearfix">
+                                <div class=" wdg-ctrl--btn settings">
+                                    <span></span>
+                                </div>
+                                <div class="dropdown dropdown-wrap">
+                                <button type="button"  data-toggle="dropdown" class="wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                      <span></span>
+                                </button>
+                                <div class="dropdownMenu">
+                                    <div> <a href="javascript:void(0)"  id="deleteSelected">Delete Selected </a></div>
+                                    <div> <a href="javascript:void(0)" id="deleteALL" >Delete All </a></div>
+                                </div>
+                            </div>
+                         </div>
+                     </div>
+                </div>
+               <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-dataTable--box">
+                        <apex:datatable value="{!MenuLinks}" var="Mlink" styleclass="wdg-dataTable " id="wdgTable"  >
+                            <apex:column styleclass="small">
+                                <apex:facet name="header">
+                                    <div class="custom-checkbox">
+                                        <input type="checkbox" id="headerCB"/>
+                                    </div>
+                                </apex:facet>
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" class="eachselect" value="{!Mlink.id}"/>
+                                </div>
+                            </apex:column>
+                            <apex:column styleclass="medium" >
+                                <apex:facet name="header">
+                                    <apex:commandlink value="Title {!IF(fieldName=='name',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                 <apex:outputfield value="{!Mlink.name}"/>
+                            </apex:column>
+                            <apex:column styleclass="small" >
+                              <apex:facet name="header">Social-Keys</apex:facet>
+                              <apex:image width="35px" height="35px" url="/servlet/servlet.FileDownload?file={!Mlink.wk_wedge__Image_id__c}"/>
+                            </apex:column>
+                            <apex:column styleclass="large" >
+                              <apex:facet name="header">URL</apex:facet>
+                                <apex:outputfield value="{!Mlink.wk_wedge__Url__c}"/>
+                            </apex:column>
+                             <apex:column styleclass="medium">
+                                <apex:facet name="header">
+                                    <apex:commandlink value="Status {!IF(fieldName=='published__c',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="published__c" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                 <apex:outputpanel layout="block" styleclass="dropdown status-dropdown">
+                                    <div data-toggle="dropdown" class="status status-value dropdown-toggle" id="ecm_status_Dropdown">
+                                        <span>{!IF(Mlink.published__c, 'Published','Unpublished')}</span><span class="status-caret"></span>
+                                    </div>
+                                    <div class="status-dropdown-menu">
+                                        <span class="status status-option" targetid="{!Mlink.id}">Published</span>
+                                        <span class="status status-option" targetid="{!Mlink.id}"> Unpublished</span>
+                                    </div>
+                                 </apex:outputpanel>
+                            </apex:column>
+                             
+                            <apex:column styleclass="medium"> 
+                                <apex:facet name="header">Action</apex:facet>
+                                <apex:outputlink value="{!URLFOR($Page.wk_wedge__AddSocialMedia, null,['id'=Mlink.id,'tcompid'=$CurrentPage.parameters.tcompid])}" styleclass=" wdg-ctrl--btn edit"><span></span></apex:outputlink>
+                                <div class="wdg-ctrl--btn delete" targetid="{!Mlink.id}"><span></span></div>
+                           </apex:column>
+                           <apex:facet name="footer">
+                                <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                        <apex:outputpanel rendered='{!MenuLinks.size>0}'>
+                                        <apex:commandlink value="" action="{!first}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!previous}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                        <apex:outputText styleclass="wdg-dataTable--pages" value="{!pagenumber} of {!totalPages} "></apex:outputText>
+                                        <apex:commandlink value="" action="{!next}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!last}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                    </apex:outputpanel> 
+                                    <apex:outputpanel rendered="{!MenuLinks.size==0}">
+                                        <div class="No-Product">No Records Returned !!!!</div>
+                                    </apex:outputpanel>
+                                </apex:outputpanel>
+                            </apex:facet>
+                        </apex:datatable>
+                        <apex:inputhidden value="{!deletesel}" id="deletable"/>
+                      <apex:actionfunction name="deleteoneRecord" action="{!deletethis}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" status="waitstatus" oncomplete="afterdelete()"></apex:actionfunction>
+                    <apex:actionfunction name="deleteAllRecords" action="{!deleteAll}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" status="waitstatus" oncomplete="afterdelete()"></apex:actionfunction>
+                    <apex:actionfunction name="deleteSelectedRecords" action="{!deleteselected}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" status="waitstatus" oncomplete="afterdelete()"></apex:actionfunction>
+                    <apex:actionfunction name="changeRecordstatus" action="{!changestatus}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" status="waitstatus" oncomplete="closenotifications()"></apex:actionfunction>
+                       <apex:actionFunction name="updatePage" action="{!updatedata}" status="waitstatus" /><!--oncomplete="recordcount()"-->
+                    </apex:outputpanel>
+                              
+                </div>  
+             
+            
+        </apex:form>
+        <script>
+            jQuery(document).ready(function($) {
+              // Get Accounts via the REST API
+                  $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Template_Social_Media__c',
+                    {
+                      beforeSend: function(xhr) {
+                        // Set the OAuth header from the session ID
+                        xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                      },
+                      success: function(response) {
+                        // Append the records to HTML list
+                        var str=JSON.stringify(response);
+                        var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                        var arr = total.split(',');
+                        document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                });
+                      },
+                      error: function(jqXHR, textStatus, errorThrown) {
+                        // Error
+                        console.log(jqXHR.status + ': ' + errorThrown);
+                      }
+                    }
+                  );
+                  
+                });
+                function afterdelete(){
+                    recordcount();
+                    closenotifications();    
+                } 
+                function recordcount(){
+                    if($('[Id$="urlval"]').val()!='' && $('[Id$="urlval"]').val()!=null){
+                        $.ajax($('[Id$="urlval"]').val(),
+                        {
+                          beforeSend: function(xhr) {
+                            // Set the OAuth header from the session ID
+                            xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                          },
+                          success: function(response) {
+                            // Append the records to HTML list
+                            var str=JSON.stringify(response);
+                            var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                            var arr = total.split(',');
+                            document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    });
+                          },
+                          error: function(jqXHR, textStatus, errorThrown) {
+                            // Error
+                            console.log(jqXHR.status + ': ' + errorThrown);
+                          }
+                        }
+                      );                    
+                    }
+                } 
+            </script>
+          </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,22 @@
+.THIS .viewed {
+	color: #fff;
+    background-color: #04844b !important;
+}
+
+.THIS .unviewed {
+    background-color: #ffb75d;
+    color: #16325c;
+}
+
+.THIS .white svg {
+    fill: #fff;
+}
+.THIS .checkMsg svg{
+    fill: #04844b;
+}
+.THIS .name-btn{
+    height:24px !important;
+}
+.THIS .slds-scope .slds-button:focus{
+    box-shadow: none !important;
+}

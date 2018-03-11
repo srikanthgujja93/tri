@@ -1,0 +1,12 @@
+<apex:page showheader="false" setup="false" standardstylesheets="false" controller="wk_wedge.loginRedirect" action="{!updatecart}" cache="false" >
+  {!urlvalue}
+  <p>
+  {!$CurrentPage.url}
+  </p>
+  <p>
+   {!urlvalue2}
+  </p>
+   <p>
+  {!$CurrentPage.parameters.rexURL}
+  </p>
+</apex:page>

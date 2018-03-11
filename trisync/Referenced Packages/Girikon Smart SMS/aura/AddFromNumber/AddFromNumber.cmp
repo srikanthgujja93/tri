@@ -1,0 +1,199 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes"
+                controller="gkn_sms.FromNumberCtr" access="global">
+    <aura:attribute name="savedNumbers" type="gkn_sms__From_Numbers__c[]"/>
+    <aura:attribute name="isDelete" type="Boolean"/>
+    <aura:attribute name="deleteRecord" type="gkn_sms__From_Numbers__c"/>    
+    <aura:attribute name="hasMessage"	type="String" default=""/>
+    <aura:attribute name="messageType"	type="String" default=""/>
+    
+    <aura:attribute name="addNew" type="gkn_sms__From_Numbers__c" default="{'sobjectType': 'gkn_sms__From_Numbers__c','Name':'','gkn_sms__Mobile__c':''}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <lightning:spinner aura:id="loading" class="slds-show gkn-sms-spiner" alternativeText="Loading" variant="brand" size="small" />
+    <div aura:id="mobileAction" class="slds-hide" style="background-color:#fff">
+        <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <div class="slds-media slds-media--center slds-has-flexi-truncate">      
+                    <div class="slds-media__body">
+						<lightning:button aura:id="cancelbtn" variant="neutral" label="Cancel"
+                                  onclick="{!c.cancelAction}" />
+                        Create New
+                    </div>
+                </div>
+                <div class="slds-no-flex">
+                    <lightning:button aura:id="savebutton" variant="brand" label="Save"
+                                  onclick="{!c.addNewNumber}" />                
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <aura:if isTrue="{!!empty(v.hasMessage)?true:false}">
+        <div style="position:absolute" class="{!v.hasMessage==''?'slds-hide':'slds-notify_container slds-is-relative slds-show'}">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.messageType}" role="alert"> 
+                <span class="slds-assistive-text">{!v.messageType}</span>
+                <span class="{!'slds-icon_container slds-icon-utility-'+v.messageType+' slds-m-right_small slds-no-flex slds-align-top'}" title="{!v.messageType}">
+                    <lightning:icon variant="bare" class="slds-icon slds-icon_small" iconName="{!'utility:'+v.messageType}" size="small"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        {!v.hasMessage}
+                    </h2>
+                </div>
+                <lightning:buttonIcon iconName="utility:close" class="slds-notify__close slds-button_icon-inverse" size="small" variant="bare" onclick="{!c.closeToast}"/>
+            </div>
+        </div>            
+    </aura:if>
+    
+    <article class="slds-card onesetupSetupHeader">
+        <div class="slds-card__header setup-header-element slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="setup-header-element">
+                    <span
+                          class="slds-icon_container slds-icon-utility-settings setup-icon"
+                          title="Template"> 
+                        <lightning:icon variant="inverse" iconName="utility:phone_portrait" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <div class="slds-p-left--medium">
+                            <span class="slds-text-heading--small">From Numbers</span>
+                        </div>
+                    </h2>
+                </div>
+            </header>
+        </div>
+    </article>
+    <div aura:id="addFromNumberContainer" class="slds-grid slds-p-horizontal--small">        
+        <div class="slds-col">
+            <div class="slds-m-around--small"></div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="numberName">
+                    <abbr class="slds-required" title="required">*</abbr> Name
+                </label>
+                <div class="slds-form-element__control">
+                    <ui:inputText aura:id="numberName" class="slds-input"
+                                  value="{!v.addNew.Name}"/>
+                </div>
+            </div>
+            <div class="slds-m-around--small"></div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="fromNumber">
+                    <abbr class="slds-required" title="required">*</abbr> From Number
+                </label>
+                <div class="slds-form-element__control">
+                    <ui:inputPhone aura:id="fromNumber" class="slds-input"
+                                   value="{!v.addNew.gkn_sms__Mobile__c}"/>
+                </div>
+            </div>
+            <div class="slds-m-around--small"></div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">
+                    <abbr class="slds-required" title="required">*</abbr> Country Code 
+                </label>
+                <div class="slds-form-element__control">
+                    <ui:inputPhone placeholder="+1" aura:id="countryCode" class="slds-input" value="{!v.addNew.gkn_sms__Country_Code__c}"/>
+                </div>
+            </div>
+            
+            <div class="slds-m-around--small"></div>
+            <div aura:id="desktopAction" class="slds-form-element">                
+                <lightning:button aura:id="savebutton" variant="brand" label="Save"
+                                  onclick="{!c.addNewNumber}" />
+                <lightning:button aura:id="cancelbtn" variant="neutral" label="Cancel"
+                                  onclick="{!c.cancelAction}" />
+            </div>
+        </div>
+        <div class="slds-col">&nbsp;</div>
+        <div class="slds-col">&nbsp;</div>
+        <div class="slds-col">&nbsp;</div>
+        <div class="slds-col">&nbsp;</div>
+        <div class="slds-col">&nbsp;</div>		
+    </div>
+    <div aura:id="largepadding" class="slds-m-around--large"></div>
+    <div class="slds">
+        <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal" role="grid">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th>S.NO.</th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Name">Name
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Number"> Number</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Country Code">Country Code</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Created Date">Created Date</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Action">Action</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration var="num" items="{!v.savedNumbers}" indexVar="index">
+                    <tr>
+                        <td data-label="S.N">
+                            <div class="slds-truncate" title="S.N.">{!index+1}</div>
+                        </td>					
+                        <td data-label="Name">
+                            <div class="slds-truncate" title="Name">{!num.Name}</div>
+                        </td>
+                        <td data-label="Mobile">
+                            <div class="slds-truncate" title="Mobile">
+                                <ui:outputPhone value="{!num.gkn_sms__Mobile__c}"/></div>
+                        </td>
+                        <td data-label="Country Code">
+                            <div class="slds-truncate" title="Country Code">
+                                <ui:outputPhone value="{!num.gkn_sms__Country_Code__c}"/></div>
+                        </td>
+                        
+                        <td data-label="CreatedDate">
+						<div class="slds-truncate" title="Created Date">
+							<ui:outputDate format="MM/dd/YYYY" value="{!num.CreatedDate}" />
+						</div>
+					</td>
+					<td data-label="Action">
+                        <lightning:button variant="brand"
+							value="{!num}" label="Edit" onclick="{!c.editFromNumber}"
+							iconName="utility:edit" iconPosition="left" /> 
+                        <lightning:button value="{!num}" onclick="{!c.deleteAlert}" variant="destructive" label="Delete" iconName="utility:delete"
+							iconPosition="left" /></td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </div>
+	<aura:if isTrue="{!v.isDelete==true?true:false}">
+		<div role="alertdialog" tabindex="-1"
+			aria-labelledby="prompt-heading-id"
+			aria-describedby="prompt-message-wrapper"
+			class="slds-modal slds-fade-in-open slds-modal--prompt">
+			<div class="slds-modal__container">
+				<div
+					class="slds-modal__header slds-theme--error slds-theme--alert-texture">
+					<lightning:button variant="slds-button" value="No" onclick="{!c.deleteConfirm}"
+						class="slds-button slds-modal__close slds-button--icon-inverse"
+						title="Close">
+						<lightning:icon variant="inverse" iconName="utility:close" size="small"/>
+						<span class="slds-assistive-text">Close</span>
+					</lightning:button>
+					<h2 class="slds-text-heading--medium" id="prompt-heading-id">WARNING!</h2>
+				</div>
+				<div class="slds-modal__content slds-p-around--medium">
+					<p>Are you sure, you want to delete <strong><ui:outputPhone value="{!v.deleteRecord.gkn_sms__Mobile__c}"/></strong>?</p>
+                    <p>Please note you need at least one ACTIVE "FROM Number" for APP to send SMS.</p>
+				</div>
+				<div class="slds-modal__footer slds-theme--default">
+					<lightning:button value="No" onclick="{!c.deleteConfirm}" class="slds-button slds-button--neutral" label="No"/>
+					<lightning:button value="{!v.deleteRecord}" onclick="{!c.deleteConfirm}" class="slds-button slds-button--neutral" label="Yes"/>
+				</div>				
+			</div>
+		</div>
+		<div class="slds-backdrop slds-backdrop--open"></div>
+	</aura:if>
+</aura:component>

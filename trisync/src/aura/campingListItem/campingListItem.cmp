@@ -1,0 +1,14 @@
+<aura:component > 
+    <aura:attribute name="item" type="Camping_Item__c" default="{
+                                                                'Name':'Item1',
+                                                                'Quantity__c':10,
+                                                                'Price__c':100,
+                                                                'Packed__c':false}"/>
+    <p><ui:outputText value="{!v.item.Name}" /></p>          
+    <p><ui:outputNumber value="{!v.item.Quantity__c}" /></p>
+    <p><ui:outputCurrency value="{!v.item.Price__c}" /></p>
+    <p><ui:outputCheckbox value="{!v.item.Packed__c}" /></p>
+    <div>
+        <lightning:button label="Packed!" onClick="{!c.packItem}"/>
+    </div>
+</aura:component>

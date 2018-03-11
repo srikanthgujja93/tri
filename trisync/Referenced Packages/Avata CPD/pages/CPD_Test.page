@@ -1,0 +1,12 @@
+<apex:page Sidebar="false" cache="false" expires="600" contentType="text/html" controller="ATC.AvSessionCon" showHeader="false" StandardStyleSheets="false">
+    <apex:image url="{!URLFOR($Resource.ATC__TreeGrid5912,'Grid/avata.jpg')}"/>
+     <apex:sectionHeader title="This page is no longer in use - redirecting to Avata CPD" />
+  <script>
+     window.onload = function() {
+       var str = document.location.href;
+       str = str.substr(0,str.lastIndexOf('\/')+1); //take out url upto '...apex/'
+       var loc = str + "CPD_Landing";
+       window.location = loc;
+    }
+   </script>
+</apex:page>

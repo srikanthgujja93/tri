@@ -1,0 +1,216 @@
+<apex:page controller="wk_wedge.wishlist" title="Wishlist" standardstylesheets="false" setup="false" showheader="false" cache="false">
+     <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+            <apex:define name="templatebody">
+                  <TITLE>WISHLIST</TITLE>
+
+                <style>
+                    .horizontal-grey{
+                        border-color:#cccccc;
+                    }
+                    .wishlist-details-container .details-column-header{
+                        margin:0 15px
+                    }
+                    .wishlist-product-details{
+                        width: 95%;
+                        margin: 0 auto;
+                    }
+                    .wishlist-product-details .details-header{
+                        font-weight:700;
+                        color:#333;
+                    }
+                    .wishlist-product-details td{
+                        padding:10px 0px;
+                    }
+                    .wishlist-product-details .w-prod-img{
+                        display:block;
+                        border:1px solid #cccccc;
+                    }
+                    .wishlist-product-details .W-product-desc{
+                        display:inline-block;
+                        vertical-align:top;
+                        margin-left:10px;
+                        text-transform: uppercase;
+                        width:80%;
+                    }
+                    .wishlist-product-details .w-add-to-cart{
+                        padding:10px;
+                        display:inline-block;
+                        color:#fff;
+                        width:160px;
+                        vertical-align:middle;
+                        text-align:center;
+                        background:#4BBA60;
+                        border-radius:3px;
+                     }
+                     .wishlist-product-details .w-add-to-cart:hover, .wishlist-product-details .w-add-to-cart:active, .wishlist-product-details .w-add-to-cart:focus{
+                         text-decoration:none;
+                     }
+                    .wishlist-product-details .w-remove{
+                        width:15px;
+                        height:15px;
+                        vertical-align:middle;
+                        display:inline-block;
+                        background:transparent url('{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}') no-repeat -203px -47px;
+                    }
+                    .W-product-desc a {
+                        color: #333333;
+                    }
+                    .no-items--continue, .no-items--continue:hover, .no-items--continue:active, .no-items--continue:focus{
+                        display:inline-block;
+                        background-color:#0086CE;
+                        color: #fff;
+                        min-width: 160px;
+                        padding: 10px;
+                        margin:5px 0px;
+                        text-align: center;
+                        border-radius: 3px;
+                    }
+                    .large-width{
+                        width:48%;
+                    }
+                    .W-product-details a:hover{
+                        color:#337ab7;
+                    }
+                    .addcart{
+                            border-radius: 5px;
+                            text-align: center;
+                            cursor: pointer;
+                            display: inline-block;
+                            text-decoration: none;
+                            border: 0;
+                            vertical-align: top;
+                            margin: 0;
+                            margin-left: 15px; 
+                    }
+                    .addcart::before{
+                        content: "";
+                        display: inline-block;
+                        background: url('{!URLFOR($Resource.wedgecommerce,"wedgeCommerce/images/sprite.png")}') no-repeat -245px -76px;
+                        background-repeat: no-repeat;
+                        width: 26px;
+                        height: 27px;
+                        vertical-align: middle;
+                        border-radius: 3px;
+                    }
+                    .addcart:hover::before {
+                        background-position: -245px -76px;
+                    }            
+                    @media screen and (max-width: 991px) {
+                        .wishlist-product-details .w-prod-img{
+                            display: inline;
+                        }
+                        hr.top-50{
+                            display:none;
+                        }
+                        hr.bottom-50{
+                            display:none;
+                        }
+                        .large-width{
+                            width:100%;
+                        }
+                        .W-product-details a{
+                            display:inline-block;
+                        }
+                        table {
+                          border: 0;
+                        }
+        
+                        table thead {
+                          display: none;
+                        }
+        
+                        table tr {
+                          margin-bottom: 10px;
+                          display: block;
+                          border-bottom: 2px solid #ddd;
+                          padding:10px;
+                        }
+                        table tr:last-child{
+                            border-bottom:0;
+                        }
+                        table td {
+                          display: block;
+                          text-align: right;
+                          font-size: 13px;
+                          border-bottom: 1px dotted #ccc;
+                        }
+        
+                        table td:last-child {
+                          border-bottom: 0;
+                        }
+        
+                        table td:before {
+                          content: attr(heading);
+                          float: left;
+                          text-transform: uppercase;
+                          font-weight: bold;
+                        }
+                                                
+                    }
+                </style>
+                <div class="container producttable" >
+                <hr class="horizontal-grey top-50"/>
+                <apex:outputpanel layout="block" styleclass="wishlist-details-container" id="wishlistdata">
+                    <apex:outputpanel layout="block" styleclass="">
+                            <apex:outputpanel layout="block" styleclass="row">
+                            <apex:outputpanel layout="block" styleclass="col-md-12">
+                                  
+                                    <h4 class="oxy-20-bold wishlist-details-title"> {!IF(wishlistitems.size > 0,TEXT(wishlistitems.size)+' Items','No Item')}  in your wishlist </h4>
+                                    <apex:outputlink value="{!$Site.baseurl}" styleclass=" no-items--continue" rendered="{!wishlistitems.size==0}"> {!$Label.wk_wedge__wishlist_continue_shopping}</apex:outputlink>
+                                 
+                             </apex:outputpanel>
+                            </apex:outputpanel>
+                    </apex:outputpanel>
+                    <apex:outputpanel layout="block" styleclass="">
+                            <apex:outputpanel layout="block" styleclass="row">
+                            <apex:form >
+                                <apex:datatable id="wishlisttable" rendered= "{!wishlistitems.size>0}" value="{!wishlistitems}" var="item" styleclass="wishlist-product-details"> 
+                                    <apex:column styleClass="large-width" html-heading="Product">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__wishlist_product}</h5>
+                                        </apex:facet>
+                                        <apex:outputpanel layout="block" styleclass="W-product-details">
+                                            <apex:outputlink value="{!URLFOR($Page.wk_wedge__productdetail,null,[productid=item.product_id__r.id])}">
+                                            <apex:outputpanel layout="block" styleclass="W-product-desc">
+                                                <span>{!item.product_id__r.name}</span>
+                                            </apex:outputpanel>
+                                            <apex:image url="/servlet/servlet.FileDownload?file={!item.product_id__r.wk_wedge__Image_Id__c}" height="100px" width="100px" styleclass="w-prod-img"/>                                            
+                                            </apex:outputlink>
+                                        </apex:outputpanel>
+                                    </apex:column>
+                                    <apex:column value="{!CurrSymbol} {!item.wk_wedge__Product_List_Price__c}" html-heading="Price">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__wishlist_price}</h5>
+                                        </apex:facet>
+                                    </apex:column>
+                                    <apex:column html-heading="Stock Status">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__wishlist_stock_status}</h5>
+                                        </apex:facet>
+                                        <apex:outputtext value="{!IF(item.product_id__r.wk_wedge__Amount__c>0, 'In Stock', 'Out of Stock')}"/>
+                                    </apex:column>
+                                    <apex:column html-heading="Option">
+                                        <apex:facet name="header">
+                                            <h5 class="details-header">{!$Label.wk_wedge__wishlist_option}</h5>
+                                        </apex:facet>
+                                        <apex:commandlink value="" styleclass="w-remove info-panel-btn" title="{!$Label.wk_wedge__wishlist_remove_button}" status="docSearch" rerender="cartItems,notice,wishlistdata,wishcount"  action="{!removefromwishlist}" oncomplete="closenotifications()"> 
+                                            <apex:param name="prodid" value="{!item.product_id__r.id}" assignto="{!prodid}"/> 
+                                            <apex:param name="prodName" value="{!item.product_id__r.name}" assignto="{!prodName}"/>  
+                                        </apex:commandlink>
+                                        <apex:commandlink value="" title="{!$Label.wk_wedge__wishlist_add_to_cart_button}" rendered="{!NOT(item.product_id__r.wk_wedge__Amount__c==0)}" action="{!addtocart}" status="docSearch" rerender="cartItems,notice,rerenderNav,QuickcartView" styleclass="addcart" oncomplete="closenotifications()">
+                                            <apex:param name="prodid" value="{!item.product_id__r.id}" assignto="{!prodid}"/> 
+                                            <apex:param name="prodName" value="{!item.product_id__r.name}" assignto="{!prodName}"/>  
+                                            <apex:param name="prodImg" value="{!item.product_id__r.wk_wedge__Image_Id__c}" assignto="{!prodImg}"/> 
+                                            <apex:param name="prodprice" value="{!item.Product_Id__r.wk_wedge__List_price__c*exchangeRate}" assignto="{!prodprice}"/>
+                                        </apex:commandlink> 
+                                    </apex:column>
+                                </apex:datatable>
+                            </apex:form>
+                        </apex:outputpanel>
+                    </apex:outputpanel>
+                </apex:outputpanel> 
+                <hr class=" bottom-50 horizontal-grey"/> 
+                </div> 
+            </apex:define>
+       </apex:composition>
+</apex:page>

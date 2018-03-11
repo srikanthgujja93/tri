@@ -1,0 +1,17 @@
+<apex:page standardController="Contact">
+2
+  <apex:pageBlock title="Account Summary">
+3
+        <apex:pageBlockSection >
+4
+            First Name: {! Contact.FirstName } <br/>
+5
+            Last Name: {! Contact.LastName } <br/>
+6
+            Owner's Email: {! Contact.Owner.Email } <br/>
+7
+        </apex:pageBlockSection>
+8
+    </apex:pageBlock>
+9
+</apex:page>

@@ -1,0 +1,163 @@
+<aura:component access="GLOBAL" implements="force:appHostable" controller="gkn_sms.AdminConfigController">
+    <ltng:require scripts="{!$Resource.gkn_sms__jslib + '/jquery.js'}"/>
+    <aura:attribute name="activeTree" type="String" default=""/>
+    <aura:attribute name="activeComponent" type="String" default="RightBarContainer"/>   
+    <aura:attribute name="tempEditObj" type="gkn_sms__SMSTemplate__c" default="
+    {'sobjectType': 'gkn_sms__SMSTemplate__c','Name':'','gkn_sms__Object_Name__c':'','gkn_sms__SMS_Body__c':''}"/>
+    
+    <aura:attribute name="editConfig" type="gkn_sms__GirikonSMSConfig2__c" default="{
+                                                                           'sobjectType':'gkn_sms__GirikonSMSConfig2__c',
+                                                                           'Name':'',
+                                                                           'gkn_sms__Object_Name__c':'',
+                                                                           'gkn_sms__toNumber__c':'',
+                                                                           'gkn_sms__isSaveInCustomObj__c':false
+                                                                           }"/>   
+    <aura:handler event="gkn_sms:smsApp" action="{!c.handleComponentEvent}"/>
+    <aura:handler event="gkn_sms:configEditEvent" action="{!c.handleConfigEditEvent}"/>
+    <aura:handler event="gkn_sms:tmpEditEvent" action="{!c.handleTempEditEvent}"/>
+    <aura:attribute name="rechargeStatus" type="String" default=""/>
+    <aura:attribute name="chargeid" type="String" default=""/>
+    <aura:attribute name="sforgid" type="String" default=""/>
+    
+    <aura:handler value="{!this}" name="init" action="{!c.doInit}"/>
+    <div class="rightbar-container">        
+        <div class="rightbar-body" style="">        	
+            <div class="overflow" style="padding:1rem;">
+                <aura:if isTrue="{!v.activeComponent == 'RightBarContainer' ? true : false}">
+                    <gkn_sms:RightBarContainer smsbalance="{'sobjectType': 'SMSBalance__c',
+'gkn_sms__balanceSMS__c':'0','gkn_sms__totalSMS__c':0,'usageSms__c':0,'IncomingSMSCount__c':0,'OutgoingSMSCount__c':0}"/>	
+                </aura:if>
+                <aura:if isTrue="{!v.activeComponent == 'AdminConfig' ? true : false}">
+                    <gkn_sms:AdminConfig smsConfig="{!v.editConfig}" />
+                </aura:if>
+                <aura:if isTrue="{!v.activeComponent == 'ListAdminConfig' ? true : false}">
+                    <gkn_sms:ListAdminConfig />
+                </aura:if>
+                <aura:if isTrue="{!v.activeComponent == 'workflowconfig' ? true : false}">
+                    <gkn_sms:WorkflowConfig />
+                </aura:if>
+                <aura:if isTrue="{!v.activeComponent == 'debuglog' ? true : false}">
+                    <gkn_sms:SMSDebug />
+                </aura:if>
+                <aura:if isTrue="{!v.activeComponent == 'SMSTemplate' ? true : false}">
+                    <gkn_sms:SMSTemplate smsTemplate="{!v.tempEditObj}"/>	
+                </aura:if>
+                <aura:if isTrue="{!v.activeComponent == 'ListSMSTemplate' ? true : false}">
+                    <gkn_sms:ListSMSTemplate />	
+                </aura:if>
+                <aura:if isTrue="{!v.activeComponent == 'AddFromNumber' ? true : false}">
+                    <gkn_sms:AddFromNumber />	
+                </aura:if>
+                <aura:if isTrue="{!v.activeComponent == 'recharge' ? true : false}">
+                    <gkn_sms:recharge_smsCmp rechargeStatus="{!v.rechargeStatus}" chargeid="{!v.chargeid}"/>	
+                </aura:if>
+                <!--<aura:if isTrue="{!v.activeComponent == 'Optout' ? true : false}">
+                    <gkn_sms:ManageOptout />	
+                </aura:if>-->
+            </div>
+        </div>
+    </div>
+    
+    <div class="column-container navigation-container" style="border-bottom-left-radius:4px;">
+        <div class="smart-sms-app left-nav-panel">
+            <div class="slds-tree_container" role="application">
+                <h4 class="slds-text-title--caps" id="treeheading">Administrator</h4>
+                <ul class="slds-tree" role="tree" aria-labelledby="treeheading">
+                    <li id="admin-setup" role="treeitem" aria-level="0">
+                        <div class="{!v.activeComponent == 'RightBarContainer' ? 'slds-tree__item data-active' : 'slds-tree__item'}" onclick="{!c.home}">
+                            <a href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="Dashboard">Dashboard</a>
+                        </div>
+                    </li>                    
+                    <li aura:id="tree0-node0" onclick="{!c.expendConfigTree}"  role="treeitem" aria-level="1" aria-expanded="{!v.activeTree=='config'?'true':'false'}">
+                        <div class="slds-tree__item">
+                            <button class="chevronicon slds-button slds-button--icon slds-m-right--x-small" aria-controls="tree0-node1" title="Toggle">
+                                <aura:if isTrue="{!v.activeTree=='config'}">
+                                    <lightning:icon iconName="utility:chevrondown" size="small"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.activeTree!='config'}">
+                                    <lightning:icon iconName="utility:chevronright" size="small"/>
+                                </aura:if>                                
+                                <span class="slds-assistive-text">Toggle</span>
+                            </button>
+                            <a id="tree0-node1__label" href="javascript:void(0);" tabindex="-1" role="presentation" 
+                               class="slds-truncate" title="Configuration">Configuration</a>
+                        </div>
+                        <ul aura:id="admin-config" class="slds-is-collapsed" role="group" aria-labelledby="tree0-node1__label">
+                            <li id="tree0-node0-0" role="treeitem" aria-level="2">
+                                <div class="{!v.activeComponent == 'AdminConfig' ? 'slds-tree__item data-active' : 'slds-tree__item'}" onclick="{!c.addNewConfigNav}" >
+                                    <a href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="Add New">Add New</a>
+                                </div>
+                            </li>
+                            <li id="tree0-node0-1" role="treeitem" aria-level="2">
+                                <div class="{!v.activeComponent == 'ListAdminConfig' ? 'slds-tree__item data-active' : 'slds-tree__item'}" onclick="{!c.listConfigNav}">
+                                    <a href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="View All Configuration">View All Configuration</a>
+                                </div>
+                            </li>
+                            <li id="tree0-node0-2" role="treeitem" aria-level="2">
+                                <div class="{!v.activeComponent == 'workflowconfig' ? 'slds-tree__item data-active' : 'slds-tree__item'}" onclick="{!c.workflowConfigNav}">
+                                    <a href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="Workflow Configuration">Workflow Configuration</a>
+                                </div>
+                            </li>
+                            <li id="tree0-node0-3" role="treeitem" aria-level="2">
+                                <div class="{!v.activeComponent == 'debuglog' ? 'slds-tree__item data-active' : 'slds-tree__item'}" onclick="{!c.debuglog}">
+                                    <a href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="Debug Log">Debug Log</a>
+                                </div>
+                            </li>                            
+                        </ul>
+                    </li>
+                    <li aura:id="tree1-node1" onclick="{!c.expendSMSTempTree}" role="treeitem" aria-level="1" aria-expanded="{!v.activeTree=='temp'?'true':'false'}">
+                        <div class="slds-tree__item">
+                            <button class="chevronicon slds-button slds-button--icon slds-m-right--x-small" aria-controls="tree0-node1" title="Toggle">
+                                <aura:if isTrue="{!v.activeTree=='temp'}">
+                                	<lightning:icon iconName="utility:chevrondown" size="small"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.activeTree!='temp'}">
+                                    <lightning:icon iconName="utility:chevronright" size="small"/>
+                                </aura:if>
+                                <span class="slds-assistive-text">Toggle</span>
+                            </button>
+                            <a id="tree1-node1__label" href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="Tree Branch">SMS Template</a></div>
+                        <ul aura:id="sms-temp" class="slds-is-collapsed" role="group" aria-labelledby="tree1-node1__label">
+                            <li id="tree0-node1-0" role="treeitem" aria-level="2">
+                                <div class="{!v.activeComponent == 'SMSTemplate' ? 'slds-tree__item data-active' : 'slds-tree__item'}" onclick="{!c.addSMStempNav}">
+                                    <a href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="Add New">Add New</a>
+                                </div>
+                            </li>
+                            <li id="tree0-node1-0" role="treeitem" aria-level="2">
+                                <div class="{!v.activeComponent == 'ListSMSTemplate' ? 'slds-tree__item data-active' : 'slds-tree__item'}" onclick="{!c.listSMStempNav}">
+                                    <a href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="All Template">View All Templates</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li aura:id="tree2-node1" onclick="{!c.expendAddFromNumber}" role="treeitem" aria-level="1" aria-expanded="{!v.activeTree=='fromNum'?'true':'false'}">
+                        <div class="slds-tree__item">
+                            <button class="chevronicon slds-button slds-button--icon slds-m-right--x-small" aria-controls="tree0-node1" title="Toggle">
+                                <aura:if isTrue="{!v.activeTree=='fromNum'}">
+                                    <lightning:icon iconName="utility:chevrondown" size="small"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.activeTree!='fromNum'}">
+                                    <lightning:icon iconName="utility:chevronright" size="small"/>
+                                </aura:if>
+                                <span class="slds-assistive-text">Toggle</span>
+                            </button>
+                            <a id="tree2-node1__label" href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="Tree Branch">From Numbers</a>
+                        </div>
+                        <ul aura:id="sms-fromnum" class="slds-is-collapsed" role="group" aria-labelledby="tree2-node1__label">
+                            <li id="tree0-node1-0" role="treeitem" aria-level="2">
+                                <div class="{!v.activeComponent == 'AddFromNumber' ? 'slds-tree__item data-active' : 'slds-tree__item'}" onclick="{!c.clickFromNum}">
+                                    <a href="javascript:void(0);" tabindex="-1" role="presentation" class="slds-truncate" title="Add New Number">Add Number</a>
+                                </div>
+                            </li>                            
+                        </ul>
+                    </li>                    
+                    <li id="recharge-sms" role="treeitem">
+                        <a href="{!'https://www.girikon.com/stripe-payment/?sforgid='+v.sforgid}" class="{!v.activeComponent == 'recharge' ? 'slds-tree__item data-active' : 'slds-tree__item'}" target="_blank" title="Recharge Now">
+                            <span class="slds-truncate" style="color:rgb(22, 50, 92) !important">Recharge Now</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</aura:component>

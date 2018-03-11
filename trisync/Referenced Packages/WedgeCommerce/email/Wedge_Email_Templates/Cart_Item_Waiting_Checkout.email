@@ -1,0 +1,7 @@
+<messaging:emailTemplate subject="Cart Item Waiting Checkout" recipientType="User" relatedToType="product2">
+    <messaging:htmlEmailBody >
+        Hello {!recipient.name},<br/><br/>
+        This Item was added to your cart and is waiting for checkout, {!relatedTo.name}. Please login to complete the checkout process. If you have any trouble then feel free to contact our customer care for the same.<br/><br/>
+        Thank You,
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>

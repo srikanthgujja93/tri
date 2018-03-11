@@ -1,0 +1,23 @@
+.THIS {
+}
+.THIS .setup-icon {
+    background-color: #0070D2;
+    padding: 7px;
+}
+.THIS .slds-scope .slds-card__body { 
+    margin-left: 25px;
+}
+.THIS .slds-spinner_container{
+    z-index:999;
+}
+.THIS .slds-scope .slds-spinner{
+    top: 5% !important;
+}    
+.THIS .slds-icon-utility-upload svg{
+    width: 0.70rem;
+    height: 0.70rem;
+    fill: #0070d2;
+}
+.THIS .slds-notify__close{
+    margin-top:8px !important;
+}

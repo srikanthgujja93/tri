@@ -1,0 +1,1587 @@
+<apex:page showheader="false" title="checkout" setup="false" standardstylesheets="false" doctype="html-5.0" controller="wk_wedge.checkoutController" cache="false">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <apex:define name="templatebody">
+            <style>
+                .wdg-checkout--wrapper{
+                margin-top:25px;
+                margin-bottom:25px;
+                }
+                
+                .wdg-checkout--block{
+                margin-top:25px;
+                }
+                .wdg-checkout--block:first-child,.wdg-subblock--content:first-child{
+                margin:0px;
+                }
+                .wdg-checkout--block .wdg-block--header{
+                background-color:#0086C0;
+                height:40px;
+                line-height:1.8;
+                box-sizing:border-box;
+                padding-left:15px;
+                padding-right:15px;
+                }
+                .wdg-block--title{
+                color:#fff;
+                }
+                .wdg-checkout--block .wdg-block-content{
+                margin-top:10px;
+                margin-bottom:10px;
+                
+                
+                }
+                .wdg-subblock--content{
+                width:100%;
+                text-align:left;
+                color:#222;
+                margin-top:25px;
+                display:inline-block;
+                }
+                .wdg-subblock--content.order{
+                width:90%;
+                }
+                .wdg-checkout--block .wdg-block-content .wdg-subblock--content .subblock-heading{
+                padding-bottom:10px;
+                border-bottom:1px solid #ddd;
+                }
+                .wdg-checkout--block .wdg-block-content .wdg-subblock--content .diffshipping{
+                margin-top:15px;
+                margin-bottom:15px;
+                } 
+                .wdg-checkout--block .wdg-block-content .wdg-subblock--content .diffshipping>*{
+                display:inline-block;
+                vertical-align:middle;
+                margin-right:10px;
+                }
+                .wdg-blue--line{
+                margin:5px 0px;
+                border-bottom:1px solid #ddd;
+                }
+                .wdg-checkout--icon{
+                height: 15px;
+                width: 15px;
+                display: inline-block;
+                margin-right: 10px;
+                background-image: url("{!URLFOR($resource.wedgecommerce,'wedgeCommerce/images/checkout-sprite.png')}");
+                background-repeat:no-repeat;    
+                }
+                .wdg-checkout--icon.user{
+                background-position:0px 0px;  
+                }
+                .wdg-checkout--icon.home{
+                background-position:-15px 0px;  
+                }
+                .wdg-checkout--icon.ship{
+                background-position:-30px 0px;  
+                }
+                .wdg-checkout--icon.shipment{
+                background-position:-45px 0px;  
+                }
+                .wdg-checkout--icon.payment{
+                background-position:-60px 0px;  
+                }
+                .wdg-checkout--icon.order{
+                background-position:-75px 0px;  
+                }
+                .wdg-subblock--content .wdg-checkout--label{
+                margin-top:15px;
+                margin-bottom:15px;
+                font-weight:500;
+                }
+                .wdg-subblock--content .wdg-btn.checkout-btn{
+                width:75%;
+                margin-top:15px;
+                }
+                .wdg-subblock--content .checkout-fields input:first-child{
+                margin: 0px 0px !important;
+                }
+                .wdg-subblock--content .checkout-fields input.err,.wdg-subblock--content .checkout-fields select.err{
+                border: 1px solid #c23932 !important;
+                }
+                .wdg-subblock--content .checkout-fields input[type="text"],
+                .wdg-subblock--content .checkout-fields input[type="password"],
+                .wdg-subblock--content .checkout-fields input[type="email"],
+                .wdg-subblock--content .checkout-fields select{
+                padding: 10px 8px;
+                border-radius: 3px;
+                display: block;
+                margin-bottom: 15px;
+                width: 100%;
+                outline: none;
+                background: #fff;
+                border: 1px solid #ccc;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+                -o-appearance: none;
+                appearance: none;
+                }
+                .wdg-subblock--content .checkout-fields input[type="text"]:focus,
+                .wdg-subblock--content .checkout-fields input[type="password"]:focus,
+                .wdg-subblock--content .checkout-fields input[type="email"]:focus,
+                .wdg-subblock--content .checkout-fields select:focus{
+                border: 1px solid #0086C0;
+                }
+                .wdg-subblock--content .checkout-fields select:disabled{
+                background: rgb(235, 235, 228);
+                }
+                .wdg-subblock--content .checkout-fields-ctrl{
+                width:90%;
+                }
+                .wdg-subblock--content .wdg-order--overview{
+                width:100%;
+                border-spacing:0;
+                margin:0;
+                box-sizing:border-box;
+                }
+                .wdg-subblock--content .wdg-order--overview.coupon-info td:first-child *{
+                display:inline-block;
+                margin-left:6px;
+                }
+                
+                .wdg-subblock--content .wdg-order--overview.coupon-info td:first-child span.highlight{
+                color:#4BBA60;
+                }
+                .wdg-subblock--content .wdg-order--overview.coupon-info td:first-child a{
+                color:#c43636;
+                border:1px solid;
+                border-radius:3px;
+                margin-left:8px;
+                padding:2px 5px;
+                cursor:pointer;
+                }
+                .wdg-subblock--content .wdg-order--overview td:first-child{
+                width:70%;
+                text-align:left;
+                
+                padding:5px;
+                }
+                .wdg-subblock--content .wdg-order--overview.right-alined td:first-child{
+                text-align:right;
+                font-weight:700;
+                padding:10px;
+                vertical-align:middle;
+                }
+                .wdg-subblock--content .wdg-order--overview.right-alined td:last-child{
+                padding:10px;
+                vertical-align:middle;
+                }
+                .wdg-subblock--content .wdg-order--overview td:last-child{
+                width:30%;
+                text-align:right;
+                vertical-align:top;
+                padding:5px;
+                }
+                .wdg-order--overview td a.product-image{
+                width:70px;
+                height:70px;
+                border:1px solid #aaaaaa;
+                box-sizing:border-box;
+                overflow:hidden;
+                display:inline-block;
+                margin-right:10px;
+                vertical-align:top;
+                }
+                .wdg-order--overview td a.product-image img{
+                width:100%;
+                height:100%;
+                }
+                .wdg-order--overview td .product-info{
+                display:inline-block;
+                vertical-align:top;
+                }
+                .wdg-order--overview td .product-info a{
+                display:inline-block;
+                width:250px;
+                color:#0087C1;
+                font-weight:600;
+                font-size:14px;
+                word-break:break-word;
+                }
+                .wdg-subblock--content .wdg-payment-option{
+                margin:0;
+                margin-bottom:8px;
+                padding-left:8px;
+                list-style-type:none;
+                }
+                .wdg-subblock--content .wdg-payment-option>li{
+                margin-top:8px;
+                padding:0;
+                }
+                .wdg-guest{
+                color:#fff;
+                margin-top:6px;
+                display:inline-block;
+                font-size:14px;
+                }
+                .wdg-guest *{
+                vertical-align:middle;
+                display:inline-block;
+                margin-right:5px;
+                font-weight:600;
+                }
+                .wdg-guest  input{
+                margin-top: 7px;
+                margin-right: 8px;
+                display: inline-block;
+                }
+                .wdg-promoerror--wrap,.wdg-payment--info {
+                position: relative;
+                vertical-align: middle;
+                display: inline-block;
+                margin-left: 9px;
+                cursor: pointer;
+                
+                }
+                .wdg-promoerror--wrap.hide{
+                display:none;
+                }
+                .wdg-promoerror-tooltip{
+                width: 15px;
+                height: 15px;
+                position: relative;
+                background: #c43636;
+                color: #fff;
+                font-weight: bold;
+                line-height: 1.4;
+                display: inline-block;
+                border-radius: 40px;
+                font-size: 12px;
+                text-align: center;
+                cursor: pointer;
+                }
+                .wdg-paymentinfo-tooltip{
+                width: 15px;
+                height: 15px;
+                position: relative;
+                background:#0087C1;
+                color: #fff;
+                font-weight: bold;
+                line-height: 1.4;
+                display: inline-block;
+                border-radius: 40px;
+                font-size: 12px;
+                text-align: center;
+                cursor: pointer;
+                }
+                .wdg-promoerror--msg{
+                background-color:#c43636!important;
+                position: absolute;
+                bottom: 11px;
+                padding: 8px;
+                font-size: 12px;
+                max-width: 250px;
+                min-width: 150px;
+                text-align: justify;
+                display:none;
+                opactiy:0;
+                -webkit-transition:opacity 0.1s ease-in;
+                -moz-transition:opacity 0.1s ease-in;
+                -ms-transition:opacity 0.1s ease-in;
+                transition:opacity 0.1s ease-in;
+                color: #fff!important;
+                border-radius: 3px!important;
+                
+                }
+                .wdg-paymentinfo--msg{
+                background-color:#0087C1!important;
+                position: absolute;
+                bottom: 11px;
+                padding: 8px;
+                min-width: 250px;
+                text-align: justify;
+                display:none;
+                left:17px;
+                font-size:14px;
+                opactiy:0;
+                -webkit-transition:opacity 0.1s ease-in;
+                -moz-transition:opacity 0.1s ease-in;
+                -ms-transition:opacity 0.1s ease-in;
+                transition:opacity 0.1s ease-in;
+                color: #fff!important;
+                border-radius: 3px!important;
+                }
+                .wdg-promoerror--msg.right{
+                right: 17px;
+                }
+                .wdg-promoerror--msg.left{
+                left: 17px;
+                }
+                .wdg-promoerror--wrap.wdg-toltipshow,.wdg-promoerror--wrap.wdg-toltipshow .wdg-promoerror--msg,
+                .wdg-payment--info.wdg-toltipshow .wdg-paymentinfo--msg{
+                display:inline-block;
+                opacity:1;
+                }
+                .display-inline--block{
+                display:inline-block !important;
+                }
+                .custom-checkbox{
+                position:relative;
+                width:15px;
+                height:15px;
+                padding:0;
+                background:#fff;
+                border:1px solid #ccc;
+                
+                }
+                .custom-checkbox.checked{
+                background: #fff url("{!URLFOR($resource.wedgecommerce,'wedgeCommerce/images/check.png')}") no-repeat center;
+                }
+                .custom-checkbox>input[type="checkbox"]{
+                position:absolute;
+                width:15px;
+                height:15px;
+                z-index:2;
+                top:0;
+                opacity:0;
+                margin:0;
+                padding:0;
+                left:0
+                }
+                .wdg-subblock--content.tnc>div:first-child>*{
+                display:inline-block;
+                margin-right:15px;
+                vertical-align:middle;
+                }
+                .wdg-subblock--content.tnc .order-comment{
+                margin-top:15px;
+                }
+                .wdg-subblock--content.tnc .order-comment textarea{
+                width:300px;
+                height:100px;
+                box-sizing:border-box;
+                padding: 10px 8px;
+                border-radius: 3px;
+                display: block;
+                margin: 15px 0px;
+                outline: none;
+                background: #fff;
+                border: 1px solid #ccc; 
+                resize:none !important;
+                }
+                .wdg-btn.extralarge{
+                width:220px;
+                }
+                .custom-cb{
+                position: relative;
+                width: 15px;
+                height: 15px;
+                box-sizing: border-box;
+                background-color: #fff;
+                vertical-align: middle;
+                display: inline-block;
+                background-image: url('{!urlfor($Resource.wedgecommerce,"wedgeCommerce/images/sprite-icon.png")}');
+                background-repeat: no-repeat;
+                cursor: pointer;
+                background-position: -121px -121px;
+                border: 1px solid #34becd;
+                }
+                .custom-checkbox{
+                margin-bottom: 0 !important;
+                }
+                .walletcheck{
+                margin: 0 3px 0 7px !important;
+                }
+                @media screen and (max-width: 991px){
+                .wdg-subblock--content.order{
+                width:100%;
+                }
+                .wdg-subblock--content.tnc .order-comment textarea{
+                width:100%;
+                }
+                .wdg-subblock--content .wdg-checkout--label{
+                margin-top: 15px;
+                margin-bottom: 0;
+                }
+                .wdg-subblock--content .wdg-btn.checkout-btn{
+                margin-top: 15px;
+                margin-bottom: 0;
+                }
+                .wdg-subblock--content.top{
+                padding-bottom: 15px;
+                border-bottom: 1px dashed #0088bb;
+                }
+                }
+                @media screen and (max-width: 475px){
+                .wdg-order--overview td .product-info a{
+                width: unset;
+                }
+                .wdg-order--overview td .product-info{
+                display: block;
+                }
+                .wdg-subblock--content .wdg-order--overview td:first-child{
+                width: 30%;
+                }
+                .wdg-subblock--content .wdg-order--overview td:last-child{
+                width:70%;
+                }                   
+                .wdg-subblock--content .wdg-order--overview td:first-child.promocode-col{
+                display: block;
+                width: 100%;
+                }
+                .wdg-subblock--content .wdg-order--overview td:last-child.applyButton-col{
+                display: block;
+                width: 100%;
+                text-align: left;
+                }
+                .wdg-guest.wdg-float--right{
+                float: left;
+                }
+                .wdg-btn.standard{
+                min-width: 100px;
+                }
+                }
+                .coupon-highlight{
+                background-color:yellow;
+                }
+            </style>
+            <style>     
+                #paypal-button{     
+                    position: absolute;     
+                    width: 44%;     
+                    opacity: 0;     
+                    display:none;       
+                }       
+            </style>
+            <div class="container">
+                <div class="wdg-checkout--wrapper" >
+                    <apex:outputpanel id="signIn" layout="block" styleclass="wdg-checkout--block" rendered="{!if(AND(ISPICKVAL($User.UserType,'Guest'),userregenable),true,false)}">
+                        <apex:form >
+                            <div class="wdg-block--header clearfix">
+                                <apex:actionregion >
+                                    <apex:outputpanel rendered="{!if(AND(ISPICKVAL($User.UserType,'Guest'),userregenable),true,false)}" styleclass="wdg-float--right wdg-guest" layout="block">
+                                        <div class="custom-checkbox {!IF(guest,'checked','')}">
+                                            <apex:inputcheckbox value="{!guest}">
+                                                <apex:actionsupport event="onclick" rerender="orderDetails,signIn,js_block" status="docSearch" oncomplete="setBillingPickList();"/>
+                                            </apex:inputcheckbox>
+                                        </div>
+                                        <span>{!$Label.wk_wedge__checkout_continue_as_guest_user} </span>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel rendered="{!if(AND(ISPICKVAL($User.UserType,'Guest'),NOT(userregenable)),true,false)}" styleclass="wdg-float--right wdg-guest" layout="block">
+                                        <div class="custom-cb {!IF(guest,'checked','')}">
+                                        </div>
+                                        <span>{!$Label.wk_wedge__checkout_continue_as_guest_user} </span>
+                                    </apex:outputpanel>
+                                </apex:actionregion>
+                            </div>
+                            <apex:outputText rendered="{!userregenable}">
+                                <apex:outputpanel rendered="{!NOT(OR(NOT(ISPICKVAL($User.UserType,'Guest')),guest))}"  layout="block" styleclass="wdg-block-content" >
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 col-xs-12 text-left">
+                                            <div class="wdg-subblock--content top">
+                                                <h4 class="subblock-heading bold"><i class="wdg-checkout--icon user"></i>Register With Us</h4>
+                                                <p class="wdg-checkout--label">{!$Label.Checkout_Create_your_account_here}</p>
+                                                <apex:outputlink styleclass="wdg-btn gray checkout-btn" value="{!URLFOR($Page.wk_wedge__wedgeSiteRegister)}">Create Your Account Here</apex:outputlink>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-xs-12 text-right">
+                                            <div class="wdg-subblock--content">
+                                                <h4 class="subblock-heading bold"> <i class="wdg-checkout--icon user"></i>{!$Label.Checkout_Already_Registered_Login_Here}</h4>
+                                                <label for="username" class="wdg-checkout--label">{!$Label.Checkout_Please_enter_you_email_and_password_to_login_to_your_account}</label>
+                                                <fieldset class="checkout-fields">
+                                                    <apex:input type="email"  id="username" html-placeholder="{!$Label.wk_wedge__checkout_label_username}" styleclass="no-margin" value="{!username}"/>
+                                                    <apex:inputsecret html-placeholder="********"  value="{!password}" style="margin-top:15px;"/>
+                                                </fieldset>
+                                                <div class="checkout-fields-ctrl clearfix">
+                                                    <apex:commandbutton value="{!$Label.wk_wedge__checkout_sign_in}" styleclass="wdg-btn standard blue wdg-float--left" action="{!sitelogin}"/>
+                                                    <apex:outputlink styleclass="wdg-btn  transparent standard   wdg-float--right" value="{!URLFOR($Page.wk_wedge__WedgeforgotPassword)}">{!$Label.wk_wedge__checkout_forgot_password}</apex:outputlink>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </apex:outputpanel>
+                            </apex:outputText>
+                        </apex:form>
+                    </apex:outputpanel>
+                    <apex:outputpanel id="orderDetails" styleclass="wdg-checkout--block" layout="block">                    
+                        <apex:form >
+                            <apex:outputpanel layout="block" styleclass="wdg-block--header clearfix" rendered="{!OR(NOT(ISPICKVAL($User.UserType,'Guest')),guest)}">
+                                <span class="bold wdg-block--title">{!$Label.wk_wedge__checkout_order_details}</span>
+                            </apex:outputpanel> 
+                            <apex:outputpanel rendered="{!OR(NOT(ISPICKVAL($User.UserType,'Guest')),guest)}" layout="block" styleclass="wdg-block-content" >
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-12 text-left">
+                                        <div class="wdg-subblock--content order">
+                                            <h4 class="subblock-heading bold"> <i class="wdg-checkout--icon home"></i>{!$Label.Checkout_Billing_Information}</h4>
+                                            <fieldset class="checkout-fields billing">
+                                                <label for="billFirst">{!$Label.Checkout_Billing_First_Name}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_billing_first_name} *"  value="{!billingaddress.firstname}" id="billFirst"/>
+                                                <label for="billLast">{!$Label.wk_wedge__checkout_billing_last_name}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_billing_last_name} *"  value="{!billingaddress.lastname}" id="billLast"/>
+                                                <label for="email">{!$Label.wk_wedge__checkout_billing_email}</label> 
+                                                <apex:input type="email"  html-placeholder="{!$Label.wk_wedge__checkout_billing_email} *"  value="{!billingaddress.email}" id="email"/>
+                                                <label for="billphn">{!$Label.wk_wedge__checkout_billing_phone}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_billing_phone} *"  value="{!billingaddress.phoneN}" id="billphn"/>
+                                                <label for="billaddress">{!$Label.wk_wedge__checkout_billing_address}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_billing_address_line_1} *"  value="{!billingaddress.address1}" id="billaddress"/>
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_billing_address_line_2}"  value="{!billingaddress.address2}"/>                                            
+                                                <label for="country">{!$Label.wk_wedge__checkout_billing_country}</label> 
+                                                <div class="state-country--wrap" id="country">
+                                                    <apex:inputhidden value="{!billingaddress.country}"/> 
+                                                    <select id="countryList">
+                                                        <option  value="" >--{!$Label.Select_Country}--</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <label for="state">{!$Label.Checkout_Billing_State}</label>
+                                                <div class="state-country--wrap" id="state">
+                                                    <apex:inputhidden value="{!billingaddress.state}"/> 
+                                                    <select id="stateList">
+                                                        <option  value="" >--{!$Label.wk_wedge__Select_State}--</option>
+                                                    </select>
+                                                </div>
+                                                <label for="billcity">{!$Label.Checkout_Billing_City}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_billing_city} *"  value="{!billingaddress.city}" id="billcity"/>
+                                                <label for="b_zipcode">{!$Label.wk_wedge__checkout_billing_zipcode}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_billing_zipcode} *"  value="{!billingaddress.zipcode}" id="b_zipcode"/>
+                                            </fieldset>
+                                        </div>
+                                        <apex:outputpanel styleclass="wdg-subblock--content order" layout="block" id="shippingBlock" rendered="{!AND(storeAdmin.wk_wedge__Enable_Shipping__c,NOT(isWallet))}">
+                                            <h4 class="subblock-heading bold"> <i class="wdg-checkout--icon ship"></i>{!$Label.Checkout_Shipping_Information}</h4>
+                                            <div class="diffshipping">
+                                                <div class="custom-checkbox {!IF(diffshipping,'checked','')}">
+                                                    <apex:inputcheckbox value="{!diffshipping}" id="diffship">
+                                                        <apex:actionsupport event="onclick" rerender="shippingBlock" status="docSearch" oncomplete="setShippingPickList();"/>
+                                                    </apex:inputcheckbox>
+                                                </div>
+                                                <span>{!$Label.wk_wedge__checkout_ship_to_a_different_address}</span>
+                                            </div>
+                                            <apex:outputpanel rendered="{!diffshipping}" layout="block"  styleclass="checkout-fields shipping">
+                                                <label for="shipFirst">{!$Label.wk_wedge__checkout_shipping_first_name}</label>
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_shipping_first_name} *"  value="{!shippingaddress.firstname}" id="shipFirst"/>
+                                                <label for="shipLast">{!$Label.wk_wedge__checkout_shipping_last_name}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_shipping_last_name} *"  value="{!shippingaddress.lastname}" id="shipLast"/>
+                                                <label for="shipemail">{!$Label.wk_wedge__checkout_shipping_email}</label> 
+                                                <apex:input type="email" html-placeholder="{!$Label.wk_wedge__checkout_shipping_email} *"  value="{!shippingaddress.email}" id="shipemail"/>
+                                                <label for="shipphn">{!$Label.wk_wedge__checkout_shipping_phone}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_shipping_phone} *"  value="{!shippingaddress.phoneN}" id="shipphn"/>
+                                                <label for="shipaddress">{!$Label.wk_wedge__checkout_shipping_address}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_shipping_address_line_1} *"  value="{!shippingaddress.address1}" id="shipaddress"/>
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_shipping_address_line_2}"  value="{!shippingaddress.address2}"/>                                            
+                                                <label for="scountry">{!$Label.wk_wedge__checkout_shipping_country}</label> 
+                                                <div class="state-country--wrap" id="scountry">
+                                                    <apex:inputHidden value="{!shippingaddress.country}"/>
+                                                    <select id="scountryList">
+                                                        <option  value="" >--{!$Label.wk_wedge__Select_Country}--</option>
+                                                    </select>
+                                                </div>
+                                                <label for="sstate">{!$Label.Checkout_Shipping_State}</label>  
+                                                <div class="state-country--wrap" id="sstate">
+                                                    <apex:inputHidden value="{!shippingaddress.state}"/>
+                                                    <select id="sstateList">
+                                                        <option  value="" >--{!$Label.wk_wedge__Select_State}--</option>
+                                                    </select>
+                                                </div>
+                                                <label for="shipcity">{!$Label.Checkout_Shipping_City}</label> 
+                                                <apex:inputtext html-placeholder="City *"  value="{!shippingaddress.city}"  id="shipcity"/>
+                                                <label for="s_zipcode">{!$Label.wk_wedge__checkout_shipping_zipcode}</label> 
+                                                <apex:inputtext html-placeholder="{!$Label.wk_wedge__checkout_shipping_zipcode} code *"  value="{!shippingaddress.zipcode}" id="s_zipcode"/>
+                                            </apex:outputpanel>
+                                        </apex:outputpanel> 
+                                    </div>  
+                                    <div class="col-md-6 col-xs-12 text-right" >
+                                        <apex:outputpanel id="shippingoptions" layout="block" styleclass="wdg-subblock--content order" rendered="{!AND(storeAdmin.wk_wedge__Enable_Shipping__c,NOT(isWallet))}">
+                                            <h4 class="subblock-heading bold"> <i class="wdg-checkout--icon shipment"></i>{!$Label.Checkout_Shipping_Options}</h4>
+                                            <apex:outputpanel layout="block" rendered="{!shippingoptions.size==0}">
+                                                <!--<p> {!$Label.wk_wedge__checkout_no_shipping_is_required}</p>-->
+                                                <input type="radio" id="NoShippingRequired" checked="true"/>
+                                                <label for="NoShippingRequired">{!$Label.wk_wedge__checkout_no_shipping_is_required}</label>
+                                            </apex:outputpanel> 
+                                            <apex:datalist value="{!shippingoptions}" id="shippingoptionslist" var="shiping" styleclass="wdg-payment-option" rendered="{!shippingoptions.size>0}">
+                                                <label>                                                    
+                                                    <input type="radio" name="shipping"  ship-type="{!shiping.shipid}" value="{!shiping.price}"/>
+                                                    {!shiping.name} - {!Currsymbol} {!shiping.price}
+                                                </label>
+                                            </apex:datalist>
+                                            <apex:inputhidden value="{!shippingcharge}" id="shipcharge"/>
+                                            <apex:inputhidden value="{!shippingid}" id="shiptype"/>
+                                        </apex:outputpanel>
+                                        <div class="wdg-subblock--content order">
+                                            <h4 class="subblock-heading bold clearfix payemntoptions"> 
+                                                <i class="wdg-checkout--icon payment"></i>{!$Label.Checkout_Payment_options}
+                                            </h4>
+                                            <apex:datalist value="{!payementMethods}" var="pay" styleclass="wdg-payment-option" id="paymentoptionlist">
+                                                <apex:outputPanel ><!--rendered="{!if((AND(OR(pay.types=='OFFLINE METHODS',pay.types=='CALL'),isWallet)),false,true)}"-->
+                                                    <label>
+                                                        <input type="radio" class="wdg-pmt--mthd" name="payment" pay-type="{!pay.types}" value="{!pay.val}" key="{!pay.key}" salt="{!pay.salt}" />
+                                                        {!pay.name}
+                                                    </label>
+                                                    <apex:outputpanel layout="block"  rendered="{!pay.types=='Paypal Express Checkout'}" styleclass="wdg-payment--info" id="paypalinfo">
+                                                        <span class="wdg-paymentinfo-tooltip" id="custom-tooltip">i</span>
+                                                        <div class="wdg-paymentinfo--msg" id="helpText">
+                                                            <div class="body">{!$Label.wk_wedge__paypal_amount_limit}</div>
+                                                        </div>
+                                                    </apex:outputpanel>
+                                                    <apex:outputpanel layout="block"  rendered="{!AND(pay.descr!=null,pay.descr!='')}" styleclass="wdg-payment--info" id="paymentinfo">
+                                                        <span class="wdg-paymentinfo-tooltip" id="custom-tooltip">i</span>
+                                                        <div class="wdg-paymentinfo--msg" id="helpText">
+                                                            <div class="body">{!pay.descr}</div>
+                                                        </div>
+                                                    </apex:outputpanel>
+                                                </apex:outputPanel>
+                                            </apex:datalist>
+                                            <table id="walletTab" style="display:{!if(OR(OR(isWallet,ISPICKVAL($User.UserType,'Guest'),walletCash<0.01),Not(storeadmin.wk_wedge__Enable_Wallet__c)),'none','initial')}">
+                                                <tr>
+                                                    <td>
+                                                        <div class="custom-checkbox {!IF(diffshipping,'checked','')} walletcheck">
+                                                            <apex:inputcheckbox value="{!walletReduction}" id="walletReduction"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span>{!$Label.Checkout_Pay_from_Wallet} (
+                                                            <span id="walletCurrency">{!currSymbol}&nbsp;
+                                                                <apex:outputText value="{0,number,###,##0.00}">
+                                                                    <apex:param value="{!walletCash * exchangeRate}"/>
+                                                                </apex:outputText>
+                                                            </span>
+                                                            )</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <apex:outputPanel id="orderinfo">
+                                                <span id="total" style="display:none">{!(Grandtotal+shippingcharge+taxcharge)}</span>
+                                                <apex:inputhidden value="{!orderid}" id="orderid"/>
+                                            </apex:outputPanel>
+                                        </div>
+                                        <div class="wdg-subblock--content order">
+                                            <h4 class="subblock-heading bold"> <i class="wdg-checkout--icon order"></i>{!$Label.Checkout_Order_Overview}</h4>
+                                            <table class="wdg-order--overview">
+                                                <tbody>
+                                                    <apex:repeat value="{!orderProduct}" var="product">
+                                                        <tr>
+                                                            <td><a href="{!urlfor($Page.wk_wedge__productdetail,null,[productid=product.Product_Id__r.id])}" class="product-image">
+                                                                <img src="/servlet/servlet.FileDownload?file={!if((product.Product_Id__r.Image_Id__c!=null),product.Product_Id__r.Image_Id__c,DefaultImageId)}"/>
+                                                                </a>
+                                                                <div class="product-info">
+                                                                    <apex:outputlink value="{!urlfor($Page.wk_wedge__productdetail,null,[productid=product.Product_Id__r.id])}" rendered="{!not(iswallet)}">
+                                                                        {!product.Product_Id__r.Name}
+                                                                    </apex:outputlink>
+                                                                    <apex:outputtext value="Wallet Recharge Amount" rendered="{!iswallet}"/>
+                                                                    <apex:outputPanel rendered="{!product.Cart_Option_Variant_Mappings__r.size>0}">
+                                                                        <br/>
+                                                                        <apex:repeat value="{!product.Cart_Option_Variant_Mappings__r}" var="key">  
+                                                                            <p style="display:inline-flex;text-transform:capitalize;">
+                                                                                <b>   {!key.Product_Option_Variant__r.Product_Option__r.Name} -&nbsp; </b>
+                                                                                <li style="list-style-type:none; display:inline-flex;">
+                                                                                    <apex:outputPanel rendered="{!key.Product_Option_Variant__r.wk_wedge__Type__c=='Absolute'}">{!key.Product_Option_Variant__r.Name} &#x00028; &#x0002B; {!Currsymbol}&nbsp;{!key.Product_Option_Variant__r.Modifier__c} &#x00029;</apex:outputPanel>
+                                                                                    <apex:outputPanel rendered="{!key.Product_Option_Variant__r.wk_wedge__Type__c=='Percent'}">{!key.Product_Option_Variant__r.Name} &#x00028; &#x0002B; %&nbsp;{!key.Product_Option_Variant__r.Modifier__c} &#x00029;</apex:outputPanel>
+                                                                                </li>                                                                                                                          
+                                                                            </p>
+                                                                        </apex:repeat>
+                                                                    </apex:outputPanel>
+                                                                    <br/>
+                                                                    <span class="coupon-highlight">
+                                                                    	<apex:outputText rendered="{!couponProds[product.Product_Id__r.id]}" value="Coupon Applied"/>
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            
+                                                            <td>  {!product.wk_wedge__quantity__c} 
+                                                                <apex:outputText rendered="{!if((iswallet),false,true)}">
+                                                                    &nbsp;&times;
+                                                                </apex:outputText>
+                                                                &nbsp;{!Currsymbol}  
+                                                                <apex:outputtext value="{0, number, ###,##0.00}">
+                                                                    <apex:param value="{!product.wk_wedge__Product_List_Price__c}"/>
+                                                                </apex:outputtext>
+                                                            </td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                    <!--<tr>
+                                                    	<td>Order Sub-Total</td>
+                                                        <td>{!ProductSubTotal}</td>
+                                                    </tr>-->
+                                                </tbody>
+                                            </table>
+                                            <hr class="wdg-blue--line" id="coupup"/>
+                                            <apex:outputpanel layout="block" id="couponInfo" rendered="{!NOT(isWallet)}">
+                                                <apex:outputpanel layout="block" rendered="{!(CouponInfo=null)}">
+                                                    <table class="wdg-order--overview">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="promocode-col">
+                                                                    <fieldset class="checkout-fields promocode">
+                                                                        <apex:inputtext value="{!promocode}" id="promo" html-placeholder="Apply your promocode here" styleclass="{!IF(AND(promoError!=null,promoError!=''),'err','')} display-inline--block"/>
+                                                                        <apex:outputpanel layout="block" rendered="{!AND(Promoerror!=null,Promoerror!='')}" styleclass="wdg-promoerror--wrap" id="searchInvoiceHelper">
+                                                                            <span class="wdg-promoerror-tooltip" id="custom-tooltip">i</span>
+                                                                            <div class="wdg-promoerror--msg left" id="helpText">
+                                                                                <div class="body">{!promoError}</div>
+                                                                            </div>
+                                                                        </apex:outputpanel>
+                                                                    </fieldset>
+                                                                </td>
+                                                                <td class="applyButton-col">
+                                                                    <apex:commandButton id="applyCoupon"  styleclass="wdg-btn standard blue" value="{!$Label.wk_wedge__checkout_apply}" action="{!applyPromoNew}" status="docSearch"/><!--rerender="grandTotal, couponInfo, js_block"-->
+                                                                    <!--<apex:commandButton id="applyCoupon"  styleclass="wdg-btn standard blue" value="{!$Label.wk_wedge__checkout_apply}" action="{!applypromo}" rerender="grandTotal,couponInfo,js_block" status="docSearch"/>-->
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </apex:outputpanel>
+                                                <apex:outputpanel layout="block" rendered="{!NOT(CouponInfo=null)}">
+                                                    <table class="wdg-order--overview right-alined coupon-info">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <span>{!$Label.wk_wedge__checkout_coupon_applied}</span> <span class="highlight">{!CouponInfo.code}</span>
+                                                                    <!--<apex:commandlink action="{!clearCoupon}" rerender="grandTotal,couponInfo" value="{!$Label.wk_wedge__checkout_coupon_remove_button}" status="docSearch" oncomplete="dsblpmntoptn()"/>-->
+                                                                    <apex:commandlink action="{!clearCouponNew}" value="{!$Label.wk_wedge__checkout_coupon_remove_button}" status="docSearch"/> <!-- rerender="grandTotal,couponInfo" oncomplete="dsblpmntoptn()"-->
+                                                                </td>
+                                                                <td>
+                                                                    - {!Currsymbol} {!CouponInfo.discount*exchangeRate}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </apex:outputpanel>
+                                                <hr class="wdg-blue--line" id="coupdown"/>
+                                            </apex:outputpanel>
+                                            <apex:outputpanel id="grandTotal" layout="block">
+                                                <!--<apex:outputText value="{!AND(shippingEnabled,NOT(isWallet))}"></apex:outputText>-->
+                                                <table class="wdg-order--overview right-alined">
+                                                    <tbody>
+                                                        <apex:outputPanel rendered="{!AND(shippingEnabled,NOT(isWallet))}">
+                                                            <tr>
+                                                                <td> {!$Label.wk_wedge__checkout_order_total}</td>
+                                                                <td>
+                                                                    {!Currsymbol}<apex:outputText value="{0,number,###,##0.00}">
+                                                                    <apex:param value="{!Grandtotal}"/>
+                                                                    </apex:outputText>
+                                                                </td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                                <td> {!$Label.wk_wedge__checkout_shipping_charges}</td>
+                                                                <td>
+                                                                    {!Currsymbol}<apex:outputText value="{0,number,###,##0.00}">
+                                                                    <apex:param value="{!shippingcharge}"/>
+                                                                    </apex:outputText>
+                                                                </td>
+                                                            </tr>
+                                                            <apex:outputPanel rendered="{!TaxRates.size > 0}">
+                                                                <tr>
+                                                                    <td> {!$Label.Checkout_Tax_charges}</td>
+                                                                    <!-- <td><apex:outputText value="{!Currsymbol} {!taxcharge}"/></td> -->
+                                                                </tr>
+                                                                <apex:repeat value="{!TaxRates}" var="key" rendered="{!TaxRates.size > 0}">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span style="font-weight:400">
+                                                                                <apex:outputText value="{!key.name} ({!key.taxInclude})"/>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><apex:outputText value="{!Currsymbol} {!key.price}"/></td>  
+                                                                    </tr> 
+                                                                </apex:repeat>
+                                                            </apex:outputPanel>
+                                                        </apex:outputPanel>
+                                                        
+                                                        <tr>
+                                                            <td> {!$Label.Checkout_Grand_Total}</td>
+                                                            <td>
+                                                                {!Currsymbol}&nbsp;
+                                                                <apex:outputText value="{0,number,###,##0.00}" id="totalPay">
+                                                                    <apex:param value="{!if((CouponInfo == null),(Grandtotal+shippingcharge+taxcharge),(Grandtotal+shippingcharge+taxcharge+CouponInfo.discount-CouponInfo.discount*exchangeRate))}"/>
+                                                                </apex:outputText>
+                                                                <apex:inputhidden id="taxchn" value="{!taxcharge}"/>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </apex:outputpanel>
+                                            <hr class="wdg-blue--line"/>
+                                        </div>
+                                        <div class="wdg-subblock--content order tnc">
+                                            <div>
+                                                <div class="custom-checkbox">
+                                                    <input type="checkbox" value=''/>
+                                                </div>
+                                                <apex:outputpanel rendered="{!NOT(TncViewAvailable)}">
+                                                    {!$Label.wk_wedge__checkout_i_agree_to_terms_and_conditions}
+                                                </apex:outputpanel>
+                                                <apex:outputpanel rendered="{!(TncViewAvailable)}"> 
+                                                    I agree to <apex:commandlink value=" Terms and Conditions" status="docSearch" action="{!tnCEnable}" rerender="TncView,notice"/>
+                                                </apex:outputpanel>
+                                            </div>
+                                            <div class="order-comment">
+                                                <textarea onkeyup="javascript:document.getElementById('{!$component.ordercomm}').value=this.value"></textarea>
+                                                <apex:inputhidden value="{!ordercomments}" id="ordercomm"/>
+                                            </div>
+                                            <div style="position:relative">
+                                                <div id="paypal-button"></div>
+                                                <apex:commandButton action="{!preparecheckout}" id="masterSubmit" oncomplete="placeOrder()" styleclass="wdg-btn extralarge blue" value="Place Order" status="waitstatus" rerender="none"/>
+                                            </div>
+                                        </div>                                  
+                                    </div>
+                                </div>  
+                            </apex:outputpanel> 
+                            <apex:inputhidden value="{!stripetoken}" id="stripe_token"/>
+                            <apex:actionFunction name="preparecheckout" action="{!preparecheckout}" rerender="none" status="docSearch"/>
+                            <apex:actionfunction name="appliedshipping" status="docSearch" rerender="shippingoptions" oncomplete="updatetotalPrice()"/>
+                            <apex:actionfunction name="updateshippingonpage" status="docSearch" rerender="grandTotal,js_block"/>
+                            <apex:actionRegion >
+                                <apex:inputhidden value="{!paymentId}" id="paymentId"/>
+                                <apex:inputhidden value="{!Paymenttype}" id="paymenttype"/>
+                                <apex:inputhidden value="{!Paymentkey}" id="paymentkey"/>
+                                <apex:inputhidden value="{!Paymentsalt}" id="paymentsalt"/>                                        
+                                <apex:inputhidden value="{!fname}" id="fname"/>
+                                <apex:inputhidden value="{!phoneNum}" id="phon"/>
+                                <apex:inputhidden value="{!email}" id="emailId"/>
+                                <apex:inputhidden value="{!mode}" id="mode"/>
+                                <apex:inputHidden value="{!fullwalletPay}" id="fullWalletPay"/>
+                            	<apex:actionfunction name="createAnOrder" action="{!createAnOrder}"  status="docSearch" rerender="cartItems,notice,orderinfo,payUmoneyForm" oncomplete="payUmoneyPayment()"/>
+                                <apex:actionfunction name="redirectOrder" action="{!redirectorderNew}"  status="docSearch" rerender="cartItems,notice"/>
+                            </apex:actionRegion>
+                        </apex:form>
+                    </apex:outputpanel>
+                    <apex:outputPanel id="payUmoneyForm" rendered="{!isInr}">
+                        <form action="https://test.payu.in/_payment" method="POST">
+                            <input type="hidden" name="key" id="keyVal" value="" />
+                            <input type="hidden" name="hash_string" id="hashStr" value="" />
+                            <input type="hidden" name="hash" id="hash" value=""/>
+                            <input type="hidden" name="txnid" id="txnId" value=""/>
+                            <input type="hidden" name="amount" id="amt"  />
+                            <input type="hidden" name="firstname" id="firstname"/>
+                            <input type="hidden" name="email" id="email"   />
+                            <input type="hidden" name="phone"  id="phn"/>
+                            <textarea name="productinfo" id="info" style="display:none;"></textarea>
+                            <input type="hidden" name="surl" size="64" value="{!SuccesUrl}" />
+                            <input type="hidden" name="furl" size="64" value="{!FailUrl}"/>
+                            <input type="hidden" name="service_provider" value="payu_paisa" size="64"/>
+                            <input type="submit" value="Submit"  id="sub" style="display:none;"/>
+                        </form>
+                        <form action="https://secure.payu.in/_payment" method="POST">
+                            <input type="hidden" name="key" id="keyValLive" value="" />
+                            <input type="hidden" name="hash_string" id="hashStrLive" value="" />
+                            <input type="hidden" name="hash" id="hashLive" value=""/>
+                            <input type="hidden" name="txnid" id="txnIdLive" value=""/>
+                            <input type="hidden" name="amount" id="amtLive"  />
+                            <input type="hidden" name="firstname" id="firstnameLive"/>
+                            <input type="hidden" name="email" id="emailLive"   />
+                            <input type="hidden" name="phone"  id="phnLive"/>
+                            <textarea name="productinfo" id="infoLive" style="display:none;"></textarea>
+                            <input type="hidden" name="surl" size="64" value="{!SuccesUrl}" />
+                            <input type="hidden" name="furl" size="64" value="{!FailUrl}"/>
+                            <input type="hidden" name="service_provider" value="payu_paisa" size="64"/>
+                            <input type="submit" value="Submit"  id="subLive" style="display:none;"/>
+                        </form>
+                    </apex:outputPanel>
+                </div>
+            </div> 
+            
+            <apex:outputPanel id="js_block">
+                <script>
+                disablepmtmthd();
+                function disablepmtmthd(){
+                    if('{!SelectedCurrency}'!='INR'){
+                        $("[pay-type$='PayUMoney']").attr("disabled",'');
+                    }else{
+                        $("[pay-type$='PayUMoney']").removeAttr("disabled");
+                    }
+                }
+                if($("span[id$=totalPay]").clone().children().remove().end().text().trim()== '0.00'){
+                    $('.wdg-pmt--mthd').each(function(){
+                        $(this).attr('disabled','disabled');
+                        $(this).prop('checked',false);
+                    });
+                    $('#walletTab').css('display','none');
+                    if($('.wdg-pmt--mthd-free').length == 0)
+                        $('.wdg-payment-option').append('<li><label><input class="wdg-pmt--mthd-free" name="Free" pay-type="Free" type="radio" value="" checked> {!$Label.wk_wedge__checkout_free}</label><div class="wdg-payment--info"><span class="wdg-paymentinfo-tooltip" id="custom-tooltip">i</span><div class="wdg-paymentinfo--msg" id="helpText"><div class="body">As grand total is 0.00 so checkout is for free</div></div></div></li>');
+                    else
+                        $('.wdg-pmt--mthd-free').find('input').attr('checked','checked');
+                }
+                </script>
+            </apex:outputPanel>
+            <apex:includeScript value="https://www.paypalobjects.com/api/checkout.js"/>
+            <script>
+                var clientIdsandbox='';     
+                var clientIdproduction='';      
+                var environment='';     
+                var selectedCurrency = '';      
+                var validateErrors =true;       
+                $(document).on("click",".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='paymentoptionlist'] input",function(){
+                    var payType=$(this).attr("pay-type");                           
+                    if(payType=='Paypal Express Checkout'){      
+                        var mode = $(this).attr('salt');                            
+                        if(mode=='TEST'){       
+                            clientIdsandbox = $(this).attr('key');      
+                            environment = 'sandbox';        
+                        }else if(mode=='LIVE'){     
+                            clientIdproduction = $(this).attr('key');       
+                            environment = 'production';     
+                        }       
+                        Visualforce.remoting.Manager.invokeAction(      
+                            '{!$RemoteAction.checkoutController.isCurrencySupported}',      
+                            '{!SelectedCurrency}',      
+                            function(result, event){        
+                                if (event.status) {     
+                                    selectedCurrency = '{!SelectedCurrency}';       
+                                } else if (event.type === 'exception') {}       
+                                    else {}     
+                            },      
+                            {escape: true}      
+                        );                              
+                        $('#paypal-button').show();     
+                        var totalPay = $('[Id$="totalPay"]').text();                        
+                        paypal.Button.render({      
+                            style: {        
+                                label: 'checkout', // checkout | credit | pay | buynow | generic        
+                                size:  'responsive', // small | medium | large | responsive     
+                                shape: 'rect', // pill | rect       
+                                color: 'silver' // gold | blue | silver | black     
+                            },      
+                            client: {       
+                                sandbox: clientIdsandbox,       
+                                production: clientIdproduction      
+                            },      
+                            env: environment,// sandbox | production        
+                            payment: function(data, actions) {
+                                window.placeOrder();
+                                preparecheckout();
+                                if(validateErrors){     
+                                    return actions.payment.create({
+                                        payment: {
+                                            transactions: [{
+                                                amount: {
+                                                    total: totalPay,
+                                                    currency: selectedCurrency
+                                                }
+                                            }]
+                                        }
+                                    }); 
+                                }else{      
+                                    return null;        
+                                }       
+                            },      
+                                    
+                            onAuthorize: function(data, actions) {                
+                                return actions.payment.execute().then(function() {  
+                                    console.log('data.paymentID: '+data.paymentID);     
+                                    if(data.paymentID!=null && data.paymentID!='')      
+                                        createAnOrder();        
+                                });     
+                            }       
+                        }, '#paypal-button');       
+                    }else{      
+                        $('#paypal-button').hide();
+                    }       
+                });     
+                        
+            </script>       
+            <script>
+            
+            function payUmoneyPayment(){
+                var exRate = '{!exchangeRate}';
+                if(exRate == '')
+                    exRate = 1;
+                else
+                    exRate = parseFloat(exRate);
+                console.log($('[Id$="totalPay"]').text());
+                var totalAmt = $('[Id$="totalPay"]').text().replace(/,/g,'');
+                console.log('test');
+                var val = $('[Id$="paymenttype"]').val();
+                if(val=='PayUMoney'){                  
+                    if($('[Id$="mode"]').val()=='TEST'){
+                        $('[Id$="keyVal"]').val($('[Id$="paymentkey"]').val());
+                        $('[Id$="firstname"]').val($('[Id$="fname"]').val());
+                        $('[Id$="email"]').val($('[Id$="emailId"]').val());
+                        $('[Id$="phn"]').val($('[Id$="phon"]').val());
+                        $('[Id$="amt"]').val(parseFloat(totalAmt));
+                        $('[Id$="info"]').val($('[Id$="orderid"]').val());
+                        var hashstr = '';
+                        var d = new Date();
+                        var txnId = ''+Math.floor((Math.random() * 100000))+''+d.getMilliseconds()+'';
+                        txnId = SHA512(txnId);
+                        txnId = txnId.substr(0,20);
+                        $('[Id$="txnId"]').val(txnId);
+                        hashstr+= $('[Id$="keyVal"]').val();
+                        hashstr+='|';
+                        hashstr+= $('[Id$="txnId"]').val();
+                        hashstr+='|';
+                        hashstr+= (parseFloat(totalAmt));
+                        hashstr+='|';
+                        hashstr+= $('[Id$="orderid"]').val();
+                        hashstr+='|';
+                        hashstr+= $('[Id$="firstname"]').val();
+                        hashstr+='|';
+                        hashstr+= $('[Id$="email"]').val();
+                        hashstr+='|||||||||||';
+                        hashstr+= $('[Id$="paymentsalt"]').val();
+                        $('[Id$="hashStr"]').val(hashstr);
+                        $('[Id$="hash"]').val(SHA512(hashstr));
+                        $('[Id$="sub"]').trigger('click');
+                    }else if($('[Id$="mode"]').val()=='LIVE'){
+                        $('[Id$="keyValLive"]').val($('[Id$="paymentkey"]').val());
+                        $('[Id$="firstnameLive"]').val($('[Id$="fname"]').val());
+                        $('[Id$="emailLive"]').val($('[Id$="emailId"]').val());
+                        $('[Id$="phnLive"]').val($('[Id$="phon"]').val());
+                        $('[Id$="amtLive"]').val(parseFloat(totalAmt));
+                        
+                        $('[Id$="infoLive"]').val($('[Id$="orderid"]').val());
+                        var hashstr = '';
+                        var d = new Date();
+                        var txnId = ''+Math.floor((Math.random() * 100000))+''+d.getMilliseconds()+'';
+                        txnId = SHA512(txnId);
+                        txnId = txnId.substr(0,20);
+                        $('[Id$="txnIdLive"]').val(txnId);
+                        hashstr+= $('[Id$="keyVal"]').val();
+                        hashstr+='|';
+                        hashstr+= $('[Id$="txnId"]').val();
+                        hashstr+='|';
+                        hashstr+= (parseFloat(totalAmt));
+                        hashstr+='|';
+                        hashstr+= $('[Id$="orderid"]').val();
+                        hashstr+='|';
+                        hashstr+= $('[Id$="firstname"]').val();
+                        hashstr+='|';
+                        hashstr+= $('[Id$="email"]').val();
+                        hashstr+='|||||||||||';
+                        hashstr+= $('[Id$="paymentsalt"]').val();
+                        $('[Id$="hashStrLive"]').val(hashstr);
+                        $('[Id$="hashLive"]').val(SHA512(hashstr));    
+                        $('[Id$="subLive"]').trigger('click');
+                    }               
+                }else if(val=='Skrill'){
+                    $('[Id$="skrillEmail"]').val($('[Id$="paymentkey"]').val());                            
+                    $('[Id$="skrillAmount"]').val($('[Id$="total"]').html());
+                    $('[Id$="skrillInfo"]').val($('[Id$="orderid"]').val());
+                    $('[Id$="skrillCurrencyCode"]').val('{!selectedCurrency}');
+                    $('[Id$="skrillSub"]').trigger('click');
+                }else{
+                    redirectOrder();
+                }                        
+                
+            }
+            </script>
+            <script>
+            window.stripePayment=function(config,e,amoun){
+                /* var url = "https://checkout.stripe.com/checkout.js";
+                    var handler=[];
+                    wk("[Id$='docSearch.start']").css({'display':'block'});
+                    wk.getScript( url, function() {
+                        handler = StripeCheckout.configure({
+                            key:config.key , 
+                            locale: 'auto',
+                            token: function(token) {
+                                wk("[id$='stripe_token']").val(token.id);
+                                createAnOrder();
+                            }
+                        });  
+                        handler.open({
+                                name:config.CompanyName ,
+                                description:config.companydescription,
+                                amount:parseInt(amoun)*100,
+                                image: config.companylogo,
+                                currency:config.curr,
+                                panelLabel: 'pay '+config.curr+' '+parseInt(amoun)*100,
+                                allowRememberMe: true
+                                
+                          });
+                        wk("[Id$='docSearch.start']").css({'display':'none'});    
+                            e.preventDefault(); 
+                    });*//*
+                      var url = "https://checkout.stripe.com/checkout.js";
+                    var handler=[];
+                    wk("[Id$='docSearch.start']").css({'display':'block'});
+                    wk.getScript( url, function() {
+                        handler = StripeCheckout.configure({
+                            key:config.key , 
+                            locale: 'auto',
+                            token: function(token) {
+                                wk("[id$='stripe_token']").val(token.id);
+                                createAnOrder();
+                            }
+                        });  
+                        handler.open({
+                                name:config.CompanyName ,
+                                description:config.companydescription,
+                                amount:parseInt(amoun)*100,
+                                image: config.companylogo,
+                                currency:config.curr,
+                                panelLabel: 'Pay '+config.curr+' '+parseInt(amoun)*100,
+                                allowRememberMe: true
+                                
+                          });
+                        wk("[Id$='docSearch.start']").css({'display':'none'});    
+                            e.preventDefault(); 
+                    });*/
+                var url = "https://checkout.stripe.com/checkout.js";
+                var handler=[];
+                wk("[Id$='docSearch.start']").css({'display':'block'});
+                wk.getScript(url, function() {
+                    handler = StripeCheckout.configure({
+                        key:config.key , 
+                        locale: 'auto',
+                        token: function(token) {
+                            wk("[id$='stripe_token']").val(token.id);
+                            createAnOrder();
+                        }
+                    });
+                    //bitcoin:true,
+                    handler.open({
+                        name:config.CompanyName ,
+                        description:config.companydescription,
+                        amount:parseFloat(amoun)*100,
+                        image: config.companylogo,
+                        currency:'{!selectedcurrency}',
+                        panelLabel: 'Pay ',
+                        allowRememberMe: true
+                    });
+                    //+(parseFloat(amoun).toFixed(2).replace(/./g, function(c, i, a) {return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                    wk("[Id$='docSearch.start']").css({'display':'none'});    
+                    //e.preventDefault(); 
+                });
+                
+            }
+            </script>
+            <script>
+            window.WalletCash = <apex:outputText value="{0,number,##0.00}"><apex:param value="{!WalletCash * exchangeRate}"/></apex:outputtext>;
+            window.GrandTotal = <apex:outputText value="{0,number,##0.00}"><apex:param value="{!(Grandtotal+shippingcharge+taxcharge)}"/></apex:outputtext>;
+            wk=jQuery.noConflict();
+            wk(function() {
+                function dsblpmntoptn(){
+                    wk('#paypal-button').hide();
+                    if(wk("span[id$=totalPay]").clone().children().remove().end().text().trim()== '0.00'){
+                        wk('.wdg-pmt--mthd').each(function(){
+                            wk(this).attr('disabled','disabled');
+                            wk(this).prop('checked',false);
+                        });
+                        wk('#walletTab').css('display','none');
+                        wk('.wdg-payment-option').append('<li><label><input class="wdg-pmt--mthd-free" name="Free" pay-type="Free" type="radio" checked> {!$Label.wk_wedge__checkout_free}</label><div class="wdg-payment--info"><span class="wdg-paymentinfo-tooltip" id="custom-tooltip">i</span><div class="wdg-paymentinfo--msg" id="helpText"><div class="body">As grand total is free so checkout is for free</div></div></div></li>');
+                    }
+                }
+                //dsblpmntoptn();
+                
+                if(wk("span[id$=totalPay]").clone().children().remove().end().text()== '0.00'){
+                    wk('#coupup').css('display','none');
+                    wk('#coupdown').css('display','none');
+                    wk('div[id$=couponInfo]').css('display','none');
+                }
+                wk('[id$=countrylist]').find('option:contains("'+wk('[id$=bhcountry]').val()+'")').filter(function() {
+                    return wk(this).text() === wk('[id$=bhcountry]').val();
+                }).prop('selected','selected');
+                console.log(wk('[id$=statelist]').children());
+                console.log(wk('[id$=statelist]').find('option:contains("'+wk('[id$=bhstate]').val()+'")').filter(function() {
+                    return wk(this).text() === wk('[id$=bhstate]').val();
+                }).prop('selected','selected'));
+            
+                
+                window.validatebilling=function(){
+                    var bflag=true;
+                    wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.billing input,.wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.shipping input").removeClass("err");
+                    wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.shipping [Id$='scountry'] select, .wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.billing [Id$='country'] select").removeClass("err")
+                    wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.shipping input, .wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.billing input").each(function(){
+                        wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.billing [Id$='state'] select").removeClass("err")
+                        wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='sstate'] select").removeClass("err");
+                        if(wk(this).attr('placeholder')!==undefined && wk(this).attr('placeholder')!='' &&  wk(this).attr('placeholder')!='email *' && wk(this).attr('placeholder')!='Zip / Postel code *' && wk(this).attr('placeholder')!='Address Line 2'){
+                            if(wk(this).val()==''){
+                                wk(this).addClass("err");
+                                bflag=false;
+                                console.log('bflag st:'+bflag);
+                            }
+                        }
+                        
+                        if(wk(this).attr('placeholder')=='Phone *'){
+                            var phn = wk(this).val();
+                            phn = phn.replace(/[^---*][-]/g,'');
+                            console.log(phn);
+                            if(!wk.isNumeric(phn)){
+                                bflag=false;
+                                wk(this).addClass("err");
+                            }
+                        }
+                        
+                        if(wk(this).attr('placeholder')=='email *'){
+                            var regex=/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+                            var a=wk(this).val();
+                            if(!(regex.test(a))){
+                                wk(this).addClass("err");
+                                bflag=false;
+                                console.log('bflag em:'+bflag);
+                            }
+                        }
+                        
+                        if(wk(this).attr('placeholder')=='Zip / Postel code *'){
+                            if(isNaN(wk(this).val()) || wk(this).val()==''){
+                                wk(this).addClass("err");
+                                bflag=false;
+                                console.log('bflag post:'+bflag);
+                            }
+                        }
+                        
+                        
+                    });
+                    var country=wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.billing [Id$='country'] select").val();
+                    
+                    if(country=='' || country==null || country == '--Select Country--'){ 
+                        wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.billing [Id$='country'] select").addClass("err");
+                        bflag=false;
+                    }
+                    if(!wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='state'] select").prop("disabled")){
+                        var state=wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='state'] select").val();
+                        if(state=='' || state==null){ 
+                            wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.billing [Id$='state'] select").addClass("err");
+                            bflag=false;
+                        }
+                    }
+                    
+                    var Scountry=wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.shipping [Id$='scountry'] select").val();
+                    if(wk("[Id$='diffship']").prop("checked")) {
+                        if(Scountry=='' || Scountry==null || Scountry == '--Select Country--'){ 
+                            wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .checkout-fields.shipping [Id$='scountry'] select").addClass("err");
+                            bflag=false;
+                        }
+                        if(wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='sstate'] select")!==undefined){
+                            if(!wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='sstate'] select").prop("disabled")){
+                                var sstate=wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='sstate'] select").val();
+                                if(sstate==''){ 
+                                    wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content  [Id$='sstate'] select").addClass("err");
+                                    bflag=false;
+                                }
+                            }
+                        }
+                    }
+                    return bflag;
+                }
+                window.validatePayemnt=function(){
+                    
+                }
+                window.updatetotalPrice=function(){
+                    wk("[Id$='shippingoptionslist']>li label:first").trigger("click");
+                    if(wk("[Id$='shippingoptionslist']>li label:first").html()===undefined){
+                        wk("[Id$='shipcharge']").val(0.00);
+                        wk("[Id$='shiptype']").val('');
+                        updateshippingonpage();
+                    }
+                }
+                wk(document).on("click",".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='shippingoptionslist']>li label",function(){
+                    wk("[Id$='shipcharge']").val(wk(" input",this).val());
+                    wk("[Id$='shiptype']").val(wk(" input",this).attr("ship-type"));
+                    updateshippingonpage();
+                });
+                window.validatemasteragreeMent =function(){
+                    return wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content.order.tnc .custom-checkbox input").prop("checked")
+                }
+                window.placeOrder=function(){
+                    var flag=true; 
+                    var payType='';
+                    var payid='';
+                    flag= window.validatebilling();
+                    if(flag){
+                        var pflag=false;
+                        wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='payemntError']").addClass("hide");
+                        wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .subblock-heading.bold.payemntoptions").css({"color":"#222"});
+                        wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content  [Id$='paymentoptionlist'] input").each(function(){
+                            console.log(wk(this).prop("checked"));
+                            if(wk(this).prop("checked")){
+                                pflag=true;                                
+                                payType=wk(this).attr("pay-type");
+                                wk("[Id$='paymenttype']").val(wk(this).attr("pay-type"));
+                                payid=wk(this).val();
+                                wk("[Id$='paymentId']").val(wk(this).val());
+                                wk("[Id$='paymentkey']").val(wk(this).attr("key"));
+                                wk("[Id$='paymentsalt']").val(wk(this).attr("salt"));
+                                wk("[Id$='fname']").val(wk('[Id$="billfirstname"]').val());
+                                wk("[Id$='emailId']").val(wk('[Id$="billemail"]').val());
+                                wk("[Id$='phon']").val(wk('[Id$="billphn"]').val());
+                                
+                            }
+                        });
+                        if($("span[id$=totalPay]").clone().children().remove().end().text().trim()== '{!currSymbol} 0.00'){
+                            pflag = true;
+                            if($('[id$=walletReduction').is(":checked")){
+                                $('[id$=fullWalletPay]').val(true);
+                            }
+                        }
+                        if(!pflag){
+                            wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='payemntError']").removeClass("hide");
+                            wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='payemntError'] div.body").html("payment Methhod is Required");
+                            wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .subblock-heading.bold.payemntoptions").css({"color":"#c43636"});
+                            window.ShowAlert("Please select a payment method");
+                            validateErrors = false;
+                        }
+                        else{
+                            var mflag=validatemasteragreeMent()
+                            if(!mflag){
+                                window.ShowAlert("Please agree to Term and conditions");
+                                validateErrors = false;
+                            }else{
+                                if(payType=='STRIPE'){
+                                    wk("[Id$='docSearch.start']").css({'display':'block'});
+                                    Visualforce.remoting.Manager.invokeAction(
+                                        '{!$RemoteAction.checkoutController.stripeConfig}',
+                                        payid,handleResponse, {escape: false});
+                                    
+                                }else if(payType=='Paypal Express Checkout'){
+                                }else{
+                                    createAnOrder();                                        
+                                }
+                                validateErrors = true;                                
+                            }
+                        }   
+                    }
+                    else{
+                        //console.log(wk(this).attr("pay-Type"));
+                        window.ShowAlert("Please correct the errors");
+                        validateErrors = false;
+                    }
+                    
+                }
+                function handleResponse(result,event){
+                    if (event.status){
+                        var config=JSON.parse(result);
+                        var amount=0;
+                        if(!isNaN(parseFloat(wk("[Id$='shipcharge']").val())))
+                            amount+=parseFloat(wk("[Id$='shipcharge']").val());
+                        if(!isNaN(parseFloat(wk("[Id$='taxchn']").val())))                              
+                            amount+=parseFloat(wk("[Id$='taxchn']").val());
+                        if(!isNaN(parseFloat('{!Grandtotal}')))
+                            amount+=parseFloat('{!Grandtotal}');
+                        if(wk('input[id$=walletReduction]').prop('checked') && amount > window.WalletCash){
+                            amount -= window.WalletCash;
+                        }
+                        window.stripePayment(config,event,amount);                              
+                    }
+                    
+                }
+                wk(document).on("mouseenter", ".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .wdg-promoerror--wrap",function(){
+                    wk(this).addClass("wdg-toltipshow");
+                }).on("mouseleave", ".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content  .wdg-promoerror--wrap",function(){
+                    wk(this).removeClass("wdg-toltipshow");
+                });
+                wk(document).on("mouseenter", ".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content .wdg-payment--info",function(){
+                    wk(this).addClass("wdg-toltipshow");
+                }).on("mouseleave", ".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content  .wdg-payment--info",function(){
+                    wk(this).removeClass("wdg-toltipshow");
+                });
+                wk(document).on("change", ".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='country'] select ",function(){
+                    var vals='';
+                    var selected=wk(this).val();
+                    wk(" option ",this).each(function(){
+                        if(selected==wk(this).val())
+                            vals=wk(this).text()
+                            });
+                    wk(this).next().val(vals);
+                    if(!wk("[Id$='diffship']").prop("checked")){
+                        if(wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='state'] select").prop("disabled")){
+                            wk("[Id$='bhstate']").val('');
+                            appliedshipping();  
+                        }
+                    }
+                });
+                wk(document).on("change",".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='scountry'] select ",function(){
+                    var vals='';
+                    var selected=wk(this).val();
+                    wk(" option ",this).each(function(){
+                        if(selected==wk(this).val())
+                            vals=wk(this).text()
+                            });
+                    wk(this).next().val(vals);
+                    if(wk(".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='sstate'] select").prop("disabled")){
+                        wk("[Id$='shstate']").val('');
+                        appliedshipping();  
+                    }
+                });
+                wk(document).on("change", " .wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='sstate'] select ",function(){
+                    console.log(this.value);
+                    var vals='';
+                    var selected=wk(this).val();
+                    wk(" option ",this).each(function(){
+                        if(selected==wk(this).val())
+                            vals=wk(this).text()
+                            });
+                    wk(this).parent().next().val(vals);
+                    appliedshipping();
+                });
+                wk(document).on("change", ".wdg-checkout--wrapper .wdg-block-content .wdg-subblock--content [Id$='state'] select",function(){
+                    console.log(this.value);
+                    var vals='';
+                    var selected=wk(this).val();
+                    wk(" option ",this).each(function(){
+                        if(selected==wk(this).val())
+                            vals=wk(this).text()
+                            });
+                    wk(this).parent().next().val(vals);
+                    if(!wk("[Id$='diffship']").prop("checked")){
+                        appliedshipping();  
+                    }
+                });
+                wk(document).on("click",".custom-checkbox input",function(){
+                    wk(this).parent().removeClass("checked");
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                    }     
+                });
+                wk(document).on("change","input[id$=walletReduction]",function(){
+                    var wallena = '{!storeadmin.wk_wedge__Enable_Wallet__c}';
+                    if(wallena == 'true'){
+                        var currentPrice = $('span[id$=totalPay]').html();
+                        var price = currentPrice.substring(currentPrice.indexOf(' ')+1);
+                        price = parseFloat(price.replace(/,/g,''));
+                        var currcash = window.WalletCash.toFixed(2).replace(/./g, function(c, i, a) {
+                            return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                        });
+                        var currtotal = window.GrandTotal.toFixed(2).replace(/./g, function(c, i, a) {
+                            return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                        });
+                        price = price - parseFloat(window.WalletCash);
+                        if($(this).is(":checked")){
+                            var parnode = $('span[id$=totalPay]').parent();
+                            var parnodehtml = $(parnode).html();
+                            $(parnode).html(parnodehtml.substring(parnodehtml.indexOf('<')));
+                            if(price>0){
+                                $('span[id$=totalPay]').html('<del>{!currSymbol} '+currtotal+'</del> {!currSymbol} ' + price.toFixed(2).replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                }));
+                                $('#walletCurrency').html('<del>{!currSymbol} '+currcash+'</del> {!currSymbol} 0.00');
+                            }
+                            else{
+                                $('#paypal-button').hide();
+                                $('span[id$=totalPay]').html('<del>{!currSymbol} '+currtotal+'</del> {!currSymbol} 0.00');
+                                $('#walletCurrency').html('<del>{!currSymbol} '+currcash+'</del> {!currSymbol} '+(-1*price).toFixed(2).replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                }));
+                                $('.wdg-pmt--mthd').each(function(){
+                                    $(this).attr('disabled','disabled');
+                                    $(this).prop('checked',false);
+                                });
+                            }
+                        }else{
+                            $('span[id$=totalPay]').html('{!currSymbol} '+currtotal);
+                            $('#walletCurrency').html('{!currSymbol} '+currcash);
+                            $('.wdg-pmt--mthd').each(function(){
+                                $(this).removeAttr('disabled');
+                            });
+                            disablepmtmthd();
+                        }
+                    }
+                });
+            }(jQuery));
+            </script>
+            <script>
+            /** Counrty State Picklist JS START**/
+            var jsonString = getJsonString();
+            var contries = jsonString['Countries'];
+            var country_array = [];
+            var state_temp_array = [];
+            var state_array = [];
+            var state_temp = '';
+            var vals='';
+            
+            wk=jQuery.noConflict();
+            function setBillingPickList() {
+                setCountry('countryList');
+                setState('countryList', 'stateList');
+            }
+            function setShippingPickList() {
+                setCountry('scountryList');
+                setState('scountryList', 'sstateList');
+            }
+            function setCountry(selectedCountryId) {
+                var selected = '';
+                var existVal = 0;
+                console.log(contries);
+                //
+                if(selectedCountryId == 'countryList') {
+                    if('{!billingaddress.country}' != '') {
+                        selected = '{!billingaddress.country}';
+                    }
+                } else {
+                    if('{!billingaddress.country}' != ''){
+                        selected = '{!shippingaddress.country}';
+                    }
+                }
+                console.log(selected);
+                country_array = [];
+                
+                contries.forEach(function(item, index) {
+                    state_temp_array = [];
+                    country_array.push(item['CountryName']);
+                    var option = wk('<option />');
+                    option.attr('value', item['CountryName']).text(item['CountryName']);
+                    wk('[Id$="'+selectedCountryId+'"]').append(option);
+                    item['States'].forEach(function(itemState, indexState) {
+                        state_temp_array.push(itemState['StateName']);
+                    } );
+                    state_array[item['CountryName']] = state_temp_array;
+                    if(item['CountryName'] == selected){
+                        existVal = 1;
+                    }
+                });
+                if(existVal == 1){
+                    wk('[Id$="'+selectedCountryId+'"]').val(selected);
+                }
+            }
+            
+            function setState(selectedCountryId, selectedStateId){
+                var existVal = 0;
+                var setStateVal = '';
+                var selected = wk('[Id$="'+selectedCountryId+'"]').val();
+                
+                wk('[Id$="'+selectedStateId+'"]').empty();
+                var option = wk('<option />');
+                option.attr('value', '').text('--{!$Label.wk_wedge__select_state}--');
+                wk('[Id$="'+selectedStateId+'"]').append(option);
+                if(state_array[selected] != null) {
+                    state_array[selected].forEach(function(item, index){
+                        var option = wk('<option />');
+                        option.attr('value', item).text(item);
+                        wk('[Id$="'+selectedStateId+'"]').append(option);
+                        
+                        if(selectedCountryId == 'countryList') {
+                            if('{!billingaddress.state}' == item) {
+                                setStateVal = '{!billingaddress.state}';
+                                existVal = 1;
+                            }
+                        } else {
+                            if('{!shippingaddress.state}' == item) {
+                                setStateVal = '{!shippingaddress.state}';    
+                                existVal = 1;
+                            }
+                        }
+                    });
+                }
+                
+                if(existVal == 1) {
+                    wk('[Id$="'+selectedStateId+'"]').val(setStateVal);
+                }
+            }
+            
+            
+            wk(document).on("change", "#countryList",function(){
+                setState('countryList', 'stateList');
+                var selected = wk('#countryList').val();
+                wk('#countryList').prev().val(selected); 
+                //wk('#countryList').prev().val(selected); 
+            });
+            wk(document).on("change", "#stateList",function(){
+                var selectedState=wk("#stateList").val();
+                
+                wk("#stateList").prev().val(selectedState); 
+                //wk("#stateList").prev().val(selectedState); 
+                
+            });
+            wk(document).on("change", "#scountryList",function(){
+                setState('scountryList', 'sstateList');
+                var selected = wk('#scountryList').val();
+                wk('#scountryList').prev().val(selected);
+                //wk('#scountryList').prev().val(selected);
+            });
+            
+            wk(document).on("change", "#sstateList",function(){
+                var selectedState=wk('#sstateList').val();
+                wk('#sstateList').prev().val(selectedState); 
+                //wk('#sstateList').next().val(selectedState); 
+            });
+            wk(function() {
+                setCountry('countryList');
+                setState('countryList', 'stateList');                
+            }(jQuery));
+            /** Counrty State Picklist JS End**/
+            </script>
+        </apex:define> 
+    </apex:composition> 
+</apex:page>

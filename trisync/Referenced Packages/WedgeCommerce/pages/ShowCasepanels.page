@@ -1,0 +1,432 @@
+<apex:page showheader="false" setup="false" standardstylesheets="false" controller="wk_wedge.showcasePanelController" cache="false" title="Showcase Panels" docType="HTML-5.0">
+    <style>
+        .wdg-nav-icon.template {
+            background-color: #34becd;
+        }
+        .validateClass{
+            color: #EF6E64;
+            font-size: 12px;
+        }
+         .wdg-addOption--btn{
+                     cursor: pointer;
+                    
+                     padding: 8px;
+                     background: #7DC37D;
+                     color: #fff;
+                     display: inline-block;
+                     text-align: center;
+                     text-decoration: none;
+                     border-radius: 2px;
+                     border: none;
+                     font-size: 13px;
+                     font-weight: 600;
+                     box-shadow: none;
+                     outline: none;
+                 }
+                 .wdg-body .wdg-dataTable--box{
+            margin-top:5px;
+        }
+        .totalRec{
+            font-size: 14px;
+            color: #777777;
+            margin-top:2px;
+        }
+        .wdg-body-titletext{
+            display:inline-block;
+            vertical-align: top;
+            line-height: 1;
+        }
+        .recperpage{
+            background: #FFF;
+            padding: 4px 8px;
+            border: 2px solid #57BDC2;
+            border-radius: 4px;
+            cursor:pointer;
+            margin-right:10px;
+        }
+        .recperpage:focus{
+            outline:none;
+            cursor:pointer;
+        }
+    </style>
+    <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>    
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+                 
+         <apex:form id="thepopblock">
+          <apex:outputpanel layout="block" id="thepopup">
+             <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!fadein}">
+                <div class="wdg-popup--modal">
+                     <div class="wdg-modal--header clearfix">
+                        <div class="wdg-modal--title">{!popupheading}</div>
+                             <apex:commandlink styleclass="wdg-modal--close"  status="waitstatus" action="{!close}" rerender="thepopblock,wdgerrorBlock,wdgTable,wdgTablebox"/>
+                       </div> 
+                       <div class="wdg-modal--content">
+                          <div class="wdg-modal--fieldbox">
+                             <label >Heading :</label>
+                             <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputfield value="{!panels.name}"  id="ip_title" rendered="{!metaname==null}"/>
+                                <apex:inputtext value="{!metaname}" id="prodmetaName" rendered="{!metaname!=null}"/>
+                            </div>
+                            <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>
+                        </div>
+                       
+                       <div class="wdg-modal--fieldbox">
+                            <label >Position :</label>
+                             <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputfield value="{!panels.wk_wedge__Position__c}"  id="ip_panel"/>
+                            </div>
+                        </div>
+                        <div class="wdg-modal--fieldbox">
+                            <label>Criteria :</label>
+                             <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputfield value="{!panels.wk_wedge__Criteria__c}"  id="ip_panelcr"/>
+                            </div>
+                        </div>
+                        <apex:inputhidden id="criteriaQ" value="{!panels.wk_wedge__Criteria_Query__c}"/>
+                        <div id="criteriaW">
+                            
+                        </div> 
+                         <div class="wdg-modal--fieldbox">
+                            <label >Show Heading :</label>
+                            <div class="custom-checkbox {!IF(panels.show_heading__C,'checked','')}">
+                               <apex:inputfield value="{!panels.wk_wedge__Show_Heading__c}"  id="ip_heading"/>
+                            </div>
+                        </div>
+                         <div class="wdg-modal--fieldbox">
+                            <label >Active :</label>
+                            <div class="custom-checkbox {!IF(panels.Active__C,'checked','')}">
+                               <apex:inputfield value="{!panels.wk_wedge__Active__c}"  id="ip_active"/>
+                            </div>
+                        </div>  
+                   </div> 
+                    <div  class="wdg-modal--footer"> 
+                        <a href="javascript:void(0)"  onclick="validateVal(event)" class="wdg-modal--btn" id="upbtn">{!popbtn}</a>
+                        <apex:actionfunction name="updatepanels" action="{!updatepanel}" status="waitstatus" oncomplete="recordcount()" rerender="thepopup,wdgerrorBlock,wdgTable,wdgTablebox"/>
+                    </div>
+                  </div> 
+                  <div class="wdg-popup--bg fadein"></div>     
+            </apex:outputpanel>
+         </apex:outputpanel>
+           <div class="wdg-body">
+                 <apex:outputpanel layout="block" id="wdgerrorBlock">
+                     <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                 </apex:outputpanel>
+                 <div class="wdg-body--titleblock clearfix">
+                       <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo showcase"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> Showcase Panels </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div>
+                        <div class="wdg-filter--options" style="display:inline-block">
+                                <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!welan.activatedLanguages.size>1}">
+                                    <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                    <apex:selectOptions value="{!welan.activatedLanguages}">
+                                        <span class="caret multidropdownsymbol"></span>
+                                    </apex:selectOptions>
+                                </apex:selectList>
+                            </div>  
+                      <div class="wdg-ctrl--btnPanel">
+                         <apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!pagesize}" id="recPerPage" onchange="updatePage()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>
+                         <apex:commandButton styleclass=" wdg-addOption--btn"  value="Template Menus" action="{!cancelpage}">
+                                        <span></span>
+                           </apex:commandButton>
+                         <apex:commandlink styleclass="wdg-ctrl--btn addNew" action="{!addlink}" status="waitstatus" rerender="thepopblock,wdgerrorBlock,wdgTable,wdgTablebox">
+                                <span></span>
+                           </apex:commandlink>
+                          <apex:commandlink action="{!cancelpage}" styleclass="wdg-ctrl--btn cancel"> 
+                                    <span></span>
+                         </apex:commandlink>
+                     </div>
+                  </div>
+                    <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-dataTable--box">
+                        <apex:datatable value="{!allpanels}"  id="wdgTable" var="P" styleclass="wdg-dataTable">
+                            <apex:column styleclass="medium" >
+                                <apex:facet name="header">Panel Name</apex:facet>
+                                <apex:outputfield value="{!P.name}"/>
+                                
+                            </apex:column>
+                            <apex:column styleclass="medium" >
+                                <apex:facet name="header">Panel Position</apex:facet>
+                                <apex:outputfield value="{!P.wk_wedge__Position__c}"/>
+                            </apex:column>
+                            <apex:column styleclass="medium">
+                                <apex:facet name="header"> Criteria</apex:facet>
+                                 <apex:outputfield value="{!P.wk_wedge__Criteria__c}"/>
+                            </apex:column>
+                            <apex:column styleclass="medium">
+                                <apex:facet name="header">Action</apex:facet>
+                                   <apex:commandlink styleclass="wdg-ctrl--btn edit" value="" oncomplete="criteriaQuery()"  action="{!editlink}" status="waitstatus" rerender="thepopup,wdgerrorBlock,wdgTable,wdgTablebox" >
+                                        <span></span>
+                                        <apex:param name="editid" value="{!P.id}" assignto="{!editid}"/>
+                                    </apex:commandlink>
+                                    <div class="wdg-ctrl--btn delete" targetid="{!P.id}"><span></span></div>
+                           </apex:column>
+                              <apex:facet name="footer">
+                                   <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                       <apex:outputpanel rendered='{!allpanels.size>0}'>
+                                           <apex:commandlink value="" action="{!first}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                           <apex:commandlink value="" action="{!previous}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                           <apex:outputText styleclass="wdg-dataTable--pages" value="{!pagenumber} of {!totalPages} "></apex:outputText>
+                                           <apex:commandlink value="" action="{!next}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                           <apex:commandlink value="" action="{!last}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                       </apex:outputpanel> 
+                                       <apex:outputpanel rendered="{!allpanels.size==0}">
+                                           <div >No Records Returned !!!!</div>
+                                       </apex:outputpanel>
+                                   </apex:outputpanel>
+                               </apex:facet>
+                        </apex:datatable>
+                      <apex:actionfunction name="deleteoneRecord" action="{!deleteSeltd}" oncomplete="recordcount()"/>
+                      <apex:inputhidden id="deletable" value="{!deletesel}"/>
+                       <apex:actionFunction name="updatePage" action="{!updatedata}" status="waitstatus" />
+
+                    </apex:outputpanel>
+                             
+                </div>  
+        </apex:form>
+         <script>
+            jQuery(document).ready(function($) {
+              // Get Accounts via the REST API
+                  $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Template_Panels__c',
+                    {
+                      beforeSend: function(xhr) {
+                        // Set the OAuth header from the session ID
+                        xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                      },
+                      success: function(response) {
+                        // Append the records to HTML list
+                        var str=JSON.stringify(response);
+                        var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                        var arr = total.split(',');
+                        document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                });
+                      },
+                      error: function(jqXHR, textStatus, errorThrown) {
+                        // Error
+                        console.log(jqXHR.status + ': ' + errorThrown);
+                      }
+                    }
+                  );
+                  
+                }); 
+                function recordcount(){
+                    $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Template_Panels__c',
+                    {
+                      beforeSend: function(xhr) {
+                        // Set the OAuth header from the session ID
+                        xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                      },
+                      success: function(response) {
+                        // Append the records to HTML list
+                        var str=JSON.stringify(response);
+                        var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                        var arr = total.split(',');
+                        document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                });
+                      },
+                      error: function(jqXHR, textStatus, errorThrown) {
+                        // Error
+                        console.log(jqXHR.status + ': ' + errorThrown);
+                      }
+                    }
+                  );
+                }    
+            </script>
+       <script>
+            wk=jQuery.noConflict();
+                (function(wk){
+                    wk( document ).on("change",".wdg-popup [Id$='ip_panelcr']",function(){
+                        if(wk(this).val()=='Create On your own'){
+                            wk("[Id$='criteriaW']").addClass('wdg-modal--fieldbox');
+                            field='<label>SOQL for Criteria :</label> ';
+                            field+='<div class="requiredInput"><div class="requiredBlock"></div> ';
+                            field+='<input type="text" id="criteriaQuery"/></div> ';
+                            wk("[Id$='criteriaW']").append(field);
+                        }else{
+                           wk("[Id$='criteriaW']").empty();
+                            wk("[Id$='criteriaW']").removeClass('wdg-modal--fieldbox')
+                            
+                        }
+                    });
+                   wk( document ).on("keyup",".wdg-popup [Id$='criteriaQuery']",function(){
+                        wk("[Id$='criteriaQ']").val(wk(this).val())
+                    });
+                   window.criteriaQuery=function(){
+                        
+                        if(wk(".wdg-popup [Id$='ip_panelcr']").val()=='Create On your own'){
+                            wk(" .wdg-popup  [Id$='criteriaW']").addClass('wdg-modal--fieldbox');
+                            field='<label>SOQL for Criteria :</label> ';
+                            field+='<div class="requiredInput"><div class="requiredBlock"></div> ';
+                            field+='<input type="text" id="criteriaQuery"/></div> ';
+                            wk(".wdg-popup [Id$='criteriaW']").append(field);
+                        }
+                         wk(".wdg-popup [Id$='criteriaQuery']").val(wk(".wdg-popup [Id$='criteriaQ']").val());
+                     
+                    
+                   }
+                   window.validateVal=function(e){
+                        var flag=false;
+                        /* wk(".wdg-popup [Id$='ip_title'],.wdg-popup [Id$='ip_panel'],.wdg-popup [Id$='ip_panelcr'],.wdg-popup [Id$='criteriaQuery']").css({'border':'1px solid #adadad'});
+                        if(wk(".wdg-popup [Id$='ip_title']").val()==null || wk(".wdg-popup [Id$='ip_title']").val()==''){
+                             flag=true;
+                             wk(".wdg-popup [Id$='ip_title']").css({'border':'1px solid #CC0000'});
+                        }
+                        if(wk(".wdg-popup [Id$='ip_panel']").val()==null || wk(".wdg-popup [Id$='ip_panel']").val()==''){
+                             flag=true;
+                             wk(".wdg-popup [Id$='ip_panel']").css({'border':'1px solid #CC0000'});
+                        }
+                        if(wk(".wdg-popup [Id$='ip_panelcr']").val()==null || wk(".wdg-popup [Id$='ip_panelcr']").val()==''){
+                             flag=true;
+                             wk(".wdg-popup [Id$='ip_panelcr']").css({'border':'1px solid #CC0000'});
+                        }
+                        if(wk(".wdg-popup [Id$='ip_panelcr']").val()=='Create On your own' && (wk(".wdg-popup [Id$='criteriaQuery']").val()==null || wk(".wdg-popup [Id$='criteriaQuery']").val()=='')){
+                             flag=true;
+                             wk(".wdg-popup [Id$='criteriaQuery']").css({'border':'1px solid #CC0000'});
+                        }
+                        if(!flag){
+                            updatepanels();
+                        }*/
+                        updatepanels();
+                   }
+                })(jQuery);
+       </script>
+        <!--       
+         <apex:form id="thepopblock">
+             <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!fadein}">
+                <div class="wdg-popup--modal">
+                     <div class="wdg-modal--header clearfix">
+                        <div class="wdg-modal--title">Edit {!panels.name}</div>
+                             <apex:outputlink styleclass="wdg-modal--close" value="{!URLFOR($Page.ShowCasepanels, null,['tcompid'=$CurrentPage.parameters.tcompid])}"></apex:outputlink>
+                       </div>
+                       <div class="wdg-modal--content">
+                          <div class="wdg-modal--fieldbox">
+                             <label >Heading :</label>
+                             <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputfield value="{!panels.name}"  id="ip_title"/>
+                            </div>
+                        </div>
+                        <div class="wdg-modal--fieldbox">
+                            <label >Panel :</label>
+                             <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputfield value="{!panels.Panel__c}"  id="ip_panel"/>
+                            </div>
+                        </div>
+                        <div class="wdg-modal--fieldbox">
+                            <label>Criteria :</label>
+                             <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputfield value="{!panels.wk_wedge__Criteria__c}"  id="ip_panelcr"/>
+                            </div>
+                        </div>
+                     
+                 </div> 
+                    <div  class="wdg-modal--footer"> 
+                        <apex:commandbutton value="{!popbtn}" onclick="javascript:this.disabled= true;" id="upbtn" action="{!updatepanel}" styleclass="wdg-modal--btn" status="waitstatus" rerender="thepopblock"/></div>
+                    </div> 
+                     <div class="wdg-popup--bg fadein"></div>     
+            </apex:outputpanel>
+     
+           <div class="wdg-body">
+                  <div class="wdg-body--header">
+                       <apex:messages id="pagemessgaes" styleclass="pagemessages"/>
+                 </div>
+                 <div class="wdg-body--titleblock clearfix">
+                       <div class="wdg-body--title">
+                           <span class="wdg-title--logo panel"></span>
+                           <span> Showcase Panels </span>
+                       </div>
+                      <div class="wdg-ctrl--btnPanel">
+                         <apex:commandlink styleclass="wdg-ctrl--btn addNew" action="{!addlink}" status="waitstatus" rerender="thepopblock">
+                                <span></span>
+                           </apex:commandlink>
+                          <a href="{!$page.storeAdmin}" class="wdg-ctrl--btn cancel"> 
+                                    <span></span>
+                         </a>
+                     </div>
+                  </div>
+                    <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-dataTable--box">
+                        <apex:datatable value="{!allpanels}" var="P" styleclass="wdg-dataTable No-footer">
+                            <apex:column styleclass="medium" >
+                                <apex:facet name="header">Panel Name</apex:facet>
+                                <apex:outputfield value="{!P.name}"/>
+                                
+                            </apex:column>
+                            <apex:column styleclass="medium" >
+                                <apex:facet name="header">Panel Position</apex:facet>
+                                <apex:outputfield value="{!P.Panel__c}"/>
+                            </apex:column>
+                            <apex:column styleclass="medium">
+                                <apex:facet name="header"> Criteria</apex:facet>
+                                 <apex:outputfield value="{!P.wk_wedge__Criteria__c}"/>
+                            </apex:column>
+                            <apex:column styleclass="medium">
+                                <apex:facet name="header">Action</apex:facet>
+                                <apex:outputpanel layout="block" rendered="{!(P.panel_name__c!='Central')}"> 
+                                    <apex:commandlink styleclass="wdg-ctrl--btn edit" value=""  action="{!editlink}" status="waitstatus" rerender="thepopblock" >
+                                        <span></span>
+                                        <apex:param name="editid" value="{!P.id}" assignto="{!editid}"/>
+                                    </apex:commandlink>
+                                    <div class="wdg-ctrl--btn delete" targetid="{!P.id}"><span></span></div>
+                                </apex:outputpanel>
+                           </apex:column>
+                        </apex:datatable>
+                         <apex:outputpanel layout="block" styleclass="wdg-no-results" rendered="{!allpanels.size==0}">
+                             <apex:outputpanel layout="block" >
+                                  <span>No Records Returned !!!!</span>
+                              </apex:outputpanel>
+                       </apex:outputpanel> 
+                      <apex:actionfunction name="deleteoneRecord" action="{!deleteSeltd}"/>
+                      <apex:inputhidden id="deletable" value="{!deletesel}"/>
+                 
+                    </apex:outputpanel>
+                             
+                </div>  
+        </apex:form>
+       -->
+       <script>
+            function ValidateSave(event){
+                    updateheaderLink();
+                        return true;
+                    var str  = $("[Id$='ip_title']").val();                
+                    /*if (str.match(/^[A-z0-9\d\s]+$/)) {
+                        $("[Id$='validate']").html('');
+                        
+                    }
+                    else{                    
+                        alerto("Review all the errors!");
+                        $("[Id$='validate']").html('Special Characters Are Not Allowed');                        
+                        event.preventDefault();
+                        return false;
+                    }*/
+                }
+                
+                wk=jQuery.noConflict();
+                (function(wk){
+                    wk( document ).on("blur","[Id$='ip_title']",function(){
+                        var str  = wk("[Id$='ip_title']").val();                       
+                        if (str.match(/^[A-z0-9\d\s]+$/)) {
+                            wk("[Id$='validate']").html('');
+                        }
+                        else{
+                            wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        }
+                     })
+                     
+                 }(jQuery));
+        </script>       
+       </apex:define>
+    </apex:composition> 
+</apex:page>

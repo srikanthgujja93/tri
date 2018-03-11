@@ -1,0 +1,26 @@
+<apex:page controller="gkn_sms.SmartSMSCreatePermissionSetCtrl" >
+    <apex:includeScript value="{!URLFOR($Resource.gkn_sms__jszip, '/jszip.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.gkn_sms__jszip, '/jszip-load.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.gkn_sms__jszip, '/jszip-deflate.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.gkn_sms__jszip, '/jszip-inflate.js')}"/>
+    
+    <apex:form id="form">    
+        <apex:sectionHeader title="Create SMS Admin User & SMS User Permission Sets"/>
+		<apex:pageMessages />
+		<apex:actionPoller action="{!checkAsyncRequest}" interval="5" rerender="form" rendered="{!NOT(ISNULL(AsyncResult))}"/>
+		<apex:actionFunction name="deployZip" action="{!deployZip}" rendered="{!ISNULL(AsyncResult)}" rerender="form">
+			<apex:param name="data" assignTo="{!ZipData}" value=""/>
+		</apex:actionFunction>
+        <c:LSZip name="generateZip" oncomplete="deployZip(data);" rendered="{!ISNULL(AsyncResult)}">
+            <c:LSzipEntry path="package.xml" data="{!PackageXml}"/>
+       		<c:LSzipEntry path="permissionsets/SmartSMS_APP_User.permissionset" data="{!PackageXmlPermissionSet}"/>
+            <c:LSzipEntry path="permissionsets/SmartSMS_APP_Admin_User.permissionset" data="{!PackageXmlPermissionSetAdmin}"/>
+        </c:LSZip>
+    
+        <apex:outputPanel rendered="{!!isExists}">
+            <apex:outputPanel rendered="{!ISNULL(AsyncResult)}">
+                <input type="button" onclick="generateZip();" value="Deploy"/>
+            </apex:outputPanel>
+        </apex:outputPanel>        
+    </apex:form>
+</apex:page>

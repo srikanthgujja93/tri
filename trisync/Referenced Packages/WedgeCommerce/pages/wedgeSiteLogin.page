@@ -1,0 +1,388 @@
+<apex:page title="{!$Site.masterlabel}"  controller="wk_wedge.wedgeSiteloginController" standardstylesheets="false" setup="false" showheader="false" cache="false"  doctype="html-5.0">
+     <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+         <div class="container">
+            <style>
+                .wdg-msg--box{
+                    height: 500px; 
+                    width: 600px; 
+                    margin: 6% auto;
+                    padding:1px 60px;
+                    box-shadow: 0px 0px 15px 4px #ccc;
+                    border-radius: 3px;
+                    text-align:center;
+                }
+                .wdg-msg--box.smallpadding{
+                     padding:1px 15px;
+                }
+                .wdg-msg--box .wdg-site--logo{
+                    display: block;
+                    height: 60px;
+                    width: 155px;
+                    box-sizing: border-box;
+                    padding: 10px;
+                    margin: 35px auto;
+                    box-shadow: 0px 0px 15px 4px #ccc;
+
+                }
+                .wdg-msg--box .wdg-msg-title{
+                    text-align:center;
+                    font-size:16px;
+                    font-weight:700;
+                }
+                .wdg-msg--box .wdg-msg-title.highlight{
+                    font-size:30px;
+                }
+                
+                .wdg-msg--box .wdg-msgbox--input{
+                    display: block;
+                    margin: 0 auto;
+                    padding: 6px 12px;
+                    border-radius: 3px;
+                    border-width: 1px;
+                    border-style: solid;
+                    width: 300px;
+                    margin-top: 25px;
+                    margin-bottom: 25px;
+                    border-color: #adadad;
+                    outline: none;
+                }
+                .wdg-msg--box .wdg-msgbox--btn{
+                    margin-top:20px;
+                }
+                .wdg-signIn-ctrl{
+                        margin-bottom:10px;                 
+                    }
+                    .wdg-signIn--box.mobile div.sign-in{
+                        border-right:none;
+                        border-bottom: 1px dashed #0088bb;
+                        padding:0;
+                    }
+                    .wdg-signIn--box div.create-an--account{
+                        margin-bottom:20px;
+                        padding: 0;                    
+                    }
+                    .wdg-signIn--box>div{
+                        display:table-cell;
+                        width:100%;
+                        padding:10px;
+                    }
+                    .wdg-signIn--box div.sign-in{
+                        border-right:none;
+                        border-bottom: 1px solid #ccc;
+                    }
+                    .wdg-signIn--box{
+                        width:unset;
+                        margin: 10px auto;
+                        border:0;
+                    }
+                    
+                    .wdg-btn.signin, .wdg-btn.signin:hover, .wdg-btn.signin:focus, .wdg-btn.signin:active{
+                        height: 32px;
+                        font-size: 12px;
+                    }
+                    .wdg-msg--box .wdg-msgbox--btn{
+                        margin-bottom: 20px;
+                    }
+                @media screen and (max-width: 767px){
+                    
+                    .wdg-signIn-ctrl{
+                        margin-bottom:10px;                 
+                    }
+                    .wdg-signIn--box.mobile div.sign-in{
+                        border-right:none;
+                        border-bottom: 1px dashed #0088bb;
+                        padding:0;
+                    }
+                    .wdg-signIn--box div.create-an--account{
+                        margin-bottom:20px;
+                        padding: 0;                    
+                    }
+                    .wdg-signIn--box>div{
+                        display:table-cell;
+                        width:100%;
+                        padding:10px;
+                    }
+                    .wdg-signIn--box div.sign-in{
+                        border-right:none;
+                        border-bottom: 1px solid #ccc;
+                    }
+                    .wdg-signIn--box{
+                        width:unset;
+                        margin: 10px auto;
+                    }
+                    
+                    .wdg-btn.signin, .wdg-btn.signin:hover, .wdg-btn.signin:focus, .wdg-btn.signin:active{
+                        height: 32px;
+                        font-size: 12px;
+                    }
+                    .wdg-msg--box{
+                        height: unset;
+                        width: unset;
+                    }
+                    .wdg-msg--box .wdg-msgbox--btn{
+                        margin-bottom: 20px;
+                    }
+                }
+                @media screen and (max-width: 420px){
+                    
+                    
+                    .sign-in-heading{
+                        padding: 5px;
+                        border-bottom: 1px solid #ddd;
+                        font-size: 15px;
+                    }
+                    .wdg-signIn--box  .fieldset label{
+                        font-size: 12px;
+                    }
+                    .wdg-btn.signin, .wdg-btn.signin:hover, .wdg-btn.signin:focus, .wdg-btn.signin:active{
+                        height: 35px;
+                        min-width: 80px;
+                        font-size: 13px;
+                    }
+                    .wdg-btn.large{
+                        min-width:130px;
+                    }
+                    .wdg-signIn--box div.sign-in .sign-in--with, .wdg-signIn--box .fieldset div{
+                        margin-top: 10px;
+                        margin-bottom: 10px;
+                        font-size: 13px;
+                    }
+                    .wdg-msg--box{
+                        padding: 1px 30px;              
+                    }
+                    .wdg-msg--box .wdg-unauthorised{
+                        width: unset;
+                        height: 175px;
+                    }                       
+                        
+                }
+                @media screen and (max-width: 320px){
+                    
+                }
+            </style>  
+            <div class="wdg-msg--box smallpadding">
+                <apex:form >
+                    <apex:outputpanel layout="block" styleclass="wdg-signIn--box mobile" rendered="true">
+                        <div class="row">
+                            <div class="sign-in col-sm-12">
+                                <h4 class="bold"> Sign In</h4>
+                                <p class="sign-in--with"> Sign in with your e-mail and password </p>
+                                <section class="fieldset">
+                                    <div>
+                                        <apex:outputlabel value="Email :" for="usr"></apex:outputlabel>
+                                        <apex:inputtext html-placeholder="Email" value="{!username}" id="usr"/>
+                                    </div>
+                                    <div>
+                                        <apex:outputlabel value="Password :" for="pswd"></apex:outputlabel>
+                                        <apex:inputsecret html-placeholder="********" value="{!password}" id="pswd"/>
+                                    </div>
+                                </section>
+                                <div class="wdg-signIn-ctrl clearfix">
+                                    <apex:commandlink value="Sign In" action="{!sitelogin}" styleclass="wdg-btn blue pull-left"/>
+                                    <a href="{!URLFOR($Page.wedgeForgotPassword)}" class="wdg-btn large blue pull-right">Forgot Password</a>
+                                </div>
+                            </div>
+                            <div class="create-an--account col-sm-12">
+                                <h4 class="bold invisible">site</h4>
+                                <p class="create-acc--here"> Create a {!$Site.name} account here using your email address</p>
+                                <apex:outputlink value="{!URLFOR($Page.wk_wedge__wedgeSiteRegister)}" styleclass="wdg-btn full-width gray">Create An Account</apex:outputlink>
+                            </div>
+                        </div>
+                    </apex:outputpanel>                 
+                </apex:form>
+            </div>
+            <script>
+                 wk=jQuery.noConflict();
+                 (function(wk){
+                    wk( document ).ready(function(){
+                        
+                        wk(" .wdg .wdg-msg--box .wdg-site--logo").html(wk(".wdg .wdg-header .wdg-site--logo").html());
+                    });
+                 }(jQuery));
+             </script>
+             </div>
+         </apex:define>
+      </apex:composition>
+</apex:page>
+<!--<apex:page controller="wk_wedge.wedgeSiteloginController"  id="loginPage" showHeader="false" title="{!$Label.site.site_login}" cache="false" standardStylesheets="false">
+ <apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+ <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+ <apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+ 
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+<style>
+    h3,h5{
+    display:block;
+    }
+      .info-panel-heading{
+        padding:5px;
+        border-bottom:1px solid #0086C0;
+    }
+    .info-panel{ 
+        
+    }
+    .info-panel-title{
+        margin: 15px 0px;
+    }
+    .info-panel-title span{
+       display: inline-block;
+       vertical-align: middle;
+       font-size:14px;
+       margin-right:10px;
+       
+    }
+    .info-panel-input{
+        padding :10px 8px; 
+        border-radius: 3px;
+        display:block;
+        margin:15px 0px;
+        width:100%;
+        border:1px solid #ccc;
+    }
+    .info-panel-input:active,.info-panel-input:hover,.info-panel-input:focus{
+        outline:none;
+        border:1px solid #0086C0;   
+    }
+    textarea{
+    height: 198px;
+    width: 358px;
+    resize: none;
+    }
+      .info-panel-btn{
+        background-color: #0086c0;
+        border: medium none !important;
+        border-radius: 3px;
+        color: #fff;
+        min-width: 100px;
+        padding: 10px 13px;
+        margin-right:13px;
+        text-align: center;
+    }
+    .info-panel-btn:active, .info-panel-btn:hover,  .info-panel-btn:focus{
+        color:#fff;
+        text-decoration:none;
+    }
+    .warning{
+    color:red;
+    }
+    .acc-block label{
+        text-align:left!important;
+    }
+    .em_loginimg{
+            background:transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/all-images/image-login.png')}') no-repeat center center;
+            min-height:350px;
+       }
+       .back{
+            text-decoration:none!important;
+        }
+        .arrow{
+            margin-right:5px;
+            }
+        .success {
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px #888;
+            margin: 0 auto;
+            
+            width: 600px;
+        }
+    </style>
+     <div class="content-wrapper">
+          <div class="container">
+              <div class="row success">
+                    <div class="col-md-12 em_loginimg"></div>
+                   <div class="col-sm-12 text-center">
+                      <apex:form id="loginForm" forceSSL="true" styleClass="form-horizontal" >
+                  <apex:outputpanel layout="block" styleclass="account-login-wrap" > 
+
+                            <apex:outputpanel layout="block" styleclass="acc-block">
+                                <h4 class="oxy-20-bold">Sign In</h4>
+                                <p class="space-top-15"> Sign in with your username and password</p>
+                                <p class="space-top-15">
+                                    <apex:outputlabel value="Email/Username :" for="usr"></apex:outputlabel>
+                                    <apex:inputtext html-placeholder="Email" value="{!username}" id="usr"/>
+                                </p>
+                                <p class="space-top-15">
+                                    <apex:outputlabel value="Password :" for="pswd"></apex:outputlabel>
+                                    <apex:inputsecret html-placeholder="*********" value="{!password}" id="pswd"/>
+                                </p>
+                                <p class="space-top-15">
+                                    <apex:commandlink value="Sign In" action="{!sitelogin}" styleclass="info-panel-btn"/>
+                                    <a href="{!URLFOR($Page.ForgotPassword)}" styleclass="info-panel-btn" style="margin-right:0px;">Forgot Password ?</a>
+
+                                </p>
+                            </apex:outputpanel>
+                            <apex:outputpanel layout="block" styleclass="acc-block">
+                               <Apex:outputText ><p class="space-top-85"> Create a {!$Site.name} account here using your email address</p></Apex:outputText> 
+                                <apex:outputlink value="{!$Page.SiteRegister}" styleclass="create-acc">Create An Account</apex:outputlink>
+                            
+                            </apex:outputpanel>
+                        </apex:outputpanel>
+        </apex:form>
+                    </div>
+
+              </div>
+            
+            </div>
+          </div>
+      
+ <script>
+        var query=null;
+    var txt=String(window.location);
+    var querystring=txt.split("?")[1];
+    var htmlparams=querystring.split("&");
+    for(var i=0;i<htmlparams.length;i++){
+        var a=htmlparams[i];
+        var key=a.split("=")[0]
+        var value=a.split("=")[1];
+        if(key=='err')
+            query=value;
+    }
+    if(query=='1'){
+         $( "#error-trigger" ).trigger( "click" );
+
+    }
+    var Jusername;
+    var Jpassword;
+   function validateemail(){
+           var emailad=   document.getElementById('usermail').value;  
+           var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+           if(emailad!=null && emailad !=''){
+               if(filter.test(emailad)){
+                    document.getElementById('email-w').innerHTML='';
+                   Jusername=emailad;
+                   }
+                else
+                    document.getElementById('email-w').innerHTML='Email is not valid';
+           }
+           else{
+               document.getElementById('email-w').innerHTML='Email Field is Mandatory';
+           }
+   }
+   function validatepassword(){
+           var pswd=   document.getElementById('pswrd').value;
+           if(pswd!=null && pswd !='' && pswd.length>6){
+               document.getElementById('pswd-w').innerHTML='';
+               Jpassword=pswd;
+           }
+           else
+            document.getElementById('pswd-w').innerHTML='invalid Password Must have minimum 6 character';
+           
+   }
+   function validatedata(){
+            if(Jusername!=null && Jusername!='' && Jpassword!=null && Jpassword !=''){
+                  document.getElementById('{!$Component.loginForm.username}').value=Jusername;
+                   document.getElementById('{!$Component.loginForm.password}').value=Jpassword;
+                 fieldvalidateFunction(Jusername,Jpassword);
+             } 
+            else{
+                document.getElementById('m-warn').innerHTML='<div class="alert alert-danger warn"><a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a><h5 id="main-warn">Invalid Credentials</h5></div>';
+            }
+        
+        }
+ </script>
+   </apex:define>
+</apex:composition>
+</apex:page>
+-->

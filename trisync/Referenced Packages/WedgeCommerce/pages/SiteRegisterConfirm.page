@@ -1,0 +1,79 @@
+<apex:page showHeader="false" title="{!$Label.site.registration_confirmation}" standardStylesheets="false" cache="false">
+   <!--
+   <apex:composition template="siteLeadPage">
+    <apex:define name="body_content">  
+       <TITLE>REGISTER CONFIRM</TITLE>
+
+ <style>
+         .wrapper{
+             height:auto;
+         }
+       .em_congrasimg{
+            background:transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/all-images/thankyou.png')}') no-repeat center center;
+            min-height:350px;
+       }
+      
+        .title{
+            text-align:center;
+        }
+        .gotologin{
+            margin-top:20px;
+            
+        }
+       
+        .success {
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px #888;
+            margin: 0 auto;
+            min-height: 555px;
+            width: 800px;
+            padding:20px;
+        }
+         
+      .info-panel-btn{
+        background-color: #0086c0;
+        border: medium none !important;
+        border-radius: 3px;
+        color: #fff;
+        display: inline-block;
+        margin:10px auto;
+    
+        min-width: 100px;
+        padding: 10px 20px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .info-panel-btn:active, .info-panel-btn:hover,  .info-panel-btn:focus{
+        color:#fff;
+        text-decoration:none;
+    }
+    table{
+    width:100%;
+    }
+    .tableclas>tbody>tr>td{
+        display:block;
+    }
+        </style>
+         
+         <div class="content-wrapper">
+          <div class="container">
+              <div class="row">
+               <div class="success">
+                  <div class="col-md-12">
+                       <h3 class="title">Thank You !!!</h3>
+                       <h3 class="title">You have successfully registerd to {!$site.masterlabel}</h3>
+                        <div class="text-center col-sm-12 col-md-12 em_congrasimg"></div>
+                </div>
+                  <div class="col-md-12 text-center">
+                 
+                         <apex:outputLink value="{!$Site.baseurl}" styleclass="info-panel-btn match-parent-width">Go to Shopping</apex:outputLink>
+                  </div>
+               </div>
+              </div>
+          </div>  
+        </div>
+   
+</apex:define>
+</apex:composition>
+-->
+</apex:page>

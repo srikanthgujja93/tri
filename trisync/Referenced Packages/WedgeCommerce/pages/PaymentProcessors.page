@@ -1,0 +1,301 @@
+<apex:page controller="wk_wedge.PayementProcessors" setup="false" showheader="false" standardstylesheets="false" docType="HTML-5.0" sidebar="false" cache="false" title="Payment Gateways">
+    <style>
+        .wdg-nav-icon.payment {
+        background-color: #34becd;
+        }
+        .wdg-nav-icon.cms {
+        background-color: #34becd;
+        }
+        .wdg-body .wdg-dataTable--box{
+        margin-top:5px;
+        }
+        .totalRec{
+        font-size: 14px;
+        color: #777777;
+        margin-top:2px;
+        }
+        .wdg-body-titletext{
+        display:inline-block;
+        vertical-align: top;
+        line-height: 1;
+        }
+        .recperpage{
+        background: #FFF;
+        padding: 4px 8px;
+        border: 2px solid #57BDC2;
+        border-radius: 4px;
+        cursor:pointer;
+        }
+        .recperpage:focus{
+        outline:none;
+        cursor:pointer;
+        }
+    </style>
+    <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/> 
+    <apex:includescript value="{!URLFOR($Resource.wk_wedge__SFResources,'EcomResources/exterfiles/jquery.min.js')}"/>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <apex:form > 
+                <apex:outputpanel layout="block" id="thepopup">
+                    <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!fadein}">
+                        <div class="wdg-popup--modal">
+                            <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">{!popupheading}</div>
+                                <apex:outputlink styleclass="wdg-modal--close" value="{!$Page.wk_wedge__PaymentProcessors}"></apex:outputlink>
+                            </div>
+                            <div class="wdg-modal--content">
+                                
+                                
+                                <div class="wdg-modal--fieldbox">
+                                    <label  for="ip_type">{!$label.Add_Payment_Gateway_Type}:</label>
+                                    <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        <apex:inputfield value="{!paypro.wk_wedge__Type__c}" id="ip_type">
+                                            <apex:actionsupport event="onchange" action="{!updatePaymentfields}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,theconfigpopup,thepopup" status="waitstatus"/> 
+                                        </apex:inputfield> 
+                                    </div> 
+                                </div> 
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_auth"> {!$label.Add_Payment_Gateway_Name} :</label>
+                                    <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        <apex:inputfield value="{!paypro.name}"  id="ip_auth"/>
+                                    </div>
+                                    <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>
+                                </div>   
+                                <div class="wdg-modal--fieldbox">
+                                    <label  for="ip_status">{!$label.Add_Payment_Gateway_Status} :</label>
+                                    <div class="custom-checkbox {!IF(paypro.IS_Active__c,'checked','')}">
+                                        <apex:inputfield value="{!paypro.wk_wedge__IS_Active__c}" id="ip_status"/>
+                                    </div>
+                                </div>
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_inventory">{!$Label.wk_wedge__payment_processors_inventory_deduction} :</label>
+                                    <div class="custom-checkbox {!IF(paypro.wk_wedge__Inventory_Deduction_on_Order_Place__c,'checked','')}">
+                                        <apex:inputfield value="{!paypro.wk_wedge__Inventory_Deduction_on_Order_Place__c}" id="ip_inventory"/>
+                                    </div>
+                                </div>
+                                <apex:dynamiccomponent componentvalue="{!payemntfields}"/>
+                                
+                            </div> 
+                            <div class="wdg-modal--footer">
+                                <button type="button" class="wdg-modal--btn"  value="Save Settings" id="upbtn">{!$label.Add_Payment_Gateway_Save_Settings}</button>
+                            </div>   
+                            
+                        </div>
+                        <div class="wdg-popup--bg fadein"></div>
+                    </apex:outputpanel>
+                </apex:outputpanel>
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                    
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo Payment"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div>{!$label.Payment_Gateways_List_Top_Heading}  </div>
+                                <div class="totalRec"> {!$label.Payment_Gateways_List_Total_Records}: <span id="totalrec"></span></div>
+                            </div>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:outputLabel value="{!$Label.wk_wedge__payment_gateways_list_record_per_page}: " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!pagesize}" id="recPerPage" onchange="updatePage()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>
+                            <apex:commandlink action="{!addPayment}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,theconfigpopup, thepopup" styleclass="wdg-ctrl--btn addNew" >
+                                <span></span>
+                            </apex:commandlink>
+                            
+                            <div class="wdg-ctrl--btngroup clearfix">
+                                <div class="wdg-ctrl--btn settings">
+                                    <span></span>
+                                </div>
+                                <div class="dropdown dropdown-wrap">
+                                    <button type="button"  data-toggle="dropdown" class="wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                        <span></span>
+                                    </button>
+                                    <div class="dropdownMenu">
+                                        <div> <a href="javascript:void(0)" id="deleteSelected">Delete Selected </a></div>
+                                        <div> <a href="javascript:void(0)" id="deleteALL" >Delete All </a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-dataTable--box">
+                        <apex:datatable value="{!PaymentProcessors}" var="pay" styleclass="wdg-dataTable" id="wdgTable">
+                            <apex:column styleclass="Xsmall">
+                                <apex:facet name="header"> 
+                                    <div class="custom-checkbox"> 
+                                        <input type="checkbox" id="headerCB" />
+                                    </div>
+                                </apex:facet>
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" class="eachselect" value="{!pay.id}"/>
+                                </div>
+                            </apex:column>
+                            <apex:column styleclass="medium">
+                                <apex:facet name="header">  
+                                    <apex:commandlink value="Type {!IF(fieldName=='type__C',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="type__C" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                <apex:outputfield value="{!pay.wk_wedge__Type__c}"/> 
+                            </apex:column>
+                            <apex:column styleclass="medium">
+                                <apex:facet name="header">  
+                                    <apex:commandlink value="Name {!IF(fieldName=='name',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                <apex:outputfield value="{!pay.Name}"/> 
+                            </apex:column>
+                            <apex:column styleclass="large" >
+                                <apex:facet name="header">
+                                    <apex:commandlink value="Status {!IF(fieldName=='is_Active__C',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="is_Active__C" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                <apex:outputpanel layout="block" styleclass="dropdown status-dropdown" rendered="{!(pay.id!=null)}">
+                                    <div data-toggle="dropdown" class="status status-value dropdown-toggle" id="ecm_status_Dropdown">
+                                        <span>{!IF(pay.is_Active__C, 'Active','In Active')}</span><span class="status-caret"></span>
+                                    </div>
+                                    <div class="status-dropdown-menu">
+                                        <span class="status status-option" targetid="{!pay.id}">Active</span>
+                                        <span class="status status-option" targetid="{!pay.id}">In active</span>
+                                    </div>
+                                </apex:outputpanel>
+                            </apex:column> 
+                            <apex:column styleclass="large" >
+                                <apex:facet name="header">
+                                    Action
+                                </apex:facet>
+                                <apex:outputpanel layout="block" styleclass="dropdown status-dropdown" rendered="{!(pay.id!=null)}">
+                                    <apex:commandlink styleclass="wdg-ctrl--btn edit" action="{!editpayment}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,theconfigpopup, thepopup">
+                                        <apex:param name="payproid" value="{!pay.id}" assignto="{!payproid}"/>
+                                        <span></span>
+                                    </apex:commandlink>
+                                    <div class="wdg-ctrl--btn delete" id="singledelete" targetid="{!pay.id}" ><span></span></div>
+                                </apex:outputpanel>
+                                <apex:outputpanel layout="block" styleclass="dropdown status-dropdown" rendered="{!(pay.id==null)}">
+                                    <apex:commandlink styleclass="wdg-ctrl--btn addNew" action="{!addpayment}"  status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,theconfigpopup, thepopup">
+                                        <span></span>
+                                    </apex:commandlink>
+                                    
+                                </apex:outputpanel> 
+                            </apex:column> 
+                            <apex:facet name="footer">
+                                <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                    <apex:outputpanel rendered='{!PaymentProcessors.size>0}'>
+                                        <apex:commandlink value="" action="{!first}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!previous}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                        <apex:outputText styleclass="wdg-dataTable--pages" value="{!pagenumber} of {!totalPages} "></apex:outputText>
+                                        <apex:commandlink value="" action="{!next}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!last}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                    </apex:outputpanel> 
+                                    <apex:outputpanel rendered="{!PaymentProcessors.size==0}">
+                                        <span>No payement methods created yet !!!!</span>
+                                    </apex:outputpanel>
+                                </apex:outputpanel>
+                            </apex:facet>
+                        </apex:datatable>
+                        
+                    </apex:outputpanel>
+                </div>
+                <apex:inputhidden value="{!deleteid}" id="deletable"/>
+                <apex:actionfunction name="deleteoneRecord" action="{!deletesinglePayment}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete();"/>
+                <apex:actionfunction name="changeRecordstatus" action="{!updatestatus}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="closenotifications();"/>
+                <apex:actionfunction name="deleteSelectedRecords" action="{!deleteSelectedpayment}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete();"/>
+                <apex:actionfunction name="deleteAllRecords" action="{!deleteAllpayment}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete();"/>
+                <apex:actionfunction name="SaveRecords" action="{!SavepaymentDetails}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,theconfigpopup,thepopup,notice" oncomplete="afterdelete();"/>
+                <apex:actionFunction name="updatePage" action="{!updatedata}"  />
+                <apex:actionFunction name="registerstriperemotesites" action="{!registerstriperemotesites}"/>
+            </apex:form>
+            <script>
+            wk=jQuery.noConflict();
+            wk(function() {
+                wk( document).on("click",".wdg-popup--modal .wdg-modal--footer [Id$='upbtn']",function(){
+                    var flag=true;
+                    wk(".wdg-popup--modal .wdg-modal--content .wdg-modal--fieldbox .requiredInput input, .wdg-popup--modal .wdg-modal--content .wdg-modal--fieldbox .requiredInput select ").css({"border":"1px solid #adadad"});
+                    wk(".wdg-popup--modal .wdg-modal--content .wdg-modal--fieldbox .requiredInput textarea").css({"border":"1px solid #adadad"});
+                    wk(".wdg-popup--modal .wdg-modal--content .wdg-modal--fieldbox .requiredInput input , .wdg-popup--modal .wdg-modal--content .wdg-modal--fieldbox .requiredInput select").each(function(){
+                        if(this.value==null || this.value==''){
+                            wk(this).css({"border":"1px solid #c23932"});
+                            flag=false;
+                        }
+                    }); 
+                    wk(".wdg-popup--modal .wdg-modal--content .wdg-modal--fieldbox .requiredInput textarea").each(function(){
+                        if(this.value==null || this.value==''){
+                            wk(this).css({"border":"1px solid #c23932"});
+                            flag=false;
+                        }
+                    })
+                    if(flag){
+                        SaveRecords();
+                    }
+                });
+            }(jQuery));
+            </script>
+            <script>
+            jQuery(document).ready(function($) {
+                closenotifications();
+                
+                // Get Accounts via the REST API
+                $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Payement_Processors__c',
+                       {
+                           beforeSend: function(xhr) {
+                               // Set the OAuth header from the session ID
+                               xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                           },
+                           success: function(response) {
+                               // Append the records to HTML list
+                               var str=JSON.stringify(response);
+                               var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                               var arr = total.split(',');
+                               document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                   return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                               });;
+                           },
+                           error: function(jqXHR, textStatus, errorThrown) {
+                               // Error
+                               console.log(jqXHR.status + ': ' + errorThrown);
+                           }
+                       }
+                      );
+            });
+            function afterdelete(){
+                recordcount();
+                closenotifications();    
+            }
+            function recordcount(){
+                
+                registerstriperemotesites();
+                $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Payement_Processors__c',
+                       {
+                           beforeSend: function(xhr) {
+                               // Set the OAuth header from the session ID
+                               xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                           },
+                           success: function(response) {
+                               // Append the records to HTML list
+                               var str=JSON.stringify(response);
+                               var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                               var arr = total.split(',');
+                               document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                   return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                               });
+                           },
+                           error: function(jqXHR, textStatus, errorThrown) {
+                               // Error
+                               console.log(jqXHR.status + ': ' + errorThrown);
+                           }
+                       }
+                      );
+            }    
+            </script> 
+        </apex:define>
+        
+    </apex:composition>
+</apex:page>

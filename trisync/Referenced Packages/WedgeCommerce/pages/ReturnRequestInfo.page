@@ -1,0 +1,538 @@
+<apex:page controller="wk_wedge.ReturnRequestInfo" title="ReturnRequestInfo" showheader="false" setup="false" standardstylesheets="false" cache="false">
+ <style>
+        .wdg-nav-icon.RMA {
+            background-color: #34becd;
+        }
+        .wdg-nav-icon.RMARequest {
+            background-color: #34becd;
+        }
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">    
+            <style>
+            
+                .wdg-form--block .wdg-form--blocktitle {
+                    padding-bottom: 14px;
+                }
+                .wdg-file--box.sleek{
+                    width:150px;
+                    height:38px;
+                    line-height:2.5;
+                }
+                .wdg-attachments{
+                    border:1px solid #ccc;
+                }
+                .justify{
+                    text-align:justify !important;
+                }
+                .wdg-form--block.wdg-gap--top{
+                    margin-top:60px;
+                }
+                .wdg-attachment--wrap{
+                    margin:15px;
+                    display:inline-block;
+                    padding:12px;
+                    border:1px solid #ccc;
+                    position:relative;
+                }
+                .wdg-attachment--title .wdg-AttachentTitle{
+                    margin-top:8px;
+                }
+                
+                .no-margin{
+                    margin:0 !important;
+                }
+                .display--block{
+                    display:block !important;
+                }
+                .wdg-attach--checkboxwrap{
+                        box-sizing: border-box;
+                        display: inline-block;
+                        height: 15px;
+                        width: 15px;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        z-index: 255;
+                        margin-top: -1px;
+                        margin-left: -1px;
+                }
+                .float--right{
+                    float:right;
+                }
+                .filename{
+                    color:#555555;
+                    font-size:14px;
+                }
+               
+                .wdg-addOption--btn{
+                     cursor: pointer;
+                    
+                     padding: 8px;
+                     background: #7DC37D;
+                     color: #fff;
+                     display: inline-block;
+                     text-align: center;
+                     text-decoration: none;
+                     border-radius: 2px;
+                     border: none;
+                     font-size: 13px;
+                     font-weight: 600;
+                     box-shadow: none;
+                     outline: none;
+                 }
+                  .selectType {
+                    padding: 6px;
+                    border-radius: 3px;
+                    font-size: 14px;
+                    color: #222;
+                    background: #fff;
+                    border: 1px solid #adadad;
+                    outline: none;
+                    box-shadow: none;
+                    display: inline-block;
+                    width:150px;
+                    box-sizing: border-box;
+                }
+                .wdg-modal--content .wdg-ctrl--btn {
+                    position: relative;
+                    width: 30px;
+                    height: 30px;
+                    outline:none;
+                    border:none;
+                    border-radius: 3px;
+                    cursor: pointer;
+                    margin-left: 5px;
+                    vertical-align: middle;
+                    display: inline-block;
+                }
+                .wdg-modal--content .wdg-ctrl--btn > span {
+                    background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite-icon.png')}') no-repeat;
+                    width: 15px;
+                    height: 15px;
+                    position: absolute;
+                    display: inline-block;
+                    z-index: 1;
+                }
+                .wdg-ctrl--btn.addRow>span{
+                    background-position: -45px -120px;
+                    left: 9px;
+                    top: 7px;
+                }
+                .wdg-ctrl--btn.deleteRow>span{
+                    background-position: -105px -105px;
+                    left: 9px;
+                    top: 7px;
+                }
+                .Opname , .Opname:hover , .Opname:Active{
+                    color: #0066cc;
+                    text-decoration:underline;
+                }
+                .wdg-addOption--btn {
+                    cursor: pointer;
+                    padding: 8px;
+                    background: #7DC37D;
+                    color: #fff;
+                    display: inline-block;
+                    text-align: center;
+                    text-decoration: none;
+                    border-radius: 2px;
+                    border: none;
+                    font-size: 13px;
+                    font-weight: 600;
+                    box-shadow: none;
+                    outline: none;
+                    margin-left: 10px;
+                }
+                .wdg-addOption--btn.update{
+                    margin-left:0;
+                }
+             </style>
+             
+             <apex:form id="productform" styleclass="wdg-dataentry--form">
+                
+                   
+                   <div class="wdg-body">
+                         <apex:outputpanel id="wdgErrorBlock" layout="block">
+                             <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                         </apex:outputpanel>
+                         <div class="wdg-body--titleblock clearfix">
+                            <div class="wdg-body--title">
+                                <span class="wdg-title--logo rmarequest"></span>
+                                <span>Request Information </span>
+                            </div>
+                            <div class="wdg-ctrl--btnPanel">                                
+                                <a href="{!$page.ReturnRequestListing}" class="wdg-ctrl--btn cancel"> 
+                                    <span></span>
+                                </a>
+                             </div>  
+                        </div>
+                       <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                           <div class="wdg-form--header">
+                                <ul class="wdg-form--headeroptions clearfix">
+                                    <li class="active">
+                                       <a href="javascript:void(0)" data-target="ReturnProductsInfoBlock">Return Products</a> 
+                                    </li>
+                                    <li >
+                                       <a href="javascript:void(0)" data-target="DeclinedProductsInfoBlock">Declined Products</a> 
+                                    </li>
+                                    <li >
+                                       <a href="javascript:void(0)" data-target="Coupons">Coupons</a> 
+                                    </li>
+                                    <li >
+                                       <a href="javascript:void(0)" data-target="WalletRefunds">Wallet Refunds</a> 
+                                    </li>
+                                    <li >
+                                       <a href="javascript:void(0)" data-target="Action">Action</a> 
+                                    </li>
+                               </ul>
+                            </div>
+                            <div id="ProductsInfoBlock" class="wdg-form--content">
+                                <apex:actionFunction name="updateStatus" status="waitstatus" action="{!updateStatus}" rerender="wdgTable,wdgTabledec"/>
+                                <apex:actionFunction name="updateDeclineStatus" status="waitstatus" action="{!updateDeclineStatus}" rerender="wdgTable,wdgTabledec"/>
+                                <apex:actionFunction name="CreateGiftCoupon" action="{!CreateGiftCoupon}" status="waitstatus" rerender="wdgTable,wdgTableCoupon"/>
+                                <apex:actionFunction name="RefundToWallet" action="{!RefundToWallet}" status="waitstatus" rerender="wdgTable,wdgTableCoupon"/>
+                               <div id="ReturnProductsInfoBlock" class="wgd-form--tab show">
+                                   <div class="wdg-form--block">
+                                        <div class="wdg-form--blocktitle">
+                                             <span>Products </span>
+                                             <span style="float:right;margin-top: -6px;">
+                                                 <apex:outputPanel rendered="{!Product2s.size>0}">
+                                                     <a id="statusAccept" class="wdg-addOption--btn">Decline Product</a>
+                                                 </apex:outputPanel>
+                                                 <a id="couponinfo" class="wdg-addOption--btn">Create Gift Coupon</a>
+                                                 <a id="walletinfo" class="wdg-addOption--btn">Refund To Wallet</a>
+                                                 <apex:inputhidden id="AcceptIds" value="{!deleteAll}"/>
+                                                 <apex:inputhidden id="GiftCouponIds" value="{!GiftCouponIds}"/>
+                                                 <apex:inputhidden id="WalletRefundIDs" value="{!WalletRefundIDs}"/>
+                                             </span>
+                                        </div>
+                                        <div class="wdg-form--blockfields">
+                                            <apex:datatable value="{!Product2s}" var="Prod" styleclass="wdg-dataTable" id="wdgTable" >
+                                                <apex:column styleclass="Xsmall">
+                                                    <apex:facet name="header">
+                                                        <!--<div class="custom-checkbox">
+                                                            <input type="checkbox" id="headerCB"/>
+                                                        </div>-->
+                                                    </apex:facet>
+                                                    <div class="custom-checkbox">
+                                                        <input type="checkbox" class="eachselect" value="{!Prod.id}" amt="{!Prod.Order_Product__r.ListPrice}" quantity="{!Prod.wk_wedge__Quantity__c}" productId="{!Prod.Order_Product__r.Pricebookentry.Product2.Id}" actualQuantity="{!Prod.Order_Product__r.Pricebookentry.Product2.Amount__c}"/>
+                                                    </div>
+                                                </apex:column>
+                                                <apex:column styleclass="medium">
+                                                    <apex:facet name="header">
+                                                        <apex:commandlink value="Return Product Number {!IF(fieldName=='name',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                                            <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                                        </apex:commandlink>
+                                                    </apex:facet>
+                                                    <apex:outputLink value="/{!Prod.id}">{!Prod.name}</apex:outputLink>
+                                                </apex:column>
+                                               
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Order product Name
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.Order_Product__r.Pricebookentry.Product2.name}"></apex:outputtext>
+                                                </apex:column> 
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Quantity
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.wk_wedge__Quantity__c}"></apex:outputtext>
+                                                </apex:column> 
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Request Reason
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.wk_wedge__Reason__c}"></apex:outputtext>
+                                                </apex:column>                               
+                                                
+                                                  <apex:facet name="footer">
+                                                    <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">                                                            
+                                                        <apex:outputpanel rendered="{!Product2s.size==0}">
+                                                            <div class="No-Product">No Records Returned !!!!</div>
+                                                        </apex:outputpanel>
+                                                    </apex:outputpanel>
+                                                </apex:facet>
+                                            </apex:datatable>
+                                        </div>
+                                  </div>
+                               </div>
+                               <div id="DeclinedProductsInfoBlock"  class="wgd-form--tab ">
+                                    <div class="wdg-form--block">
+                                      <div class="wdg-form--blocktitle">
+                                        <span>Declined Product</span>
+                                        <span style="float:right;margin-top: -6px;">
+                                            <a id="statusDecline" href="javascript:void(0);" Class="wdg-addOption--btn">Accept Product</a>
+                                            <apex:inputhidden id="DeclineIds" value="{!DeclineIds}"/>
+                                        </span>
+                                      </div>
+                                      <apex:outputpanel layout="block" id="Productattch" styleclass="wdg-form--blockfields">
+                                          <apex:datatable value="{!Product2sDeclined}" var="Prod" styleclass="wdg-dataTable"  id="wdgTabledec">
+                                                <apex:column styleclass="Xsmall">
+                                                    <apex:facet name="header">
+                                                        <!--<div class="custom-checkbox parent">
+                                                            <input type="checkbox" id="headerCB"/>
+                                                        </div>-->
+                                                    </apex:facet>
+                                                    <div class="custom-checkbox child">
+                                                        <input type="checkbox" class="eachselect" value="{!Prod.id}"/>
+                                                    </div>
+                                                </apex:column>
+                                                <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                        <apex:commandlink value="Return Product Number {!IF(fieldName=='name',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                                            <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                                        </apex:commandlink>
+                                                    </apex:facet>
+                                                    <apex:outputLink value="/{!Prod.id}">{!Prod.name}</apex:outputLink>
+                                                </apex:column>
+                                               
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Order product Name
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.Order_Product__r.Pricebookentry.Product2.name}"></apex:outputtext>
+                                                </apex:column> 
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Quantity
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.wk_wedge__Quantity__c}"></apex:outputtext>
+                                                </apex:column> 
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Request Reason
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.wk_wedge__Reason__c}"></apex:outputtext>
+                                                </apex:column>                               
+                                                
+                                                  <apex:facet name="footer">
+                                                    <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">                                                            
+                                                        <apex:outputpanel rendered="{!Product2sDeclined.size==0}">
+                                                            <div class="No-Product">No Records Returned !!!!</div>
+                                                        </apex:outputpanel>
+                                                    </apex:outputpanel>
+                                                </apex:facet>
+                                            </apex:datatable>
+                                      </apex:outputpanel>                                      
+                                    </div>
+                                </div>  
+                                
+                                <div id="Coupons"  class="wgd-form--tab ">
+                                    <div class="wdg-form--block">
+                                      <div class="wdg-form--blocktitle">
+                                        <span>Coupons</span>
+                                      </div>
+                                      <div class="wdg-form--blockfields">
+                                          <apex:datatable value="{!CouponList}" var="Prod" styleclass="wdg-dataTable"  id="wdgTableCoupon">
+                                                <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                        Coupon Code
+                                                    </apex:facet>
+                                                    <apex:outputLink value="/{!Prod.id}">{!Prod.wk_wedge__Coupon_Code__c}</apex:outputLink>
+                                                </apex:column>
+                                               
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Return Product Number
+                                                    </apex:facet>
+                                                    <apex:outputLink value="/{!Prod.wk_wedge__Return_requests_Product__c}">{!Prod.Return_requests_Product__r.name}</apex:outputLink>
+                                                    <apex:outputtext value=""></apex:outputtext>
+                                                </apex:column>
+                                                <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Order product Name
+                                                    </apex:facet>
+                                                    <apex:outputLink value="/{!Prod.Return_requests_Product__r.Order_Product__r.Pricebookentry.Product2.Id}">{!Prod.Return_requests_Product__r.Order_Product__r.Pricebookentry.Product2.name}</apex:outputLink>
+                                                    <apex:outputtext value=""></apex:outputtext>
+                                                </apex:column>   
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Quantity
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.Return_requests_Product__r.wk_wedge__Quantity__c}"></apex:outputtext>
+                                                </apex:column> 
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Request Reason
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.Return_requests_Product__r.wk_wedge__Reason__c}"></apex:outputtext>
+                                                </apex:column>                               
+                                                
+                                                  <apex:facet name="footer">
+                                                    <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">                                                            
+                                                        <apex:outputpanel rendered="{!CouponList.size==0}">
+                                                            <div class="No-Product">No Records Returned !!!!</div>
+                                                        </apex:outputpanel>
+                                                    </apex:outputpanel>
+                                                </apex:facet>
+                                            </apex:datatable>      
+                                      </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="WalletRefunds"  class="wgd-form--tab ">
+                                    <div class="wdg-form--block">
+                                      <div class="wdg-form--blocktitle">
+                                        <span>Wallet Refunds</span>
+                                      </div>
+                                      <div class="wdg-form--blockfields">
+                                          <apex:datatable value="{!WalletRefundList}" var="Prod" styleclass="wdg-dataTable"  id="wdgTableWalletRefunds">
+                                                <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                        Wallet Transaction
+                                                    </apex:facet>
+                                                    <apex:outputLink value="/{!Prod.wk_wedge__Wallet_Transaction__c}">{!Prod.Wallet_Transaction__r.name}</apex:outputLink>
+                                                </apex:column>
+                                               
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Return Product Number
+                                                    </apex:facet>
+                                                    <apex:outputLink value="/{!Prod.id}">{!Prod.name}</apex:outputLink>
+                                                    <apex:outputtext value=""></apex:outputtext>
+                                                </apex:column>
+                                                <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Order product Name
+                                                    </apex:facet>
+                                                    <apex:outputLink value="/{!Prod.Order_Product__r.Pricebookentry.Product2.Id}">{!Prod.Order_Product__r.Pricebookentry.Product2.name}</apex:outputLink>
+                                                    <apex:outputtext value=""></apex:outputtext>
+                                                </apex:column>   
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Quantity
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.wk_wedge__Quantity__c}"></apex:outputtext>
+                                                </apex:column> 
+                                                 <apex:column styleclass="medium" >
+                                                    <apex:facet name="header">
+                                                      Request Reason
+                                                    </apex:facet>
+                                                    <apex:outputtext value="{!Prod.wk_wedge__Reason__c}"></apex:outputtext>
+                                                </apex:column>                               
+                                                
+                                                  <apex:facet name="footer">
+                                                    <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">                                                            
+                                                        <apex:outputpanel rendered="{!WalletRefundList.size==0}">
+                                                            <div class="No-Product">No Records Returned !!!!</div>
+                                                        </apex:outputpanel>
+                                                    </apex:outputpanel>
+                                                </apex:facet>
+                                            </apex:datatable>      
+                                      </div>
+                                    </div>
+                                </div>
+                                
+                                
+                                <div id="Action"  class="wgd-form--tab ">
+                                    <div class="wdg-form--block">
+                                      <div class="wdg-form--blocktitle">
+                                        <span>Action</span>
+                                      </div>
+                                      <div class="wdg-form--blockfields">
+                                           <table class="wdg-form--table">
+                                               <tbody>
+                                                   <tr>
+                                                       <tr>
+                                                            <td class="label"><apex:outputlabel value="Status :" for="ipname"></apex:outputlabel></td>
+                                                            <td class="field">
+                                                                <apex:selectList size="1" value="{!actionValue}" styleclass="requestStatus">
+                                                                    <apex:selectOptions value="{!actionOpt}"/>
+                                                                </apex:selectList>
+                                                                <apex:inputHidden value="{!reqStatus}" id="reqStatus"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="label"></td>
+                                                            <td class="field">
+                                                                <apex:commandLink styleClass="wdg-addOption--btn update" action="{!updateRequestAction}" status="waitstatus" value="Save" rerender="Action"/>
+                                                            </td>
+                                                        </tr>
+                                                   </tr>
+                                               </tbody>
+                                           </table>
+                                      </div>
+                                    </div>
+                                </div>
+                         </div>
+                        </apex:outputpanel>
+                        
+                    </div>                    
+             </apex:form>
+             
+             
+             <script>
+                wk=jQuery.noConflict();
+                (function(wk){                    
+                    wk( document).on("click",".wdg-form--headeroptions li a ",function(){
+                        wk(this).parent().siblings().removeClass("active");
+                        wk(this).parent().addClass("active");
+                        var ids=wk(this).attr("data-target");
+                        wk("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                    }); 
+                 wk(document ).on("click",".custom-checkbox input",function(){
+                 
+                    wk(this).parent().removeClass("checked");
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                    }
+                 });
+                 wk(document).on("click","[Id$='statusDecline']",function(){
+                     wk('[id$="DeclineIds"]').val('');
+                     var acc = '';                     
+                     wk('.custom-checkbox input:checked').each(function(){
+                         if(wk(this).val()!='on')
+                             acc+=wk(this).val()+';';                         
+                     });
+                     acc = acc.slice(0,-1);
+                     wk('[id$="DeclineIds"]').val(acc);
+                     updateStatus();
+                 });
+                 wk(document).on("click","[Id$='statusAccept']",function(){
+                     wk('[id$="AcceptIds"]').val('');
+                     var acc = '';                     
+                     wk('.custom-checkbox input:checked').each(function(){
+                         if(wk(this).val()!='on')
+                             acc+=wk(this).val()+';';                         
+                     });
+                     acc = acc.slice(0,-1);
+                     wk('[id$="AcceptIds"]').val(acc);
+                     updateDeclineStatus();
+                 });
+                 wk(document).on("click","[Id$='couponinfo']",function(){
+                     wk('[id$="GiftCouponIds"]').val('');
+                     var acc = [];                     
+                     wk('.custom-checkbox input:checked').each(function(){
+                             acc.push({'id':wk(this).val(),'amt':parseFloat($(this).attr('amt')),'quantity':parseFloat(wk(this).attr('quantity')),'actualQuantity': parseFloat(wk(this).attr('actualQuantity')),'productId':wk(this).attr('productId')});                         
+                     });                     
+                     wk('[id$="GiftCouponIds"]').val(JSON.stringify(acc));
+                     CreateGiftCoupon();
+                 });
+                 wk(document).on("click","[Id$='walletinfo']",function(){
+                     wk('[id$="WalletRefundIDs"]').val('');
+                     var acc = [];                     
+                     wk('.custom-checkbox input:checked').each(function(){
+                             acc.push({'id':wk(this).val(),'amt':parseFloat($(this).attr('amt')),'quantity':parseFloat(wk(this).attr('quantity')),'actualQuantity': parseFloat(wk(this).attr('actualQuantity')),'productId':wk(this).attr('productId')});                         
+                     });
+                     
+                     console.log(JSON.stringify(acc));
+                     wk('[id$="WalletRefundIDs"]').val(JSON.stringify(acc));
+                     console.log(wk('[id$="WalletRefundIDs"]').val(JSON.stringify(acc)));
+                     RefundToWallet();
+                 });
+                 wk(document).on("change",".requestStatus",function(){
+                     var status = wk(this).val();                     
+                     wk(".requestStatus option").each(function(){
+                         if(wk(this).val()==status){
+                             wk('[Id$="reqStatus"]').val(status);
+                         }
+                     });
+                 }); 
+               
+               }(jQuery));
+            </script>    
+        </apex:define>
+    </apex:composition>
+</apex:page>

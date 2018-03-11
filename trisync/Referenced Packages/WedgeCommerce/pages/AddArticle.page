@@ -1,0 +1,249 @@
+<apex:page standardController="wk_wedge__Article__c" extensions="wk_wedge.addarticle" title="Add Article" showheader="false" setup="false" standardstylesheets="false" cache="false" id="addArticle">
+    <style>
+        .wdg-nav-icon.article, .wdg-nav-icon.contentmanagement {
+        background-color: #34becd;
+        }
+        .small-width{
+        width:38%;
+        display:inline-block;
+        height:80%;
+        }
+        .check-avail--btn{
+        padding:5px 20px;
+        }
+        .wdg-form--table tbody td.field .green-css{
+        color:green;
+        }
+        .wdg-form--table tbody td.field .red-css{
+        color:red;
+        }
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <apex:form id="productform">
+                <div class="wdg-body">
+                    <apex:outputpanel id="wdgErrorBlock" layout="block">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel> 
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo articles"></span>
+                            <span>Add Article</span>
+                        </div>
+                        <div class="wdg-filter--options" style="display:inline-block">
+                            <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!welan.activatedLanguages.size>1}">
+                                <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                <apex:selectOptions value="{!welan.activatedLanguages}">
+                                    <span class="caret multidropdownsymbol"></span>
+                                </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:commandlink styleclass="wdg-ctrl--btn save " immediate="false" onclick="return ValidateSave(event);" action="{!saveData}" >
+                                <span></span>
+                            </apex:commandlink>
+                            <a href="{!URLFOR($page.articlelisting)}" class="wdg-ctrl--btn cancel">
+                                <span></span>
+                            </a>
+                        </div>  
+                    </div>
+                    <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active"><a href="javascript:void(0)" data-target="productBlock">General</a></li>
+                                <li ><a href="javascript:void(0)" data-target="pageSEO">SEO</a></li>
+                            </ul>
+                        </div>
+                        <div id="productTabGroup" class="wdg-form--content">
+                            <div id="productBlock" class="wgd-form--tab show">
+                                <apex:outputpanel layout="block"  styleclass="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Information </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Name :" for="prodName"></apex:outputlabel></td>
+                                                    <td class="field" id="prod_name_col">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield value="{!wk_wedge__Article__c.name}" id="prodName" styleclass="field--small display-inline--block" rendered="{!metaname==null}"/>
+                                                            <apex:inputtext value="{!metaname}" id="prodmetaName" styleclass="field--small display-inline--block" rendered="{!metaname!=null}"/>
+                                                        </div>
+                                                        <!--<apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>-->                                               
+                                                    </td>
+                                                </tr>                                                
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Content :" for="prodstatus"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!wk_wedge__Article__c.wk_wedge__Content__c}" id="prodStatus" styleclass="field--small display-inline--block" rendered="{!metadesc == null}" html-tinymce="true"/>
+                                                        <apex:inputtextarea value="{!metadesc}" id="prodStatus1meta"  styleclass="field--small display-inline--block" rendered="{!metadesc != null}" html-tinymce="true"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </apex:outputpanel>
+                            </div>
+                            <div id="pageSEO" class="wgd-form--tab ">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Information </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>                                                
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="SEO Alias :  " for="prodAlias"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput small-width">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield value="{!wk_wedge__Article__c.wk_wedge__Editable_Alias__c}" id="prodAlias" styleclass="display-inline--block"/>
+                                                        </div>
+                                                        <!--<apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel> -->
+                                                        <!--<a class="check-avail--btn" href="javascript:void(0)">Check Availability</a>-->
+                                                        <span id="availableCheck"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Page Title :  " for="pagetitle"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputtext value="{!wk_wedge__Article__c.wk_wedge__Page_Title__c}" id="pagetitle" styleclass="display-inline--block" rendered="{!metapagetitle==null}"/>
+                                                        <apex:inputtext value="{!metapagetitle}" id="pagetitleMeta" styleclass="display-inline--block" rendered="{!metapagetitle!=null}"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Meta Description :" for="prodstatus2"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <apex:inputtext value="{!wk_wedge__Article__c.wk_wedge__Meta_Description__c}" id="prodStatus2"  styleclass="display-inline--block" rendered="{!metapagedesc == null}"/>
+                                                        <apex:inputtext value="{!metapagedesc}" id="prodStatus2meta"  styleclass="display-inline--block" rendered="{!metapagedesc != null}"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Meta Keywords :  " for="metakeyword"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputtext value="{!wk_wedge__Article__c.wk_wedge__Meta_Keywords__c}" id="metakeyword" styleclass="display-inline--block" rendered="{!metakeywords==null}"/>
+                                                        <apex:inputtext value="{!metakeywords}" id="keywordsMeta" styleclass="display-inline--block" rendered="{!metakeywords!=null}"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </apex:outputpanel>
+                </div>
+            </apex:form>
+            
+            <script>
+            window.enableSave = false;
+            
+            function ValidateSave(event){
+                if(!window.enableSave){
+                    //alert('Please check availability of SEO alias first');
+                    return false;
+                }
+                return true;
+                /*var str  = $("[Id$='prodName']").val();
+                if(str == undefined)
+                    str  = $("[Id$='prodmetaName']").val();
+                if (str.match(/^[A-z0-9\d\s]+$/)) {
+                    $("[Id$='validate']").html('');
+                    return true;
+                }
+                else{
+                    alert("Review all the errors!");
+                    $("[Id$='validate']").html('Special Characters Are Not Allowed');
+                    event.preventDefault();
+                    return false;
+                }*/
+            }
+            wk=jQuery.noConflict();
+            (function(wk){
+                wk( document ).on("blur",".wdg-body .wdg-form--table td [Id$='prodName']",function(){
+                    var str  = wk("[Id$='prodName']").val();                       
+                    if (str.match(/^[A-z0-9\d\s]+$/)) {
+                        wk("[Id$='validate']").html('');
+                    }
+                    else{
+                        wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+                    }
+                });
+                
+                wk('[id$=prodAlias]').blur(function(){
+                    var aliasName = wk(this).parent().find('input').val();
+                    if(aliasName != ''){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.addarticle.checkAvailability}',
+                            aliasName, 
+                            function(result, event){
+                                if (event.status) {
+                                    if(result == null || result == '{!CurrentProductId}' || aliasName == 'abc'){
+                                        console.log('available');
+                                        wk('#availableCheck').text('');
+                                        /*wk('#availableCheck').addClass('green-css');
+                                        wk('#availableCheck').removeClass('red-css');*/
+                                        window.enableSave = true;
+                                    }else{
+                                        console.log('Already in use');
+                                        wk('#availableCheck').text('SEO Alias Unavailable');
+                                        wk('#availableCheck').removeClass('green-css');
+                                        wk('#availableCheck').addClass('red-css');
+                                        window.enableSave = false;
+                                    }
+                                } else {
+                                    window.enableSave = false;
+                                }
+                            }, 
+                            {escape: true}
+                        );
+                    } else {
+                        //wk('#availableCheck').text('Enter value for SEO Alias First');
+                        wk('#availableCheck').removeClass('green-css');
+                        wk('#availableCheck').addClass('red-css');
+                        window.enableSave = false;
+                    }
+                });
+                
+                wk('[id$=prodName]').blur(function(){
+                    var SEOAlias = wk(this).val().replace(/[^a-zA-Z0-9_\- ]/g, "").toLowerCase();
+                    if(wk('[id$=prodAlias]').val()=='' && wk('[id$=prodName]').val()!=''){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.addarticle.checkAvailability}',
+                            SEOAlias.replace(/ /g,'-'), 
+                            function(result, event){
+                                console.log(result);
+                                if (event.status) {
+                                    if((result == null || result == '{!CurrentProductId}') && SEOAlias.replace(/ /g,'-') != 'abc'){
+                                        wk('[id$=prodAlias]').val(SEOAlias.replace(/ /g,'-'));
+                                        window.enableSave = true;
+                                    }else{
+                                        wk('[id$=prodAlias]').val(SEOAlias.replace(/ /g,'-') +'-'+ Math.floor(Math.random() * 100));
+                                        window.enableSave = false;
+                                    }
+                                    wk('#availableCheck').text('');
+                                } else {
+                                    window.enableSave = false;
+                                }
+                            }, 
+                            {escape: true}
+                        );
+                        //wk('[id$=prodAlias]').val(SEOAlias.replace(/ /g,'-'));
+                    }
+                });
+                wk("[id$=prodName]").trigger("blur");
+                wk("[id$=prodAlias]").trigger("blur");
+            }(jQuery));
+            </script>
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

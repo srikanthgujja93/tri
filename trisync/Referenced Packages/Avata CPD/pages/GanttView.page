@@ -1,0 +1,34 @@
+<apex:page Sidebar="false" controller="ATC.GanttView" showHeader="false" StandardStyleSheets="false">
+<!--  CSS -->  
+    <apex:stylesheet value="{!URLFOR($Resource.ATC__JSResources, 'resources/css/ext-all.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ATC__GResourcesMin, 'GResources/css/ganttlib.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ATC__GResourcesMin, 'GResources/css/gantt.css')}" />
+<!--  JS -->  
+    <apex:includeScript value="{!URLFOR($Resource.ATC__JSResources, 'ext-all.js')}" />       
+    <apex:includeScript value="{!URLFOR($Resource.ATC__GResourcesMin, 'GResources/js/ganttlib.js')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.ATC__GResourcesMin, 'GResources/js/ganttmin.js')}" />
+<script> 
+    document.title = 'CPD Gantt View';
+    var SFORGPFX = "ATC";
+    var Av_listId  = "{!RecordId}" ;
+    var BlankImagePath = "{!URLFOR($Resource.ATC__ext312, 'resources/images/default')}";
+    Ext.BLANK_IMAGE_URL = BlankImagePath+'/s.gif';
+    var SFHost = "{!$Api.PARTNER_SERVER_URL_140}"
+    function AvataMakeSforceConnection()
+    {  
+        if (sforce.connection) 
+        {
+          var sid = gup('_sId');
+          if (sid !== '') {
+            sforce.connection.sessionId = decodeURI(sid);
+          } else { //fallback
+            sforce.connection.sessionId = '{!$Api.Session_ID}';
+          }
+          // AvataConsole('sessionId ='+ sforce.connection.sessionId); 
+          //Avata.dbUtils.init();  
+           return true;
+        }
+        else return false;
+    }
+</script>
+</apex:page>

@@ -1,0 +1,92 @@
+<apex:page showheader="false" setup="false" standardstylesheets="false" controller="wk_wedge.Footertext" cache="false" title="Footer Text" docType="HTML-5.0">
+ <style>
+        .wdg-nav-icon.template {
+            background-color: #34becd;
+        }
+         .wdg-addOption--btn{
+                     cursor: pointer;
+                    
+                     padding: 8px;
+                     background: #7DC37D;
+                     color: #fff;
+                     display: inline-block;
+                     text-align: center;
+                     text-decoration: none;
+                     border-radius: 2px;
+                     border: none;
+                     font-size: 13px;
+                     font-weight: 600;
+                     box-shadow: none;
+                     outline: none;
+                 }
+    </style>
+ <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+          <apex:includeScript value="{!urlfor($Resource.wk_wedge__EcomKulResources, 'EcomKulResources/BackEnd/tinymce/js/tinymce/tinymce.min.js')}"/>
+            <apex:form id="Templateform">
+               <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo footer"></span>
+                            <span>Footer Text </span>
+                        </div>
+                        <div class="wdg-filter--options" style="display:inline-block">
+                            <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!welan.activatedLanguages.size>1}">
+                                <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                <apex:selectOptions value="{!welan.activatedLanguages}">
+                                    <span class="caret multidropdownsymbol"></span>
+                                </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:commandButton styleclass=" wdg-addOption--btn"  value="Template Menus" action="{!cancel}">
+                                        <span></span>
+                           </apex:commandButton>
+                            <apex:commandlink styleclass="wdg-ctrl--btn save "  action="{!save}" >
+                                <span></span>
+                            </apex:commandlink>
+                           <apex:commandLink action="{!cancel}" styleclass="wdg-ctrl--btn cancel"> 
+                                 <span></span>
+                         </apex:commandLink>
+                         </div>  
+                    </div>
+                    <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active"><a href="javascript:void(0)" data-target="productBlock">General</a></li>
+                            </ul>
+                        </div>
+                        <div id="productTabGroup" class="wdg-form--content">
+                            <apex:outputpanel layout="block" id="productBlock" styleclass="wdg-form--block">
+                                 <div class="wdg-form--blocktitle">
+                                    <span>Information </span>
+                                </div> 
+                                <div class="logo-wrap">
+                                  <apex:actionregion >
+                                    <apex:outputpanel id="ImagesPane1" layout="block" styleclass="wdg-form--blockfields">
+                                      <table class="wdg-form--table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Footer Text :" for="prodName"></apex:outputlabel></td>
+                                                <td class="field" id="prod_name_col">
+                                                    <apex:inputTextarea value="{!footertext}" styleclass="ecm_form_ip" rendered="{!metadesc == null}" html-tinymce="true"/>
+                                                    <apex:inputtextarea value="{!metadesc}" id="prodStatus1meta"  styleclass="ecm_form_ip" rendered="{!metadesc != null}" html-tinymce="true"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                     </table>   
+                                   </apex:outputpanel>
+                                </apex:actionregion>
+                              </div>
+                           </apex:outputpanel>
+                       </div>
+                   </apex:outputpanel>  
+                 </div>
+            </apex:form>
+      
+        </apex:define>
+    </apex:composition>
+</apex:page>

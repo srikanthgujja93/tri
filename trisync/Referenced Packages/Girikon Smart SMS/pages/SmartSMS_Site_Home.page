@@ -1,0 +1,7 @@
+<apex:page title="SmartSMS Site Home Page">
+    <center>
+    <h1>
+        Welcome to SmartSMS Site.
+    </h1>
+    </center>
+</apex:page>

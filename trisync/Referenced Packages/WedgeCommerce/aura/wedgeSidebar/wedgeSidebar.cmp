@@ -1,0 +1,148 @@
+<aura:component implements="force:appHostable">
+    <ltng:require styles="{!join(',',$Resource.wk_wedge__SLDS +'/assets/styles/salesforce-lightning-design-system-ltng.css',$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/css/backend/style-lightning.css')}" 
+      scripts="{!$Resource.wk_wedge__bootstrap+'/bootstrap/jquery.min.js'}" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initialize}"/>
+    
+    <aura:handler name="createTemplateComponent" action="{!c.getTemplateComponent}" event="wk_wedge:TemplateEvent"/>
+    <aura:handler name="createTemplateVariants" action="{!c.getTemplateVariants}" event="wk_wedge:TemplateComponentsEvent"/>
+    <aura:handler name="createImageSlider" action="{!c.getImageSlider}" event="wk_wedge:ImageSliderEvent"/>
+    <aura:handler name="createProduct" action="{!c.getProduct}" event="wk_wedge:ProductEvent"/>
+	<aura:handler name="createCategory" action="{!c.getCategory}" event="wk_wedge:ProductEvent"/>
+    <table style="height:100%">
+    	<tbody>
+        	<tr>
+            	<td>
+                	<div class="wdg">
+                        <div class="wdg-sideMenu">       
+                            <div class="wdg-sideMenu--nav">
+                                <a href="javascript:void(0)" id="collapse" class="wdg-nav--btn">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </a>
+                            </div>
+                            <ul class="wdg-nav--menulist">
+                                <li>
+                                    <a href="javascript:void(0);" onclick="{!c.storeAdmin}">
+                                        <span title="Store Administration" aura:id="storeAd" class="wdg-nav-icon storeadmin">
+                                            <span></span>
+                                        </span>
+                                        <span >Store Administration</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="{!c.getArticleListing}" class="art">
+                                        <span  title="Articles" aura:id="article" class="wdg-nav-icon article"><span></span></span>
+                                        <span >Articles</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="{!c.getTemplatesListing}">
+                                        <span title="Templates" aura:id="template" class="wdg-nav-icon template"><span></span></span>
+                                        <span >Templates</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="{!c.getPaymentProcessesListing}">
+                                        <span title="Payment Processors" aura:id="paymentProcesses" class="wdg-nav-icon payment"><span></span></span>
+                                        <span >Payment Processors </span>
+                                    </a>
+                                </li>
+                                <li class="wdg-accordion">
+                                    <a href="javascript:void(0)">
+                                        <span title="Product Catalog" aura:id="productcat" class="wdg-nav-icon productcatalog">
+                                            <span></span>
+                                        </span>
+                                        <span style="margin-left: 20px;">Product Catalog </span>
+                                        <span class="carret"></span>
+                                    </a>
+                                    <ul class="wdg-subNav--list">
+                                        <li><a href="javascript:void(0);" onclick="{!c.getCategoryListing}"><span title="Categories" aura:id="category" class="wdg-nav-icon category"><span></span></span><span >Categories</span></a></li>
+                                        <li><a href="javascript:void(0);" onclick="{!c.getProductFeatureListing}"><span title="Product Features" aura:id="prodFeatures" class="wdg-nav-icon prodfeature"><span></span></span><span >Product Features</span></a></li>
+                                        <li><a href="javascript:void(0);" onclick="{!c.getProductListing}"><span title="Products" aura:id="product" class="wdg-nav-icon product"><span></span></span><span >Products</span></a></li>
+                                        <li><a href="javascript:void(0);" onclick="{!c.getProductOptionListing}"><span title="Product Options" aura:id="prodOpt" class="wdg-nav-icon prodOptions"><span></span></span><span >Product Options</span></a></li>
+                                        <li><a href="javascript:void(0);" onclick="{!c.getReviewListing}"><span title="Product Reviews" aura:id="prodReview" class="wdg-nav-icon review"><span></span></span><span >Product Reviews</span></a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="{!c.getCouponListing}">
+                                        <span title="Coupons" aura:id="coupons" class="wdg-nav-icon coupons">
+                                            <span></span>
+                                        </span>
+                                        <span >Coupons</span>
+                                    </a>
+                                </li>
+                                <li class="wdg-accordion">
+                                    <a href="javascript:void(0)">
+                                        <span title="Shipping and Taxes" aura:id="shipTax" class="wdg-nav-icon shipandtax">
+                                            <span></span>
+                                        </span>
+                                        <span style="margin-left: 20px;">Shipping &amp; Taxes</span>
+                                        <span class="carret"></span>
+                                    </a>
+                                    <ul class="wdg-subNav--list">
+                                        <li><a href="javascript:void(0);" onclick="{!c.getLocationListing}"><span title="Locations" aura:id="location" class="wdg-nav-icon location"><span></span></span><span >Locations</span></a></li>
+                                        <li><a href="javascript:void(0);" onclick="{!c.getShippingMethodListing}"><span title="Shipping Methods" aura:id="shipmeth" class="wdg-nav-icon shippingmth"><span></span></span><span >Shipping Methods</span></a></li>
+                                        <li><a href="javascript:void(0);" onclick="{!c.getTaxListing}"><span title="Taxes" aura:id="loctax" class="wdg-nav-icon tax"><span></span></span><span >Taxes</span></a></li>                    
+                                    </ul>
+                                </li>                
+                                <li>                
+                                    <a href="javascript:void(0);" onclick="{!c.getOrderListing}">
+                                        <span title="Orders" aura:id="orders" class="wdg-nav-icon order">
+                                            <span></span>
+                                        </span>
+                                        <span >Orders</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="{!c.getCustomerListing}">
+                                        <span title="Customers" aura:id="customer" class="wdg-nav-icon customer"><span></span></span>
+                                        <span >Customers</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="{!c.getCartListing}">
+                                        <span title="Cart and Wishlist" aura:id="cartWishlist" class="wdg-nav-icon cartwishlist"><span></span></span>
+                                        <span >Cart &amp; Wishlist</span>
+                                    </a>
+                                </li>                
+                            </ul>             
+                        </div>       
+                        <!--<div class="wdg-pre-header">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-2">
+                                        <div class="wdg-preheader-navigation">
+                                            <ul class="wdg-preheader-navlist">                                    
+                                                <li class="dropdown">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                                                        <i class="account wdg-icon"></i>
+                                                        <span><ui:outputtext value="{!IF(NOT(ISPICKVAL($User.UserType,'Guest')),$User.FirstName +'  '+$User.LastName,'Account')}"/></span>
+                                                        <span class="caret"></span>
+                                                    </a>
+                                                    <div class="dropdown-menu wdg-user-dropdown">
+                                                        <apex:outputpanel layout="block" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}" styleclass="wdg-loggedIn-box">
+                                                            <ul class="wdg-loggedIn-nav">
+                                                                <li id="storelink"><a href="{!URLFOR(SiteUrl)}" target="_blank">Your Store</a></li> 
+                                                                <li id="storelink"><a href="{!$Page.wedgeActiveIndexpage}" target="_blank">Your Store</a></li>
+                                                                <li> <a href="/home/home.jsp">Back to Salesforce</a></li>
+                                                                <li><apex:commandbutton value="Log Out" action="{!sitelogout}" styleclass="wdg-btn blue wdg-logoff-btn"></apex:commandbutton></li>
+                                                            </ul>
+                                                        </apex:outputpanel>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </td>
+                <td style="width: 100%; vertical-align: top;">
+                	{!v.body}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</aura:component>

@@ -1,0 +1,12 @@
+.THIS .disp{
+    display:none;
+}
+
+
+
+@media screen and (max-width: 980px)
+{
+    .THIS .container{
+        padding: 0;
+    }
+}

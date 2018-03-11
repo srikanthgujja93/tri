@@ -1,0 +1,65 @@
+<aura:component >
+    <aura:attribute name="smstype" type="string" default="self"/>
+    <aura:attribute name="message" type="string" default=""/>
+    <aura:attribute name="createddate" type="string" default=""/>
+    <aura:attribute name="profilePic" type="string" default=""/>
+    <aura:attribute name="mms" type="string" default=""/>
+    <aura:attribute name="isDateChange" type="boolean" default="false"/>
+    <aura:attribute name="isToday" type="boolean" default="false"/>    
+    <aura:attribute name="isSentOrReceived" type="boolean" default="true"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:if isTrue="{!v.isDateChange==true}">
+        <div class="slds-grid">
+            <div class="slds-p-horizontal_small slds-size_5-of-12"><hr/></div>
+            <div class="slds-p-horizontal_small slds-align_absolute-center slds-size_2-of-12">
+                <div>
+                    <span class="slds-badge">
+                        &nbsp;
+                        <!--<ui:outputDateTime value="{!v.createddate}" format="EEEE, MMMM dd, yyyy"/>-->
+                        <aura:if isTrue="{!v.isToday}">
+                            Today
+                        	<aura:set attribute="else">
+                            	<ui:outputDateTime value="{!v.createddate}" format="EEEE, MMMM dd, yyyy"/>
+                            </aura:set>
+                        </aura:if>                                				
+                        &nbsp;
+                    </span>
+                </div>
+            </div>
+            <div class="slds-p-horizontal_small slds-size_5-of-12"><hr/></div>
+        </div>        
+   </aura:if>
+    
+   <li class="{!v.smstype}">
+        <div class="avatar">
+            <aura:if isTrue="{!v.smstype=='self'?true:false}">
+                <img src="{!v.profilePic}" style="max-width:40px"/>
+                <aura:set attribute="else">
+                    <lightning:icon iconName="standard:user" size="medium" alternativeText="User"/>
+                </aura:set>
+            </aura:if>            
+        </div>
+        <div class="messages">
+            <div class="slds-form-element" style="{!v.isSentOrReceived==false?'background-color:#4cb8da':''}">
+                <aura:if isTrue="{!!v.isSentOrReceived}">                    
+                    <lightning:spinner aura:id="outgoing_spinner" variant="brand" size="small" />                    
+                </aura:if>            
+                <p>
+                    <ui:outputTextArea value="{!v.message}"/><br/>
+                    <aura:if isTrue="{!v.mms!=''?true:false}">
+                        <a href="{!v.mms}" target="_blank"><img src="{!v.mms}" class="mms-media"/></a>
+                    </aura:if>
+                </p>
+                <time datetime="{!v.createddate}">
+                    <ui:outputDateTime value="{!v.createddate}" format="hh:mm a"/>
+                    <aura:if isTrue="{!v.isSentOrReceived}">
+                        <aura:if isTrue="{!v.smstype=='self'}">
+                            &nbsp;<lightning:icon iconName="utility:check" class="checkMsg" size="xx-small" alternativeText="Sent"/>
+                        </aura:if>
+                    </aura:if>
+                </time>      
+            </div>
+        </div>
+    </li>
+</aura:component>

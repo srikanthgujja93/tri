@@ -1,0 +1,753 @@
+<apex:page controller="wk_wedge.WedgecommerceDashboardsshow" showheader="false" setup="false" title="Dynamic Dashboards" standardstylesheets="false">
+  
+  <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+            <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+            <style>
+                html, body {
+                    height: 100%;
+                }
+                .wdg .wdg-body{
+                    width:calc(100% - 57px); 
+                }
+                .wdg .wdg-body.move{
+                    width:calc(100% - 237px); 
+                }
+                .container{
+                    width:100%;
+                }
+                .wdg-nav-icon.wedgeDashboard {
+                    background-color: #34becd;
+                }
+                .wdg-body .wdg-dataTable--box {
+                    border: 2px solid #F0F0F0;
+                    margin-top:25px;
+                    padding: 15px 0;
+                }
+                .wdg-background-img{
+                    background:transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/dashboard-sprite.png')}') no-repeat center;
+                    height: 65px;
+                    width: 65px;
+                    
+                }
+                .wdg-sideMenu .wdg-nav--btn{
+                    height:35px !important;
+                    width:100% !important;
+                }
+                .orderimage{                    
+                    //background-position: 0px -132px;
+                    background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/orders.svg')}') no-repeat center;
+                    /*height: 43px;
+                    width: 40px;*/
+                    height: 83px;
+                    margin: 0 auto;
+                }
+                .customerimage{
+                    background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/customer.svg')}') no-repeat center;
+                    /*height: 43px;
+                    width: 40px;*/
+                    height: 83px;
+                    margin: 0 auto;
+                }
+                .subscriberimage{
+                    background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/subscriber.svg')}') no-repeat center;
+                    /*height: 43px;
+                    width: 40px;*/
+                    height: 83px;
+                    margin: 0 auto;
+                }
+                .returnimage{
+                    background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/return-request.svg')}') no-repeat center;
+                    /*height: 43px;
+                    width: 40px;*/
+                    height: 83px;
+                    margin: 0 auto;
+
+                }
+                .wdg-image.order-image{
+                    background: linear-gradient(to right, #3879C3 0%, #7AAEEB 100%);
+                    padding:0;
+                }
+                .wdg-image.customer-image{
+                    background: linear-gradient(to right, #9CBE24 0%, #D7E8A1 100%);
+                    padding:0;
+                }
+                .wdg-image.subscriber-image{
+                  background: linear-gradient(to right, #FF6E81 0%, #FEC3CA 100%);
+                    padding:0;
+                }
+                .wdg-image.return-image{
+                   background: linear-gradient(to right, #FF8D45 0%, #FDC19E 100%);
+                    padding:0;
+                }
+                .wdg-body .wdg-table-row{
+                    display:table-row;
+                    vertical-align: middle;
+                }
+                .wdg-body .wdg-table-cell{
+                    display:inline-block;
+                    vertical-align: top;
+                }
+                .wdg-text{                    
+                    padding: 15px;
+                    text-align: start;
+                    transition: padding-right 0.25s linear;
+                    height: 83px;
+                }
+                
+                .wdg-text.order{
+                    border-bottom: 1px solid #7BAFEC;
+                    background: linear-gradient(to right, #4E8BD0 0%, #7BAFEC 100%);
+                }
+                .wdg-text.customer{
+                    border-bottom: 1px solid #D7E9A2;
+                    background: linear-gradient(to right, #AFCC4F 0%, #D7E9A2 100%);
+                    transition: padding-right 0.25s linear;             
+                }
+                .wdg-text.subscriber{
+                    border-bottom: 1px solid #FEC4CB;
+                  background: linear-gradient(to right, #FF8A9A 0%, #FEC4CB 100%);
+                    transition: padding-right 0.25s linear;
+                }
+                .wdg-text.return{
+                    border-bottom: 1px solid #FDC19E;
+                    background: linear-gradient(to right, #FE9E63 0%, #FDC19E 100%);
+                    transition: padding-right 0.25s linear;
+                 }
+                /*.wdg-text.decPadding{
+                    padding-right: 50px;
+                }
+                .wdg-text.customer.decPadding{
+                    padding-right: 35px;
+                }
+                .wdg-text.subscriber.decPadding{
+                    padding-right: 35px;
+                }
+                .wdg-text.return.decPadding{
+                    padding-right: 8px;                    
+                }*/
+                .wdg-heading{
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #fff;
+                }
+                .wdg-count{
+                    font-size: 22px;
+                    font-weight: 600;
+                    color: #fff;
+                }
+                .wdg-bottom{                    
+                    color:#fff;
+                    font-size:12px;
+                    padding: 8px 15px;
+                    box-shadow: 0 10px 10px  #ECECEC;
+                }
+                .wdg-bottom.order-bottom{
+                    background: linear-gradient(to right, #3779C3 0%, #7BAFEC 100%);
+                    text-align:start;
+                }
+                .wdg-bottom.customer-bottom{
+                   background: linear-gradient(to right, #AFCC4F 0%, #D8E9A2 100%);
+                    text-align:start;
+                }
+                .wdg-bottom.subscriber-bottom{
+                   background: linear-gradient(to right, #FF6D80 0%, #FEC4CB 100%);
+                    text-align:start;
+                }
+                .wdg-bottom.return-bottom{
+                    background: linear-gradient(to right, #FF8C44 0%, #FDC19E 100%);
+                    text-align:start;
+                }
+                .wdg-padding--none{
+                    padding:0;
+                }
+                .wdg-margin-left{
+                    margin-left:24px;
+                }
+                .wdg-body .shopping-cart{
+                    box-shadow: 10px 10px 30px 10px #ECECEC;
+                }
+                .wdg-body .active-cart{
+                    display: inline-block;
+                    padding: 50px 25px;
+                    text-align: start;
+                }
+                .active-cart.wishlist{
+                    padding: 57px 50px 57px 0;
+                }
+                .wdg-body .active-cart>.heading{
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #606060;
+                    white-space: nowrap;
+                }
+                .wdg-body .active-cart>.description{
+                    font-size: 15px;
+                    color: #606060;
+                    white-space: nowrap;
+                }
+                .cart-image{
+                    background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/cart.svg')}') no-repeat center;
+                    padding: 50px 25px;
+                    display: inline-block;
+                    height: auto;
+                    font-size: 35px;
+                    font-weight: 700;
+                    color: #606060;
+                    text-align: center;
+                    vertical-align: middle;
+                }
+                .cart-image.wishlist{
+                    background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/wishlist.svg')}') no-repeat center;                        
+                }
+                a{
+                    color: #3A7BC4;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+                a:hover{
+                    color: #3A7BC4;
+                }
+                .pending-list{
+                    text-align: start;
+                    box-shadow: 10px 10px 30px 10px #ECECEC;
+                }
+                .pending-list>.heading{
+                    padding: 20px;
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #606060;
+                    border-bottom: 1px solid #F0F0F0;
+                }
+                .pending-info{
+                     padding: 20px;
+                     border-bottom: 1px solid #F0F0F0;
+                }
+                .pending-info>.heading{
+                    display: inline-block;
+                    text-align: start;
+                    width: 48%;
+                    white-space: nowrap;
+                    font-size: 11px;
+                    color: #606060;
+                    text-overflow: ellipsis;
+                }
+                .pending-info>.count{
+                    display: inline-block;
+                    text-align: end;
+                    width: 50%;
+                    font-size: 18px;
+                    color: #606060;
+                    font-weight:600;
+                 }
+                 .roundimg{
+                     height: 30px;
+                     width: 30px;
+                     border-radius: 50%;
+                 }
+                 .buyer-info{
+                     padding: 17px;
+                     border-bottom: 1px solid #F0F0F0;
+                 }
+                 .buyer-info>.heading{
+                    display: inline-block;
+                    text-align: start;
+                    width: 48%;
+                    font-size: 12px;
+                    color: #606060;   
+                }
+                 .buyer-info>.count{
+                     display: inline-block;
+                    text-align: end;
+                    width: 50%;
+                    font-size: 18px;
+                    color: #606060;
+                    font-weight: 600;
+                    vertical-align: top;
+                    margin-top: 5px;
+                 }
+                 .buyer-info>.heading>div{
+                    display: inline-block;
+                    vertical-align: top;
+                    margin: 6px;
+                    width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                 }
+                 .buyer-list{
+                    text-align: start;
+                    min-height:308px;
+                    margin-right: 15px;
+                    box-shadow: 10px 10px 30px 10px #ECECEC;
+                }
+                .buyer-list>.heading{
+                    padding: 18px;
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #606060;
+                    border-bottom: 1px solid #F0F0F0;
+                }
+                .wdg-margin-top{
+                    margin-top:40px;
+                }
+                .latest-order{
+                    box-shadow: 10px 10px 30px 10px #ECECEC;
+                    margin: 40px 15px 0 15px;
+                }
+                .latest-order>.heading{
+                    padding: 20px;
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #606060;
+                    border-bottom: 1px solid #F0F0F0;
+                }
+                .latest-order .orderTable{ 
+                    width: 100%;
+                    
+                }
+                .ordertableWrapper{
+                    min-height:312px;
+                }
+                .orderTable>thead>tr>td{
+                    padding:20px;
+                    font-size: 20px;
+                    color: #606060;
+                    border-bottom: 1px solid #F0F0F0;                    
+                }
+                .orderTable>tbody>tr>td{
+                    padding:20px;
+                    font-size: 14px;
+                    color: #606060;
+                    border-bottom: 1px solid #F0F0F0;                    
+                }
+                td.Activated>span{
+                    
+                }
+                .wrapperclass{
+                    display: flex;
+                    justify-content: space-between;
+                    flex-wrap:wrap;
+                    margin: 0 15px;
+                }
+                .tile-row{
+                    text-align: center;
+                    width: 100%;
+                }
+                .fixedclass{
+                    width:45%;
+                    height:420px;
+                    margin-top: 55px;
+                    background-color: rgba(255,255,255,0.5);                    
+                    cursor:pointer;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    box-shadow: 10px 10px 30px 10px #ECECEC;
+                }
+                .fixedclass>span{
+                    background: url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/add-chart-icon.svg')}') no-repeat center;
+                    height: 104px;
+                    width: 91px;
+                }
+                .remclass{
+                    position:relative;
+                    height: 420px;
+                    width: 45%;
+                    display: inline-block;
+                    cursor:pointer;
+                    margin-top: 55px;
+                }
+                .crossclass{
+                    position: absolute;
+                    right: 5px;
+                    top: 2px;
+                    cursor: pointer;
+                    height: 26px;
+                    width: 28px;
+                    background-position: -206px -1px;
+                }
+                .nocss{
+                    border:none;
+                    box-shadow: 10px 10px 30px 10px #ECECEC;
+                }
+                .wdg-bottom a{
+                    color:#FFF;
+                    text-decoration: none;                    
+                }
+                .No-Recent-Buyers{
+                    min-height: 265px;
+                    text-align: center;
+                    vertical-align: middle;
+                    padding-top: 100px;
+                    box-sizing: border-box;
+                    font-size: 26px;
+                    font-weight: 600;
+                    color: #606060;
+                }
+                .No-Order-Placed{
+                    min-height: 320px;
+                    text-align: center;
+                    vertical-align: middle;
+                    padding-top: 130px;
+                    box-sizing: border-box;
+                    font-size: 26px;
+                    font-weight: 600;
+                    color: #606060;
+                }
+                .showMore-btn{
+                    padding: 6px;
+                    background-color: #ECA500;
+                    float: right;
+                    border-radius: 3px;
+                }
+                .showMore-btn>span{
+                    background-color: #ECA500;
+                    float: right;
+                    background-position: -260px -5px;
+                    height: 20px;
+                    width: 20px;
+                }
+                @-moz-document url-prefix() {
+                    .orderimage{
+                        height: 84px;
+                    }
+                    .customerimage{
+                        height: 84px;
+                    }
+                    .subscriberimage{
+                        height: 84px;
+                    }
+                }
+                .wdg-pre--header .wdg-user--dropdown{
+                    right:0;
+                }
+                </style>
+                <div class="wdg-body">
+                    <apex:form id="theForm">
+                    
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                    </apex:outputpanel>
+                    
+                   <div class="wdg-body--titleblock clearfix">
+                         <div class="wdg-body--title">
+                            <span class="wdg-title--logo wedgedashboard"></span>
+                            <span> {!$label.wk_wedge__Dashboard_top_heading} </span>
+                        </div>
+                    </div>            
+                    <apex:outputpanel layout="block" id="wdgTablebox"  styleClass="wdg-padding--none">
+                        <apex:outputPanel layout="block" styleclass="wdg-dataTable--box">
+                            <div class="container">
+                                <div style="row">
+                                  <a href="/apex/wk_wedge__Orderlisting">
+                                    <div class="col-sm-6 col-md-3">
+                                        <div style="padding: 0 15px;margin-top:15px;">
+                                            <div class="row">
+                                                <div class="col-xs-4 wdg-image order-image">
+                                                    <div class="wdg-background-img orderimage"></div>
+                                                </div> 
+                                                <div class="col-xs-8 wdg-text order">
+                                                    <div class="wdg-heading">{!$label.wk_wedge__Dashboard_Orders_Text}</div>
+                                                    <div class="wdg-count">{!orderCount}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row wdg-bottom order-bottom">
+                                                <a href="/apex/Orderlisting">{!$label.wk_wedge__Dashboard_View_all}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </a>
+                                  <a href="/apex/wk_wedge__customerlisting" >
+                                    <div class="col-sm-6 col-md-3">
+                                        <div style="padding: 0 15px;margin-top:15px;">
+                                            <div class="row">
+                                                <div class="col-xs-4 wdg-image customer-image">
+                                                    <div class="wdg-background-img customerimage"></div>
+                                                </div> 
+                                                <div class="col-xs-8 wdg-text customer">
+                                                    <div class="wdg-heading">{!$label.wk_wedge__Dashboard_Customers_Text}</div>
+                                                    <div class="wdg-count">{!customerCount}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row wdg-bottom customer-bottom">
+                                                <a href="/apex/customerlisting">{!$label.wk_wedge__Dashboard_View_all}</a>
+                                            </div>   
+                                        </div>     
+                                    </div>
+                                  </a>
+                                  <a href="/apex/wk_wedge__Quotes" >
+                                    <div class="col-sm-6 col-md-3">
+                                        <div style="padding: 0 15px;margin-top:15px;">
+                                            <div class="row">
+                                                <div class="col-xs-4 wdg-image subscriber-image">
+                                                    <div class="wdg-background-img subscriberimage"></div>
+                                                </div> 
+                                                <div class="col-xs-8 wdg-text subscriber">
+                                                    <div class="wdg-heading">{!$label.wk_wedge__Dashboard_Quotes_Text}</div>
+                                                    <div class="wdg-count">{!RequestQuoteCount}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row wdg-bottom subscriber-bottom">
+                                                <a href="/apex/Quotes">{!$label.wk_wedge__Dashboard_View_all}</a>
+                                            </div>  
+                                        </div>      
+                                    </div>
+                                  </a>
+                                  <a href="/apex/wk_wedge__ReturnRequestListing" >
+                                    <div class="col-sm-6 col-md-3">
+                                        <div style="padding: 0 13px;margin-top:15px;">
+                                            <div class="row">
+                                                <div class="col-xs-4 wdg-image return-image">
+                                                    <div class="wdg-background-img returnimage"></div>
+                                                </div> 
+                                                <div class="col-xs-8 wdg-text return">
+                                                    <div class="wdg-heading">{!$label.wk_wedge__Dashboard_Return_Requests_Text}</div>
+                                                    <div class="wdg-count">{!returnRequestCount}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row wdg-bottom return-bottom">
+                                                <a href="/apex/ReturnRequestListing">{!$label.wk_wedge__Dashboard_View_all}</a>
+                                            </div>       
+                                        </div> 
+                                    </div> 
+                                  </a>                              
+                                </div>
+                            </div>
+                            <!--<div style="text-align:center;margin-top:40px;">
+                                
+                            </div>-->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-4 wdg-margin-top">
+                                        <div style="padding: 0 15px; margin: 0 0 0 15px;">
+                                            <div class="row shopping-cart"> 
+                                                <div class="col-xs-6 active-cart" >
+                                                    <div class="heading">{!$label.wk_wedge__Dashboard_Shopping_Cart_Text}</div>
+                                                    <div class="description">{!$label.wk_wedge__Dashboard_last_1_hour}</div>
+                                                </div>
+                                                <div class="col-xs-6 cart-image">
+                                                    <span>{!activeShoppingCarts}</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="row shopping-cart" style="margin-top:30px;">
+                                                <div class="col-xs-6 active-cart" >
+                                                    <div class="heading">{!$label.wk_wedge__Dashboard_Wishlist_Text}</div>
+                                                    <div class="description">{!$label.wk_wedge__Dashboard_last_1_hour}</div>
+                                                </div>
+                                                <div class="col-xs-6 cart-image wishlist">
+                                                    <span>{!wishlist}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="col-sm-12 col-md-4 wdg-margin-top tile-table-width">
+                                            <div class="pending-list" >
+                                                <div class="heading">{!$label.wk_wedge__Dashboard_Currently_Pending}</div>
+                                                <div class="pending-info">
+                                                    <div class="heading">{!$label.wk_wedge__Dashboard_Orders_Text}</div>
+                                                    <div class="count">{!pendingOrderStatus}</div>
+                                                </div>
+                                                <div class="pending-info">
+                                                    <div class="heading">{!$label.wk_wedge__Dashboard_Return_exchanges}</div>
+                                                    <div class="count">{!pendingRequest}</div>
+                                                </div>
+                                                <div class="pending-info">
+                                                    <div class="heading">{!$label.wk_wedge__Dashboard_Abandoned_Cart}</div>
+                                                    <div class="count">{!abandonedcarts}</div>
+                                                </div>
+                                                <div class="pending-info">
+                                                    <div class="heading">{!$label.wk_wedge__Dashboard_Out_of_stock_product}</div>
+                                                    <div class="count">{!productOutOfStock}</div>
+                                                </div>
+                                            </div>        
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 wdg-margin-top tile-table-width">
+                                            <div class="buyer-list" >
+                                                <div class="heading">
+                                                    <span>
+                                                        {!$label.wk_wedge__Dashboard_Recent_Buyers}
+                                                    </span>
+                                                    <a href="/apex/wk_wedge__customerlisting" target="_blank" class="showMore-btn" title="Go to Customer Listing"><span class="wdg-background-img " ></span></a>                                            
+                                                </div>
+                                                <apex:repeat value="{!recentBuyers}" var="key">
+                                                    <div class="buyer-info">                                                
+                                                        <div class="heading">
+                                                            <!--<img class="roundimg" src="{!key.BillToContact.photourl}" ></img> -->
+                                                            <div><a href="/{!key.createdBy.Id}">{!key.createdby.name}</a></div>
+                                                        </div>
+                                                        <div class="count">{!currsymbol} {!key.Amount_Paid__c}</div>
+                                                    </div>   
+                                                </apex:repeat>
+                                                
+                                                <apex:outputPanel layout="block" rendered="{!recentBuyers.size==0}" styleclass="No-Recent-Buyers">
+                                                    <apex:outputPanel >{!$Label.wk_wedge__no_recent_buyers}</apex:outputPanel>
+                                                </apex:outputPanel>                                    
+                                            </div>      
+                                        </div>
+                                </div>
+                            </div>
+                           <div class="container">
+                               <div class="latest-order">
+                                    <div class="heading">
+                                        <span>{!$label.wk_wedge__Dashboard_Latest_Order_Text}</span>
+                                        <a href="/apex/Orderlisting" class="showMore-btn" target="_blank" title="Go to Order Listing"><span class="wdg-background-img "></span></a>    
+                                    </div>
+                                    <apex:outputpanel styleclass="ordertableWrapper" rendered="{!recentBuyers.size>0}">
+                                        <table class="orderTable" >
+                                            <thead>
+                                                <tr>
+                                                    <td>{!$label.wk_wedge__Dashboard_Order_Number_text}</td>
+                                                    <td>{!$label.wk_wedge__Dashboard_Customers_Text}</td>
+                                                    <td>{!$label.wk_wedge__Dashboard_Status_Text}</td>
+                                                    <td>{!$label.wk_wedge__Dashboard_Date_Added_Text}</td>
+                                                    <td>{!$label.wk_wedge__Dashboard_Total}</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <apex:repeat value="{!recentBuyers}" var="key">
+                                                    <tr>
+                                                        <td><a href="/{!key.Id}">{!key.ordernumber}</a></td>
+                                                        <td><a href="/{!key.createdBy.Id}">{!key.createdby.name}</a></td>
+                                                        <td class="{!key.status}"><span>{!key.status}</span></td>
+                                                        <td>{!key.createddate}</td>
+                                                        <td>{!CurrSymbol} {!key.wk_wedge__Amount_Paid__c}</td>
+                                                    </tr>
+                                                </apex:repeat>
+                                            </tbody>
+                                        </table>
+                                    </apex:outputpanel>
+                                    <apex:outputPanel layout="block" rendered="{!recentBuyers.size==0}" styleclass="No-Order-Placed">
+                                        <apex:outputPanel >{!$Label.wk_wedge__no_order_placed}</apex:outputPanel>
+                                    </apex:outputPanel>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <apex:outputPanel styleclass="wrapperclass">
+                                <!--<apex:outputPanel id="lastblock" styleclass="remclass">
+                                    <apex:iframe src="{!iframeUrl}" height="500" width="410"/>
+                                </apex:outputPanel>-->
+                                <apex:outputPanel onclick="addNew()" id="addnewthisid" styleClass="fixedclass">
+                                    <span class="wdg-background-img"></span>
+                                 <!--   <apex:image url="{!urlfor($Resource.ess_res,'img/add.png')}"/> -->
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                                <apex:actionFunction action="{!addChart}" name="callInsert" rerender="">
+                                    <apex:param assignTo="{!chartId}" value="" name="chartId"/>
+                                    <apex:param assignTo="{!chartType}" value="" name="chartType"/>
+                                    <apex:param assignTo="{!chartData}" value="" name="chartData"/>
+                                </apex:actionFunction>
+                                <apex:actionFunction action="{!getChartList}" name="getCharts" rerender=""/>
+                                <apex:actionFunction action="{!removeRecord}" name="removeit" rerender="">
+                                    <apex:param assignTo="{!removeChartId}" name="removeid" value=""/>
+                                </apex:actionFunction>
+                                <br/>
+                            </div>
+                        </apex:outputPanel>
+                    </apex:outputpanel> 
+                    
+                </apex:form>
+            </div>
+            <script>
+                window.uid=1;
+                window.addNewBlock;
+                window.chartCount = {!chartCount};
+                try{
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.WedgecommerceDashboardsshow.getChartList}',
+                        function(result, event){
+                            console.log(result);
+                            if(event.status){
+                                var appendToTag = document.querySelectorAll('span[id*=lastblock]');
+                                var addnew = document.querySelectorAll('span[id*=addnewthisid]');
+                                addNewBlock = addnew[0];
+                                console.log(appendToTag);
+                                //appendToTag = appendToTag[0].parentNode;
+                                appendToTag = addnew[0].parentNode;
+                                appendToTag.removeChild(addnew[0]);
+                                for(var i=0;i<result.length;i++){
+                                    var opnode = document.createElement('span');
+                                    opnode.setAttribute("class","remclass");
+                                    opnode.setAttribute("id","unique"+ result[i].wk_wedge__Dashboard_ID__c);
+                                    var ifrm = document.createElement('iframe');
+                                    ifrm.src = "{!iframeUrl}?id=" + result[i].wk_wedge__Dashboard_ID__c;
+                                    ifrm.height = "420";
+                                    ifrm.width = "100%";
+                                    ifrm.setAttribute("class","nocss");
+                                    var closetag = document.createElement("span");
+                                    var texttag = document.createTextNode("");
+                                    closetag.setAttribute("onclick","closeif("+ result[i].wk_wedge__Dashboard_ID__c +")");
+                                    closetag.setAttribute("class","wdg-background-img crossclass");
+                                    closetag.setAttribute("title","Close");
+                                    closetag.appendChild(texttag);
+                                    opnode.appendChild(ifrm);
+                                    opnode.appendChild(closetag);
+                                    appendToTag.appendChild(opnode);
+                                    window.uid=parseInt(result[i].wk_wedge__Dashboard_ID__c)+1;
+                                }
+                                if(chartCount < {!totaltypes})
+                                    appendToTag.appendChild(addnew[0]);
+                            }
+                        }
+                    );
+                }catch(err){
+                    console.log(err);    
+                }
+                
+                function addNew(){
+                    var allspan = document.querySelectorAll('span[id*=lastblock]');
+                    var addnew = document.querySelectorAll('span[id*=addnewthisid]');
+                    var parNode = addnew[0].parentNode;
+                    var opnode = document.createElement('span');
+                    opnode.setAttribute("class","remclass");
+                    opnode.setAttribute("id","unique"+ window.uid);
+                    var ifrm = document.createElement('iframe');
+                    ifrm.src = "{!iframeUrl}?id=" + window.uid;
+                    ifrm.height = "420";
+                    ifrm.width = "100%";
+                    ifrm.setAttribute("class","nocss");
+                    var closetag = document.createElement("span");
+                    var texttag = document.createTextNode("");
+                    closetag.setAttribute("onclick","closeif("+ window.uid +")");
+                    closetag.setAttribute("class","wdg-background-img crossclass");
+                    closetag.appendChild(texttag);
+                    opnode.appendChild(ifrm);
+                    opnode.appendChild(closetag);
+                    /*allspan[0].parentNode.removeChild(addnew[0]);
+                    allspan[0].parentNode.appendChild(opnode);
+                    allspan[0].parentNode.appendChild(addnew[0]);*/
+                    parNode.removeChild(addnew[0]);
+                    parNode.appendChild(opnode);
+                    window.chartCount++;
+                    if(chartCount < {!totaltypes})
+                        parNode.appendChild(addNewBlock);
+                    //parNode.appendChild(addnew[0]);
+                    callInsert(window.uid++,'pie');
+                }
+                function closeif(curid){
+                    var node = document.querySelectorAll("span[id=unique"+curid+"]");
+                    var par = node[0].parentNode;
+                    par.removeChild(node[0]);
+                    var len = par.length;
+                    removeit(curid);
+                    if(window.chartCount == {!totaltypes}){
+                        par.appendChild(addNewBlock);
+                    }
+                    window.chartCount--;
+                }
+            </script>
+       </apex:define>
+    </apex:composition>
+</apex:page>
+
+<!--<style>
+        body{
+            background-color:lightgrey !important;
+        }
+        
+        
+    </style>
+    
+    
+    -->

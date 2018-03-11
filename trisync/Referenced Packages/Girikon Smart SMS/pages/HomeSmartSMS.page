@@ -1,0 +1,110 @@
+<apex:page sidebar="false" setup="false" id="aPage" title="SMS Admin" showHeader="true" tabStyle="SMS_Admin__tab">    
+    <html style="height:100%;">
+        <body style="padding:0; margin:0; height:100%;" >
+            <apex:includeScript value="/lightning/lightning.out.js" />
+            <apex:includeLightning />
+            
+           <c:remotesitesetting2 rssName="mdapi"/>
+            
+            <c:PermissionsSet />
+            <div id="spinner" style="height:64px;">                
+                <img class="gkn-sms-waiting" src="{!URLFOR($Resource.gkn_sms__slds_assets,'/assets/images/spinners/slds_spinner_brand.gif')}" alt="Loading..." />
+            </div>            
+            <div style="width:100%;max-height:auto;min-height: 654px;" id="ltngcontainer"></div>
+            <script>
+            $Lightning.use("gkn_sms:GirikonSMSApp", function() {
+                $Lightning.createComponent("gkn_sms:leftNavBar",{ borderColor : "#16325c", bgColor : "#16325c" ,
+                                               fontColor : "#FFF",frontText : "What's cool about Lightning Component Development",
+                                               backText : "You dont need to enable Lightning experience, It will work on Classic Instance as well"
+                                           },
+                                           "ltngcontainer",function(cmp) {
+                                               console.log('Lightning component created by lightning-out!');                                               
+                                               document.getElementById('spinner').style.display='none';
+                                           });
+            });
+</script>
+<apex:outputPanel rendered="{!$User.UITheme == 'Theme3'}">
+<style>
+.rightbar-container{
+    min-height:850px !important
+}
+</style>
+</apex:outputPanel>
+
+<style>
+.slds-select_container:after{top: 20px;}
+.gkn-sms-waiting{
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+.navigation-container {
+    background-color: #fff;
+    float: left;
+    overflow-x: hidden;
+    position: relative;
+    width: 13%;
+    height:100%;
+}            
+.rightbar-container {
+    max-height: auto;
+    padding: 0;
+    vertical-align: top;
+    border-left: 1px solid rgb(216, 221, 230);
+    float: right;
+    position: relative;
+    width: 86.5%;
+}
+button .slds-icon--small {
+    height: 0.7rem !important;
+    line-height: 1;
+    width: 0.7rem !important;
+}
+.slds-tree__item.data-active {
+    background-color: #f0f8fc;
+}
+.data-active::before {
+    background-color: rgb(0, 112, 210);
+    content: "";
+    height: 30px;
+    left: -3.2em;
+    position: relative;
+    top: 0;
+    width: 4px;
+}
+.slds-scope .slds-tree [aria-level="1"] > .slds-tree__item {
+    padding-left: 0.6rem !important;
+}    
+.slds-scope .slds-tree [aria-level="2"] > .slds-tree__item {
+    padding-left: 2.6rem !important;
+}
+.slds-scope .slds-spinner_container{
+ z-index:9999;   
+}    
+.slds-scope .slds-text-title--caps {
+    /*font-size: 1rem;*/
+    line-height: 1.25;
+    color: rgb(84, 105, 141);
+    text-transform: uppercase;
+    letter-spacing: .0625rem;
+    margin-left: 1em;margin-top: 1em;
+}    
+.setup-icon {
+    background-color: #0070D2;
+    padding: 7px;
+}
+.hide{
+    display:none;
+}    
+#AdminauraErrorMessage{
+    display:none;
+}    
+</style>            
+        </body>
+    </html>
+</apex:page>

@@ -1,0 +1,109 @@
+<apex:page controller="wk_wedge.QuoteInformationController" title="Quote Information" showheader="false" setup="false" standardstylesheets="false" cache="false" >
+    <style>
+        .wdg-nav-icon.requestquote, .wdg-nav-icon.quotes {
+            background-color: #34becd;
+        }
+        .wdg-form--table tbody td a, .wdg-form--table tbody td a:hover, .wdg-form--table tbody td a:active, .wdg-form--table tbody td a:focus {
+            color: #3A7BC4;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .wdg-form--block .wdg-form--blocktitle {
+            padding-bottom: 14px;
+        }
+        .wdg-addOption--btn {
+                    cursor: pointer;
+                    padding: 8px;
+                    background: #7DC37D;
+                    color: #fff;
+                    display: inline-block;
+                    text-align: center;
+                    text-decoration: none;
+                    border-radius: 2px;
+                    border: none;
+                    font-size: 13px;
+                    font-weight: 600;
+                    box-shadow: none;
+                    outline: none;
+                    margin-left: 10px;
+                }
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <apex:form id="productform">
+                <div class="wdg-body">
+                          <apex:outputpanel id="wdgErrorBlock" layout="block">
+                             <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                         </apex:outputpanel> 
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo quote"></span>
+                            <span>Quote Information</span>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <!--<apex:commandlink styleclass="wdg-ctrl--btn save " immediate="false" onclick="return ValidateSave(event);" action="{!saveData}" >
+                                <span></span>
+                            </apex:commandlink>-->
+                            <a href="{!URLFOR($page.Quotes)}" class="wdg-ctrl--btn cancel">
+                                <span></span>
+                            </a>
+                         </div>  
+                    </div>
+                     <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active"><a href="javascript:void(0)" data-target="productBlock">General</a></li>
+                            </ul>
+                        </div>
+                        <div id="productTabGroup" class="wdg-form--content">
+                            <apex:outputpanel layout="block" id="productBlock" styleclass="wdg-form--block">
+                                 <div class="wdg-form--blocktitle">
+                                    <span>Information </span>
+                                    <apex:outputPanel style="float:right;margin-top: -6px;" id="requestPanel">
+                                        <apex:outputPanel rendered="{!NOT(quoteInfo.wk_wedge__Offer_Accepted__c)}"><a class="wdg-addOption--btn" href="javascript:void(0);" onclick="acceptRequest();">Accept Request</a></apex:outputPanel>
+                                        <apex:outputPanel rendered="{!quoteInfo.wk_wedge__Offer_Accepted__c}"><a class="wdg-addOption--btn" href="javascript:void(0);" onclick="rejectRequest();">Reject Request</a></apex:outputPanel>                                        
+                                    </apex:outputPanel>
+                                    <apex:actionFunction name="acceptRequest" action="{!acceptRequest}" rerender="requestPanel" status="waitstatus"/>
+                                    <apex:actionFunction name="rejectRequest" action="{!rejectRequest}" rerender="requestPanel" status="waitstatus"/>
+                                </div>
+                                <div class="wdg-form--blockfields">
+                                   <table class="wdg-form--table">
+                                       <tbody>
+                                           <tr>
+                                                <td class="label"><apex:outputlabel value="Name :" ></apex:outputlabel></td>
+                                                <td class="field"><apex:outputLink value="/{!quoteInfo.Id}">{!quoteInfo.Name}</apex:outputLink></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Email :" ></apex:outputlabel></td>
+                                                <td class="field">{!quoteInfo.wk_wedge__Email__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Product :" ></apex:outputlabel></td>
+                                                <td class="field"><apex:outputLink value="/{!quoteInfo.wk_wedge__Product__c}">{!quoteInfo.Product__r.Name}</apex:outputLink></td>
+                                            </tr>
+                                            <apex:outputPanel rendered="{!quoteInfo.wk_wedge__Product_Option__c!=null}">
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Product Options :" ></apex:outputlabel></td>
+                                                    <td class="field">{!quoteInfo.wk_wedge__Product_Option__c}</td>
+                                                </tr>
+                                            </apex:outputPanel>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Product Quantity :" ></apex:outputlabel></td>
+                                                <td class="field">{!quoteInfo.wk_wedge__Product_Quantity__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Product Price :" ></apex:outputlabel></td>
+                                                <td class="field">{!storeAd.wk_wedge__Currecy_Symbol__c} {!quoteInfo.wk_wedge__Price_Per_Product__c}</td>
+                                            </tr>
+                                       </tbody>                                        
+                                   </table>
+                               </div>
+                            </apex:outputpanel> 
+                        </div>
+                  </apex:outputpanel>
+               </div>
+           </apex:form>
+    
+        </apex:define>
+    </apex:composition>
+</apex:page>

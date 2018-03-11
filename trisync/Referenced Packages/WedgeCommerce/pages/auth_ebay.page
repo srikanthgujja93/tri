@@ -1,0 +1,13 @@
+<apex:page controller="wk_wedge.auth_ebay" showHeader="false" sidebar="false">
+    <apex:form >
+    	<apex:actionFunction action="{!initOauth}" name="getCode" rerender="none" oncomplete="redir()"/>
+    </apex:form>
+    <script>
+    	getCode();
+    	function redir(){
+            console.log(window.opener.location.reload());
+            window.close();
+            //window.location = "/apex/ebay_config";
+        }
+    </script>
+</apex:page>

@@ -1,0 +1,25 @@
+<apex:page standardController="Lead" extensions="gkn_sms.SendBulkSMSCtr" recordSetVar="item" sidebar="false">
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeLightning />
+    <div id="spinner" style="height:150px;margin-top:17%;margin-left:50%">
+        <img class="center-middle" width="60px" src="{!URLFOR($Resource.gkn_sms__slds_assets,'/assets/images/spinners/slds_spinner_brand.gif')}" alt="Loading..." />
+    </div>
+    <textarea style="display:none" id="selectids">{"Ids":{!jsonOfSelectedRecord}}</textarea>
+    <div style="width:100%;height:auto" id="componentContainer"></div>
+    <script>
+    var selectedRecord = JSON.parse(document.getElementById('selectids').value);
+    $Lightning.use("gkn_sms:sendBulkSMSApp", function() {
+        $Lightning.createComponent("gkn_sms:SendBulkSMS",
+                                   {
+                                       'appName':'Send Bulk SMS',
+                                       'allSelected':selectedRecord
+                                   },
+                                   "componentContainer",
+                                   function(cmp) {
+                                       console.log("Component created");
+                                       document.getElementById("spinner").style.display="none";
+                                   }
+                                  );
+    });
+    </script>
+</apex:page>

@@ -1,0 +1,411 @@
+<apex:page title="{!$Site.masterlabel}" controller="wk_wedge.wedgesiteregister"  standardstylesheets="false" setup="false" showheader="false" cache="false"  doctype="html-5.0">
+     <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+      <div class="container">
+        <style>
+       .wrapper{
+            padding-top:0px;
+        }
+        .Reg-wrap{
+            margin-top:35px;
+        }
+        
+        
+        .info-panel-title{
+        margin: 15px 0px;
+    }
+    .info-panel-title span{
+       display: inline-block;
+       vertical-align: middle;
+       font-size:14px;
+       margin-right:10px;
+       
+    }
+    .user-info-panel-input-wrap{
+        margin:15px 0px;
+    }
+    .user-info-panel-input-wrap input{
+        padding :10px 8px; 
+        border-radius: 3px;
+        display:block;
+        width:100%;
+        box-sizing:border-box;
+        border:1px solid #ccc;
+    }
+    .user-info-panel-input-wrap sup{
+        font-weight: 700;
+        font-size: 14px;
+        top: -2px;
+        left: 2px;
+        margin-right:5px;
+        color: #e53935;
+    }
+    .user-info-panel-input-wrap input:active,.user-info-panel-input-wrap input:hover,.user-info-panel-input-wrap input:focus,
+    textarea:hover, textarea:focus,textarea:active{
+        outline:none;
+        border:1px solid #0086C0;   
+    }
+    textarea{
+    height: 198px;
+    width: 100%;
+    display:block;
+    padding:6px;
+    border-radius:6px;
+    resize: none;
+    outline:none; 
+    border: 1px solid #ccc;
+    }
+      .info-panel-btn{
+     background-color: #0086c0;
+    border: medium none !important;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+   
+    margin-top: 15px;
+    min-width: 100px;
+    padding: 10px 20px;
+    text-align: center;
+    vertical-align: middle;
+    }
+    .info-panel-btn:active, .info-panel-btn:hover,  .info-panel-btn:focus{
+        color:#fff;
+        text-decoration:none;
+    }
+    .em_inppanel{
+    margin-top:20px;
+    }
+    .Reg-wrap input.errorborder{
+        border-color:#C23934;
+    }
+    .Reg-wrap .err{
+        color:#C23934;
+    }
+    input[type="submit"].em_submitbtn {
+                background-color: #0087c1;
+                border: medium none;
+                border-radius: 4px;
+                color: #fff;
+                display: inline-block;
+                width: 80px;
+                margin-bottom: 11px;
+                outline: medium none;
+                padding: 10px 18px;
+                margin-right: 21px;
+       }
+       .em_submitbtn:hover, .em_submitbtn:focus, .em_submitbtn:active{
+          background-color:#0086C0;
+       }
+      .forgetbtn, .forgetbtn:hover, .forgetbtn:active, .forgetbtn:focus {
+                display: inline;
+                padding: 11px 12px;
+                border-radius: 4px;
+                background-color: #0086C0;
+                vertical-align: middle;
+                color: #fff;
+                min-width: 100px;
+                text-decoration: none;
+                text-align: center;
+        }
+        .user-info-panel-input-wrap.info{
+            margin: 0;
+            margin-bottom: 15px; 
+        }
+                </style>
+        
+        <div class="wrapper">
+            <div class="container">
+               
+                <div class="Reg-wrap">
+                    <div class="row ">
+                        <apex:form forcessl="true">
+                        <div class="notices">
+                            <div class="notice-error">
+                                <apex:messages />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel-title">
+                                <h4 class="oxy-20-bold">{!$Label.wk_wedge__wedgesitereg_register_for_a_new_account}</h4>
+                                <h5>{!$Label.wk_wedge__wedgesitereg_create_your_account_here}</h5>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="{!$Label.wk_wedge__userprofile_first_name}" for="ufname"/><sup class="req">*</sup>
+                                <apex:inputtext value="{!firstName}" html-placeholder="{!$Label.wk_wedge__userprofile_first_name}" id="ufname"/>
+                                <apex:outputPanel styleclass="err reg" layout="block"></apex:outputPanel>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="{!$Label.wk_wedge__userprofile_last_name}" for="ulname"/><sup class="req">*</sup>
+                                <apex:inputtext value="{!lastname}" html-placeholder="{!$Label.wk_wedge__userprofile_last_name}" id="ulname" />
+                                <apex:outputPanel styleclass="err reg" layout="block"></apex:outputPanel>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="{!$Label.wk_wedge__wedgesitereg_user_alias}" for="uCname"/><sup class="req">*</sup>
+                                <!--<c:fronttooltip helptext="Your email Will be your Username"/> -->
+                                 <apex:input type="text" value="{!NewAlias}" html-placeholder="{!$Label.wk_wedge__wedgesitereg_user_alias_placeholder} " id="unName" />
+                                <div class="err reg" id="aliaserr"></div>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="{!$Label.wk_wedge__wedgesitereg_e_mail_username}" for="uCname"/><sup class="req">*</sup>
+                                <!--<c:fronttooltip helptext="Your email Will be your Username"/> -->
+                                 <apex:input type="email" value="{!email}" html-placeholder="{!$Label.wk_wedge__userprofile_email} " id="uCName" />
+                                <div class="err reg" id="emailerr"></div>
+                            </div>
+                          
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="{!$Label.wk_wedge__wedgesitereg_password}" for="pswd"/><sup class="req">*</sup>
+                                <apex:inputsecret value="{!Newpassword}" html-placeholder="{!$Label.wk_wedge__wedgesitereg_password}" id="pswd"/>
+                                <apex:outputPanel styleclass="err reg" layout="block"></apex:outputPanel>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="{!$Label.wk_wedge__wedgesitereg_confirm_password}" for="pconfirm"/><sup class="req">*</sup>
+                                <apex:inputsecret value="{!Newconfirmpassword}" html-placeholder="{!$Label.wk_wedge__wedgesitereg_confirm_password}" id="pconfirm" />
+                                <div class="err reg" id="pswdErr"></div>
+                            </div>
+                                <h5>
+                                    <apex:inputcheckbox id="tnccheck" required="true"/> &nbsp;{!$label.Creating_an_account_you_agree_to_our} &nbsp;
+                                    <apex:outputpanel rendered="{!Storeadmin.wk_wedge__TNC_URL__c!=null}">
+                                      <apex:actionregion >
+                                          <apex:commandlink value="{!$Label.wk_wedge__wedgesitereg_terms_and_conditions}" status="docSearch" action="{!CreateTNCView}" rerender="TncView,notice"/>
+                                    </apex:actionregion>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel rendered="{!Storeadmin.wk_wedge__TNC_URL__c==null}">
+                                        <apex:outputText >{!$Label.wk_wedge__wedgesitereg_terms_and_conditions}</apex:outputText> 
+                                    </apex:outputpanel>
+                                </h5> 
+                                <div class="err reg" id="tncErr"></div>
+                             <div class="user-info-panel-input-wrap">
+                                <apex:commandButton id="submitREG" action="{!registerUser}"  value="{!$Label.site.submit}" styleClass="em_submitbtn"/>
+                             </div>
+                        </div>
+                        </apex:form>
+                         <div class="col-md-6">
+                             <apex:form forcessl="true">
+                                 <apex:outputpanel layout="block" styleclass="account-login-wrap" rendered="{!ISPICKVAL($User.UserType,'Guest')}"> 
+                                     <div class="panel-title">
+                                        <h4 class="oxy-20-bold">{!$Label.wk_wedge__wedgesitereg_already_have_an_account}</h4>
+                                        <h5>{!$Label.wk_wedge__sign_in_with_your_e_mail_and_password}</h5>
+                                    </div>
+                                    <div class="user-info-panel-input-wrap">
+                                         <apex:outputlabel value="{!$Label.wk_wedge__wedgesitereg_e_mail_username}" for="uname"/><sup class="req">*</sup>
+                                        <apex:input type="email" value="{!Username}" html-placeholder="{!$Label.wk_wedge__userprofile_email}" id="uname"/>
+                                        <apex:outputPanel styleclass="err login" layout="block"></apex:outputPanel>
+                                    </div>
+                                    <div class="user-info-panel-input-wrap">
+                                         <apex:outputlabel value="{!$Label.wk_wedge__wedgesitereg_password}" for="pswdn"/><sup class="req">*</sup>
+                                        <apex:inputsecret value="{!password}" html-placeholder="{!$Label.wk_wedge__wedgesitereg_password}" id="pswdn"/>
+                                        <apex:outputPanel styleclass="err login" layout="block"></apex:outputPanel>
+                                    </div>
+                                    <div class="user-info-panel-input-wrap">
+                                    <apex:commandButton action="{!siteloginForHomepage}"  value="{!$Label.wk_wedge__checkout_sign_in} " id="login"  styleClass="em_submitbtn"/>
+                                        <a href="{!URLFOR($Page.wedgeForgotPassword)}" class="forgetbtn" style="margin-right:0px;">{!$Label.Checkout_Forgot_Password}</a>
+                                    </div>
+                                    
+                                 </apex:outputpanel>
+                             </apex:form>                             
+                        </div>                        
+                    </div>
+                    <div class="user-info-panel-input-wrap info">
+                        <sup class="req">*</sup> These Information are Required.
+                    </div>
+                </div>
+            </div>
+        </div>
+       <script>
+            wk=jQuery.noConflict();
+            wk(function() {
+
+                var validemail=false;
+                var valideuName=false;
+                
+            wk( document ).on("keyup",".Reg-wrap [Id$='uCName']",function(){
+                    var regex=/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+                    var a=wk(this).val();
+                    if(!(regex.test(a))){
+                      wk(".Reg-wrap #emailerr").html("{!$Label.wk_wedge__invalid_email_address}");
+                      wk(this).addClass("errorborder");
+                    }
+                    else if((regex.test(a))){
+                        validemail=true;
+                        wk(".Reg-wrap #emailerr").html("");
+                        wk(this).removeClass("errorborder");
+                    }
+            });
+             wk( document ).on("keyup",".Reg-wrap [Id$='pswd']",function(){
+                   var pswd=wk(".Reg-wrap [Id$='pconfirm']").val();
+                   if(pswd!=null && pswd!=''){
+                     var a=wk(".Reg-wrap [Id$='pswd']").val();
+                     if(!(pswd ==a)){
+                      wk(".Reg-wrap #pswdErr").html("Passwords do not match");
+                      wk(this).addClass("errorborder");
+                    }
+                    else if(pswd ==a){
+                        valideuName=true;
+                        wk(".Reg-wrap #pswdErr").html(""); 
+                        wk(this).removeClass("errorborder");
+                        wk(".Reg-wrap [Id$='pconfirm']").removeClass("errorborder");
+                    }
+                   }
+             });
+            
+             
+            wk( document ).on("keyup",".Reg-wrap [Id$='pconfirm']",function(){
+                    var pswd=wk(".Reg-wrap [Id$='pswd']").val();
+                    var a=wk(".Reg-wrap [Id$='pconfirm']").val();
+                    
+                    if(!(pswd ==a)){
+                      wk(".Reg-wrap #pswdErr").html("{!$Label.wk_wedge__passwords_do_not_match}");
+                      wk(this).addClass("errorborder");
+                    }
+                    else if(pswd ==a && pswd!=null && pswd!='' && a!=null && a!=''){
+                        valideuName=true;
+                        wk(".Reg-wrap #pswdErr").html(""); 
+                        wk(this).removeClass("errorborder");
+                        wk(".Reg-wrap [Id$='pswd']").removeClass("errorborder");
+                    }
+            });
+            wk(document).on("blur","[Id$='ufname'],[Id$='ulname'],[Id$='unName'],[Id$='pswd'],[Id$='uCName'],[Id$='pconfirm']",function(){
+                wk('.login').html('');
+                wk("[Id$='uname'],[Id$='pswdn']").removeClass("errorborder");
+                var pswd=wk(".Reg-wrap [Id$='pswd']").val();
+                var a=wk(".Reg-wrap [Id$='pconfirm']").val();               
+                //var letterNumber = /^(/?![0-9]{8})[0-9a-zA-Z]{8}$/;///^[0-9a-zA-Z]+$/
+                if(wk(this).val()==null || wk(this).val()== ''){
+                    wk(this).addClass("errorborder");
+                    wk(this).next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                    
+                }else{
+                   wk(this).next('div').html('');
+                   wk(this).removeClass("errorborder");
+                }
+                
+                if($(this).attr('Id')==wk("[Id$='uCName']").attr('Id')){
+                    var regex=/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+                    var a=wk("[Id$='uCName']").val();
+                    if(!(regex.test(a))){
+                      wk(".Reg-wrap #emailerr").html("{!$Label.wk_wedge__invalid_email_address}");
+                      wk("[Id$='uCName']").addClass("errorborder");
+                    }
+                    else if((regex.test(a))){
+                        validemail=true;
+                        wk(".Reg-wrap #emailerr").html("");
+                        wk("[Id$='uCName']").removeClass("errorborder");
+                    }
+                }
+                
+                if($(this).attr('Id')==wk(".Reg-wrap [Id$='pswd']").attr('Id')){
+                        if((pswd.length<8) || !(/\d/.test(pswd)) || !(/[a-zA-Z]/.test(pswd))){
+                        wk("[Id$='pswd']").next('div').html("{!$Label.wk_wedge__password_validation}");
+                        wk(".Reg-wrap [Id$='pswd']").addClass("errorborder");
+                    }else{
+                        wk(".Reg-wrap [Id$='pswd']").next('div').html("");
+                        wk(".Reg-wrap [Id$='pswd']").removeClass("errorborder");
+                    }   
+                }
+                if($(this).attr('Id')==wk("[Id$='pconfirm']").attr('Id')){
+                    if(!(pswd ==a) ){                      
+                          wk(".Reg-wrap #pswdErr").html("{!$Label.wk_wedge__passwords_do_not_match}");
+                          wk("[Id$='pconfirm']").addClass("errorborder");
+                    }else if(pswd ==a && pswd!=null && pswd!='' && a!=null && a!=''){
+                          valideuName=true;
+                          wk(".Reg-wrap #pswdErr").html(""); 
+                          wk("[Id$='pconfirm']").removeClass("errorborder");
+                    }                                    
+                }
+                
+            });
+            
+            wk(document).on("click",".Reg-wrap [Id$='submitREG']",function(event){
+                
+                   var pswd=wk(".Reg-wrap [Id$='pswd']").val();
+                    var a=wk(".Reg-wrap [Id$='pconfirm']").val();
+                    var regex=/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+                    var letterNumber = /^[0-9a-zA-Z]+$/
+                    var ae=wk("[Id$='uCName']").val();
+                   var tncheck=wk(".Reg-wrap [Id$='tnccheck']").prop('checked');
+                   
+                   if(wk("[Id$='ufname']").val()==null || wk("[Id$='ufname']").val()== ''){
+                        wk("[Id$='ufname']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                        wk("[Id$='ufname']").addClass("errorborder");
+                        event.preventDefault();
+                   }else if(wk("[Id$='ulname']").val()==null || wk("[Id$='ulname']").val()== ''){
+                        wk("[Id$='ulname']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                        wk("[Id$='ulname']").addClass("errorborder");
+                        event.preventDefault();
+                   }else if(wk("[Id$='uCName']").val()==null || wk("[Id$='uCName']").val()== ''){
+                        wk("[Id$='uCName']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                        wk("[Id$='uCName']").addClass("errorborder");
+                        event.preventDefault();
+                   }else if(pswd==null || pswd== ''){
+                        wk("[Id$='pswd']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                        wk("[Id$='pswd']").addClass("errorborder");
+                        event.preventDefault();
+                   }else if(wk("[Id$='pconfirm']").val()==null || wk("[Id$='pconfirm']").val()== ''){
+                        wk("[Id$='pconfirm']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                        wk("[Id$='pconfirm']").addClass("errorborder");
+                        event.preventDefault();
+                   }else if(!(regex.test(ae))){
+                      wk(".Reg-wrap #emailerr").html("{!$Label.wk_wedge__invalid_email_address}");
+                      wk("[Id$='uCName']").addClass("errorborder");
+                      event.preventDefault();
+                   }else if(pswd.length<8 || !(/\d/.test(pswd)) || !(/[a-zA-Z]/.test(pswd))){
+                       wk("[Id$='pswd']").next('div').html("{!$Label.wk_wedge__password_validation}");
+                       wk("[Id$='pswd']").addClass("errorborder");
+                       event.preventDefault();
+                   } else if(!tncheck){                  
+                         wk(".Reg-wrap #tncErr").html("{!$Label.wk_wedge__please_accept_terms_and_conditons}");
+                          event.preventDefault();
+                          
+                   }else if(!(pswd ==a) ){                      
+                      wk(".Reg-wrap #pswdErr").html("{!$Label.wk_wedge__passwords_do_not_match}");
+                      //wk("[Id$='pswd']").addClass("errorborder");
+                      wk("[Id$='pconfirm']").addClass("errorborder");
+                      event.preventDefault();
+                    }else {
+                        wk("[Id$='ufname'],[Id$='ulname'],[Id$='pswd'],[Id$='uCName'],[Id$='pconfirm']").removeClass("errorborder");
+                        wk('.err').html('');
+                        
+                         if((regex.test(ae))){
+                            validemail=true;
+                            wk(".Reg-wrap #emailerr").html("");
+                            wk("[Id$='uCName']").removeClass("errorborder");
+                        }
+                    }
+                  
+                
+            });
+            wk(document).on("blur","[Id$='uname'],[Id$='pswdn']",function(){
+                wk('.reg').html('');
+                wk("[Id$='ufname'],[Id$='ulname'],[Id$='pswd'],[Id$='uCName'],[Id$='pconfirm']").removeClass("errorborder");
+                if($(this).val()==null || $(this).val()== ''){
+                    wk(this).addClass("errorborder");
+                    wk(this).next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                    
+                }else{
+                   $(this).next('div').html('');
+                   wk(this).removeClass("errorborder");
+                } 
+                
+            });
+            wk(document).on("click","[Id$='login']",function(){
+                if(wk("[Id$='uname']").val()==null || wk("[Id$='uname']").val()== ''){
+                    wk("[Id$='uname']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                    wk("[Id$='uname']").addClass("errorborder");
+                    event.preventDefault();
+                }else if(wk("[Id$='pswdn']").val()==null || wk("[Id$='pswdn']").val()== ''){
+                    wk("[Id$='pswdn']").next('div').html('{!$Label.wk_wedge__this_is_a_required_field_plaese_enter_a_value}');
+                    wk("[Id$='pswdn']").addClass("errorborder");
+                    event.preventDefault();
+                }
+            });
+            wk( document ).on("click",".Reg-wrap [Id$='tncpage']",function(){
+                    showTNCView();  
+            });
+            
+                   
+            }(jQuery));
+        </script>
+        </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

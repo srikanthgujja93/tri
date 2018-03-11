@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" description="Event template" >
+    <aura:attribute name="tcompId" type="String"/>
+    <aura:attribute name="Id" type="String"/>
+    <aura:attribute name="colname" type="String"/>
+    <aura:attribute name="comp" type="Aura.Component"/>
+</aura:event>

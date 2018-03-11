@@ -1,0 +1,89 @@
+<apex:page controller="wk_wedge.WedgecommerceDashboards" title="Pie Chart" sidebar="false" showHeader="false">
+<style>
+        
+        .chartblock-container{
+           /*padding:10px;*/
+        }
+        .ess_select{
+            margin-right: 10px;
+            border: 1px solid #B3B3B3;
+            background: #fff;
+            color: #606060;
+            border-radius: 3px;
+            padding-left: 3px;
+            height: 27px;
+            font-size: 12px;
+            padding-right: 30px;
+        }
+        .btn.btnclass{
+            background-image:none !important;
+            background-color:#35BA6E !important;
+            color:white !important;
+            padding: 7px !important;
+            border:none;
+            outline:none;
+        }
+        .ess_select_label{
+            font-size: 12px;
+            font-weight: 600;
+            color: #606060;
+            margin-bottom: 5px;
+        }
+        .selectList-container{
+            padding: 10px;
+            border-bottom: 2px solid #F0F0F0;
+        }
+        .selectList-container>div{
+            display:inline-block;
+        }
+    </style>
+    <div class="wrapperdiv">
+    <apex:form styleClass="chartblock-container">
+        <div class="selectList-container">
+            <div  >
+                <div class="ess_select_label">{!$label.wk_wedge__Dashboard_Select_Chart_Type}</div>
+                <apex:selectList value="{!selectedchart}" size="1" styleClass="ess_select">
+                    <apex:selectoptions value="{!chartList}"/>
+                </apex:selectList>
+            </div>
+            <div>
+                <div class="ess_select_label">{!$Label.wk_wedge__dashboard_select_action}</div>
+                <apex:selectList value="{!selecteddata}" size="1" styleClass="ess_select">
+                    <apex:selectoptions value="{!dataList}"/>
+                </apex:selectList>
+            </div>
+            
+            <apex:commandButton action="{!updatedata}" value="{!$Label.wk_wedge__dashboard_show_chart}" styleclass="btnclass"/>
+        </div>
+    
+    <apex:outputPanel id="chartblock">
+        <apex:chart height="350" width="400" data="{!Data}" rendered="{!if((selectedchart == 'pie'),true,false)}">
+            <apex:pieSeries dataField="data" labelField="name" highlight="false" donut="60" tips="true" colorSet="#61E6D5,#61B7E6,#6173E6,#9560E6,#D560E6,#E661B7,#E66173,#E69461,#E6D561,#B7E661,#73E661,#61E694">
+                <apex:chartLabel display="none"/>
+                <apex:chartTips width="130"/>
+            </apex:pieSeries>
+            <apex:legend position="right" spacing="1"/>
+        </apex:chart>
+        <apex:chart height="350" width="400" data="{!Data}" rendered="{!showbar}">
+            <apex:axis position="left" fields="data" type="Numeric"/>
+            <apex:axis position="bottom" fields="name" type="Category"/>
+            <apex:barSeries axis="left" orientation="vertical" xField="name" yField="data" highlight="false">
+            
+            </apex:barSeries>
+        </apex:chart>
+        <apex:chart height="350" width="400" data="{!Data}" rendered="{!showline}">
+            <apex:axis position="left" fields="data" type="Numeric"/>
+            <apex:axis position="bottom" fields="name" type="Category"/>
+            <apex:lineSeries axis="left" xField="name" yField="data" highlight="false"></apex:lineSeries>
+        </apex:chart>
+    </apex:outputPanel>
+    </apex:form>
+    </div>
+    <script>
+    //console.log(window.location.href);
+        var urlString = window.location.href;
+        var url       = new URL(urlString);
+        var id        = url.searchParams.get("id");
+    //console.log(id);
+    </script>
+</apex:page>

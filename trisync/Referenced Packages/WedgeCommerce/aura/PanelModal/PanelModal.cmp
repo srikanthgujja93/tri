@@ -1,0 +1,98 @@
+<aura:component controller="wk_wedge.WedgePanelLightning">
+    <aura:attribute name="PanelId" type="String" />
+    <aura:attribute name="tcompid" type="String" default=""/>
+    <aura:attribute name="TemplateId" type="String" default=""/>
+    <aura:attribute name="newPanel" type="wk_wedge__Template_Panels__c" default="{ 'sobjectType': 'wk_wedge__Template_Panels__c',
+                         'Name': '',
+                         'wk_wedge__Active__c': false,
+                         'wk_wedge__Position__c' : '',
+                         'wk_wedge__Show_Heading__c' : false,
+                         'wk_wedge__Templates__c' : '',
+                         'wk_wedge__Template_Component__c' : '',
+                         'wk_wedge__Criteria__c' : ''
+                       }"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initialize}"/>
+    <aura:handler name="openPopup" action="{!c.initialize}" event="wk_wedge:WedgePopupEvent"/>
+    <aura:attribute name="position" type="Object[]"/>
+    <aura:attribute name="criteria" type="Object[]"/>
+    <aura:attribute name="panels" type="wk_wedge__Template_Panels__c[]"/>
+	<aura:registerEvent name="RemoveComponent" type="wk_wedge:RemoveComponentDynamically"/>
+    <aura:registerEvent name="UpdateEvent" type="wk_wedge:WedgePopupEvent"/>
+	<div role="dialog" tabindex="-1" aura:id="Modalbox" aria-labelledby="header43" class="slds-modal ">
+    	<div>
+        	<div class="slds-modal__container ">
+            	<div class="slds-modal__header">                
+                	<button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removeComponent}">
+                    	<span>
+                        	<wk_wedge:SVG class="slds-button__icon slds-button__icon--large" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/action-sprite/svg/symbols.svg#close'}" />
+                            <span class="slds-assistive-text">Close</span>
+                        </span>                	
+                    </button>
+                    <div class="slds-grid">
+                    	<div class="slds-col slds-has-flexi-truncate">
+                        	<div class="slds-media slds-media--center slds-no-space slds-grow">
+                            	<div class="slds-media__figure">
+                                	<span class="slds-icon_container slds-icon-custom-custo31">
+                                    	<wk_wedge:SVG class="slds-icon" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/custom-sprite/svg/symbols.svg#custom31'}" />
+                                        <span class="slds-assistive-text">Event Icon</span>
+                                    </span>
+                                </div>
+                                <div class="slds-media__body">
+                                	<h1 class="slds-page-header__title slds-m-right--small slds-truncate slds-align-middle" title="New Showcase Panel">New Showcase Panel</h1>
+                                </div>                        
+                            </div>
+                         </div>            	             
+                    </div>
+                </div>                    
+                <div class="modal-body scrollable slds-modal__content slds-p-around--medium parent">
+                    <div c-lass= "slds-form--stacked">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element slds-is-required">
+                                <div class="slds-form-element__control">
+                                	<ui:inputText aura:id="heading" label="Heading" class="slds-input" labelClass="slds-form-element__label" value="{!v.newPanel.Name}" required="true"/>
+                            	</div>
+                        	</div>
+                        </div>
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <ui:inputSelect aura:id="pos" value="{!v.newPanel.wk_wedge__Position__c}" label="Position" class="slds-input" labelClass="slds-form-element__label" required="true" >
+                                    <aura:iteration items="{!v.position}" var="key">
+                                        <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                                    </aura:iteration>
+                                </ui:inputSelect>           
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <ui:inputSelect aura:id="criteria" value="{!v.newPanel.wk_wedge__Criteria__c}" label="Criteria" class="slds-input" labelClass="slds-form-element__label" required="true" >
+                                    <aura:iteration items="{!v.criteria}" var="key">
+                                        <ui:inputselectOption text="{!key.value}" label="{!key.label}"/>
+                                    </aura:iteration>
+                                </ui:inputSelect>           
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                        	<div class="slds-form-element__control">
+                              	<ui:inputCheckbox aura:id="showheading" label="Show Heading" class="slds-checkbox" labelClass="slds-form-element__label slds-checkbox__label" value="{!v.newPanel.wk_wedge__Show_Heading__c}" />
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                        	<div class="slds-form-element__control">
+                              	<ui:inputCheckbox aura:id="status" label="Active" class="slds-checkbox" labelClass="slds-form-element__label slds-checkbox__label" value="{!v.newPanel.wk_wedge__Active__c}" />
+                            </div>
+                        </div>
+                    </div>      
+                </div>
+                <div class="slds-modal__footer">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <ui:button aura:id="button1" class="slds-button slds-button--neutral slds-not-selected" press="{!c.removeComponent}">Cancel</ui:button>
+                            <ui:button class="slds-button slds-button--neutral slds-button--brand slds-not-selected" press="{!c.createPanel}">Save</ui:button>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="MB-Back"></div>
+</aura:component>

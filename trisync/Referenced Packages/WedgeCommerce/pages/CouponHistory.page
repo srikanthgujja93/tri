@@ -1,0 +1,164 @@
+<apex:page showheader="false" standardStyleSheets="false" doctype="html-5.0" title="Coupon History" controller="wk_wedge.CouponHistory">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <style>
+                .wdg-nav-icon.walletsystem {
+                    background-color: #34becd;
+                }
+                .wdg-nav-icon.ebaycategory {
+                    background-color: #34becd;
+                }
+                .wdg-ctrl--btn.settings{
+                    padding: 0 10px;
+                }
+                .wdg-body .wdg-ctrl--btngroup {
+                    width: 80px;
+                }
+            	.wdg-body .wdg-dataTable--box{
+                    margin-top:5px;
+                }
+                .totalRec{
+                    font-size: 14px;
+                    color: #777777;
+                    margin-top:2px;
+                }
+                .wdg-body-titletext{
+                    display:inline-block;
+                    vertical-align: top;
+                    line-height: 1;
+                }
+                .recperpage{
+                    background: #FFF;
+                    padding: 4px 8px;
+                    border: 2px solid #57BDC2;
+                    border-radius: 4px;
+                    cursor:pointer;
+                }
+                .recperpage:focus{
+                    outline:none;
+                    cursor:pointer;
+                }
+            </style>   
+            <apex:form id="theForm">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                            <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                        </apex:outputpanel>
+                    <!--<div class="wdg-body--header">
+                        <div class="wdg-search--box"> 
+                           <apex:inputtext html-placeholder="Search"  value="{!searchstr}" onkeydown="dosearch(event)"/>
+                           <apex:commandbutton value="Search" styleclass="wdg-submit--btn search" onclick="initsearch()" action="{!dummymethod}" rerender="none" status="waitstatus"/>
+                           <apex:actionFunction name="initsearch" action="{!fetchagain}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>
+                        </div>
+                    </div>-->
+                    <apex:pageMessages id="pageMessage"/>
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo walletsys"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div>Orders&nbsp;<apex:outputText rendered="{!NOT(alluser)}">for {!SelectedCouponName} Coupon</apex:outputText>
+                                <apex:outputText rendered="{!alluser}">for all Coupon</apex:outputText></div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div> 
+                        <div class="wdg-ctrl--btnPanel">
+                        <apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!currentlimit}" id="recPerPage" onchange="initsearch()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>
+                        <!--    <div class="wdg-ctrl--btngroup clearfix">
+                                <div class="wdg-ctrl--btn settings">
+                                    <apex:commandButton value="Sync" onclick="initsync()" rerender="wdgTable, wdgerrorBlock" styleclass="buttonsync"/>
+                                </div>
+                                 <div class="dropdown dropdown-wrap">
+                                    <button type="button"  data-toggle="dropdown" class="wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                        <span></span>
+                                    </button>
+                                     <div class="dropdownMenu">
+                                        <div><apex:commandLink action="{!dummymethod}" onclick="deletemultiple()" reRender="wdgTable, wdgerrorBlock" value="Delete Selected"/></div>
+                                        <div> <apex:commandLink action="{!deleteallebaycat}">Delete All </apex:commandLink></div>
+                                    </div>
+                                  </div>
+                            </div>-->
+                        </div>
+                    </div>
+                
+                        <apex:outputpanel layout="block"  id="wdgTablebox" styleclass="wdg-dataTable--box">
+                            <apex:datatable value="{!recordList}" var="rec" styleclass="wdg-dataTable" id="wdgTable">
+                                <apex:column headerValue="Order Number" styleclass="wdg-tbl--width20 wdg-tbl--cell">
+                                    <apex:outputLink value="/{!rec.id}" target="_blank">
+                                        <apex:outputText value="{!rec.ordernumber}"/>
+                                    </apex:outputLink>
+                                </apex:column>
+                                <apex:column styleclass="wdg-tbl--width10 wdg-tbl--cell" value="{!rec.effectiveDate}" headerValue="Order Place Date"/>
+                                <apex:column styleclass="wdg-tbl--width10 wdg-tbl--cell" headerValue="Coupon" rendered="{!allUser}">
+                                    <apex:outputLink value="{!urlfor($Page.wk_wedge__addNewCoupon,null,[coupid=rec.wk_wedge__Coupon_Applied__c])}" target="_blank">
+                                        <apex:outputText value="{!rec.Coupon_Applied__r.wk_wedge__Coupon_Code__c}"/>
+                                    </apex:outputLink>
+                                </apex:column>
+                                <apex:column headerValue="Discount Amount ({!currSymbol})" styleClass="rightcol wdg-tbl--width15 wdg-tbl--cell">
+                                    <apex:outputtext value="{0,number,###,##0.00}">
+                                        <apex:param value="{!rec.wk_wedge__Discount__c}"/>
+                                    </apex:outputtext>
+                                </apex:column>
+                                <apex:column headerValue="Amount Paid ({!currSymbol})" styleClass="rightcol wdg-tbl--width15 wdg-tbl--cell">
+                                    <apex:outputtext value="{0,number,###,##0.00}">
+                                        <apex:param value="{!rec.wk_wedge__Amount_Paid__c}"/>
+                                    </apex:outputtext>
+                                </apex:column>
+                                <apex:facet name="footer">
+                                    <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                        <apex:outputpanel rendered='{!recordList.size>0}'>
+                                            <apex:commandlink value="" action="{!fetchagain}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                            <apex:commandlink value="" action="{!fetchlessrecords}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                            <apex:outputText styleclass="wdg-dataTable--pages" value="{!pageno} of {!totalPage} "></apex:outputText>
+                                            <apex:commandlink value="" action="{!fetchmorerecords}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                            <apex:commandlink value="" action="{!fetchlastpage}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                        </apex:outputpanel> 
+                                        <apex:outputpanel rendered="{!recordList.size==0}">
+                                            <div class="No-Product">No Records Returned !!!!</div>
+                                        </apex:outputpanel>
+                                    </apex:outputpanel>
+                                </apex:facet>
+                            </apex:datatable>
+                        </apex:outputpanel> 
+                </div>
+                <apex:inputhidden value="{!deleteAll}" id="deletable"/>
+                <apex:actionFunction name="initsearch" action="{!fetchagain}" rerender="wdgTable, footpanal, headpanal, pageMessage" status="loadgif"/>
+            </apex:form>
+            <script>
+            jQuery(document).ready(function($) {
+               
+              var str = '{!$CurrentPage.parameters.couponid}';
+              var url = '/services/data/v39.0/query?q=SELECT+Name+FROM+Order';
+              if(str!=''){
+                  url+="+where+wk_wedge__Coupon_Applied__c='"+str+"'";
+              }else{
+                  url+="+where+wk_wedge__Coupon_Applied__c!=null";
+              }
+              $.ajax(url,
+                {
+                  beforeSend: function(xhr) {
+                    // Set the OAuth header from the session ID
+                    xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                  },
+                  success: function(response) {
+                    // Append the records to HTML list
+                    var str=JSON.stringify(response);
+                    var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                    var arr = total.split(',');
+                    document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                            });
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    // Error
+                    console.log(jqXHR.status + ': ' + errorThrown);
+                  }
+                }
+              );
+            });
+          </script>
+        </apex:define>            
+    </apex:composition>
+</apex:page>

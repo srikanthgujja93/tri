@@ -1,0 +1,151 @@
+<apex:page title="contact us" standardcontroller="lead" extensions="wk_wedge.contactus" showHeader="false" standardStylesheets="false" >
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+    
+
+        <link href='https://fonts.googleapis.com/css?family=Great+Vibes' rel='stylesheet' type='text/css'/>
+        <style>
+        .wrapper{
+            padding-top:0px;
+            margin-top:25px;
+            margin-bottom:25px;
+        }
+        .contact-wrap{
+            margin-top:15px;
+        }
+        .em_contactus_banner{
+            background:#99E0E6 url("{!URLFOR($resource.wedgecommerce,'wedgeCommerce/images/contactus.png')}") no-repeat right center;
+            min-height:250px;
+        	background-size: contain;
+        }
+        
+        .info-panel-title{
+		        margin: 15px 0px;
+		    }
+		    .info-panel-title span{
+		       display: inline-block;
+		       vertical-align: middle;
+		       font-size:14px;
+		       margin-right:10px;
+		       
+		    }
+		    .user-info-panel-input-wrap{
+		        margin:15px 0px;
+		    }
+		    .user-info-panel-input-wrap input{
+		        padding :10px 8px; 
+		        border-radius: 3px;
+		        display:block;
+		        width:100%;
+		        box-sizing:border-box;
+		        border:1px solid #ccc;
+		    }
+		    .user-info-panel-input-wrap sup{
+		        font-weight: 700;
+		        font-size: 14px;
+		        top: -2px;
+		        left: 2px;
+		        color: #e53935;
+		    }
+		    .user-info-panel-input-wrap input:active,.user-info-panel-input-wrap input:hover,.user-info-panel-input-wrap input:focus,
+		    textarea:hover, textarea:focus,textarea:active{
+		        outline:none;
+		        border:1px solid #0086C0;   
+		    }
+		    textarea{
+		    height: 198px;
+		    width: 100%;
+		    display:block;
+		    padding:6px;
+		    border-radius:6px;
+		    resize: none;
+		    outline:none;
+		    border: 1px solid #ccc;
+		    }
+		      .info-panel-btn{
+		     background-color: #0086c0;
+		    border: medium none !important;
+		    border-radius: 3px;
+		    color: #fff;
+		    display: inline-block;
+		   
+		    margin-top: 15px;
+		    min-width: 100px;
+		    padding: 10px 20px;
+		    text-align: center;
+		    vertical-align: middle;
+		    }
+		    .info-panel-btn:active, .info-panel-btn:hover,  .info-panel-btn:focus{
+		        color:#fff;
+		        text-decoration:none;
+		    }
+		    .em_inppanel{
+		    margin-top:20px;
+		    }
+		    @media screen and (max-width: 767px) {
+		    	.em_contactus_banner{
+		    		min-height: 165px;
+		    	}
+		    }
+		    @media screen and (max-width: 320px) {
+		    	.em_contactus_banner{
+		    		min-height: 68px;
+		    	}
+		    }
+        </style>
+       <div class="container">
+        <apex:form >
+        <div class="wrapper">
+            <div class="">
+                <div class="row">
+                   <div class="col-md-12 col-sm-12 em_contactus_banner">
+                     </div>
+                </div>
+                <div class="contact-wrap">
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="First Name" for="ufname"/>
+                                <apex:inputtext value="{!lead.firstName}" html-placeholder="First Name" id="ufname"/>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="Last Name" for="ulname"/><sup class="req">*</sup>
+                                <apex:inputtext value="{!lead.lastname}" html-placeholder="Last name" id="ulname" required="true"/>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="Company" for="uCname"/><sup class="req">*</sup>
+                                <apex:inputtext value="{!lead.company}" html-placeholder="Company " id="uCName" required="true"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="Email" for="uemail"/><sup class="req">*</sup>
+                                <apex:inputtext value="{!lead.email}" html-placeholder="Email" id="uemail" required="true"/>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="Contact Number" for="ucontact"/>
+                                <apex:inputtext value="{!lead.Phone}" html-placeholder="Phone" id="ucontact" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="Message" for="contactmsg"/>
+                                <apex:inputfield value="{!lead.description}" html-placeholder="Type your query here" id="contactmsg" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                             <apex:commandbutton action="{!Save}" value="Save" styleclass="info-panel-btn match-parent-width"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </apex:form>
+       </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

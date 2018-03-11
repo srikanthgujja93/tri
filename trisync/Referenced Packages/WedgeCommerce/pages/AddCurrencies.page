@@ -1,0 +1,155 @@
+<apex:page showheader="False" standardstylesheets="false" title="Add Currency" controller="wk_wedge.MultiCurrencyAdd" doctype="html-5.0">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <style>
+            .wdg-nav-icon.multiCurrency,.wdg-nav-icon.cms{
+                    background-color: #34becd;
+                }
+                .oauthclass{
+                    width:50px;
+                }
+                .wdg-Notedata{
+                    font-size:12px;
+                    color:red;
+                }
+                .connectbutton:hover{
+                    cursor:pointer;
+                }
+                .connectbutton:disabled{
+                    background-color: darkgrey;
+                    cursor:not-allowed;
+                }
+                .newwidth{
+                    display:inline !important;
+                    width:95% !important;
+                }
+                .disabled{
+                    width:95% !important;
+                    display: inline-block !important;
+                }
+                .wdg-form--table input[type="date"], .wdg-form--table input[type="number"] {
+                    padding: 6px;
+                    border-radius: 3px;
+                    font-size: 14px;
+                    color:#222;
+                    border: 1px solid #adadad;
+                    outline: none;
+                    box-shadow: none;
+                    display:block;
+                    width:100%;
+                    box-sizing:border-box;
+                }
+            </style>
+            <apex:form styleclass="wdg-dataentry--form">
+                
+                <apex:actionFunction name="getCurrentRate" action="{!fetchCurrentRate}" rerender="pbm, currrate, Dcurrrate"  />
+            
+                <div class="wdg-body">
+                    <apex:messages styleClass="wdg-error--msg"/>
+                   
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo Currencies"></span>
+                            <span>{!$label.wk_wedge__Add_Currency_Head_Text}</span>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:commandlink styleclass="wdg-ctrl--btn save " action="{!savedata}">
+                                <span></span>
+                            </apex:commandlink>
+                            <a href="{!$page.ListCurrencies}" class="wdg-ctrl--btn cancel"> 
+                                <span></span>
+                            </a>
+                         </div>  
+                    </div>
+                     <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-form--box">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active"> <a href="javascript:void(0)">{!$Label.wk_wedge__add_currency_general_tab}</a></li>
+                            </ul>
+                        </div>
+                        <div class="wdg-form--content">
+                            <div class="wdg-form--block">
+                                <div class="wdg-form--blocktitle">
+                                    <span>{!$Label.wk_wedge__add_currency_information_text} </span>
+                                </div>
+                                <div class="wdg-form--blockfields">
+                                    <table class="wdg-form--table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >{!$Label.wk_wedge__add_currency_currancy_name}:</apex:outputLabel>
+                                                    <span><c:ToolTip helptext="{!$Label.wk_wedge__add_currency_name_hint}"/></span>
+                                                </td>
+                                                <td class="field">
+                                                    <div class="requiredInput">
+                                                        <div class="requiredBlock"></div>
+                                                        <apex:inputText value="{!CurrName}" styleclass="newwidth" required="true"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >{!$Label.wk_wedge__add_currency_code}:</apex:outputLabel>
+                                                    <span><c:ToolTip helptext="{!$Label.wk_wedge__add_currency_code_hint}"/></span>
+                                                </td>
+                                                <td class="field">
+                                                    <div class="requiredInput">
+                                                        <div class="requiredBlock"></div>
+                                                        <apex:inputText value="{!CurrCode}" styleclass="newwidth" onblur="getCurrentRate()" required="true"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >{!$Label.wk_wedge__add_currency_symbol}:</apex:outputLabel>
+                                                    <span><c:ToolTip helptext="{!$Label.wk_wedge__add_currency_symbol_hint}"/></span>
+                                                </td>
+                                                <td class="field">
+                                                    <apex:inputText value="{!CurrSymb}" styleclass="newwidth" maxlength="10"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >{!$Label.wk_wedge__add_currency_rate}:</apex:outputLabel>
+                                                    <span><c:ToolTip helptext="{!$Label.wk_wedge__add_currency_rate_hint}"/></span>
+                                                </td>
+                                                <td class="field">
+                                                    <apex:input type="number" value="{!CurrRate}" styleclass="newwidth"  id="currrate"/>
+                                                </td>
+                                            </tr>
+                                            <!--<tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >Latest Currency Rate:</apex:outputLabel>
+                                                    <!--<span><c:ToolTip helptext="The Current Exchange rate w.r.t. org's standard Currency"/></span>-->
+                                                <!--</td>
+                                                <td class="field">
+                                                    <apex:input type="number" value="{!LatestCurrRate}" styleclass="newwidth"  id="Dcurrrate" disabled="true"/>
+                                                </td>
+                                            </tr>-->
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputLabel >{!$Label.wk_wedge__add_currency_active}:</apex:outputLabel>
+                                                    <span><c:ToolTip helptext="{!$Label.wk_wedge__add_currency_active_hint}"/></span>
+                                                </td>
+                                                <td class="field">
+                                                    <div class="custom-checkbox {!if((active),'checked','')}">
+                                                        <apex:inputcheckbox value="{!active}" styleclass="newwidth"  id="curractive"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <td  class="label"></td>
+                                            <!--<td><apex:commandButton action="{!saveConfig}" value="Save Data"/></td>-->
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <span class="wdg-Notedata" >{!$label.wk_wedge__Add_Currency_Note}</span>
+                        </div>
+                    </apex:outputpanel>  
+                </div>
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

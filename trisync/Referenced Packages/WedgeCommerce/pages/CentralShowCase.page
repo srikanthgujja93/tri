@@ -1,0 +1,95 @@
+<apex:page showheader="false" setup="false" standardstylesheets="false" controller="wk_wedge.centralShowCase" cache="false" title="Central ShowCase" docType="HTML-5.0">
+    <style>
+        .wdg-nav-icon.template {
+            background-color: #34becd;
+        }
+         .wdg-addOption--btn{
+                     cursor: pointer;
+                    
+                     padding: 8px;
+                     background: #7DC37D;
+                     color: #fff;
+                     display: inline-block;
+                     text-align: center;
+                     text-decoration: none;
+                     border-radius: 2px;
+                     border: none;
+                     font-size: 13px;
+                     font-weight: 600;
+                     box-shadow: none;
+                     outline: none;
+                 }
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+          <apex:form >       
+            
+            <div class="wdg-body">
+              <apex:outputpanel layout="block" id="wdgerrorBlock">
+                <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+              </apex:outputpanel>
+             
+              <div class="wdg-body--titleblock clearfix">
+                   <div class="wdg-body--title">
+                        <span class="wdg-title--logo central"></span>
+                        <span> {!$label.wk_wedge__Central_Showcase_Top_Heading} </span>
+                   </div>
+                   <div class="wdg-filter--options" style="display:inline-block">
+                            <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!welan.activatedLanguages.size>1}">
+                                <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                <apex:selectOptions value="{!welan.activatedLanguages}">
+                                    <span class="caret multidropdownsymbol"></span>
+                                </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                   <div class="wdg-ctrl--btnPanel">
+                           <apex:commandButton styleclass=" wdg-addOption--btn"  value="{!$Label.wk_wedge__central_showcase_template_menues_text}" action="{!cancel}">
+                                        <span></span>
+                           </apex:commandButton>
+                           <apex:commandlink action="{!cancel}" styleclass="wdg-ctrl--btn cancel"> 
+                                 <span></span>
+                           </apex:commandlink>
+                   </div>
+               </div>
+              <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-dataTable--box">
+                            <apex:datatable value="{!Allblocks}" var="P" styleclass="wdg-dataTable No-footer" >
+                                <apex:column styleclass="medium" >
+                                    <apex:facet name="header">{!$Label.wk_wedge__central_showcase_table_columns}</apex:facet>
+                                    <apex:outputfield value="{!P.wk_wedge__Column_Names__c}"/>
+                                </apex:column>
+                                <apex:column styleclass="large" >
+                                    <apex:facet name="header">{!$Label.wk_wedge__central_showcase_table_image}</apex:facet>
+                                   <apex:image url="/servlet/servlet.FileDownload?file={!P.wk_wedge__Image_Id__c}" height="200px" width="400px" rendered="{!(P.wk_wedge__Image_Id__c!='')}" />
+                                   
+                                </apex:column>
+                                <apex:column styleclass="medium">
+                                    <apex:facet name="header">{!$Label.wk_wedge__central_showcase_table_heading}</apex:facet>
+                                     <apex:outputfield value="{!P.wk_wedge__Heading__c}"/>
+                                </apex:column>
+                                <apex:column styleclass="medium">
+                                    <apex:facet name="header">{!$Label.wk_wedge__central_showcase_table_action}</apex:facet>
+                                    <apex:outputpanel layout="block" rendered="{!(P.name==null)}"> 
+                                    <a href="{!URLFOR($page.editcentralshowcase,null,['col'=P.Column_Names__c,'act'='add','tcompid'=$currentpage.parameters.tcompid])}" class="wdg-ctrl--btn addNew"><span></span></a>
+                                    
+                                </apex:outputpanel>  
+                                <apex:outputpanel layout="block" rendered="{!(P.name!=null)}"> 
+                                    <a href="{!URLFOR($page.editcentralshowcase,null,['col'=P.id,'act'='edit','tcompid'=$currentpage.parameters.tcompid])}" class="wdg-ctrl--btn edit"><span></span></a>
+                                    <div class="wdg-ctrl--btn delete" targetid="{!P.id}"><span></span></div>
+                                </apex:outputpanel>
+                               </apex:column>
+                         </apex:datatable> 
+                         <apex:outputpanel layout="block" styleclass="wdg-no-results" rendered="{!Allblocks.size==0}">
+                            <div> 
+                                <span> No Results found!!</span>
+                            </div> 
+                      </apex:outputpanel>
+                            <apex:actionfunction name="deleteoneRecord" action="{!deleteshowcase}" rerender="notice" oncomplete="closenotifications();"></apex:actionfunction>
+                            <apex:inputhidden value="{!delrec}" id="deletable"/>
+                        </apex:outputpanel>
+                    </div>  
+                
+            </apex:form> 
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

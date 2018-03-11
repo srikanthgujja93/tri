@@ -1,0 +1,26 @@
+<apex:page controller="wk_wedge.articleViewController"  doctype="html-5.0" setup="false" standardstylesheets="false" showHeader="false" cache="false" > 
+       <TITLE>{!articleobj.Page_Title__c}</TITLE>
+        <meta name="description" content="{!articleobj.Meta_Description__c}"/>
+        <meta name="keywords" content="{!articleobj.Meta_Keywords__c}"/>
+        <link rel="canonical" href="{!articleobj.Canonical_URL__c}" />
+        <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+        <div class="container">
+            <TITLE>ARTICLES</TITLE>
+            <div class="fullpageWrap">
+                <div class="container">
+                    <div class="row wdg-site--breadcrumbs">
+                        <apex:outputPanel >
+                             <apex:outputLink value="{!$Site.baseurl}"><i class="wdg-home--logo"></i></apex:outputLink>
+                             <apex:outputText >&nbsp;/&nbsp;</apex:outputText>
+                             <apex:outputText styleClass="wedge-blog--blog" value="{!ArticleName}"/>
+                         </apex:outputPanel>
+                    </div>
+                    <apex:dynamicComponent componentValue="{!article}" />
+                </div>
+            </div>
+           </div>
+        </apex:define>
+   </apex:composition>
+
+</apex:page>

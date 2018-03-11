@@ -1,0 +1,71 @@
+<aura:component controller="wk_wedge.WedgeCentralShowcaseLightning">
+	<ltng:require styles="{!$Resource.wk_wedge__SLDS +
+	         '/assets/styles/salesforce-lightning-design-system-ltng.css'}"/>
+	
+	<aura:handler name="init" value="{!this}" action="{!c.getShowcase}" />
+    <aura:attribute name="TempId" type="String" default=""/>
+    <aura:attribute name="TemplateId" type="String" default=""/>
+    <aura:registerEvent name="createImageSlider" type="wk_wedge:ImageSliderEvent"/>
+	<aura:attribute name="ShowcaseList" type="wk_wedge__New_Arrival_show_Case__c[]"/>
+    
+    <aura:handler name="UpdateEvent" action="{!c.updateShowcaselist}" event="wk_wedge:WedgePopupEvent"/>
+    <aura:method name="updateList" action="{!c.getShowcase}"/>
+    
+    <div class="wk_static pos">
+		<div class="slds-page-header pageHeader slds-p-around--x-small" role="banner">
+			<div class="slds-has-flexi-truncate">
+				<div class="slds-media">
+					<div class="templatelarge slds-m-left--medium">
+						<span ></span>
+					</div>
+					<div class="slds-media__body slds-m-left--x-small">
+						<p class="heading">Central Show Cases</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+        	<table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                <thead class="tableHeader">
+                    <tr class="slds-text-heading--label tableHeaderRow">
+                        <th class="action column" scope="col">Columns</th>
+                        <th class="slds-is-sortable column" scope="col">Image</th>
+                        <th class="slds-is-sortable column" scope="col">Heading</th>
+                        <th class="slds-is-sortable column" scope="col">Action</th>                    
+                    </tr>  
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.ShowcaseList}" var="key">
+                        <tr class="slds-hint-parent">
+                            <td data-label="Columns" class="action column">{!key.wk_wedge__Column_Names__c}</td>
+                            <td data-label="Image" class="action column">
+                                <aura:if isTrue="{!key.wk_wedge__Image_Id__c!=''}">
+                                	<img src="{!'/servlet/servlet.FileDownload?file='+key.wk_wedge__Image_Id__c}" class="dimension"/>
+                                    <aura:set attribute="else">
+                                    	{!key.wk_wedge__Image_Id__c}
+                                    </aura:set>
+                                </aura:if>
+                            </td>
+                            <td data-label="Heading" class="column">{!key.wk_wedge__Heading__c}</td>
+                            <td data-label="Action" class="column">
+                                <span style="display: inline-block;">
+                                   <aura:if isTrue="{!key.Id!=null}">
+                                    	<wk_wedge:CentralShowcaseForm CentralShowcaseId="{!key.Id}" tcompid="{!v.TempId}" TemplateId="{!v.TemplateId}"/>
+                                       <aura:set attribute="else">
+                                       		<wk_wedge:CentralShowcaseForm colname="{!key.wk_wedge__Column_Names__c}" tcompid="{!v.TempId}" TemplateId="{!v.TemplateId}"/>
+                                       </aura:set>
+                                    </aura:if>                                    
+                                </span>
+                            	<span class="slds-m-left--small">                                                              
+                                    <aura:if isTrue="{!key.Id!=null}">
+                                    	<wk_wedge:deleteButton delThisId="{!key.Id}" objectName="wk_wedge__New_Arrival_show_Case__c" />
+                                    </aura:if>                                
+                                </span>  
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+	</div>
+</aura:component>

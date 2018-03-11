@@ -1,0 +1,55 @@
+<apex:page showHeader="false" controller="wk_wedge.Templates" standardStylesheets="false" docType="HTML-5.0" cache="false" title="Templates">
+    <style>
+        .wdg-nav-icon.template {
+            background-color: #34becd;
+        }
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <div class="wdg-body">
+                <apex:outputpanel layout="block" id="wdgerrorBlock">
+                    <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                </apex:outputpanel>
+                
+                 <div class="wdg-body--titleblock clearfix">
+                     <div class="wdg-body--title">
+                         <span class="wdg-title--logo Template"></span>
+                         <span> {!$label.wk_wedge__Templates_Top_Heading}</span>
+                     </div>
+                     
+                </div>
+               <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-dataTable--box">
+                       <apex:datatable value="{!Templates}" var="Mlink" styleclass="wdg-dataTable No-footer">
+                            <apex:column >
+                                <apex:facet name="header">{!$Label.wk_wedge__template_table_table_name}</apex:facet>
+                                 <apex:outputlink styleclass="tnamelink" value="{!URLFOR($Page.wk_wedge__TemplateConfiguration, null, ['page'=Mlink.wk_wedge__VisualForcePage__c,'templateid'=Mlink.id])}">
+                                    <apex:outputfield value="{!Mlink.name}"/>
+                                 </apex:outputlink>
+                                 
+                            </apex:column>
+                            
+                            <apex:column >
+                                <apex:facet name="header">{!$Label.wk_wedge__template_table_configure} </apex:facet>
+                                    <!-- <apex:outputlink title="Preview"  target="_blank" value="{!SiteUrl}" styleclass="wdg-ctrl--btn preview"><span></span></apex:outputlink> -->
+                                    <apex:outputlink title="Preview"  target="_blank" value="{!$Page.wk_wedge__wedgeActiveIndexpage}" styleclass="wdg-ctrl--btn preview"><span></span></apex:outputlink> 
+                                    
+                                    
+                                    <apex:outputlink styleclass="wdg-ctrl--btn configure" value="{!URLFOR($Page.wk_wedge__TemplateConfiguration, null, ['page'=Mlink.wk_wedge__VisualForcePage__c,'templateid'=Mlink.id])}">
+                                      <span></span>
+                                    </apex:outputlink>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">{!$Label.wk_wedge__template_table_status}</apex:facet>
+                                 <apex:outputfield value="{!Mlink.wk_wedge__Active__c}"/>
+                            </apex:column>
+                      </apex:datatable>
+                      <apex:outputpanel layout="block" styleclass="wdg-no-results" rendered="{!Templates.size==0}">
+                            <div> 
+                                <span>{!$Label.wk_wedge__template_table_no_template_available}</span>
+                            </div> 
+                      </apex:outputpanel>
+               </apex:outputpanel>
+         </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,303 @@
+<apex:page controller="wk_wedge.Addtaxescontroller" title="Taxes" showheader="false" setup="false" standardstylesheets="false" cache="false">
+   
+   <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+       
+        <style>
+            .wdg-nav-icon.shipandtax, .wdg-nav-icon.tax {
+                background-color: #34becd;
+            }
+            .wdg-field--group input[type="text"].group-input{
+                width:100px;
+                display:inline-block;
+                vertical-align:middle;
+            }
+            .wdg-field--group span{
+                display:inline-block;
+                vertical-align:middle;
+                color:#555;
+                font-size:14px;
+                margin-left:5px;
+                margin-right:5px;
+            }
+            .wdg-shiping--Nav{
+                margin:0;
+                padding:0;
+                list-style-type:none;
+                display:block;
+            }
+            .wdg-shiping--Nav>li{
+                display:inline-block;
+                verticle-align:middle;
+                margin-right:15px;
+            }
+            .wdg-shiping--Nav>li>a{
+                color:#fff;
+                display:block;
+                background-color:#54698D;
+                line-height:1.8;
+                font-size:14px;
+                padding:5px 12px;
+                border:1px solid #54698D;
+                border-radius:3px;
+                min-width:110px;            
+                text-align:center;
+            }
+            .wdg-shiping--Nav>li.active>a{
+                background-color:#fff;
+                border-color:#adadad;
+                color:#555;
+            }
+            .wdg-shippingrates--block{
+                margin-top:20px;
+                border-top:1px solid #adadad;
+                
+            }
+            .wdg-shippingrates--block .wdg-shipping--location{
+                padding:10px;
+                margin-bottom:5px;
+                display:none;
+                opacity:0;
+                transition:opacity 0.2s ease-in;
+                -webkit-transition:opacity 0.2s ease-in;
+                -moz-transition:opacity 0.2s ease-in;
+                -ms-transition:opacity 0.2s ease-in;
+            }
+            .wdg-shipping--location.show,.wdg-shipping--location.block-0{
+                display:block;
+                opacity:1;
+            }
+            .wdg-shipping--location .wdg-shipping--dependency{
+                margin-top:40px;
+            }
+            .wdg-shipping--location .wdg-shipping--dependency:first-child{
+                margin-top:10px;
+            }
+            .wdg-shipping--dependency .wdg-dependency--title{
+                margin: 0;
+                font-weight: 600;
+                color: #555;
+                font-size: 14px;
+                padding-bottom: 5px;
+                margin-top: 15px;
+                border-bottom: 1px solid #adadad;
+            
+            }
+            .wdg-shipping--dependency .wdg-dependency--form{
+                margin:10pxShipping_rates__r;
+                font-size:14px;
+                color:#555;
+            }
+            .wdg-shipping--dependency .wdg-dependency--table{
+                width:100%;
+                box-sizing:border-box;
+                text-align:left;
+                
+            }
+            .wdg-shipping--dependency .wdg-dependency--table th{
+                font-weight:600;
+                padding-bottom: 10px;
+            }
+            .wdg-shipping--dependency .wdg-dependency--table td input,.wdg-shipping--dependency .wdg-dependency--table td select{
+                    padding: 6px;
+                    border-radius: 3px;
+                    font-size: 14px;
+                    color: #222;
+                    background:#fff;
+                    border: 1px solid #adadad;
+                    outline: none;
+                    box-shadow: none;
+                    display: inline-block;
+                    width: 150px;
+                    box-sizing: border-box;
+            
+            }
+            .wdg-shipping--dependency .wdg-dependency--table td input:active,
+            .wdg-shipping--dependency .wdg-dependency--table td select:active,
+            .wdg-shipping--dependency .wdg-dependency--table td input:focus,
+            .wdg-shipping--dependency .wdg-dependency--table td select:focus{
+                    border: 1px solid #34BECD;
+            } 
+        </style>
+         <apex:form id="productform" styleclass="wdg-dataentry--form">
+             <div class="wdg-body">
+                <apex:outputpanel layout="block" id="wdgerrorBlock">
+                 <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                </apex:outputpanel>
+                <div class="wdg-body--header"></div>
+                <div class="wdg-body--titleblock clearfix">
+                    <div class="wdg-body--title">
+                        <span class="wdg-title--logo tax"></span>
+                        <span>Add Tax </span>
+                    </div>
+                    <div class="wdg-filter--options" style="display:inline-block">
+                        <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!welan.activatedLanguages.size>1}">
+                            <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                            <apex:selectOptions value="{!welan.activatedLanguages}">
+                                <span class="caret multidropdownsymbol"></span>
+                            </apex:selectOptions>
+                        </apex:selectList>
+                    </div>
+                    <div class="wdg-ctrl--btnPanel">
+                        <apex:commandlink styleclass="wdg-ctrl--btn save"  onclick="saveCharges()" action="{!saveshipping}">
+                            <span></span>
+                        </apex:commandlink>
+                        <apex:inputhidden value="{!shippingcharges}" id="shipCharge"/>
+                        <apex:inputhidden value="{!removedRow}" id="removeRow"/>
+                        <a href="{!URLFOR($page.Taxes)}" class="wdg-ctrl--btn cancel">
+                            <span></span>
+                        </a>
+                   </div>
+                </div>  
+                <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                    <div class="wdg-form--header">
+                        <ul class="wdg-form--headeroptions">
+                            <li class="active"><a href="javascript:void(0)" data-target="productBlock">General</a></li>
+                            <li class=""><a href="javascript:void(0)" data-target="charges">Tax Rates</a></li>
+                        </ul>
+                    </div>
+                    <div id="productTabGroup" class="wdg-form--content">
+                        <div class="wgd-form--tab show" id="productBlock">
+                            <apex:outputpanel layout="block" styleclass="wdg-form--block">
+                                <div class="wdg-form--blocktitle">
+                                    <span>Information </span>
+                                </div>
+                                <div class="wdg-form--blockfields">
+                                    <table class="wdg-form--table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel for="methName" value="Name :"/></td>
+                                                <td class="field">
+                                                    <div class="requiredInput">
+                                                         <div class="requiredBlock"></div>
+                                                         <apex:inputfield value="{!shipMeth.name}" required="true" id="methName" rendered="{!metaname==null}" />
+                                                         <apex:inputtext value="{!metaname}" id="prodmetaName" rendered="{!metaname!=null}"/>
+                                                     </div>
+                                                     <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel for="methrno" value="Registration Number :"/></td>
+                                                <td><apex:inputfield value="{!shipMeth.wk_wedge__Registration_number__c}"  id="methrno" /></td>
+                                            </tr>
+                                            <tr>
+                                                    <td class="label"><apex:outputlabel for="MethActive" value="Is Active :"/></td>
+                                                <td>
+                                                    <div class="custom-checkbox {!IF(shipMeth.wk_wedge__Active__c,'checked','')}">
+                                                        <apex:inputfield value="{!shipMeth.wk_wedge__Active__c}" id="MethActive" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel for="methinc" value="Price Includes Tax :"/></td>
+                                                <td>
+                                                    <div class="custom-checkbox {!IF(shipMeth.wk_wedge__Price_includes_tax__c,'checked','')}">
+                                                        <apex:inputfield value="{!shipMeth.wk_wedge__Price_includes_tax__c}"  id="methinc" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </apex:outputpanel>
+                        </div>
+                        <div class="wgd-form--tab" id="charges" ng-app="shippingApp">
+                            <apex:outputpanel layout="block" styleclass="wdg-form--block">
+                                <apex:datalist value="{!locationMap}" var="loc" styleclass="wdg-shiping--Nav">
+                                    <a href="javascript:void(0)" data-target="locblock{!locationMap[loc].id}">{!locationMap[loc].name}</a>
+                                </apex:datalist>
+                                
+                               <div  class="wdg-shippingrates--block" ng-controller="shippingctrl">
+                                    <input type="hidden" ng-model="deleteRow" ng-init="deleteRow=''"/>
+                                    <div class="wdg-shipping--location block-{{$index}}" ng-repeat="(lid, locations) in shipRates " id="locblock{{lid}}">
+                                        <div class="wdg-shipping--dependency" ng-repeat="(dep, loc) in locations"  >
+                                            <h4 class="wdg-dependency--title">Information</h4>
+                                            <div class="wdg-dependency--form">
+                                                <table class="wdg-dependency--table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> Price</th>
+                                                            <th> Type</th>
+                                                            
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>  
+                                                        <tr ng-repeat="(key,rates) in loc ">
+                                                       
+                                                            <td>
+                                                                <input type="text" ng-model="rates.wk_wedge__Price__c"/>
+                                                            </td>
+                                                            <td>
+                                                                <select name="singleSelect" ng-model="rates.wk_wedge__Type__c">
+                                                                    <option value="Absolute" >Absolute</option>
+                                                                    <option value="Percent">Percent</option>
+                                                                 </select>
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                    </tbody>
+                                                </table> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputpanel>
+                        </div>
+                    </div>
+                  </apex:outputpanel>
+                </div>
+            </apex:form>
+            <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.min.js"></script>
+            <script>
+                var shippingRates='{!JSENCODE(shippingRates)}'
+            </script>
+            <script>
+                function ValidateSave(event){
+                   return true;
+                   /* var str  = $("[Id$='methName']").val();                       
+                    if (str.match(/^[A-z0-9\d\s]+$/)) {
+                        $("[Id$='validate']").html('');
+                        return true;
+                    }
+                    else{
+                        alert("Review all the errors!");
+                        $("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        event.preventDefault();
+                        return false;
+                    }*/
+                }        
+                 wk=jQuery.noConflict();
+                (function(wk){ 
+                    wk(".wdg-form--content .wdg-form--block ul>li:first").addClass("active");
+                     wk( document ).on("click",".wdg-form--content .wdg-form--block ul>li>a",function(){
+                        var ids=wk(this).attr("data-target");
+                        wk(this).parent().addClass("active").siblings().removeClass("active");
+                        wk("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show block-0");
+                    });
+                    window.saveCharges=function(e){
+                        var scope = angular.element(document.querySelector('[ng-controller="shippingctrl"]')).scope();
+                        wk("[Id$='shipCharge']").val(JSON.stringify(scope.shipRates));
+                        wk("[Id$='removeRow']").val(scope.deleteRow);
+                        ValidateSave(e)
+                    }
+                    wk( document ).on("blur",".wdg-body .wdg-form--table td [Id$='methName']",function(){
+                        var str  = wk("[Id$='methName']").val();                       
+                        if (str.match(/^[A-z0-9\d\s]+$/)) {
+                            wk("[Id$='validate']").html('');
+                        }
+                        else{
+                            wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        }
+                     })
+                 }(jQuery));
+            </script>
+            <script>
+                var shippingApp = angular.module("shippingApp", []);
+                shippingApp.controller("shippingctrl", function($scope) {
+                    $scope.shipRates=JSON.parse(shippingRates);
+                });
+            </script>
+        </apex:define>
+    </apex:composition> 
+    
+</apex:page>

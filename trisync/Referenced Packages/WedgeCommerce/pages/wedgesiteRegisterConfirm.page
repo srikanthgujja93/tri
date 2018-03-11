@@ -1,0 +1,86 @@
+<apex:page title="{!$Site.masterlabel}"  standardstylesheets="false" setup="false" showheader="false" cache="false"  doctype="html-5.0">
+     <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+          <div class="container">
+            <style>
+                .wdg-msg--box{
+                    height: 500px;
+                    width: 600px;
+                    margin: 6% auto;
+                    padding:1px 60px;
+                    box-shadow: 0px 0px 15px 4px #ccc;
+                    border-radius: 3px;
+                    text-align:center;
+                }
+                .wdg-msg--box.height-extra{
+                    height: 550px;
+                }
+                .wdg-msg--box .wdg-register-confirm{
+                    width:278px;
+                    height:278px;
+                    margin:35px auto;
+                    background:transparent  url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/thankyou.png')}") no-repeat center;
+                    background-size: contain;
+                }
+                .wdg-msg--box .wdg-msg-title{
+                    text-align:center;
+                    font-size:16px;
+                    font-weight:700;
+                }
+                .wdg-msg--box .wdg-msg-title.highlight{
+                    font-size:30px;
+                }
+                .wdg-msg--box .wdg-msgbox--input{
+                    display: block;
+                    margin: 0 auto;
+                    padding: 6px 12px;
+                    border-radius: 3px;
+                    border-width: 1px;
+                    border-style: solid;
+                    width: 300px;
+                    margin-top: 25px;
+                    margin-bottom: 25px;
+                    border-color: #adadad;
+                    outline: none;
+                }
+                .wdg-msg--box .wdg-msgbox--btn{
+                    margin-top:20px;
+                }
+                @media screen and (max-width: 675px) {
+                    .wdg-msg--box{
+                        height: unset;
+                        width: unset;
+                    }
+                    .wdg-msg--box .wdg-msgbox--btn{
+                        margin-bottom: 20px;
+                    }
+                }
+                @media screen and (max-width: 420px) {                  
+                    .wdg-msg--box{
+                        padding: 1px 30px;              
+                    }
+                    .wdg-msg--box .wdg-register-confirm{
+                        width: unset;
+                        height: 175px;
+                    }
+                    .wdg-msg--box.height-extra{
+                        height: unset;
+                    }                   
+                }
+            </style> 
+            <div class="wdg-msg--box height-extra">
+                <div class="wdg-register-confirm"></div>
+                <p class="wdg-msg-title highlight">
+                    {!$Label.wk_wedge__thank_you}
+                </p>
+                <p class="wdg-msg-title">
+                    {!$Label.wk_wedge__registration_successful} {!$Site.masterlabel}
+                </p>
+                    
+                <apex:outputlink value="{!$Site.baseURl}" styleclass="wdg-btn blue large wdg-msgbox--btn">{!$Label.wk_wedge__go_shopping}</apex:outputlink>
+                
+            </div>
+            </div>
+        </apex:define>
+      </apex:composition>
+</apex:page>

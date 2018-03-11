@@ -1,0 +1,120 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes"
+	controller="gkn_sms.SMSTemplateListController" access="global">
+	<aura:attribute name="smsTemplate" type="gkn_sms__SMSTemplate__c"
+		default="{'sobjectType': 'gkn_sms__SMSTemplate__c','Name':'','gkn_sms__Object_Name__c':'','gkn_sms__SMS_Body__c':''}" />
+	<aura:attribute name="msg" type="String" default="" />
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:registerEvent name="smsApp" type="gkn_sms:smsApp" />
+	<lightning:spinner aura:id="loading" class="slds-show gkn-sms-spiner" alternativeText="Loading" variant="brand" size="small" />
+	
+    <div aura:id="mobileAction" class="slds-hide" style="background-color:#fff">
+        <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <div class="slds-media slds-media--center slds-has-flexi-truncate">      
+                    <div class="slds-media__body">
+						<lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelSMSTemp}" />
+                        Create New
+                    </div>
+                </div>
+                <div class="slds-no-flex">
+                    <lightning:button variant="brand" label="Save Template" onclick="{!c.addNewTemp}" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <article class="slds-card onesetupSetupHeader">
+		<div class="slds-card__header setup-header-element slds-grid">
+			<header class="slds-media slds-media--center slds-has-flexi-truncate">
+				<div class="setup-header-element">
+					<span
+						class="slds-icon_container slds-icon-utility-settings setup-icon"
+						title="Template"> 
+                        <lightning:icon variant="inverse" iconName="utility:insert_template" size="small"/>
+					</span>
+				</div>
+				<div class="slds-media__body">
+					<h2>
+						<div class="slds-p-left--medium">
+							<span class="slds-text-heading--small">SMS Template</span>
+						</div>
+					</h2>
+				</div>
+			</header>
+		</div>
+        <div class="slds-p-left--medium">
+			<div class="slds-p-left--x-small">
+                <div class="slds-card__body">Templates created here can be used for sending SMS by the APP.</div>
+			</div>
+		</div>
+	</article>
+	<div class="slds-m-around--small"></div>
+	<div aura:id="tempcontainer" class="slds-grid">		
+		<div class="slds-p-horizontal--small slds-size--1-of-1 slds-small-size--12-of-12 slds-medium-size--1-of-2 slds-large-size--1-of-3">
+			<div class="slds-form-element">
+				<label class="slds-form-element__label" for="templateName">
+					<abbr class="slds-required" title="required">*</abbr> Template Name
+				</label>
+				<div class="slds-form-element__control">
+					<ui:inputText aura:id="templateName" class="slds-input"
+						value="{!v.smsTemplate.Name}" required="" />
+				</div>
+			</div>
+			<div class="slds-m-around--small"></div>
+			<div class="slds-form-element">
+				<label class="slds-form-element__label" for="objectName"> <abbr
+					class="slds-required" title="required">*</abbr> Select Object
+				</label>
+				<div class="slds-form-element__control">
+					<div aura:id="objectNameSelect" class="slds-select_container">
+						<ui:inputSelect class="slds-select" change="{!c.changeObject}"
+							aura:id="objectName"
+							value="{!v.smsTemplate.gkn_sms__Object_Name__c}" />
+					</div>
+				</div>
+			</div>
+			<div class="slds-m-around--small"></div>
+			<div class="slds-form-element">
+				<label class="slds-form-element__label" for="fieldName">Select
+					Fields</label>
+				<div class="slds-form-element__control">
+					<div aura:id="fieldNameSelect" class="slds-select_container">
+						<ui:inputSelect class="slds-select" change="{!c.changeField}"
+							aura:id="fieldName" />
+					</div>
+				</div>
+			</div>
+			<div class="slds-m-around--small"></div>
+			<div class="slds-form-element">
+				<label class="slds-form-element__label" for="mergeField">Merge
+					Field</label>
+				<div class="slds-form-element__control">
+					<ui:inputText click="{!c.selectMergeField}" aura:id="mergeField"
+						class="slds-input" />
+				</div>
+			</div>
+			<div class="slds-m-around--small"></div>
+			<div class="slds-form-element">
+				<label class="slds-form-element__label" for="smsBody"> <abbr
+					class="slds-required" title="required">*</abbr> Template Body
+				</label>
+				<div class="slds-form-element__control">
+					<ui:inputTextarea maxlength="1500" rows="5" aura:id="smsBody" class="slds-textarea"
+						value="{!v.smsTemplate.gkn_sms__SMS_Body__c}" />
+				</div>
+			</div>
+			<div class="slds-m-around--small"></div>
+			<div aura:id="desktopAction"  class="slds-form-element">
+				<lightning:button variant="brand" label="Save Template" onclick="{!c.addNewTemp}" />
+				
+				<lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelSMSTemp}" />
+			</div>
+		</div>
+		<div class="slds-col">&nbsp;</div>
+		<div class="slds-col">&nbsp;</div>
+		<div class="slds-col">&nbsp;</div>
+		<div class="slds-col">&nbsp;</div>
+		<div class="slds-col">&nbsp;</div>		
+	</div>
+
+</aura:component>

@@ -1,0 +1,265 @@
+<apex:page id="Registration" showHeader="false" controller="wk_wedge.SiteRegisterController" standardstylesheets="false" title="{!$Label.site.register}"  doctype="html-5.0" >
+<!--
+<apex:composition template="siteLeadPage">        
+
+    <apex:define name="body_content">
+          
+        <style>
+        .wrapper{
+            padding-top:0px;
+        }
+        .Reg-wrap{
+            margin-top:35px;
+        }
+        
+        
+        .info-panel-title{
+        margin: 15px 0px;
+    }
+    .info-panel-title span{
+       display: inline-block;
+       vertical-align: middle;
+       font-size:14px;
+       margin-right:10px;
+       
+    }
+    .user-info-panel-input-wrap{
+        margin:15px 0px;
+    }
+    .user-info-panel-input-wrap input{
+        padding :10px 8px; 
+        border-radius: 3px;
+        display:block;
+        width:90%;
+        box-sizing:border-box;
+        border:1px solid #ccc;
+    }
+    .user-info-panel-input-wrap sup{
+        font-weight: 700;
+        font-size: 14px;
+        top: -2px;
+        left: 2px;
+        margin-right:5px;
+        color: #e53935;
+    }
+    .user-info-panel-input-wrap input:active,.user-info-panel-input-wrap input:hover,.user-info-panel-input-wrap input:focus,
+    textarea:hover, textarea:focus,textarea:active{
+        outline:none;
+        border:1px solid #0086C0;   
+    }
+    textarea{
+    height: 198px;
+    width: 100%;
+    display:block;
+    padding:6px;
+    border-radius:6px;
+    resize: none;
+    outline:none; 
+    border: 1px solid #ccc;
+    }
+      .info-panel-btn{
+     background-color: #0086c0;
+    border: medium none !important;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+   
+    margin-top: 15px;
+    min-width: 100px;
+    padding: 10px 20px;
+    text-align: center;
+    vertical-align: middle;
+    }
+    .info-panel-btn:active, .info-panel-btn:hover,  .info-panel-btn:focus{
+        color:#fff;
+        text-decoration:none;
+    }
+    .em_inppanel{
+    margin-top:20px;
+    }
+    .Reg-wrap input.errorborder{
+        border-color:#C23934;
+    }
+    .Reg-wrap .err{
+        color:#C23934;
+    }
+    input[type="submit"].em_submitbtn {
+          background-color: #0087c1;
+          border: medium none;
+          border-radius: 4px;
+          color: #fff;
+          display: inline-block;
+          width:200px;
+          margin-bottom: 11px;
+          outline: medium none;
+          padding: 10px 30px;
+          margin-right:20px;
+       }
+       .em_submitbtn:hover, .em_submitbtn:focus, .em_submitbtn:active{
+          background-color:#0086C0;
+       }
+      .forgetbtn, .forgetbtn:hover, .forgetbtn:active, .forgetbtn:focus {
+            display: inline;
+           
+            padding: 11px 50px;
+            border-radius: 4px;
+            background-color: #0086C0;
+            vertical-align: middle;
+            color: #fff;
+            min-width: 100px;
+            text-decoration: none;
+            text-align: center;
+        }
+                </style>
+        <apex:form forcessl="true">
+        <apex:messages styleclass="pagerrormsg"/>
+        <div class="wrapper">
+            <div class="container">
+               
+                <div class="Reg-wrap">
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <div class="panel-title">
+                                <h4 class="oxy-20-bold">Create your Account</h4>
+                                <h5> Create your {!$Site.masterlabel} account  here.</h5>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="First Name" for="ufname"/><sup class="req">*</sup>
+                                <apex:inputtext value="{!firstName}" html-placeholder="First Name" id="ufname" required="true"/>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="Last Name" for="ulname"/><sup class="req">*</sup>
+                                <apex:inputtext value="{!lastname}" html-placeholder="Last Name" id="ulname" required="true"/>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="E-mail/UserName" for="uCname"/><sup class="req">*</sup>
+                                <apex:input type="email" value="{!email}" html-placeholder="Email " id="uCName" required="true"/>
+                                <div class="err" id="emailerr"></div>
+                            </div>
+                          
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="Password" for="paswd"/><sup class="req">*</sup>
+                                <apex:inputsecret value="{!Newpassword}" html-placeholder="Password" id="pswd" required="true"/>
+                            </div>
+                            <div class="user-info-panel-input-wrap">
+                                <apex:outputlabel value="Confirm Password" for="pconfirm"/><sup class="req">*</sup>
+                                <apex:inputsecret value="{!Newconfirmpassword}" html-placeholder="Confirm Password" id="pconfirm" required="true"/>
+                                <div class="err" id="pswdErr"></div>
+                            </div>
+                                <h5>
+                                    <apex:inputcheckbox id="tnccheck" required="true"/> &nbsp;By Creating an account, you agree to our &nbsp;
+                                    <apex:outputpanel rendered="{!Storeadmin.TNC_URL__c!=null}">
+                                        <a href="javascript:void(0)" id="tncpage" class="tnc">Terms &amp; Conditions</a>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel rendered="{!Storeadmin.TNC_URL__c==null}">
+                                        <apex:outputText >Terms &amp; Conditions</apex:outputText> 
+                                    </apex:outputpanel>
+                                </h5> 
+                                <div class="err" id="tncErr"></div>
+                             <div class="user-info-panel-input-wrap">
+                                <apex:commandButton action="{!registerUser}"  value="{!$Label.site.submit}" id="submitREG"  styleClass="em_submitbtn"/>
+                             </div>
+                        </div>
+                         <div class="col-md-6">
+                             <apex:outputpanel layout="block" styleclass="account-login-wrap" rendered="{!ISPICKVAL($User.UserType,'Guest')}"> 
+                                 <div class="panel-title">
+                                    <h4 class="oxy-20-bold">Already have an Account</h4>
+                                    <h5>Sign in with your username and password</h5>
+                                </div>
+                                <div class="user-info-panel-input-wrap">
+                                     <apex:outputlabel value="E-mail/UserName" for="uname"/><sup class="req">*</sup>
+                                    <apex:input type="email" value="{!Username}" html-placeholder="Email" id="uname"/>
+                                </div>
+                                <div class="user-info-panel-input-wrap">
+                                     <apex:outputlabel value="Password" for="pswdn"/><sup class="req">*</sup>
+                                    <apex:inputsecret value="{!password}" html-placeholder="Password" id="pswdn"/>
+                                    
+                                </div>
+                                <div class="user-info-panel-input-wrap">
+                                  <apex:commandButton action="{!sitelogin}"  value="Sign In " id="login"  styleClass="em_submitbtn"/>
+                                    <a href="{!URLFOR($Page.ForgotPassword)}" class="forgetbtn" style="margin-right:0px;">Forgot Password ?</a>
+                                </div>
+                                
+                             </apex:outputpanel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </apex:form>
+        <apex:form forcessl="true">
+            <apex:actionfunction name="showTNCView" action="{!CreateTNCView}" status="docSearch" rerender="quickTNCview"/>
+         </apex:form>
+        <script>
+            wk=jQuery.noConflict();
+            wk(function() {
+
+                var validemail=false;
+                var valideuName=false;
+                
+            wk( document ).on("keyup",".Reg-wrap [Id$='uCName']",function(){
+                    var regex=/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+                    var a=wk(this).val();
+                    if(!(regex.test(a))){
+                      wk(".Reg-wrap #emailerr").html("invalid email address");
+                      wk(this).addClass("errorborder");
+                    }
+                    else if((regex.test(a))){
+                        validemail=true;
+                        wk(".Reg-wrap #emailerr").html("");
+                        wk(this).removeClass("errorborder");
+                    }
+            });
+             wk( document ).on("keyup",".Reg-wrap [Id$='pswd']",function(){
+                   var pswd=wk(".Reg-wrap [Id$='pconfirm']").val();
+                   if(pswd!=null && pswd!=''){
+                     var a=wk(".Reg-wrap [Id$='pswd']").val();
+                     if(!(pswd ==a)){
+                      wk(".Reg-wrap #pswdErr").html("Passwords do not match");
+                      wk(this).addClass("errorborder");
+                    }
+                    else if(pswd ==a){
+                        valideuName=true;
+                        wk(".Reg-wrap #pswdErr").html(""); 
+                        wk(this).removeClass("errorborder");
+                        wk(".Reg-wrap [Id$='pconfirm']").removeClass("errorborder");
+                    }
+                   }
+             });
+            
+             
+            wk( document ).on("keyup",".Reg-wrap [Id$='pconfirm']",function(){
+                    var pswd=wk(".Reg-wrap [Id$='pswd']").val();
+                    var a=wk(".Reg-wrap [Id$='pconfirm']").val();
+                    if(!(pswd ==a)){
+                      wk(".Reg-wrap #pswdErr").html("Passwords do not match");
+                      wk(this).addClass("errorborder");
+                    }
+                    else if(pswd ==a){
+                        valideuName=true;
+                        wk(".Reg-wrap #pswdErr").html(""); 
+                        wk(this).removeClass("errorborder");
+                        wk(".Reg-wrap [Id$='pswd']").removeClass("errorborder");
+                    }
+            });
+            wk( document ).on("click",".Reg-wrap [Id$='submitREG']",function(event){
+                   var tncheck=wk(".Reg-wrap [Id$='tnccheck']").prop('checked');
+                   if(!tncheck){
+                         wk(".Reg-wrap #tncErr").html("Please accept terms and Conditons");
+                          event.preventDefault();
+                   }else{
+                         wk(".Reg-wrap #tncErr").html("");
+                   }
+                  
+                
+            });
+            wk( document ).on("click",".Reg-wrap [Id$='tncpage']",function(){
+                    showTNCView();  
+            });
+            
+                   
+            }(jQuery));
+        </script>
+    </apex:define>
+</apex:composition> -->
+</apex:page>

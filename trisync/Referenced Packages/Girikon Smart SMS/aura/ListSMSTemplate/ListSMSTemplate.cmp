@@ -1,0 +1,151 @@
+<aura:component implements="force:appHostable"
+	controller="gkn_sms.SMSTemplateListController" access="GLOBAL">
+	<aura:attribute name="templateNames" type="gkn_sms__SMSTemplate__c[]" />
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:attribute name="templateDetail" type="gkn_sms__SMSTemplate__c" />
+	<aura:attribute name="isDelete"	type="Boolean"/>
+    <aura:attribute name="hasMessage"	type="String" default=""/>
+    <aura:attribute name="messageType"	type="String" default=""/>
+	<aura:attribute name="deleteRecord"	type="gkn_sms__SMSTemplate__c"/>
+    <aura:attribute name="recordCount" type="Integer" default="0"/>
+	<ltng:require styles="{!$Resource.gkn_sms__slds_assets + '/assets/styles/salesforce-lightning-design-system.css'}"/>
+	<aura:registerEvent name="tmpEditEvent" type="gkn_sms:tmpEditEvent" description="" />
+	<lightning:spinner aura:id="loading" class="slds-show gkn-sms-spiner" alternativeText="Loading" variant="brand" size="small" />
+	
+    
+    <aura:if isTrue="{!!empty(v.hasMessage)?true:false}">
+        <div style="position:absolute" class="{!v.hasMessage==''?'slds-hide':'slds-notify_container slds-is-relative slds-show'}">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.messageType}" role="alert"> 
+                <span class="slds-assistive-text">{!v.messageType}</span>
+                <span class="{!'slds-icon_container slds-icon-utility-'+v.messageType+' slds-m-right_small slds-no-flex slds-align-top'}" title="{!v.messageType}">
+                    <lightning:icon variant="bare" class="slds-icon slds-icon_small" iconName="{!'utility:'+v.messageType}" size="small"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        {!v.hasMessage}
+                    </h2>
+                </div>
+                <lightning:buttonIcon iconName="utility:close" class="slds-notify__close slds-button_icon-inverse" size="small" variant="bare" onclick="{!c.closeToast}"/>
+            </div>
+        </div>            
+    </aura:if>
+    
+    <article class="slds-card">
+		<div class="slds-card__header slds-grid">
+			<header class="slds-media slds-media--center slds-has-flexi-truncate">
+				<div class="slds-media__figure">
+					<span
+						class="slds-icon_container slds-icon-utility-settings setup-icon"
+						title="Template List"> 
+                        <lightning:icon variant="inverse" iconName="utility:table" size="small"/>
+					</span>
+				</div>
+				<div class="slds-media__body">
+					<h2>
+						<div class="slds-p-left--medium">
+							<span class="slds-text-heading--small">Template List ({!v.templateNames.length})</span>
+						</div>
+					</h2>
+				</div>
+			</header>
+		</div>
+		<div class="slds-p-left--medium">
+			<div class="slds-p-left--x-small">
+				<div class="slds-card__body">Hover mouse on “Template Content” to view details.</div>
+			</div>
+		</div>
+	</article>
+    <div class="slds">
+	<table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal" role="grid">
+		<thead>
+			<tr class="slds-text-title--caps">
+				<th>S.NO.</th>
+				<th scope="col">
+					<div class="slds-truncate" title="Template Name">Template
+						Name</div>
+				</th>
+				<th scope="col">
+					<div class="slds-truncate" title="Object">Object</div>
+				</th>
+
+				<th scope="col">
+					<div class="slds-truncate" title="Message Body">Template Content</div>
+				</th>
+				<th scope="col">
+					<div class="slds-truncate" title="Created Date">Created Date</div>
+				</th>
+				<th scope="col">
+					<div class="slds-truncate" title="Action">Action</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<aura:if isTrue="{!v.templateNames.length==0?true:false}">
+            	<tr>
+					<td colspan="6">
+						<div class="slds-truncate" title="">There is no template found.</div>
+					</td>
+                </tr>
+            </aura:if>
+            <aura:iteration var="temp" items="{!v.templateNames}" indexVar="index">
+				<tr>
+					<td data-label="S.N">
+						<div class="slds-truncate" title="Template Name">{!index+1}</div>
+					</td>					
+					<td data-label="Name">
+						<div class="slds-truncate" title="Template Name">{!temp.Name}</div>
+					</td>
+					<td data-label="Object">
+						<div class="slds-truncate" title="Object">{!temp.gkn_sms__Object_Name__c}</div>
+					</td>
+
+					<td data-label="SMS Body">
+						<div class="slds-truncate" title="{!temp.gkn_sms__SMS_Body__c}">
+							<aura:unescapedHtml value="{!temp.gkn_sms__SMS_Body__c}" />
+						</div>
+					</td>
+					<td data-label="CreatedDate">
+						<div class="slds-truncate" title="Created Date">
+							<ui:outputDate format="MM/dd/YYYY" value="{!temp.CreatedDate}" />
+						</div>
+					</td>
+					<td data-label="Action">
+						<lightning:button variant="brand"
+							value="{!temp}" label="Edit" onclick="{!c.editTemp}"
+							iconName="utility:edit" iconPosition="left" /> 
+						<lightning:button value="{!temp}" onclick="{!c.deleteAlert}" variant="destructive" label="Delete" iconName="utility:delete"
+							iconPosition="left" /></td>
+				</tr>
+			</aura:iteration>
+		</tbody>
+	</table>
+	</div>
+	
+	<aura:if isTrue="{!v.isDelete==true?true:false}">
+		<div role="alertdialog" tabindex="-1"
+			aria-labelledby="prompt-heading-id"
+			aria-describedby="prompt-message-wrapper"
+			class="slds-modal slds-fade-in-open slds-modal--prompt">
+			<div class="slds-modal__container">
+				<div
+					class="slds-modal__header slds-theme--error slds-theme--alert-texture">
+					<lightning:button variant="slds-button" value="No" onclick="{!c.deleteConfirm}"
+						class="slds-button slds-modal__close slds-button--icon-inverse"
+						title="Close">
+						<lightning:icon variant="inverse" iconName="utility:close" size="small"/>
+						<span class="slds-assistive-text">Close</span>
+					</lightning:button>
+					<h2 class="slds-text-heading--medium" id="prompt-heading-id">WARNING!</h2>
+				</div>
+				<div class="slds-modal__content slds-p-around--medium">
+					<p>Are you sure you want to delete "<strong><ui:outputText value="{!v.deleteRecord.Name}"/></strong>"?</p>
+				</div>
+				<div class="slds-modal__footer slds-theme--default">
+					<lightning:button value="No" onclick="{!c.deleteConfirm}" class="slds-button slds-button--neutral" label="No"/>
+					<lightning:button value="{!v.deleteRecord}" onclick="{!c.deleteConfirm}" class="slds-button slds-button--neutral" label="Yes"/>
+				</div>				
+			</div>
+		</div>
+		<div class="slds-backdrop slds-backdrop--open"></div>
+	</aura:if>
+</aura:component>

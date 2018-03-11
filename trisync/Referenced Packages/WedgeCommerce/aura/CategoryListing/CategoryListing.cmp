@@ -1,0 +1,87 @@
+<aura:component controller="wk_wedge.WedgeCategoryLightning">
+    <ltng:require styles="{!$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/css/backend/style-lightning.css'}" scripts="{!$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!--<aura:handler name="init" value="{!this}" action="{!c.getCategories}"/>-->
+    <aura:attribute name="jsonString" type="String"/>
+    <!--<div class="wk_static">-->
+    <div class="wk_static">
+        <div class="slds-page-header pageHeader slds-p-around--none" role="banner">         
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size--1-of-2 slds-p-around--x-small">
+                    <div class="slds-has-flexi-truncate">
+                        <div class="slds-media">
+                            <div class="categorylarge slds-m-left--medium">
+                            	<span ></span>
+                            </div>
+                            <div class="slds-media__body slds-m-left--x-small">
+                            	<p class="heading">Categories</p>
+                        	</div>
+                    	</div>
+                	</div>
+                </div>
+                <div class="slds-size--1-of-2">
+                    <div class="slds-float--right">
+                        <!--<span>
+                            <input type="text" class="searchbox" placeholder="Search.." id="searchbox" value="{!v.searchstr}" onkeyup="{!c.searchItems}"/>
+                            <div class="searchicon" id="searchicon">
+                            	<span ></span>
+                        	</div>
+                        </span>-->
+                        <!--<div class="saveicon slds-m-right-medium" style="display:inline-block" onclick="return ValidateSave(event);">
+                        	<span ></span>
+                        </div>-->
+                        <span class="slds-m-right--medium" style="display: inline-block;">
+                            <wk_wedge:CategoryForm />
+                        </span>
+                        <!--<div class="slds-m-right-large deleteicon" style="display:inline-block">
+                        	<span ></span>
+                    	</div>-->
+                 	</div>
+            	</div>                                      
+        	</div>
+    	</div>  
+    </div>
+    <div style="padding:0.5rem">
+    	<div class="wdg-body">
+        	<div class="wdg-form--box">
+                <table class="wdg-form--header wdg-category--tableheader">
+                	<thead>
+                    	<tr>
+                        	<td class="Xsmall">
+                            	<div class="custom-checkbox">
+                                	<input type="checkbox" id="headerCB" />
+                                </div>
+                            </td>
+                            <td class="small">Order</td>
+                            <td class="halfwidth left-shift">Category Name</td>
+                            <td class="small">Products</td>
+                            <td class="medium">Status</td>
+                            <!--<td class="small">Edit</td>-->
+                        </tr>
+                    </thead> 
+                </table> 
+                <div class="wdg-form--content wdg-no-scroll">
+                	<table class="wdg-category--tableCategory root" >
+                    	<tbody>
+                        	<tr>
+                            	<td class="Xsmall">&nbsp;&nbsp;</td>
+                                <td class="small">&nbsp;&nbsp;</td>
+                                <td class="halfwidth left-shift" >
+                                	<div class="child-expander child-expander-active" data-target="catRoot">
+                                    	<span></span>
+                                        <p class="display-inline--block">Root</p>
+                                    </div>
+                                </td>
+                                <td class="small">&nbsp;</td>
+                                <td class="medium">&nbsp;</td>
+                                <!--<td class="small">&nbsp;</td>-->
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="content-container" id="catRoot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--</div>-->
+</aura:component>

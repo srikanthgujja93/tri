@@ -1,0 +1,85 @@
+.THIS .slds-table th.column{
+    font-weight:600;
+    padding: 15px 0;
+}
+.THIS .slds-table td.column{
+    padding: 12px 0;
+}
+.THIS .tableHeader{
+    background: #037BD8;
+}
+.THIS .tableHeaderRow{
+    color: #fff;
+    font-size: 14px;
+}
+.THIS .heading{
+	font-size: 20px;	
+}
+.THIS .con{
+	padding: 0.2rem;
+}
+.THIS input.uiInput--checkbox.check{
+    display:inline-block;
+	margin-left: 1.25rem;
+    border-radius: 0px;  
+}
+.THIS .storeadminlarge{
+	padding-top: 8px;
+}
+.THIS .widt{
+	width: 100px;	
+}
+.THIS .pos{
+    width: 100%;
+}
+.THIS .disp{
+    display:none;
+}
+.THIS .slds-modal{
+    top:80px;    
+}
+/*.THIS .inputlength{
+    width: 86%;
+}*/
+.THIS .form{
+    margin: 0 auto;
+    width: 70%;
+}
+.THIS .labellength{
+    width: 150px;
+}
+.THIS .slds-page-header.pageHeader{
+    background: #35A3DC;
+    color: #fff;
+}
+.THIS .container{
+	padding: 0.5rem;
+}
+.THIS .slds-backdrop{
+   background: rgba(0, 0, 0, 0.8);
+}
+.THIS .cp-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: 15px;
+    margin-left: -24px;
+}
+.THIS .saveicon{
+    cursor:pointer;
+    display: inline-block;
+    background: #35A3DC;
+    padding: 13px;
+}
+.THIS .saveicon:hover{
+    background: #037BD8;
+}
+@media screen and (max-width: 980px)
+{
+    .THIS .container{
+        padding: 0;
+    }
+    .THIS .inputlength{
+        width: 100%;
+    }
+}

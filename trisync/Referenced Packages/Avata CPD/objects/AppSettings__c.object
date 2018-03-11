@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <description>Constants and Path names that can be modified if necessary</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>HelpSystemPath__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Prefix of the help system URL</description>
+        <externalId>false</externalId>
+        <label>Help System Path</label>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>StoryPointToPersonDays__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Used to convert Story Point datum to equivalent Person days for computation</description>
+        <externalId>false</externalId>
+        <label>Story Point to Person days</label>
+        <precision>18</precision>
+        <required>true</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>isCPDExtInstalled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Is the Extension package installed?</description>
+        <externalId>false</externalId>
+        <label>is CPD Ext Installed</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>App Settings</label>
+    <visibility>Public</visibility>
+</CustomObject>

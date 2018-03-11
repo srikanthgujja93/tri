@@ -1,0 +1,97 @@
+<apex:page controller="wk_wedge.ListOrder" showHeader="false" standardStylesheets="false">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+            <TITLE>List Order</TITLE>
+
+            <style>
+                .wdg .wdg-template--body {
+                    padding:30px 0;
+                }
+                .wdg-msg--box{
+                    width:300px;
+                    height:300px;
+                    padding: 30px;
+                    margin: 6% auto;
+                    box-shadow: 0px 0px 15px 4px #ccc;
+                    border-radius: 3px;
+                    text-align:center;
+                    position:relative;
+                }
+                .wdg-wallet--text{
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+                .wdg-wallet--table{
+                    width:100%;
+                    text-align:center;
+                    position:absolute;
+                    bottom: 30px;
+                    left:0;
+                }
+                .wdg-wallet--table td{
+                    padding: 5px 0;
+                }
+                .wdg-wallet--inp{
+                    padding: 8px 8px;
+                    border-radius: 3px;
+                    width: 80%;
+                    outline: none;
+                    background: #fff;
+                    border: 1px solid #ccc;
+                	text-align:center;
+                }
+                .wdg-checkout--btn {
+                    background-color: #0087C1;
+                    min-width: 150px;
+                    cursor: pointer;
+                    height: 40px;
+                    padding: 0px 6px;
+                    outline: none;
+                    border: none;
+                    line-height: 2.7;
+                    text-align: center;
+                    box-sizing: border-box;
+                    text-decoration: none;
+                    color: #fff;
+                    font-size: 14px;
+                    border-radius: 3px;
+                }
+                ul li{
+                    margin-left:0px;
+                }
+            </style>
+            <script>
+                if(!{!allowAccess})
+                    window.location.href='/wedgeunAuthoriesed';
+            </script>
+            <apex:outputpanel layout="block" styleclass="wdg-msg--box" id="thisblock">
+                <apex:form >
+                    <apex:outputPanel styleClass="wdg-wallet--text">{!$Label.ListOrder_View_Order_Details}&nbsp;</apex:outputPanel>
+                    <table class="wdg-wallet--table">
+                        <tr>
+                            <td>{!$Label.wk_wedge__listorder_enter_order_number}:</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:inputText value="{!orderNumber}" styleClass="wdg-wallet--inp"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{!$Label.wk_wedge__listorder_enter_order_key}:</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:inputText value="{!orderKey}" styleClass="wdg-wallet--inp"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:commandButton action="{!RedirectToOrder}" value="{!$Label.wk_wedge__listorder_show_order_details}" styleclass="wdg-checkout--btn"/>
+                            </td>
+                        </tr>
+                    </table>
+                </apex:form>
+            </apex:outputpanel>
+        </apex:define>
+    </apex:composition>
+</apex:page>

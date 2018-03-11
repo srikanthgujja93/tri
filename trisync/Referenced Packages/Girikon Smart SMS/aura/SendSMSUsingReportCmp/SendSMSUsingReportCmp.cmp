@@ -1,0 +1,170 @@
+<aura:component access="global" controller="gkn_sms.SendSMSUsingReportCtr">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="objectName" type="String" default=""/>
+    <aura:attribute name="bulkSMSHistory" type="List" default="[]"/>
+    <aura:attribute name="toNumberField" type="String" default=""/>
+    <aura:attribute name="isSaveInCustomObject" type="Boolean" default="false"/>
+    <aura:attribute name="templateBody" type="String" default=""/>
+    <aura:attribute name="SMSBalance" type="Integer" default="0"/>
+    <aura:attribute name="totalRecord" type="Integer" default="0"/>
+    <aura:attribute name="validRecord" type="Integer" default="0"/>
+    <aura:attribute name="invalidRecord" type="Integer" default="0"/>
+    <aura:attribute name="validNumbers" type="string" default=""/>
+    <aura:attribute name="countryCode" type="string" default=""/>
+    <aura:attribute name="showReport" type="boolean" default="false"/>
+    <aura:attribute name="message" type="String" default=""/>
+    
+    <lightning:spinner aura:id="loading" class="slds-hide gkn-sms-spiner" alternativeText="Loading..." variant="brand" size="small" />
+    
+    <aura:if isTrue="{!!empty(v.message)?true:false}">
+        <div style="position:absolute" class="{!v.message==''?'slds-hide':'slds-notify_container slds-is-relative slds-show'}">
+            <div class="slds-notify slds-notify_toast slds-theme_error" role="alert"> 
+                <span class="slds-assistive-text">{!v.Info}</span>
+                <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="{!v.messageType}">
+                    <lightning:icon variant="bare" class="slds-icon slds-icon_small" iconName="utility:error" size="small"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        {!v.message}
+                    </h2>
+                </div>
+                <lightning:buttonIcon iconName="utility:close" class="slds-notify__close slds-button_icon-inverse" size="small" variant="bare" onclick="{!c.closeToast}"/>
+            </div>
+        </div>            
+    </aura:if>
+    
+    <div class="slds slds-p-horizontal--large">
+        <div class="slds-grid">
+            <div class="slds-size--5-of-12 slds-p-horizontal--small">
+                <lightning:card class="slds-col" iconName="utility:sms">
+                    <aura:set attribute="title">
+                        Bulk SMS
+                    </aura:set>
+                    <div class="slds-form--stacked slds-p-horizontal--small">
+                        <!--Configuration list-->
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="objects">
+                                <abbr class="slds-required" title="required">*</abbr> Select Object</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <ui:inputSelect change="{!c.objectChange}" class="slds-select" aura:id="objects" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Select From Number list-->
+                        <div class="slds-form-element slds-p-top--small">
+                            <label class="slds-form-element__label" for="toNumber">
+                                To Number Field {!v.objectName!=''?' of '+v.objectName:''}</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-input_container">
+                                    <ui:outputText class="slds-input" aura:id="toNumber" value="{!v.toNumberField!=''? v.toNumberField+' Field':''}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Select From Number list-->
+                        <div class="slds-form-element slds-p-top--small">
+                            <label class="slds-form-element__label" for="fromNumber">
+                                <abbr class="slds-required" title="required">*</abbr> Select From Number</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <ui:inputSelect class="slds-select" aura:id="fromNumber" change="{!c.changeFromNumber}" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--SMS Template list-->
+                        <div class="slds-form-element slds-p-top--small">
+                            <label class="slds-form-element__label" for="template">
+                                Select Template</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <ui:inputSelect change="{!c.templateChange}" class="slds-select" aura:id="template" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Selected SMS Template Body-->
+                        <div class="slds-form-element slds-p-top--small">
+                            <label class="slds-form-element__label" for="smsbody">
+                                <abbr class="slds-required" title="required">*</abbr> SMS Body</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-textarea_container">
+                                    <ui:inputTextarea maxlength="1550" aura:id="smsbody" class="slds-textarea" value="{!v.templateBody}" rows="4"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-p-top--small">                            
+                            <lightning:button aura:id="sendBulkSMSBtn" onclick="{!c.testSendSMS}" label="Send SMS" />
+                            <aura:if isTrue="{!v.SMSBalance==0?true:false}">
+                                Your sms balance is {!v.SMSBalance}
+                            </aura:if>
+                            <lightning:spinner aura:id="proccessing" class="slds-hide gkn-sms-spiner" alternativeText="Loading..." variant="brand" size="small" />
+                        </div>
+                        <div aura:id="batchStatus" class="slds-form-element slds-p-top--small">
+                            
+                        </div>
+                    </div>
+                </lightning:card>
+            </div>
+            <div class="slds-size--7-of-12 slds-p-horizontal--small">
+              	<aura:if isTrue="{1=0}">
+                    <lightning:card class="slds-col" iconName="standard:report">
+                        <div class="slds-form--stacked slds-p-horizontal--small">
+                            <div class=""><strong>Total Valid Number: </strong> {!v.validNumbers}</div>
+                        </div>
+                    </lightning:card>
+                </aura:if>
+                <aura:if isTrue="{!v.showReport}">
+                    <lightning:card class="slds-col" iconName="standard:report">
+                        <aura:set attribute="title">
+                            Object Report
+                        </aura:set>
+                        <aura:set attribute="actions">
+                            <lightning:button onclick="{!c.getUpdatedBalanceAction}" label="Refresh" iconName="action:refresh" iconPosition="right"/>
+                        </aura:set>
+                        <div class="slds-form--stacked slds-p-horizontal--small">
+                            <div class=""><strong>Total Record: </strong> {!v.totalRecord}</div>
+                            <div class="slds-p-top--small"><strong>Total Valid Record: </strong> {!v.validRecord}</div>
+                            <div class="slds-p-top--small"><strong>Invalid Records: </strong> {!v.invalidRecord} record(s) do not have valid phone number</div>
+                            <div class="slds-p-top--small"><strong>Total SMS Balance: </strong> {!v.SMSBalance}</div>
+                            <div class="slds-p-top--small"><strong>You are able to send only {!v.SMSBalance} SMS</strong></div>
+                            <div class="slds-p-top--small">SMS will not be sent to numbers having different country code than FROM number.</div>
+                        </div>
+                    </lightning:card>
+                </aura:if>
+                
+                <lightning:card class="slds-col" iconName="utility:sms">
+                    <aura:set attribute="title">
+                        Bulk SMS History
+                    </aura:set>
+                    <div class="slds-p-horizontal--small" style="overflow-y:auto;min-height:100px;max-height:300px">
+                        <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal" role="grid">
+                            <thead>
+                                <tr class="slds-text-title--caps">
+                                    <th scope="col"><div class="slds-truncate" title="Object Name">Object Name</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Success SMS">Success SMS</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Failed SMS">Failed SMS</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Total SMS">Total SMS</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Sent DateTime">Sent Date</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <aura:iteration items="{!v.bulkSMSHistory}" var="item">
+                                <tr>
+                                    <td><div class="slds-truncate">{!item.Name}</div></td>
+                                    <td><div class="slds-truncate">{!item.gkn_sms__Success_SMS__c}</div></td>                                
+                                    <td><div class="slds-truncate">{!item.gkn_sms__SMS_Failed__c}</div></td>
+                                    <td><div class="slds-truncate">{!item.gkn_sms__Total_SMS__c}</div></td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <ui:outputdate format="MM/d/yyyy" value="{!item.CreatedDate}"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                                </tbody>
+                        </table>
+                    </div>
+                </lightning:card>
+            </div>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,455 @@
+<apex:page controller="wk_wedge.UserprofileController" title="Profiles" standardstylesheets="false" setup="false" showheader="false" cache="false">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+            <div class="container">
+                <TITLE>USER PROFILE</TITLE>
+                
+                <style>
+                    .userprofileWrap{
+                    margin-top:20px;
+                    margin-bottom: 20px;
+                    }
+                    .oxy-20-bold{
+                    font-weight:600;
+                    font-size:20px; 
+                    display:inline-block;
+                    vertical-align:middle;
+                    }
+                    .info-panel-heading{
+                    padding:5px; 
+                    border-bottom:1px solid #0086C0;
+                    }
+                    .info-panel{ 
+                    
+                    }
+                    .info-panel-title{
+                    margin: 15px 0px;
+                    }
+                    .info-panel-title span{
+                    display: inline-block;
+                    vertical-align: middle;
+                    font-size:14px;
+                    margin-right:10px;
+                    
+                    }
+                    .user-info-panel-input-wrap{
+                    margin:15px 0px;
+                    }
+                    .user-info-panel-input-wrap input{
+                    padding :10px 8px; 
+                    border-radius: 3px;
+                    display:block;
+                    width:100%;
+                    box-sizing:border-box;
+                    border:1px solid #ccc;
+                    }
+                    .user-info-panel-input-wrap sup{
+                    font-weight: 700;
+                    font-size: 14px;
+                    top: -2px;
+                    left: 2px;
+                    color: #e53935;
+                    }
+                    .user-info-panel-input-wrap input:active,.user-info-panel-input-wrap input:hover,.user-info-panel-input-wrap input:focus{
+                    outline:none;
+                    border:1px solid #0086C0;   
+                    }
+                    .user-sign-in-panel{
+                    margin:15px 0px;
+                    width:90%;
+                    }
+                    .info-panel-btn{
+                    display:inline-block;
+                    padding:10px 20px;
+                    border-radius:3px;
+                    background-color:#0086C0;
+                    vertical-align:middle;
+                    color:#fff;
+                    min-width:100px;
+                    text-align:center;
+                    }
+                    .info-panel-btn:active, .info-panel-btn:hover,  .info-panel-btn:focus{
+                    color:#fff;
+                    text-decoration:none;
+                    }
+                    .fe-icon-checkout{
+                    height:15px;
+                    width:15px;
+                    display:inline-block;
+                    margin-right:10px;
+                    vertical-align:middle;
+                    background-image:url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/checkout-sprite.png')}');
+                    }
+                    .bill-ico{
+                    background-position:-15px 0px;
+                    }
+                    .ship-ico{
+                    background-position:-30px 0px;
+                    }
+                    .diffshipp {
+                    margin-top:5px;
+                    margin-botton:5px;
+                    padding:10px;
+                    padding-left:0
+                    
+                    }
+                    .diffshipp input[type="checkbox"]{
+                    margin:0;
+                    padding:0;
+                    margin-right:10px; 
+                    vertical-align:middle;
+                    } 
+                    .diffshipp span{
+                    font-weight:700;
+                    vertical-align:middle;
+                    } 
+                    a.save-button{
+                    display: inline-block;
+                    background-color: #0086CE;
+                    color: #fff;
+                    min-width: 160px;
+                    padding: 10px;
+                    margin: 15px 0px;
+                    text-align: center;
+                    border-radius: 3px;
+                    text-decoration:none;
+                    }
+                    .state-country--wrap select {
+                    padding: 10px 8px;
+                    border-radius: 3px;
+                    display: block;
+                    margin: 15px 0px;
+                    width: 100%;
+                    outline: none;
+                    background: #fff;
+                    border: 1px solid #ccc;
+                    }
+                    .state-country--wrap select:active,
+                    .state-country--wrap select:hover{
+                    outline: none;
+                    border: 1px solid #0086C0;
+                    }
+                    
+                </style>
+                <apex:outputpanel layout="block" id="userinfo" styleclass="userprofileWrap">
+                    <apex:form >
+                        <div class="container ">
+                            
+                            <div class="row">
+                                <apex:message />
+                                <div class="col-md-6">
+                                    <div class="info-panel">
+                                        <div class="info-panel-heading">
+                                            <i class="fe-icon-checkout"></i>
+                                            <h4 class="oxy-20-bold">{!$Label.UserProfile_User_Account_Information}</h4>
+                                        </div>
+                                    </div>
+                                    <!--
+<apex:outputpanel layout="block" rendered="{!euserInfo!=null}" styleclass="info=panel-details">
+-->
+                                    <apex:outputpanel layout="block"  styleclass="info=panel-details">
+                                        <div class="user-info-panel-input-wrap">
+                                            <apex:outputlabel value="{!$Label.wk_wedge__userprofile_first_name}" for="ufName"/><!--{!eUserInfo.Id}-->
+                                            <apex:inputtext value="{!fname}" html-placeholder=" {!$Label.wk_wedge__userprofile_first_name}" id="ufname"/>
+                                        </div>
+                                        <div class="user-info-panel-input-wrap">
+                                            <apex:outputlabel value="{!$Label.wk_wedge__userprofile_last_name}" for="ulName"/><sup class="req">*</sup>
+                                            <apex:inputtext value="{!lName}" html-placeholder=" {!$Label.wk_wedge__userprofile_last_name}" id="ulname" required="true"/>
+                                        </div>
+                                        <div class="user-info-panel-input-wrap">
+                                            <apex:outputlabel value="{!$Label.wk_wedge__userprofile_email}" for="uemail"/><sup class="req">*</sup>
+                                            <apex:inputtext value="{!email}" html-placeholder=" {!$Label.wk_wedge__userprofile_email}" id="uemail" required="true"/>
+                                        </div>
+                                        <div class="user-info-panel-input-wrap">
+                                            <apex:outputlabel value="{!$Label.wk_wedge__userprofile_phone}" for="uphone"/>
+                                            <apex:inputtext value="{!phone}" html-placeholder=" {!$Label.wk_wedge__userprofile_phone}" id="uphone"/>
+                                        </div>
+                                    </apex:outputpanel>
+                                </div> 
+                                <div class="col-md-6">
+                                    <div class="info-panel">
+                                        <div class="info-panel-heading">
+                                            <i class="fe-icon-checkout bill-ico"></i>
+                                            <h4 class="oxy-20-bold">{!$Label.UserProfile_Billing_Information} </h4>
+                                        </div>
+                                    </div>
+                                    <!--  
+<apex:outputpanel rendered="{!euserInfo!=null}" layout="block" styleclass="info=panel-details">
+-->    
+                                    <apex:outputpanel layout="block" styleclass="info=panel-details">
+                                        <div class="user-info-panel-input-wrap">
+                                            <apex:outputlabel value="{!$Label.wk_wedge__userprofile_billing_street}" for="uaddress"/>
+                                            <apex:inputtext value="{!bStreet}" html-placeholder=" {!$Label.wk_wedge__userprofile_billing_street}" id="uaddress"/>
+                                        </div>
+                                        
+                                        <!--
+<div class="user-info-panel-input-wrap">
+<apex:outputlabel value="Billing state" for="ustate"/>
+<apex:inputtext value="{!euserInfo.mailingstate}" html-placeholder=" state" id="ustate"/>
+</div>
+
+<div class="user-info-panel-input-wrap">
+<apex:outputlabel value="Billing Country" for="ucountry"/>
+<apex:inputtext value="{!euserInfo.mailingcountry}" html-placeholder="country" id="ucountry"/>
+</div>
+-->
+                                        <div class="state-country--wrap" id="country">
+                                            <!-- <apex:inputfield value="{!usr1.countrycode}"/>
+<apex:inputhidden id="bhcountry" value="{!eUserInfo.mailingcountry}"/> -->
+                                            <label for="countryList">{!$Label.Billing_Country}</label>
+                                            <apex:inputhidden value="{!billCountry}"/> 
+                                            <select id="countryList" name="countryList">
+                                                <option  value="Select Country" >--{!$Label.Select_Country}--</option>
+                                            </select> 
+                                            
+                                        </div>
+                                        <div class="state-country--wrap" id="state">
+                                            <!-- <apex:inputfield value="{!usr1.statecode}"/>
+<apex:inputhidden id="bhstate" value="{!eUserInfo.mailingstate}"/> -->
+                                            <label for="stateList">{!$Label.Billing_State}</label>
+                                            <apex:inputhidden value="{!billState}"/>
+                                            <select id="stateList" name="stateList">
+                                                <option  value="Select State" >--{!$Label.Select_State}--</option>
+                                            </select>
+                                        </div>
+                                        <div class="user-info-panel-input-wrap">
+                                            <apex:outputlabel value="{!$Label.wk_wedge__userprofile_billing_city}" for="ucity"/>
+                                            <apex:inputtext value="{!bCity}" html-placeholder=" {!$Label.wk_wedge__userprofile_billing_city}" id="ucity"/>
+                                        </div>
+                                        <div class="user-info-panel-input-wrap">
+                                            <apex:outputlabel value="{!$Label.wk_wedge__userprofile_zipcode}" for="uzip"/>
+                                            <apex:inputtext value="{!bZip}" html-placeholder=" {!$Label.wk_wedge__userprofile_zipcode}" id="uzip"/>
+                                        </div>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel layout="block" id="diffShip" styleclass="diffshipp">
+                                        <apex:inputcheckbox value="{!diffshipping}" onchange="shiiping()" /> <span>{!$Label.wk_wedge__userprofile_have_a_different_shipping_address}</span>
+                                        <apex:actionfunction name="shiiping" rerender="shippingaddress" status="docSearch"
+                                                             oncomplete="setShippingPickList();"/>
+                                        
+                                    </apex:outputpanel>
+                                    <apex:outputpanel layout="block" id="shippingaddress">
+                                        <!--
+<apex:outputpanel layout="block" rendered="{!AND(diffshipping,euserInfo!=null) }">
+-->
+                                        
+                                        <apex:outputpanel layout="block"  rendered="{!AND(diffshipping,euserInfo!=null) }">
+                                            <div class="info-panel">
+                                                <div class="info-panel-heading">
+                                                    <i class="fe-icon-checkout ship-ico"></i>
+                                                    <h4 class="oxy-20-bold">{!$Label.UserProfile_Shipping_Information} </h4>
+                                                </div>
+                                            </div>
+                                            <!--
+<apex:outputpanel rendered="{!euserInfo!=null}" layout="block" styleclass="info=panel-details">
+-->
+                                            <apex:outputpanel layout="block" styleclass="info=panel-details" rendered="{!AND(diffshipping,euserInfo!=null) }">
+                                                <div class="user-info-panel-input-wrap">
+                                                    <apex:outputlabel value="{!$Label.wk_wedge__userprofile_shipping_street}" for="usaddress"/>
+                                                    <apex:inputtext value="{!sStreet}" html-placeholder=" {!$Label.wk_wedge__userprofile_shipping_street}" id="usaddress"/>
+                                                </div>
+                                                <!--  
+<div class="user-info-panel-input-wrap">
+<apex:outputlabel value="Shipping state" for="usstate"/>
+<apex:inputtext value="{!euserInfo.otherstate}" html-placeholder=" state" id="usstate"/>
+</div>
+
+<div class="user-info-panel-input-wrap">
+<apex:outputlabel value="Shipping Country" for="uScountry"/>
+<apex:inputtext value="{!euserInfo.othercountry}" html-placeholder="country" id="uscountry"/>
+</div>
+--> 
+                                                <div class="state-country--wrap" id="scountry">
+                                                    <!--<apex:inputfield value="{!usr2.countrycode}"/>
+<apex:inputHidden id="shcountry" value="{!eUserInfo.othercountry}"/> -->
+                                                    <label for="scountryList">{!$Label.Shipping_Country}</label>
+                                                    <apex:inputHidden value="{!shipCountry}"/>
+                                                    <select id="scountryList" name="scountryList">
+                                                        <option  value="Select Country" >--{!$Label.Select_Country}--</option>
+                                                    </select>
+                                                </div> 
+                                                <div class="state-country--wrap" id="sstate">
+                                                    <!--<apex:inputfield value="{!usr2.statecode}"/>
+<apex:inputHidden id="shstate" value="{!eUserInfo.otherstate}" /> -->
+                                                    <label for="sstateList">{!$Label.Shipping_State}</label>
+                                                    <apex:inputHidden value="{!shipState}"/>
+                                                    <select id="sstateList" name ="sstateList">
+                                                        <option  value="Select State" >--{!$Label.Select_State}--</option>
+                                                    </select>
+                                                </div>
+                                                <div class="user-info-panel-input-wrap">
+                                                    <apex:outputlabel value="{!$Label.wk_wedge__userprofile_shipping_city}" for="uscity"/>
+                                                    <apex:inputtext value="{!sCity}" html-placeholder=" {!$Label.wk_wedge__userprofile_shipping_city}" id="uscity"/>
+                                                </div>
+                                                <div class="user-info-panel-input-wrap">
+                                                    <apex:outputlabel value="{!$Label.wk_wedge__userprofile_shipping_zipcode}" for="uszip"/>
+                                                    <apex:inputtext value="{!sZip}" html-placeholder=" {!$Label.wk_wedge__userprofile_shipping_zipcode}" id="uszip"/>
+                                                </div>
+                                            </apex:outputpanel>
+                                        </apex:outputpanel> 
+                                    </apex:outputpanel>
+                                    
+                                    <apex:commandlink value="{!$Label.wk_wedge__userprofile_save_button}" rerender="cartItems,notice" oncomplete="hidenotification()" styleclass="save-button" action="{!savedetails}" status="docSearch"/>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </apex:form>
+                </apex:outputpanel>
+                <script>
+                /* wk=jQuery.noConflict();
+            wk(function() {
+                wk(document).on("change", "[Id$='country'] select ",function(){
+                    var vals='';
+                    var selected=wk(this).val();
+                    wk(" option ",this).each(function(){
+                        if(selected==wk(this).val())
+                            vals=wk(this).text()
+                            });
+                    wk(this).next().val(vals);
+                    if(!wk("[Id$='diffship']").prop("checked")){
+                        if(wk("[Id$='state'] select").prop("disabled")){
+                            wk("[Id$='bhstate']").val('');
+                            //appliedshipping();  
+                        }
+                    }
+                });
+                wk(document).on("change", " [Id$='state'] select",function(){
+                    //console.log("hel");
+                    //console.log(this.value);
+                    var vals='';
+                    var selected=wk(this).val();
+                    wk(" option ",this).each(function(){
+                        if(selected==wk(this).val())
+                            vals=wk(this).text()
+                            });
+                    wk(this).parent().next().val(vals);
+                    if(!wk("[Id$='diffship']").prop("checked")){
+                        //appliedshipping();  
+                    }
+                });
+            }(jQuery)); */
+            </script>
+            <script>
+            var jsonString = getJsonString();
+            var contries = jsonString['Countries'];
+            var country_array = [];
+            var state_temp_array = [];
+            var state_array = [];
+            var state_temp = '';
+            var vals='';
+            wk=jQuery.noConflict();
+            wk(document).ready(function(){
+                wk('[Id$="ufname"]').val('{!eUserInfo.firstName}');
+                wk('[Id$="ulname"]').val('{!eUserInfo.lastname}');
+                wk('[Id$="uemail"]').val('{!eUserInfo.email}');
+                wk('[Id$="uphone"]').val('{!eUserInfo.phone}');
+                wk('[Id$="uaddress"]').val('{!eUserInfo.mailingStreet}');
+                wk('[Id$="ucity"]').val('{!eUserInfo.mailingcity}');
+                wk('[Id$="uzip"]').val('{!eUserInfo.MailingPostalCode}');
+            });
+            function setShippingPickList() {
+                setCountry('scountryList');
+                setState('scountryList', 'sstateList');
+                wk('[Id$="usaddress"]').val('{!eUserInfo.otherstreet}');
+                wk('[Id$="uscity"]').val('{!eUserInfo.othercity}');
+                wk('[Id$="uszip"]').val('{!eUserInfo.otherpostalcode}');
+            }
+            function setCountry(selectedCountryId) {
+                var selected = '';
+                var existVal = 0;
+                if(selectedCountryId == 'countryList') {
+                    selected = '{!eUserInfo.mailingcountry}';
+                } else {
+                    selected = '{!eUserInfo.othercountry}';    
+                }
+                country_array = [];
+                
+                contries.forEach(function(item, index) {
+                    state_temp_array = [];
+                    country_array.push(item['CountryName']);
+                    var option = wk('<option />');
+                    option.attr('value', item['CountryName']).text(item['CountryName']);
+                    wk('[Id$="'+selectedCountryId+'"]').append(option);
+                    item['States'].forEach(function(itemState, indexState) {
+                        state_temp_array.push(itemState['StateName']);
+                    } );
+                    state_array[item['CountryName']] = state_temp_array;
+                    if(item['CountryName'] == selected){
+                        existVal = 1;
+                    }
+                });
+                if(existVal == 1){
+                    wk('[Id$="'+selectedCountryId+'"]').val(selected);
+                }
+            }
+            
+            function setState(selectedCountryId, selectedStateId){
+                var existVal = 0;
+                var setStateVal = '';
+                var selected = wk('[Id$="'+selectedCountryId+'"]').val();
+                
+                wk('[Id$="'+selectedStateId+'"]').empty();
+                var option = wk('<option />');
+                option.attr('value', 'Select State').text('--{!$Label.wk_wedge__select_state}--');
+                wk('[Id$="'+selectedStateId+'"]').append(option);
+                if(state_array[selected] != null) {
+                    state_array[selected].forEach(function(item, index){
+                        var option = wk('<option />');
+                        option.attr('value', item).text(item);
+                        wk('[Id$="'+selectedStateId+'"]').append(option);
+                        
+                        if(selectedCountryId == 'countryList') {
+                            if('{!eUserInfo.mailingstate}' == item) {
+                                setStateVal = '{!eUserInfo.mailingstate}';
+                                existVal = 1;
+                            }
+                        } else {
+                            if('{!eUserInfo.otherstate}' == item) {
+                                setStateVal = '{!eUserInfo.otherstate}';    
+                                existVal = 1;
+                            }
+                        }
+                    });
+                }
+                
+                if(existVal == 1) {
+                    wk('[Id$="'+selectedStateId+'"]').val(setStateVal);
+                }
+            }
+            
+            
+            wk(document).on("change", "#countryList",function(){
+                setState('countryList', 'stateList');
+                var selected = wk('#countryList').val();
+                wk('#countryList').prev().val(selected); 
+                //wk('#countryList').prev().val(selected); 
+            });
+            wk(document).on("change", "#stateList",function(){
+                var selectedState=wk("#stateList").val();
+                
+                wk("#stateList").prev().val(selectedState); 
+                //wk("#stateList").prev().val(selectedState); 
+                
+            });
+            wk(document).on("change", "#scountryList",function(){
+                setState('scountryList', 'sstateList');
+                var selected = wk('#scountryList').val();
+                wk('#scountryList').prev().val(selected);
+                //wk('#scountryList').prev().val(selected);
+            });
+            
+            wk(document).on("change", "#sstateList",function(){
+                var selectedState=wk('#sstateList').val();
+                wk('#sstateList').prev().val(selectedState); 
+                //wk('#sstateList').next().val(selectedState); 
+            });
+            wk(function() {
+                setCountry('countryList');
+                setState('countryList', 'stateList');                
+            }(jQuery));
+            </script>
+            </div>  
+        </apex:define>
+    </apex:composition>   
+    
+</apex:page>

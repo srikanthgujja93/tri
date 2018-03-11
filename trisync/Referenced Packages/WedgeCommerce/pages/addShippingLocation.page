@@ -1,0 +1,540 @@
+<apex:page controller="wk_wedge.shippinglocationcontroller" title="Shipping Locations" showheader="false" setup="false" standardstylesheets="false" cache="false">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            
+            <style>
+                .wdg-nav-icon.shipandtax, .wdg-nav-icon.location {
+                    background-color: #34becd;
+                }
+                .wdg-dropdown{
+                        position: relative;
+                        width:300px;
+                        margin:0 auto;
+                }
+                .wdg-dropdown.open>.wdg-picklist--menu{
+                    display:block;
+                } 
+                .wdg-variant-table tbody td {
+                    vertical-align: -webkit-baseline-middle;
+                }
+                td .small {
+                    vertical-align: -webkit-baseline-middle;
+                }
+                .wdg-dropdown .wdg-btn--neutral{
+                        position: relative;
+                        display: block;
+                        padding: 5px 12px;
+                        cursor:pointer;
+                        background: 0 0;
+                        background-clip: border-box;
+                        border: 1px solid transparent;
+                        border-radius: .25;
+                        font-size: 14px;
+                        line-height: 1.5;
+                        text-decoration: none;
+                        color: #555;
+                        text-align:center;
+                        -webkit-appearance: none;
+                        white-space: normal;
+                        -webkit-user-select: none;
+                        -moz-user-select: none;
+                        -ms-user-select: none;
+                        user-select: none;
+                        transition: color 50ms linear,background-color 50ms linear;
+                        border-radius: 3px;
+                        border: 1px solid #adadad;
+                        outline: none;
+                        box-shadow: none;
+                        min-width: 300px;
+                }
+                .wdg-dropdown .wdg-btn--neutral:disabled{
+                    background:rgb(235, 235, 228);
+                } 
+               .wdg-dropdown .wdg-caret{
+                   display: inline-block;
+                    width: 0;
+                    height: 0;
+                    margin-left: 2px;
+                    vertical-align: middle;
+                    border-top: 4px dashed;
+                    border-top: 4px solid\9;
+                    border-right: 4px solid transparent;
+                    border-left: 4px solid transparent;
+             
+               
+               }
+               
+              .wdg-dropdown .wdg-picklist--menu{
+                        position: relative;
+                        top: 100%;
+                        border-radius: 3px;
+                        left: 0;
+                        display: none;
+                        overflow: hidden;
+                        max-height: 300px;
+                        overflow-y: auto;
+                        width: 300px;
+                        box-sizing: border-box;
+                        z-index: 1000;
+                        min-width: 160px;
+                        padding: 5px 0;
+                        margin: auto;
+                        border: 1px solid #ccc;
+                        font-size: 14px;
+                        text-align: left;
+                        list-style: none;
+                        margin-top: 2px;
+                        background-color: #fff;
+               }
+               .wdg-dropdown .wdg-picklist--menu>li{
+                   line-height:1.5;
+               }
+               .wdg-picklist--menu>li .custom-checkbox{
+                    float:right;
+                    margin-right:10px;
+                    margin-top:10px;
+               }
+               .wdg-dropdown .wdg-picklist--menu li>a{
+                    position: relative;
+                    display: inline-block;
+                    justify-content: space-between;
+                    padding: .5rem .75rem;
+                    color: #555;
+                    white-space: nowrap;
+                    cursor: pointer;
+               }
+               .wdg-dropdown .wdg-country--title{
+                    font-size: 14px;
+                    color: #555;
+                    line-height: 1.5;
+                    border-radius: 3px;
+                    margin:0 auto;
+                    padding:5px 12px;
+                    display:block;
+               }
+               .wdg-states--tile {
+                    text-align:justify;
+               }
+               .wdg-states--tile.wdg-dropdown>span{
+                    font-size: 12px;
+                    color: #555;
+                    display: inline-block;
+                    border: 1px solid #adadad;
+                    margin-left: 5px;
+                    margin-right: 5px;
+                    padding: 3px 6px;
+                    margin-top: 5px;
+                    border-radius: 3px;
+               }
+            </style>
+           
+            <apex:form id="productform" styleclass="wdg-dataentry--form">
+                        <div style="display:none;">
+                         <!--<div id="usrcountry">
+                             <select id="countryList">
+                                 <option  value="Select Country" >--{!$Label.wk_wedge__Select_Country}--</option>
+                             </select>
+                           <apex:inputfield value="{!usr.countrycode}" />
+                        </div> -->
+                        <!--<div id="usrstate">
+                            <select id="stateList">
+                                <option  value="Select State" >--{!$Label.wk_wedge__Select_State}--</option>
+                            </select>
+                        </div> -->
+                      </div>
+              <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo locations"></span>
+                            <span>Add Locations </span>
+                        </div>
+                        <apex:actionregion > 
+                             <apex:inputhidden value="{!locationelements}" id="elements"/>
+                            <div class="wdg-ctrl--btnPanel">
+                                <apex:commandlink value="" styleclass="wdg-ctrl--btn save" 
+                                                  onclick="saveElements()"  
+                                                  action="{!savelocation}">
+                                    <span></span>
+                                </apex:commandlink>
+                                <a href="{!URLFOR($page.shipping_locations)}" class="wdg-ctrl--btn cancel">
+                                    <span></span>
+                                </a>
+                             </div>
+                          </apex:actionregion>  
+                    </div>  
+                     <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active"><a href="javascript:void(0)" data-target="productBlock">General</a></li>
+                                <li class=""><a href="javascript:void(0)" data-target="locationBlock">Location</a></li>
+                            </ul>
+                        </div>
+                        <div id="productTabGroup" class="wdg-form--content">
+                            <div class="wgd-form--tab show" id="productBlock">
+                                <apex:outputpanel layout="block" styleclass="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Information </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel for="locationName" value="location Name :"/></td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                             <div class="requiredBlock"></div>
+                                                             <apex:inputfield value="{!location.name}" required="true" id="locationName" />
+                                                         </div>
+                                                         <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>                                                       
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel for="locationActive" value="Is Active :"/></td>
+                                                    <td>
+                                                        <div class="custom-checkbox {!IF(location.wk_wedge__Active__c,'checked','')}">
+                                                            <apex:inputfield value="{!location.wk_wedge__Active__c}" id="locationActive" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel for="locationdesc" value="Description :"/></td>
+                                                    <td><apex:inputfield value="{!location.wk_wedge__Description__c}" id="locationdesc" html-tinymce="true"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                   </div>
+                                </apex:outputpanel>
+                            </div>
+                            <div class="wgd-form--tab" id="locationBlock">
+                                <apex:outputpanel layout="block"  styleclass="wdg-form--block">
+                                     <div class="wdg-form--blocktitle">
+                                        <span>Locations </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-variant-table">
+                                            <thead> 
+                                                <tr>
+                                                    <th>Countries </th>
+                                                    <th> States</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                               <tr class="primeRow" >
+                                                   <td class="large">
+                                                      <div class="dropdown wdg-dropdown wdg-countries">
+                                                        <button class=" wdg-btn--neutral "  type="button" data-toggle="dropdown">
+                                                            <span class="wdg-btn--title">Select a Country</span>
+                                                            <span class=" wdg-caret"></span>
+                                                        </button>
+                                                        <input type="hidden" name="--None--" value=" " class="wdg-input--country"/>
+                                                        <ul class="wdg-picklist--menu ">
+                                                        </ul>
+                                                     </div>    
+                                                   </td>
+                                                    <td class="large">
+                                                       <div class="dropdown wdg-dropdown wdg-states">
+                                                        <button class=" wdg-btn--neutral "  type="button" data-toggle="dropdown" ng-disabled="inactive">
+                                                            <span class="wdg-btn--title">Select States</span>
+                                                            <span class=" wdg-caret"></span>
+                                                        </button>
+                                                        <ul class="wdg-picklist--menu ">
+                                                        </ul>
+                                                     </div> 
+                                                   </td>
+                                                   <td class="small">
+                                                       <a href="javascript:void(0)" class="wdg-ctrl--btn addNew"><span></span></a>
+                                                       <a href="javascript:void(0)" class="wdg-ctrl--btn delete"><span></span></a>
+                                                   </td>
+                                                 </tr>
+                                            </tbody>
+                                       </table>    
+                                    </div>
+                                </apex:outputpanel>
+                            </div> 
+                        </div>
+                  </apex:outputpanel>
+               </div>
+           </apex:form>
+            <script>
+            var locElements=JSON.parse('{!JSENCODE(elements)}');
+            console.log(JSON.parse('{!JSENCODE(elements)}'));
+            var nspce='wk_wedge__';
+            var jsonString = getJsonString();
+            var contries = jsonString['Countries'];
+            var country_array = [];
+            var state_temp_array = [];
+            var state_array = [];
+            var state_temp = '';
+            var vals='';
+            //var jsonString = getJsonString();
+            //var locElements = jsonString['Countries'];
+            </script>
+            <script>
+            
+            function ValidateSave(event){
+                    var str  = $("[Id$='locationName']").val();                       
+                    if (str.match(/^[A-z0-9\d\s]+$/)) {
+                        $("[Id$='validate']").html('');
+                        return true;
+                    }
+                    else{
+                        //alert("Review all the errors!");
+                        $("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        event.preventDefault();
+                        return false;
+                    }
+                }    
+               wk=jQuery.noConflict();
+               (function(wk){
+               wk( document ).on("blur",".wdg-body .wdg-form--table td [Id$='locationName']",function(){
+                        var str  = wk("[Id$='locationName']").val();                       
+                        if (str.match(/^[A-z0-9\d\s]+$/)) {
+                            wk("[Id$='validate']").html('');
+                        }
+                        else{
+                            wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+                        }
+                     })
+                wk("[Id$='waitstatus.start']").css({"display":"block"});
+                  window.existingValuesRow=function(obj,ccode){
+                    var row='<tr>';
+                    row+='<td><div class="wdg-count wdg-dropdown wdg-countries"> <span class="wdg-country--title">'+obj['cName']+'</span>';
+                    row+='<input type="hidden" name="'+obj['cName']+'" value="'+ccode+'" class="wdg-input--country"/></div></td>';
+                    row+='<td><div class="wdg-states--tile wdg-dropdown wdg-states">';
+                    if(obj["states"].length>0){
+                        for(key in obj["states"]){
+                            row+='<span>'+obj["states"][key]["name"]+'</span>'
+                            row+='<input class="wdg-input--state" type="hidden" value="'+obj["states"][key]["code"]+":"+obj["states"][key]["name"]+'" name="'+ccode+'"/>';
+                        }
+                    }else{
+                        row+='<span>--None--</span>'; 
+                    }
+                    row+='</div></td>'
+                    row+='<td><a href="javascript:void(0)" class="wdg-ctrl--btn edit"><span></span></a>';
+                    row+='<a href="javascript:void(0)" class="wdg-ctrl--btn delete"><span></span></a>';
+                    row+='</td></tr>';                    
+                    return row;
+                  }
+                 wk( window ).load(function(){
+                    if(locElements!==null && locElements.length>0){
+                        var dataList={};
+                        
+                        for(key in locElements){
+                            if(locElements[key][nspce+'Element_Type__c']==='Country'){
+                                var obj={"cName":"", "states":[]};
+                                obj["cName"]=locElements[key][nspce+'Element_Name__c'];
+                                dataList[locElements[key][nspce+'Element_Code__c']]=obj; 
+                            }
+                        }
+                        for(key in locElements){
+                            if(locElements[key][nspce+'Element_Type__c']==='State'){
+                                obj={"code":"","name":""};
+                                obj["code"]=locElements[key][nspce+'Element_Code__c'];
+                                obj["name"]=locElements[key][nspce+'Element_Name__c'];
+                                dataList[locElements[key][nspce+'Country_Code__c']]["states"].push(obj);
+                            }
+                        }   
+                        
+                    }
+                    for(key in dataList){
+                        wk(" .wdg-body .wdg-variant-table tbody").prepend(window.existingValuesRow(dataList[key],key));
+                    }
+                    wk("[Id$='waitstatus.start']").css({"display":"none"});
+                });
+                window.createCountry=function(){
+                   contries.forEach(function(item, index){
+                       state_temp_array = [];
+                       country_array.push(item['CountryName']);
+                       item['States'].forEach(function(itemState, indexState) {
+                           state_temp_array.push(itemState['StateName']);
+                       } );
+                       state_array[item['CountryName']] = state_temp_array;
+                        var str='<li><a href="javascript:void(0)" id="'+item['CountryName']+'">'+item['CountryName'] +'</a></li>'
+                        wk(".wdg-body .wdg-variant-table tbody>tr>td .wdg-dropdown.wdg-countries ul ").append(str);
+                    });
+                    
+                }
+                
+                window.createstate=function(stateobject,country){
+                    wk(".wdg-dropdown.wdg-states ul ",stateobject).empty();
+                    var selected = country;
+                     if(state_array[selected] != null) {
+                         state_array[selected].forEach(function(item, index){
+                             if(wk(this).text()!='--None--'){
+                                 var statestr='<li><a href="javascript:void(0)" id="'+item+'">'+item+'</a>'
+                                 statestr+='<div class="custom-checkbox"><input  type="checkbox" value="'+item+":"+item+'" name="'+country+'"/></div>';
+                                 statestr+='</li>'
+                                 wk("td .wdg-dropdown.wdg-states ul ",stateobject).append(statestr);
+                             }
+                         });  
+                     }
+                    
+                } 
+                    window.createCountry();
+                    wk(" .wdg-body .wdg-variant-table tbody>tr>td .wdg-dropdown.wdg-states  button ").prop("disabled",true);
+                    window.createRow=function(){
+                        var row='<tr class="primeRow"><td class="large">';
+                            row+='<div class="dropdown wdg-dropdown wdg-countries">';
+                            row+='<button class=" wdg-btn--neutral "  type="button" data-toggle="dropdown">';
+                            row+='<span class="wdg-btn--title">Select a Country</span><span class=" wdg-caret"></span>';
+                            row+='</button><ul class="wdg-picklist--menu ">';
+                            row+='<input type="hidden" name="--None--" value=" " class="wdg-input--country"/>';
+                        contries.forEach(function(item, index){
+                            state_temp_array = [];
+                            country_array.push(item['CountryName']);
+                            item['States'].forEach(function(itemState, indexState) {
+                                state_temp_array.push(itemState['StateName']);
+                            } );
+                            state_array[item['CountryName']] = state_temp_array;
+                            row+='<li><a href="javascript:void(0)" id="'+item['CountryName']+'">'+item['CountryName']+'</a></li>';
+                        });
+                    
+                            row+='</ul></div></td><td class="large">';
+                            row+='<div class="dropdown wdg-dropdown wdg-states">';
+                            row+='<button class=" wdg-btn--neutral "  type="button" data-toggle="dropdown" disabled>';
+                            row+='<span class="wdg-btn--title">Select States</span><span class=" wdg-caret"></span>';
+                            row+='</button><ul class="wdg-picklist--menu "></ul>';
+                            row+='</div></td><td class="small">';
+                            row+='<a href="javascript:void(0)" class="wdg-ctrl--btn addNew"><span></span></a>';
+                            row+='<a href="javascript:void(0)" class="wdg-ctrl--btn delete"><span></span></a>';
+                            row+='</td></tr>';
+                            return row;
+                    }
+                    wk( document ).on("click",".wdg-body .wdg-variant-table tbody>tr>td .wdg-dropdown.wdg-countries ul>li>a",function(){
+                   //wk("[Id$='usrcountry'] select").val(wk(this).attr('id'));
+                        var obj=wk(this).parent().parent().parent();
+                        wk(".wdg-btn--title",obj).text(wk(this).text());
+                        wk(" input.wdg-input--country ",obj).val(wk(this).attr('id'));
+                        wk(" input.wdg-input--country ",obj).attr("name",wk(this).text());
+                   // wk("[Id$='usrcountry'] select").trigger("change");
+                        if(state_array[wk(this).text()] != null) {
+                            wk(" td .wdg-dropdown.wdg-states  button ",stateobj).prop("disabled","");
+                        } else {
+                             wk(" td .wdg-dropdown.wdg-states  button ",stateobj).prop("disabled","disabled");
+                            }
+                        //var props=wk("[Id$='usrstate'] select").prop("disabled");
+                        var stateobj=wk(this).parent().parent().parent().parent().parent();
+                        //
+                        window.createstate(stateobj,wk(this).text());
+                        
+                    });
+                    wk( document ).on("click",".wdg-body .wdg-variant-table tbody>tr>td>a.wdg-ctrl--btn.addNew",function(){
+                        obj=wk(this).parent().parent();
+                        wk(obj).after(window.createRow());
+                    });
+                    wk( document ).on("click",".wdg-body .wdg-variant-table tbody>tr>td>a.wdg-ctrl--btn.edit",function(){
+                            obj=wk(this).parent().parent();
+                            countryName=wk(" td .wdg-count.wdg-dropdown.wdg-countries input",obj).attr("name");
+                            countryCode=wk(" td .wdg-count.wdg-dropdown.wdg-countries input",obj).val();
+                            //states=wk(" input ",valobj).val();
+                            
+                            var row='<td class="large">';
+                            row+='<div class="dropdown wdg-dropdown wdg-countries">';
+                            row+='<button class=" wdg-btn--neutral "  type="button" data-toggle="dropdown">';
+                            row+='<span class="wdg-btn--title">'+countryName+'</span><span class=" wdg-caret"></span>';
+                            row+='</button><ul class="wdg-picklist--menu ">';
+                            row+='<input type="hidden" name="'+countryName+'" value="'+countryCode+'" class="wdg-input--country"/>';
+                         contries.forEach(function(item, index){
+                            state_temp_array = [];
+                            country_array.push(item['CountryName']);
+                            item['States'].forEach(function(itemState, indexState) {
+                                state_temp_array.push(itemState['StateName']);
+                            } );
+                            state_array[item['CountryName']] = state_temp_array;
+                            row+='<li><a href="javascript:void(0)" id="'+item['CountryName']+'">'+item['CountryName']+'</a></li>';
+                        });
+                    
+                            row+='</ul></div></td><td class="large wgd-temp" >';
+                        //wk("[Id$='usrcountry'] select").val(countryCode);
+                        //   wk("[Id$='usrcountry'] select").trigger("change");
+                         var isactive = true;
+                        if(state_array[countryName] != null) {
+                             isactive = false;
+                        }
+                        //var isactive= wk("[Id$='usrstate'] select").prop('disabled');
+                            var disble=isactive?'disabled':'';
+                            row+='<div class="dropdown wdg-dropdown wdg-states">';
+                            row+='<button class=" wdg-btn--neutral "  type="button" data-toggle="dropdown"'+disble+'>';
+                            row+='<span class="wdg-btn--title">select states</span><span class=" wdg-caret"></span>';
+                            row+='</button><ul class="wdg-picklist--menu ">';
+                            
+                        var selected = countryName;
+                        if(state_array[selected] != null) {
+                            state_array[selected].forEach(function(item, index){
+                                    if(item!='--None--'){
+                                        row+='<li><a href="javascript:void(0)" id="'+item+'">'+item +'</a>'
+                                        var flag=false;
+                                        var ids=item;
+                                        
+                                        wk(" td .wdg-states--tile.wdg-dropdown.wdg-states input",obj).each(function(){
+                                            console.log(wk(this).val());
+                                            if(wk(this).val().split(":")[0]==ids){
+                                                flag=true;
+                                                
+                                            }
+                                        });
+                                        if(flag){
+                                            row+='<div class="custom-checkbox checked"><input  type="checkbox" value="'+item+":"+item+'" name="'+countryCode+'" checked/></div>';
+                                        }else{
+                                            row+='<div class="custom-checkbox"><input  type="checkbox" value="'+item+":"+item+'" name="'+countryCode+'"/></div>';
+                                        }
+                                        row+='</li>';
+                                    }
+                                });
+                            }
+                            row+='</ul>';
+                            row+='</div></td><td class="small">';
+                            row+='<a href="javascript:void(0)" class="wdg-ctrl--btn addNew"><span></span></a>';
+                            row+='<a href="javascript:void(0)" class="wdg-ctrl--btn delete"><span></span></a>';
+                            row+='</td>';
+                            wk(obj).html(row);
+                    });
+                    wk( document ).on("click",".wdg-body .wdg-variant-table tbody>tr>td>a.wdg-ctrl--btn.delete",function(){
+                        obj=wk(this).parent().parent();
+                        if(wk(".wdg-body .wdg-variant-table tbody tr.primeRow").length>1 || !(wk(obj).hasClass("primeRow")))
+                            wk(obj).remove();
+                    });
+                    window.saveElements=function(e){
+                        var countriesList={};
+                        wk(".wdg-body .wdg-variant-table tbody>tr>td .wdg-dropdown.wdg-countries  input.wdg-input--country").each(function(){
+                            var key=wk(this).val();
+                            var name=wk(this).attr("name");
+                            if(name!='--None--'){
+                                if(countriesList[key]===undefined){
+                                   countriesList[key]={};
+                                    var obj={"country":"","state":{}};
+                                    obj["country"]=name;
+                                    countriesList[key]=obj;
+                                }
+                            }
+                            ValidateSave(e);
+                            
+                        });
+                        wk(".wdg-body .wdg-variant-table tbody>tr>td .wdg-dropdown.wdg-states input").each(function(){
+                             if(this.checked || wk(this).hasClass("wdg-input--state")){
+                                var country=wk(this).attr("name");
+                                var state=wk(this).val().split(":");
+                                var statecode=state[0];
+                                var stateName=state[1];
+                                if(countriesList[country]["state"][statecode]===undefined){
+                                   countriesList[country]["state"][statecode]={"name":""};
+                                   countriesList[country]["state"][statecode]["name"]=stateName;
+                                }
+                             }
+                            
+                            
+                        });
+                             
+                        wk(".wdg-body [Id$='elements']").val(JSON.stringify(countriesList));
+                        console.log(JSON.stringify(countriesList));
+                    }
+                    
+               }(jQuery));       
+           </script>
+        </apex:define> 
+    </apex:composition>
+</apex:page>

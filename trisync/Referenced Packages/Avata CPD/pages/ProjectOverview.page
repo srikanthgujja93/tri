@@ -1,0 +1,351 @@
+<apex:page Sidebar="false" controller="ATC.ProjectOverviewController" showHeader="false" StandardStyleSheets="false">
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" /> 
+<apex:stylesheet value="{!URLFOR($Resource.ATC__OResourcesMin, 'OResources/css/main.css')}" />
+<script type="text/javascript">
+    document.title = 'CPD Overview';
+</script>
+<!-- Page markup -->
+  <style> 
+      .avOpen {
+          cursor: pointer;
+          color: green;
+          font-weight: normal;
+          text-decoration: underline;
+      }
+	  .briefPrompt {
+		position: absolute;
+		bottom: 2px;
+		right: 2px;
+        width: auto;
+        height: auto;
+        color: white;
+        background-color: orange;
+        opacity: 0.75; 
+        //text-align: right;
+        //font-size: 12px;
+        z-index: 100;
+		border:1px solid #ccc;
+		padding:2px;
+		-moz-border-radius:4px;
+		-webkit-border-radius:4px;
+      }  
+   </style>
+   <script>
+      var avataUI_win = null; 
+      //hook up all classes of type "avOpen"
+      $(document).ready(function() {
+          $('.avOpen').click(function(e) {
+              var dataref = this.getAttribute('dataref');                  
+              var linktype = this.getAttribute('linktype');
+		      brieflyPrompt('Switch to Avata CPD tab');
+              try {
+                    window.opener.avataUI.openAvObject(linktype, dataref);
+                    window.opener.focus();
+              } catch(e) {
+                  try {
+                    avataUI_win.avataUI.openAvObject(linktype, dataref);
+                  } catch(error) { 
+                    avataUI_win = window.open('{!CpdUrlPfx}'+'?avtype='+linktype+'&avid='+dataref, 'CPD');
+                  }
+                  avataUI_win.focus();
+              }  
+          });
+      });
+      
+      var brieflyPrompt = function(niceMessage, topLoc, rightLoc) {
+	      // Use the following line to place the message at bottom right accounting for scrolling
+	      $('.briefPrompt').css({'bottom':-$(window).scrollTop(), 'right':-$(window).scrollLeft()});
+	      $('.briefPrompt').text(niceMessage);
+	      $('.briefPrompt').fadeIn('slow').delay(1000).fadeOut('slow');	// simpler fade in and out
+	      //$('.briefPrompt').show('fast').delay(2000).hide('slow');	// sliding in and out	
+      };
+  </script>
+
+  <!-- Set up the nicer alert message box but hide until necessary  -->
+  <div class="briefPrompt" style="display:none"></div>
+
+  <div id="atitle">
+     <div id="aspacer"></div>
+     {!TitlePfx}<a class="avsfLink" href="{!TitleLink}">{!TitleOid}</a>: {!TitlePost}
+  </div>
+  <!-- TASKS DUE -->
+  <apex:outputPanel id="pTasksDue" styleClass="pTasksDue" layout="block">  
+   <div class="tableWrapOverdue">
+     <div class="sectionHead">Tasks due this week</div> 
+     <!-- IF THERE IS DATA -->
+     <apex:variable var="anyTasksDueThisWeek" value="{!TasksDueThisWeekCount}"/>
+     <div class="innertableDue" style="visibility:{!IF(anyTasksDueThisWeek,'visble;','hidden;')}">
+     <table id="tasksDueTable" class="tasksDueTable">
+      <thead>
+       <tr> <th width="50">Item Id</th> <th width="325">Name</th> <th width="75">Due Date</th>
+            <!--  <th width="100">Assignee</th>  -->
+       </tr>
+      </thead>
+      <tbody>
+       <apex:repeat value="{!TasksDueThisWeek}" var="tx">
+        <apex:variable var="isPar" value="{!tx.IsParent}" />
+        <apex:variable var="isNested" value="{!tx.IsNested}" />
+        <tr class="{!tx.rowClass}{!IF(isPar,' itemParentClass','')}{!IF(isNested,' itemNestedClass','')}">
+        <td class="avOpen" dataref="{!tx.ItemId}" linktype="Item">{!tx.Oid}</td>
+        <td>{!tx.ItemTitle}</td>
+        <td>{!tx.DueDate}</td>
+        <!-- <td>{!tx.UserName}</td>  -->
+        </tr>
+       </apex:repeat>
+      </tbody>
+     </table>
+     </div>
+     <!-- ELSE -->
+     <div class="nodataCommon  nodataTD" style="visibility:{!IF(anyTasksDueThisWeek,'hidden;','visible;')}">
+       No relevant tasks due for this period
+     </div>
+     <!-- ENDIF -->
+   </div>
+  </apex:outputPanel>
+  <!-- CHATTER -->
+  <apex:outputPanel id="pChatter" styleClass="pChatter" layout="block">  
+    <div class="tableWrapNotUsed">
+    <div class="sectionHead">Recent Chatter</div>
+    <!-- Chatter Posts -->
+    <div class="secondaryHead">Chatter posts</div>
+    <!-- IF -->
+    <apex:variable var="anyChatterThisWeek" value="{!LatestCommentsCount}"/>
+    <div class="innertableChatter" style="visibility:{!IF(anyChatterThisWeek,'visble;','hidden;')}">
+    <table id="chatterTable" class="chatterTable">
+      <thead>
+       <th class="cspecial" width="40" ></th>
+       <th class="cspecial" width="500" ></th>
+       </thead>
+    <tbody>
+    <apex:repeat value="{!LatestComments}" var="crow">
+        <apex:variable var="isPar" value="{!crow.IsParent}" />
+        <apex:variable var="isNested" value="{!crow.IsNested}" />
+    <tr>
+     <td> 
+       <img src="{!crow.userPhotoLink}" align="left" width="25" height="25" />
+     </td>
+      <td>
+           <a class="avOpen" dataref="{!crow.ItemId}" linktype="{!crow.TiedToObject}">{!crow.ItemOid}</a>
+           <span class="user">{!crow.userName}</span>: {!crow.comment} 
+           <br/>
+           at {!crow.timestamp}
+      </td> 
+     </tr>
+     <!-- nested comments if any -->
+        <apex:repeat value="{!crow.NestedComments}" var="commentx">
+        <tr>
+         <td> 
+          <img src="{!commentx.userPhotoLink}" align="right" width="25" height="25" />
+         </td>
+         <td class="nestedComments"> 
+           <span class="user">{!commentx.userName}</span>: {!commentx.comment} 
+           <br/>
+           at {!commentx.timestamp}
+         </td> 
+         </tr>
+       </apex:repeat>
+     <!-- end nested comments -->      
+    </apex:repeat>
+    </tbody>
+   </table>  
+   </div>
+   <!-- ELSE -->
+   <div class="nodataCommon  nodataChange" style="visibility:{!IF(anyChatterThisWeek,'hidden;','visible;')}">
+       No relevant chatter posts for this period
+     </div>
+   <div class="secondaryHead">Chatter feeds</div>
+   <!-- IF -->
+   <apex:variable var="anyValueChange" value="{!LatestChangesCount}"/>
+   <div class="innertableChatter" style="visibility:{!IF(anyValueChange,'visible;','hidden;')}"> 
+   <table id="vcTable">
+    <thead>
+     <tr> <th class="cspecial" width="40" ></th>
+          <th class="cspecial" width="500" ></th> 
+     </tr>
+        <!-- 
+         <th width="50">Item Id</th> <th width="200">Name</th> <th width="80">Attribute</th> 
+         <th width="120">New Value</th> <th width="120">Old Value</th> <th width="80">By</th> 
+         <th width="130">Date</th>
+         -->
+    </thead>
+    <tbody>
+   <apex:repeat value="{!LatestChanges}" var="nx">
+       <apex:variable var="isPar" value="{!nx.IsParent}" />
+       <apex:variable var="isNested" value="{!nx.IsNested}" />  
+       <apex:variable var="itemCss" value="{!nx.ItemCssCls}"/>
+    <tr>
+     <td> 
+       <img src="{!nx.userPhotoLink}" align="left" width="25" height="25" />
+     </td>
+      <td>
+           <a class="avOpen" dataref="{!nx.ItemId}" linktype="Item">{!nx.Oid}</a>
+           <apex:variable var="isNew" value="{!nx.Creation}" />
+           <span class="user">{!nx.userName}</span>            
+               {!IF(isNew,' created ',' changed '+ nx.FieldName)}<span class="{!nx.CreatedCssCls}"> {!nx.ItemTitle}</span>
+               {!IF(isNew,'','from ')}<span class="{!nx.UpdatedCssCls}">{!nx.OldValue}</span>
+               {!IF(isNew,'',' to ')}<span class="{!nx.UpdatedCssCls}">{!nx.NewValue}</span>
+               {!IF(isNew,'',' in '+ nx.ItemTitle)}
+           <br/>
+           at {!nx.timestamp}
+      </td> 
+     </tr>
+     <!-- nested comments if any -->
+        <apex:repeat value="{!nx.NestedComments}" var="commentx">
+        <tr>
+         <td> 
+          <img src="{!commentx.userPhotoLink}" align="right" width="25" height="25" />
+         </td>
+         <td class="nestedComments"> 
+           <span class="user">{!commentx.userName}</span>: {!commentx.comment} 
+           <br/>
+           at {!commentx.timestamp}
+         </td> 
+         </tr>
+       </apex:repeat>
+     <!-- end nested comments -->
+    </apex:repeat> 
+    </tbody>
+   </table>
+   </div> <!-- inner table -->
+   <!-- Else -->
+   <div class="nodataCommon  nodataChange" style="visibility:{!IF(anyValueChange,'hidden;','visible;')}">
+       No relevant Chatter feeds for this period
+     </div> 
+   <!-- End if --> 
+   </div> <!-- table wrap -->
+  </apex:outputPanel>
+  <!-- tasks that are overdue -->
+   <apex:outputPanel id="pTasksBehind" styleClass="pTasksBehind" layout="block">
+   <div class="tableWrapAttach">
+    <div class="sectionHead">Tasks overdue </div>
+    <!-- IF THERE IS DATA -->
+   <apex:variable var="anyOverDueTask" value="{!TasksOverdueCount}"/>
+   <div class="innertable" style="visibility:{!IF(anyOverDueTask,'visible;','hidden;')}">  
+    <table id="tasksBehindTable">
+    <thead>
+    <tr> <th width="50">Item Id</th> <th width="325">Name</th> <th width="75">Due Date</th> 
+        <!--  <th width="100">Assignee</th>  -->
+    </tr>
+    </thead>
+    <tbody>
+   <apex:repeat value="{!TasksOverdue}" var="tx">
+     <apex:variable var="isPar" value="{!tx.IsParent}" />
+     <apex:variable var="isNested" value="{!tx.IsNested}" />
+     <tr class="{!tx.rowClass} {!IF(isPar,' itemParentClass','')}{!IF(isNested,' itemNestedClass','')}">
+     <td class="avOpen" dataref="{!tx.ItemId}" linktype="Item">{!tx.Oid}</td>
+     <td>{!tx.ItemTitle}</td>
+     <td>{!tx.DueDate}</td>
+     <!--   <td>{!tx.UserName}</td> -->
+     </tr>
+   </apex:repeat>  
+   </tbody>
+   </table>
+   </div> <!-- innertable --> 
+   <!-- ELSE -->
+   <div class="nodataCommon  nodataTD" style="visibility:{!IF(anyOverDueTask,'hidden;','visible;')}">
+       No relevant tasks overdue for this period
+     </div> 
+   <!-- END IF-->
+   </div> <!-- tablewrap -->
+  </apex:outputPanel>
+  <!--  attachments -->
+  <apex:outputPanel id="pAttach" styleClass="pAttach" layout="block">
+   <!-- NOTES ---->
+   <div class="tableWrapAttach">
+   <div class="sectionHead">Recent attachments </div>
+   <div class="secondaryHead">Notes </div>
+   <!-- IF THERE IS DATA -->
+     <apex:variable var="anyNotes" value="{!RecentlyAttachedNotesCount}"/>
+     <div class="innertableAttach" style="visibility:{!IF(anyNotes,'visible;','hidden;')}"> 
+   <table id="notesTable">
+    <thead>
+    <tr> <th width="50">Item Id</th> <th width="110">Note Category</th> <th width="290">Note</th> <th width="100">By</th> <th width="130">Date</th> </tr>
+    </thead>
+    <tbody>
+   <apex:repeat value="{!RecentlyAttachedNotes}" var="nx">
+     <apex:variable var="isPar" value="{!nx.IsParent}" />
+     <apex:variable var="isNested" value="{!nx.IsNested}" />
+     <tr class="{!nx.rowClass}{!IF(isPar,' itemParentClass','')}{!IF(isNested,' itemNestedClass','')}">
+     <td class="avOpen" dataref="{!nx.ItemId}" linktype="{!nx.TiedToObject}">{!nx.Oid}</td>
+     <td>{!nx.NoteTitle}</td>
+     <td>{!nx.BodyPfx}</td>
+     <td>{!nx.UserName}</td>
+     <td>{!nx.TimeStamp}</td>
+     </tr>
+   </apex:repeat>
+   </tbody>
+   </table>
+   </div> <!-- inner table -->
+   <!-- ELSE -->
+   <div class="nodataCommon  nodataNotes" style="visibility:{!IF(anyNotes,'hidden;','visible;')}">
+       No relevant Notes for this period
+     </div> 
+   <!-- END IF-->
+   </div> <!-- wrap -->
+   <!-- End NOTES ---------->
+   <!-- Documents ---------->
+     <div class="tableWrapAttach">
+        <div class="secondaryHead">Documents</div>
+         <!-- IF THERE IS DATA -->
+         <apex:variable var="anyDocs" value="{!RecentlyModDocsCount}"/>
+    <div class="innertableAttach" style="visibility:{!IF(anyDocs,'visible;','hidden;')}"> 
+     <table id="docsTable">
+       <thead>
+        <tr> <th width="50">Item Id</th><th width="50">Doc Id</th><th width="310">Document</th> <th width="40">Version</th> <th width="100">By</th> <th width="130">Date</th> </tr>
+      </thead>
+      <tbody>
+      <apex:repeat value="{!RecentlyModDocs}" var="nx">
+    <apex:variable var="isPar" value="{!nx.IsParent}" />
+    <apex:variable var="isNested" value="{!nx.IsNested}" />
+        <tr class="{!nx.rowClass}{!IF(isPar,' itemParentClass','')}{!IF(isNested,' itemNestedClass','')}">
+         <td class="avOpen" dataref="{!nx.ItemId}" linktype="{!nx.TiedToObject}">{!nx.Oid}</td>
+         <td class="avOpen" dataref="{!nx.DocId}" linktype="Doc">{!nx.DocOId}</td>
+         <td>{!nx.DocTitle}</td>
+         <td>{!nx.FileVersion}</td>
+         <td>{!nx.UserName}</td>
+         <td>{!nx.TimeStamp}</td>
+        </tr>
+       </apex:repeat>
+      </tbody>
+     </table>
+     </div> <!-- Inner table -->
+     <!-- ELSE -->
+     <div class="nodataCommon  nodataDocs" style="visibility:{!IF(anyDocs,'hidden','visible')}">
+       No relevant Documents for this period
+     </div> 
+     <!-- End IF -->
+     </div>    <!-- wrap -->
+     <div class="tableWrap">
+     <div class="secondaryHead">Issues</div>
+     <!-- Inner table -->
+      <!-- IF THERE IS DATA -->
+        <apex:variable var="anyIss" value="{!RecentlyModIssuesCount}"/>
+      <div class="innertableAttach" style="visibility:{!IF(anyIss,'visible;','hidden;')}"> 
+       <table id="docsTable">
+       <thead>
+        <tr> <th width="50">Item Id</th><th width="50">Issue Id</th><th width="350">Issue</th><th width="100">By</th> <th width="130">Date</th> </tr>
+      </thead>
+      <tbody>
+      <apex:repeat value="{!RecentlyModIssues}" var="nx">
+    <apex:variable var="isPar" value="{!nx.IsParent}" />
+    <apex:variable var="isNested" value="{!nx.IsNested}" />
+        <tr class="{!nx.rowClass}{!IF(isPar,' itemParentClass','')}{!IF(isNested,' itemNestedClass','')}">
+         <td class="avOpen" dataref="{!nx.ItemId}" linktype="{!nx.TiedToObject}">{!nx.Oid}</td>
+         <td class="avOpen" dataref="{!nx.IssId}" linktype="Issue">{!nx.IssOId}</td>
+         <td>{!nx.IssTitle}</td>
+         <td>{!nx.UserName}</td>
+         <td>{!nx.TimeStamp}</td>
+        </tr>
+       </apex:repeat>
+      </tbody>
+     </table>
+     </div> <!-- Inner table -->
+     <!-- ELSE -->
+     <div class="nodataCommon  nodataIssues" style="visibility:{!IF(anyIss,'hidden;','visible;')}">
+       No relevant Issues for this period
+     </div> 
+     <!-- End If -->
+     </div> <!-- table wrap -->
+  </apex:outputPanel>
+  <apex:messages />
+</apex:page>

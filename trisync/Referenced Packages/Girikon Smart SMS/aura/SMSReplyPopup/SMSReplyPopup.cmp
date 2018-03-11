@@ -1,0 +1,98 @@
+<!--
+    @Author : Sudip Halder & Mukesh Gupta
+    @Date : 14/June/2017
+    @Description  : This component displays Task records based on record ID
+-->
+<aura:component controller="gkn_sms.NotificationController" implements="force:lightningQuickAction" access="global" >    
+<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+<aura:handler name="change" value="{!v.TaskID}" action="{!c.doInit}"/>
+<aura:attribute name="TaskID" type="String" />   
+<aura:attribute name="Task" type="Task" />
+<aura:attribute name="msgBody" type="String" />
+<aura:attribute name="key" type="String" default="" />
+    
+<!-- Message attribute -->
+<aura:attribute name="message" type="String" default=""/>
+<aura:attribute name="messageType" type="String" default=""/>
+<aura:attribute name="messageTitle" type="String" default=""/>
+
+<aura:attribute name="isClassic" type="boolean" default="false"/>
+<aura:attribute name="SMSTemplates" type="gkn_sms__SMSTemplate__c[]" />
+    
+    <div class="slds-page-header" style="margin-top: 0px;margin-left: 0px;margin-right: 0px;">
+        <div class="slds-media">
+            <div class="slds-media__figure">
+                <span class="slds-icon_container slds-icon-standard-opportunity" title="reply icon" style="padding:4px">
+                    <lightning:icon iconName="utility:reply" size="small" variant="inverse"/>
+                </span>
+            </div>
+            <div class="slds-media__body">
+                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Time Card Management">Reply</h1>                
+            </div>
+        </div>
+    </div>
+    
+    <div class="slds-form slds-form_compound" style="max-width: 610px;">
+        <fieldset class="slds-form-element">
+            <div class="slds-form-element__group">
+                <div class="slds-form-element__row">
+                    <div class="slds-form-element slds-size_1-of-3">
+                        <label class="slds-form-element__label" for="text-input-id-1">From</label>
+                        <ui:outputPhone aura:id="fromnumber" class="slds-input" value="{!v.Task.gkn_sms__To_Number__c}" />
+                    </div>                    
+                </div>
+            </div>
+            <div class="slds-form-element slds-size_1-of-3">
+                <label class="slds-form-element__label" for="text-input-id-1">To</label>
+                <ui:outputPhone aura:id="tonumber" class="slds-input" value="{!v.Task.gkn_sms__From_Number__c}"  />
+            </div><br/>
+            <div class="slds-form-element__group">
+                <div class="slds-form-element__row">
+                    <div class="slds-form-element slds-size_2-of-2"> 
+                        <ui:inputTextArea class="slds-textarea" label="Inbound SMS Body" disabled="true" value="{!v.Task.gkn_sms__SMS_Body__c}"/>
+                    </div>
+                </div>                
+                <div class="slds-form-element__row">
+                    <div class="slds-form-element slds-size_2-of-2">
+                        <ui:inputTextArea aura:id="comments" class="slds-textarea" label="Outbound SMS Body" value="{!v.msgBody}" rows="5"/>
+                    </div>
+                </div>
+                <div class="slds-form-element__row">
+                    <div class="slds-form-element slds-size_1-of-2">
+                        <lightning:button onclick="{!c.replyMsg}" label="Reply" variant="brand" iconName="utility:reply" iconPosition="left"/>                        
+                        <lightning:spinner aura:id="smsSpinner" class="slds-hide" alternativeText="Loading" variant="brand" size="small" />                       
+                    </div>
+                </div> 
+            </div> 
+        </fieldset>
+    </div> 
+    <aura:if isTrue="{!v.isClassic==true?true:false}">
+    	<aura:if isTrue="{!v.message!=''?true:false}">
+			<div role="alertdialog" tabindex="-1"
+				aria-labelledby="prompt-heading-id"
+				aria-describedby="prompt-message-wrapper"
+				class="slds-modal slds-fade-in-open slds-modal--prompt">
+				<div class="slds-modal__container">
+					<div
+						class="{!'slds-modal__header slds-theme--'+v.messageType+ ' slds-theme--alert-texture'}">
+						<lightning:button variant="slds-button" value="close" onclick="{!c.closeAlert}"
+							class="slds-button slds-modal__close slds-button--icon-inverse"
+							title="Close">
+							<gkn_sms:svgIcon name="close" class="slds-button__icon slds-button__icon--large"
+								svgPath="{!$Resource.gkn_sms__slds_assets+'/assets/icons/utility-sprite/svg/symbols.svg#close'}" />
+							<span class="slds-assistive-text">Close</span>
+						</lightning:button>
+						<h2 class="slds-text-heading--medium" id="prompt-heading-id">{!v.messageTitle}</h2>
+					</div>
+					<div class="slds-modal__content slds-p-around--medium">
+						<p>{!v.message}</p>
+					</div>
+					<div class="slds-modal__footer slds-theme--default">
+						<lightning:button value="close" onclick="{!c.closeAlert}" class="slds-button slds-button--neutral" label="Close"/>
+					</div>				
+				</div>
+			</div>
+			<div class="slds-backdrop slds-backdrop--open"></div>
+		</aura:if>
+	</aura:if>
+</aura:component>

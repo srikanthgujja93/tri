@@ -1,0 +1,280 @@
+<apex:page controller="wk_wedge.blogListController"  doctype="html-5.0" setup="false" standardstylesheets="false" showHeader="false" cache="false" > 
+      
+       <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+          <style>
+              .blog_image{
+                
+              }
+              .blog_name{
+                  margin:40px auto 0px;
+                  
+              }
+             .blog_date{
+                  display: inline-block;
+                  margin-bottom: 15px;
+                  margin-right: 10px;
+                  color: #bbb;
+                  font-weight: normal;
+                  margin-left:10px;
+                  font-size: 14px;
+                }
+            .blog_seprator{
+                 display: inline-block;
+                  margin-bottom: 15px;
+                  color: #bbb;
+                  font-weight: normal;
+                  font-size: 14px;
+            }
+            .blog_description{
+                  margin:20px 10px;
+                  text-align:justify;                 
+                  word-wrap: break-word;
+            }
+            .recentblog_item{
+                list-style-type: square;
+                color: #ccc;
+                margin-bottom: 10px;
+             }
+             .recentblog_item>a{
+                 color:#2B83BF;
+             }
+             .recent_blog{
+                 border-bottom:1px solid #ccc;
+                 padding-bottom:5px;
+             }
+             .order-details-button, .order-details-button:hover, .order-details-button:active, .order-details-button:focus{
+                    text-decoration:none;
+                    display: inline-block;
+                    background-color: #4BBA60;
+                    color: #fff;
+                    width: 120px;
+                    padding: 10px;
+                    margin: 5px 0px;
+                    cursor:pointer;
+                    text-align: center;
+                    border-radius: 3px;
+                }
+                .wdg-ctrl--btn {
+                    position: relative;
+                    width: 30px;
+                    height: 30px;
+                    outline: none;
+                    border: none;
+                    border-radius: 3px;
+                    cursor: pointer;
+                    margin-left: 5px;
+                    vertical-align: middle;
+                    display: inline-block;
+                }
+                .wdg-ctrl--btn.paginate {
+                    background-color: #0088BB;
+                    vertical-align: middle;
+                }
+                .wdg-ctrl--btn>span {
+                    background: transparent url('{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite-icon.png')}') no-repeat;
+                    width: 15px;
+                    height: 15px;
+                    position: absolute;
+                    display: inline-block;
+                    z-index: 1;
+                }
+                .wdg-ctrl--btn.paginate.first>span {
+                    background-position: -30px -135px;
+                }
+                .wdg-ctrl--btn.paginate>span {
+                    height: 10px;
+                    width: 15px;
+                    top: 10px;
+                    left: 8px;
+                }
+                .wdg-ctrl--btn.paginate.Prev>span {
+                    background-position: 0px -135px;
+                }
+                .wdg-ctrl--btn.paginate.next>span {
+                    background-position: -15px -135px;
+                }
+                .wdg-ctrl--btn.paginate.last>span {
+                    background-position: -45px -135px;
+                }
+                .wdg-dataTable--paginate{
+                    text-align: center;
+                    margin: 10px;
+                    margin-bottom: 25px; 
+                }
+                .No-Product{
+                    font-size: 24px;
+                    font-weight: 600;
+                }
+                .searchstring{
+                    margin: 0 5px 0 20px;
+                    border-radius: 3px;
+                    border: 1px solid #0087C1;
+                    font-size: 14px;
+                    padding: 2px;
+                }
+                .searchstring:focus{
+                    outline: none;
+                }
+                .searchRecordPanel{
+                    display: inline-block;
+                    background: #0087C1;
+                    border: 1px solid #0087C1;
+                    border-radius: 2px;
+                }
+                .searchRecordPanel a{
+                    display: inline-block;
+                    background-color: transparent;
+                    background-repeat: no-repeat;
+                    margin-right: 5px;
+                    vertical-align: middle;
+                    color: #fff;
+                    padding: 2px 10px;
+                    font-weight: 700;
+                }
+                input.searchstring{
+                    margin-left: 5px;
+                    border: none;
+                    border-bottom: 0;
+                    border-radius:0;
+                }
+                select.searchstring{
+                    background: #fff;
+                    height: 26px;
+                    vertical-align: bottom;
+                    margin-left: 10px;
+                    -webkit-appearance: none;
+                }
+                .searchpanel{
+                    float: right;
+                }
+                .searchpanel div{
+                    display: inline-block;
+                    border-bottom: 1px solid #0087C1;
+                    padding-bottom: 0px;
+                    margin-right: 4px;
+                }
+                @media (max-width: 991px){
+                    .recentblogs{
+                        display: none;
+                    }
+                }
+                @media (max-width: 475px){
+                    .searchpanel{
+                        float: unset;
+                        margin-right: 15px;
+                    }
+                    .searchpanel>span {
+                        display: block;
+                        width: 100%;
+                        margin: 10px 0 15px;
+                        text-align: center;
+                    }
+                    select.searchstring{
+                        margin-left: 0;
+                    }
+                    .wdg-site--breadcrumbs{
+                        padding: 20px 0 0;
+                    }
+                    .blog_name{
+                        margin: 0;
+                    }
+                    h2,.blog_userInfo,.blog_readmore{
+                        text-align: center;
+                    }
+                    
+                    
+                }
+          </style>
+          
+        <apex:form styleClass="position: relative;">
+            <div class="container">
+            <TITLE>Blog</TITLE>
+            <div class="fullpageWrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 wdg-site--breadcrumbs">
+                         <apex:outputPanel >
+                             <apex:outputLink value="{!$Site.baseurl}"><i class="wdg-home--logo"></i></apex:outputLink>
+                             <apex:outputText >&nbsp;/&nbsp;</apex:outputText>
+                             <apex:outputText >{!$Label.wk_wedge__bloginfo_blog}</apex:outputText>
+                         </apex:outputPanel>
+                         <div class="searchpanel">                            
+                             <apex:outputPanel styleClass="searchInput" rendered="{!Product2s.size>0}">
+                                <div>
+                                    <span class="glyphicon glyphicon-search" style="color:#ccc"></span>
+                                    <apex:inputText value="{!searchQuery}" html-placeholder="Search Blogs.." styleclass="searchstring"/>
+                                </div>
+                                <apex:outputpanel styleclass="searchRecordPanel" title="Search">
+                                    <apex:commandLink value="Search" action="{!searchResults}" rerender="blogList"/>
+                                </apex:outputpanel>
+                             </apex:outputPanel>
+                             <apex:outputPanel rendered="{!Product2s.size>0}">
+                                <apex:selectList size="1" value="{!recordValue}" onchange="fetchrecordpage()" styleclass="searchstring">
+                                    <apex:selectOptions value="{!recPerPage}"/>
+                                </apex:selectList>
+                             </apex:outputPanel>
+                         </div>                        
+                        </div>
+                     <apex:outputpanel id="blogList" styleclass="col-md-9" layout="block">
+                      <apex:repeat value="{!Product2s}" var="blog">
+                          <apex:outputpanel layout="block" styleclass="blog_name">
+                           <h2> <apex:outputText value="{!blog.name}" styleClass=""></apex:outputText> </h2>
+                          </apex:outputpanel>
+                          <apex:outputPanel layout="block" styleClass="blog_userInfo">
+                               <apex:outputText value="{0,date,MM/dd/yy}" styleClass="blog_date">
+                                    <apex:param value="{!blog.CreatedDate}" />                                   
+                            </apex:outputText>
+                            <span class="blog_seprator">|</span>
+                            <apex:outputText value="{!blog.CreatedBy.firstname}"  styleClass="blog_date"></apex:outputText>                          
+                          </apex:outputPanel>
+                          <apex:outputpanel layout="block" styleclass="blog_image"> 
+                           <a  href="{!URLFOR($Page.BlogInfo, null, ['blogId'=blog.id])}">
+                              <apex:image styleclass="blog_image img img-responsive" url="/servlet/servlet.FileDownload?file={!blog.wk_wedge__Banner_Image_ID__c}" height="300" width="848"/>
+                           </a>
+                          </apex:outputpanel>
+                          <apex:outputpanel layout="block" styleclass="blog_description"> 
+                             <apex:outputText value="{!blog.wk_wedge__Meta_Description__c}" escape="false" styleClass=""></apex:outputText>
+                             <a href="{!URLFOR($Page.wk_wedge__BlogInfo, null, ['blogId'=blog.id])}">[...]</a>                             
+                          </apex:outputpanel>
+                          <apex:outputPanel layout="block" styleclass="blog_readmore">
+                              <a class="order-details-button " href="{!URLFOR($Page.wk_wedge__BlogInfo, null, ['blogId'=blog.id])}">{!$Label.wk_wedge__blog_read_more}</a>
+                          </apex:outputPanel>
+                       </apex:repeat>
+                         <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                            <apex:outputpanel rendered="{!Product2s.size>0}">
+                                <apex:actionFunction name="fetchrecordpage" action="{!fetchrecordpage}"/>
+                                <apex:commandlink value="" action="{!first}" status="docSearch" rerender="blogList" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                <apex:commandlink value="" action="{!previous}" status="docSearch"  rerender="blogList"  styleclass="wdg-ctrl--btn paginate  Prev"><span></span></apex:commandlink>
+                                <apex:outputText styleclass="wdg-dataTable--pages" value=" {!pagenumber} of {!totalPages} "></apex:outputText>
+                                <apex:commandlink value="" action="{!next}" status="docSearch" rerender="blogList"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                <apex:commandlink value="" action="{!last}" status="docSearch"  rerender="blogList"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                            </apex:outputpanel> 
+                            <apex:outputpanel rendered="{!Product2s.size==0}">
+                                <div class="No-Product">{!$Label.wk_wedge__blog_no_records_returned}</div>
+                            </apex:outputpanel>
+                         </apex:outputpanel>
+                      </apex:outputpanel>
+                      <apex:outputpanel styleclass="col-md-3 recentblogs" rendered="{!Product2s.size>0}">
+                          <div>
+                              <h2 class="recent_blog">{!$Label.wk_wedge__blog_recent_blogs}</h2>
+                              <div>
+                                  <ul class="recentblog__list">
+                                      <apex:repeat value="{!recentBlogs}" var="blog">
+                                          <li class="recentblog_item">
+                                              <a href="{!URLFOR($Page.wk_wedge__BlogInfo, null, ['blogId'=blog.id])}">{!blog.name}</a>
+                                          </li>
+                                      </apex:repeat>
+                                  </ul>
+                              </div>
+                          </div>
+                      </apex:outputpanel>
+                    </div>
+                </div>
+            </div>
+           </div>
+        </apex:form>
+        </apex:define>
+   </apex:composition>
+
+</apex:page>

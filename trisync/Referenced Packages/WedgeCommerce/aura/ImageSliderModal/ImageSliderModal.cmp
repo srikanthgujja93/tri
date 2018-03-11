@@ -1,0 +1,9 @@
+<aura:component >
+	<aura:attribute name="BannerId" type="String" default=""/>
+    <aura:attribute name="tcompid" type="String" default=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.getLink}"/>
+    <aura:attribute name="frameSrc" type="String"/>
+    
+    <iframe id="myFrame" ref="myFrame" style="height: 100%;width: 100%;margin:0 auto;border: none;" src="{!v.frameSrc}"/>
+    	
+</aura:component>

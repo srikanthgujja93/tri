@@ -1,0 +1,26 @@
+<apex:page standardStylesheets="false" title="Send Bulk SMS" sidebar="false">
+    <html>
+        <head>
+            <title>Send Bulk SMS</title>
+            <!--<apex:stylesheet value="{!URLFOR($Resource.slds_assets,'/assets/styles/salesforce-lightning-design-system.css')}" />-->
+            <apex:includeScript value="/lightning/lightning.out.js" />
+            <apex:includeLightning />
+        </head>
+        <body>
+            <div id="spinner" style="height:64px;position:absolute;top:45%;left:50%">
+                <img style="width:60px;" class="gkn-sms-waiting" src="{!URLFOR($Resource.gkn_sms__slds_assets,'/assets/images/spinners/slds_spinner_brand.gif')}" alt="Loading..." />
+            </div> 
+            <div style="min-height:600px;max-height: auto;" id="send_sms_using_report">
+            </div>
+            <script>
+            $Lightning.use("gkn_sms:SendSMSUsingReportApp", function() {
+                $Lightning.createComponent("gkn_sms:SendSMSUsingReportCmp",{},
+                                           "send_sms_using_report",function(cmp) {
+                                               console.log('Lightning component created by lightning-out!');                                               
+                                               document.getElementById('spinner').style.display='none';
+                                           });
+            });
+            </script>
+        </body>
+    </html>
+</apex:page>

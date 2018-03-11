@@ -1,0 +1,20 @@
+<aura:component >
+	<aura:attribute name="msg" type="String" default=""/>
+	<aura:attribute name="msgtype" type="String" default=""/>
+	<aura:attribute name="status" type="String" default="hide"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	
+	<div class="slds-notify_container hide" aura:id="sms-message">
+		<div class="{!'slds-notify slds-notify--toast '+ v.msgtype}" role="alert">
+			<span class="slds-assistive-text">Info</span>
+			<button onclick="{!c.close}"
+				class="slds-button slds-notify__close slds-button--icon-inverse"
+				title="Close">
+				Close
+			</button>
+			<div class="slds-notify__content">
+				<h2 class="slds-text-heading--small">{!v.msg}</h2>
+			</div>
+		</div>
+	</div>
+</aura:component>

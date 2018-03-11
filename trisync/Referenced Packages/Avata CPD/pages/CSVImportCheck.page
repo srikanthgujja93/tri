@@ -1,0 +1,16 @@
+<apex:page standardController="Document" extensions="ATC.CSVImportController" sidebar="false" showHeader="false">
+ <!-- Check if it ok to overwrite -->
+ <apex:image url="{!URLFOR($Resource.ATC__TreeGrid5912,'Grid/avata.jpg')}"/>
+    <apex:form id="theForm2">
+    <apex:sectionHeader title="Please confirm" />
+           <apex:messages />
+                <apex:outputPanel layout="block" style="text-align: center;" >
+                     <apex:commandButton action="{!doContinue}" value="{!IF(ListExists,'Add','Update')}"
+                                      styleClass="btn"/>
+                     <apex:commandButton action="{!doNew}" value="Create New" rendered="{!ListExists}"
+                                      styleClass="btn"/>
+                     <apex:commandButton action="{!doBack}" value="Go Back" styleClass="btn"/>
+                     <apex:commandButton onclick="window.close();" value="Close" styleClass="btn"/>
+                </apex:outputPanel>
+      </apex:form>
+</apex:page>

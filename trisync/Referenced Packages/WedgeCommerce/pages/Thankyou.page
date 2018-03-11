@@ -1,0 +1,70 @@
+<apex:page showheader="false" standardStylesheets="false" cache="false">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+        <TITLE>THANK YOU</TITLE>
+        <link href='https://fonts.googleapis.com/css?family=Great+Vibes' rel='stylesheet' type='text/css'/>
+        <style>
+        .content-wrapper{
+            margin:30px auto;
+        }
+        .em_congrasimg{
+            background:transparent url('{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/thankyou.png')}')  no-repeat center center;
+            min-height:350px;
+            background-size: contain;
+       }
+       .back{
+            text-decoration:none!important;
+        }
+        .arrow{
+            margin-right:5px;
+            }
+        .success {
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px #888;
+            margin: 0 auto;
+            min-height: 500px;
+            width: 600px;
+        }
+        @media screen and (max-width: 675px) {
+            .success{
+                width: unset;
+                min-height: unset;
+                padding-bottom: 20px;
+            }
+        }
+        @media screen and (max-width: 420px) {
+            .success{
+                width: unset;
+            }
+            .em_congrasimg{
+                min-height: 200px;
+                margin-bottom: 10px;
+            }
+        }
+        </style>
+        <div class="container">
+         <div class="content-wrapper">
+          <div class="container">
+              <div class="row">
+                <div class="success">
+                   <div class="col-sm-12 text-center">
+                       <h2>{!$Label.wk_wedge__thank_you} </h2>
+                    </div>
+                    <div class="text-center col-sm-12 col-md-12 em_congrasimg"></div>
+                     
+                    <div class="col-sm-12 text-center">
+                       {!$Label.wk_wedge__for_contacting_us}
+                    </div>
+                     <div class="col-sm-12 text-center">
+                         
+                         <apex:outputLink styleclass="back" value="{!URLFOR($Page.wk_wedge__wedgeActiveIndexpage)}"><apex:image styleclass="arrow" url="{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/arrow.png')}"/>Back to Home</apex:outputLink>
+                    </div>
+                </div>
+              </div>
+            
+            </div>
+          </div>
+          </div>
+   </apex:define>
+</apex:composition>
+</apex:page>

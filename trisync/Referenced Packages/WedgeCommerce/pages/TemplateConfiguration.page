@@ -1,0 +1,87 @@
+<apex:page showheader="false" setup="false" standardstylesheets="false" controller="wk_wedge.TemplateConfiguration" cache="false" title="Template Components" docType="HTML-5.0">
+    <style>
+        .wdg-nav-icon.template {
+        background-color: #34becd;
+        }
+        .template-class{
+        display:inline-block;
+        }
+        .template-class>select{
+        padding-bottom: 6px !important;
+        padding-top: 6px !important;
+        height:30px !important;
+        }
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+            <apex:form id="thepopblock">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                    </apex:outputpanel>
+                    
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo Template"></span>
+                            <span> {!TemplateName.name} </span>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:outputLabel for="catSelectList">{!$Label.wk_wedge__template_configuration_top_menu_view}: </apex:outputLabel>
+                            <div class="wdg-filter--options template-class">
+                                <span class="caret multidropdownsymbol"></span>
+                                <apex:selectlist value="{!selectedCategoryView}" size="1" rendered="{!$CurrentPage.parameters.templateid != null}" id="catSelectList">
+                                    <apex:actionSupport event="onchange" action="{!updateCatView}" rerender="none" status="waitstatus"/>
+                                    <apex:selectOptions value="{!CategoryMenuTypes}"/>
+                                </apex:selectlist>
+                            </div>
+                            <a href="{!$page.Templates}" class="wdg-ctrl--btn cancel"> 
+                                <span></span>
+                            </a>
+                        </div>
+                    </div>   
+                    <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-dataTable--box">
+                        <apex:datatable styleclass="wdg-dataTable No-footer" value="{!Templatecomponents}" var="tcomp">
+                            <apex:column styleclass="medium" >
+                                <apex:facet name="header">{!$Label.wk_wedge__template_configuration_table_name}</apex:facet>
+                                <apex:outputfield value="{!tcomp.Name}"/>
+                                
+                            </apex:column>
+                            
+                            <apex:column styleclass="large" >
+                                <apex:facet name="header">
+                                    {!$Label.wk_wedge__template_configuration_table_status}
+                                </apex:facet>
+                                <apex:outputpanel layout="block" styleclass="dropdown status-dropdown" rendered="{!(tcomp.id!=null)}">
+                                    <div data-toggle="dropdown" class="status status-value dropdown-toggle" id="ecm_status_Dropdown">
+                                        <span>{!IF(tcomp.active__c, 'Active','Inactive')}</span><span class="status-caret"></span>
+                                    </div>
+                                    <div class="status-dropdown-menu">
+                                        <span class="status status-option" targetid="{!tcomp.id}">Active</span>
+                                        <span class="status status-option" targetid="{!tcomp.id}">Inactive</span>
+                                    </div>
+                                </apex:outputpanel>
+                            </apex:column> 
+                            <apex:column styleclass="medium" >
+                                <apex:facet name="header">{!$Label.wk_wedge__template_configuration_table_configure} </apex:facet>
+                                <apex:outputlink title="Preview"  target="_blank" value="{!$Page.wk_wedge__wedgeActiveIndexpage}" styleclass="wdg-ctrl--btn preview"><span></span></apex:outputlink> 
+                                <apex:outputlink rendered="{!tcomp.id!=null}" styleclass="wdg-ctrl--btn configure" value="{!URLFOR(tcomp.wk_wedge__Settings_page_URL__c,null,['tcompid'=tcomp.id])}">
+                                    <span></span>
+                                </apex:outputlink>
+                            </apex:column>
+                            
+                            
+                        </apex:datatable>
+                        <apex:outputpanel layout="block" styleclass="wdg-no-results" rendered="{!Templatecomponents.size==0}">
+                            <div> 
+                                <span> {!$Label.wk_wedge__template_configuration_table_no_results_found}!!</span>
+                            </div> 
+                        </apex:outputpanel>
+                    </apex:outputpanel>
+                </div>
+                <apex:inputhidden value="{!statuschange}" id="deletable"/>
+                <apex:actionfunction rerender="pqr" name="changeRecordstatus" action="{!changestatus}" status="waitstatus"/>
+            </apex:form>
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

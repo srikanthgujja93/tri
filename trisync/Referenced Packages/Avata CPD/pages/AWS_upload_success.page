@@ -1,0 +1,48 @@
+<apex:page Sidebar="false" controller="ATC.AvSessionCon" showHeader="false" StandardStyleSheets="false">
+<apex:stylesheet value="{!URLFOR($Resource.ATC__JSResourcesMin, 'JSResources/css/style.css')}" />
+<apex:includeScript value="/soap/ajax/14.0/connection.js" />
+<apex:includeScript value="/soap/ajax/14.0/apex.js" />
+<apex:image url="{!URLFOR($Resource.ATC__TreeGrid5912,'Grid/avata.jpg')}"/>
+
+<div style="position:absolute;
+    left:30%;
+    top:30%;
+    z-index:20001;
+    font:0.8em Times normal ">
+<h1>Your file has been uploaded successfully!</h1>
+</div>
+
+<script>
+function gup(name)
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+var SFORGPFX = "ATC"; var SFORGPFXDOT = (SFORGPFX !== "") ? (SFORGPFX+'.') : SFORGPFX; 
+function attachFileAWSPost(idDoc, idFile, bStatus)
+{
+    var result = '';
+    result +=  sforce.apex.execute(SFORGPFXDOT+"AvataDocs", "addVersion2AWSPost",
+                    {docId:  idDoc, fileId: idFile, success: bStatus} );
+    if (result == '') return false;
+    return true;
+}
+    
+window.onload = function(){
+    var docId = gup('d');
+    var fileId = gup('f');
+    if (sforce.connection){
+     //console.log("Sforce.connection is defined");
+     sforce.connection.sessionId = '{!$Api.session_ID}';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+     var response = attachFileAWSPost(docId,fileId,'true');
+    } 
+    
+}
+</script>
+</apex:page>

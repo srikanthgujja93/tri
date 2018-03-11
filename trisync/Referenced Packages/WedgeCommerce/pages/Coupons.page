@@ -1,0 +1,349 @@
+<apex:page showheader="False" standardstylesheets="false" controller="wk_wedge.CouponController" doctype="html-5.0" cache="false" title="Coupons">
+    <style>
+        .wdg-nav-icon.coupons {
+        background-color: #34becd;
+        }
+        .wdg-nav-icon.sales {
+        background-color: #34becd;
+        }
+        .wdg-body .wdg-dataTable--box{
+        margin-top:5px;
+        }
+        .totalRec{
+        font-size: 14px;
+        color: #777777;
+        margin-top:2px;
+        }
+        .wdg-body-titletext{
+        display:inline-block;
+        vertical-align: top;
+        line-height: 1;
+        }
+        .recperpage{
+        background: #FFF;
+        padding: 4px 8px;
+        border: 2px solid #57BDC2;
+        border-radius: 4px;
+        cursor:pointer;
+        }
+        .recperpage:focus{
+        outline:none;
+        cursor:pointer;
+        }
+        .connectbutton {
+        background-color: #7DC37D;
+        color: white;
+        border: none;
+        height: 30px;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-right: 5px;
+        padding: 8px 15px;
+        font: 13.3333px Arial;
+        }
+    </style>
+    <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>   
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <apex:form >
+                <apex:outputpanel layout="block" id="thepopup">
+                    <apex:outputpanel layout="block" styleclass="wdg-popup" rendered="{!fadein}">
+                        <div class="wdg-popup--modal">
+                            <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">Edit</div>
+                                <apex:outputlink styleclass="wdg-modal--close" value="{!$Page.wk_wedge__Coupons}"></apex:outputlink>
+                            </div>
+                            <div class="wdg-modal--content">
+                                <apex:outputpanel layout="block" id="wdgerrorBlock">
+                                    <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                                </apex:outputpanel>
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_auth"> Coupon Code :</label>
+                                    <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        <apex:inputfield value="{!coupon.wk_wedge__Coupon_Code__c}" id="ip_code" required="false"/>
+                                    </div>
+                                    <apex:commandLink value="Create one for you " action="{!CreateCouponCode}" styleClass="auto-create"  status="waitstatus" rerender="thepopup,itemblock" />
+                                </div> 
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_type"> Discount Type :</label>
+                                    <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        <apex:inputfield value="{!coupon.wk_wedge__Discount_Type__c}" id="ip_type" required="false"/>
+                                    </div>
+                                </div>
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_auth"> Discount :</label>
+                                    <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        <apex:inputtext value="{!coupval}" id="ip_Discount" required="false"/>
+                                    </div>
+                                </div>
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_msg">Start Date :</label>
+                                    <div class="requiredInput">
+                                        <!--<div class="requiredBlock"></div>-->
+                                        <apex:input type="date"  styleclass="field--small" value="{!effectiveDate}" id="ip_startDate"/>
+                                    </div>
+                                </div>
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_msg">Valid for Days  :</label>
+                                    <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        <apex:inputfield value="{!coupon.wk_wedge__valid_for_days__c}" id="ip_Days" required="false"/>
+                                    </div>
+                                </div>
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_msg">Available for :</label>
+                                    <div class="requiredInput">
+                                        <!--<div class="requiredBlock"></div>-->
+                                        <apex:inputfield value="{!coupon.wk_wedge__Availbale_For__c}" id="ip_Availfor"/>
+                                    </div>
+                                </div>
+                                <div class="wdg-modal--fieldbox">
+                                    <label for="ip_msg"> Minimum Purchase :</label>
+                                    <div class="requiredInput">
+                                        <!--<div class="requiredBlock"></div>-->
+                                        <apex:inputfield value="{!coupon.wk_wedge__minimum_purchase__c}" id="ip_minpurchase"/>
+                                    </div>
+                                </div>
+                                <div class="wdg-modal--fieldbox" id="max-des">
+                                    <label for="ip_msg">   Maximum Discount :</label>
+                                    <div class="requiredInput">
+                                        <!--<div class="requiredBlock"></div>-->
+                                        <apex:inputfield value="{!coupon.wk_wedge__Maximum_Discount__c}" id="ip_maxDiscount"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wdg-modal--footer">
+                                <apex:commandLink value="{!ButtonText}"  styleclass="wdg-modal--btn"  action="{!createCoupon}"  status="waitstatus" rerender="thepopup,wdgerrorBlock,wdgTable,wdgTablebox"/>
+                            </div>  
+                        </div> 
+                        <div class="wdg-popup--bg fadein"></div>                
+                    </apex:outputpanel>
+                </apex:outputpanel>        
+                <div class="wdg-body">
+                    
+                    <div class="wdg-body--header">
+                        
+                        <div class="wdg-filter--box">
+                            <span id="openfilter" class="wdg-ctrl--btn filter"><span></span></span>
+                        </div>
+                        <div class="wdg-search--box"> 
+                            <apex:inputtext html-placeholder="Search Coupon Code"  value="{!searchQuery}"/>
+                            <apex:commandbutton value="Search" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,urlstr" status="waitstatus" styleclass="wdg-submit--btn search" oncomplete="recordcount()"/>
+                            <apex:outputPanel id="urlstr"><apex:inputHidden id="urlval" value="{!url}"/></apex:outputPanel>
+                            
+                        </div> 
+                    </div>   
+                    <div class="wdg-filters">
+                        <div class="wdg-filter--title">Filter Here</div>
+                        <div class="wdg-filters-wrap">
+                            <!--<div class="wdg-filter--options">
+<span> Filter By Coupon code</span>
+<apex:inputtext value="{!searchquery}"/>
+</div>-->
+                            <div class="wdg-filter--options"> 
+                                <span> Filter By Available For</span>
+                                <apex:selectlist value="{!Availablefor}" size="1">
+                                    <apex:selectoptions value="{!AvailableforOptions}"/>
+                                </apex:selectlist>
+                            </div>  
+                            <div class="wdg-filter--options">
+                                <apex:commandbutton value="Apply" styleclass="wdg-submit--btn apply" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,urlstr" status="waitstatus" oncomplete="recordcount()"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo Coupon"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> Coupons </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div>  
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!pagesize}" id="recPerPage" onchange="updatePage()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>
+                            <apex:outputLink value="{!urlfor($Page.wk_wedge__CouponHistory)}" styleClass="connectbutton" target="_blank">View history for all coupon</apex:outputLink>
+                            <!--<apex:commandlink styleclass=" wdg-ctrl--btn addNew" action="{!addNewCoupon}"  status="waitstatus" rerender="thepopup,wdgerrorBlock,wdgTable,wdgTablebox" oncomplete="update_popup()">
+                                <span></span>
+                            </apex:commandlink>-->
+                            <apex:outputlink styleclass="wdg-ctrl--btn addNew" value="{!$Page.wk_wedge__addNewCoupon}">
+                                <span></span>
+                            </apex:outputlink>
+                            <div class="wdg-ctrl--btngroup clearfix">
+                                <div class="wdg-ctrl--btn settings">
+                                    <span></span>
+                                </div>
+                                <div class="dropdown dropdown-wrap">
+                                    <button type="button"  data-toggle="dropdown" class="wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                        <span></span>
+                                    </button>
+                                    <div class="dropdownMenu">
+                                        <div> <a href="javascript:void(0)"  id="deleteSelected">Delete Selected </a></div>
+                                        <div> <a href="javascript:void(0)" id="deleteALL" >Delete All </a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-dataTable--box">
+                        <apex:datatable value="{!Coupons}" var="Coup" styleclass="wdg-dataTable" id="wdgTable">
+                            <apex:column styleclass="Xsmall">
+                                <apex:facet name="header">  
+                                    <div class="custom-checkbox">
+                                        <input type="checkbox" id="headerCB"/>
+                                    </div>
+                                </apex:facet>
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" class="eachselect" value="{!Coup.id}"/>
+                                </div>
+                            </apex:column>
+                            <apex:column styleclass="large">
+                                <apex:facet name="header">
+                                    <apex:commandlink value="Coupon Code {!IF(fieldName=='Coupon_Code__c',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="Coupon_Code__c" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                <apex:outputfield value="{!Coup.wk_wedge__Coupon_Code__c}"/>
+                            </apex:column> 
+                            <apex:column styleclass="large">
+                                <apex:facet name="header">
+                                    <apex:commandlink value="Start Date {!IF(fieldName=='Start_Date__c',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="Start_Date__c" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                <apex:outputfield value="{!Coup.wk_wedge__Start_Date__c}"/>
+                            </apex:column> 
+                            <apex:column styleclass="large">
+                                <apex:facet name="header">
+                                    <apex:commandlink value="Valid till {!IF(fieldName=='End_Date__c',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="End_Date__c" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                <apex:outputfield value="{!Coup.wk_wedge__End_Date__c}"/>
+                            </apex:column> 
+                            <apex:column styleclass="large">
+                                <apex:facet name="header">
+                                    <apex:commandlink value="Discount {!IF(fieldName=='Discount__c',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                        <apex:param name="fieldName" value="Discount__c" assignto="{!fieldName}"/>
+                                    </apex:commandlink>
+                                </apex:facet>
+                                <!--<apex:outputfield value="{!Coup.Discount__c}" rendered="{!OR(Coup.Discount_Type__c == 'Percentage',AND(Coup.Discount__c!=null,Coup.Discount_Amount__c == null))}"/>
+                                <apex:outputtext value="{0,number,###,##0.00}" rendered="{!Or(Coup.Discount_Type__c == 'Absolute',Coup.Discount_Amount__c != null)}">
+                                    {!currSymbol}&nbsp;<apex:param value="{!Coup.wk_wedge__Discount_Amount__c}"/>
+                                </apex:outputtext>-->
+                                <apex:outputtext value="{!currSymbol}" rendered="{!AND(Coup.wk_wedge__Discount_Type__c == 'Absolute', Coup.wk_wedge__Discount_Amount__c != null)}"/>
+                                <apex:outputfield value="{!Coup.wk_wedge__Discount_Amount__c}"/>
+                                <apex:outputtext value="%" rendered="{!AND(Coup.wk_wedge__Discount_Type__c == 'Percentage',Coup.wk_wedge__Discount_Amount__c != null)}"/>
+                                <apex:outputText rendered="{!Coup.wk_wedge__Discount_Amount__c == null}">--</apex:outputText>
+                            </apex:column> 
+                            <apex:column styleclass="medium">
+                                <apex:facet name="header">Action</apex:facet>
+                                <apex:outputlink title="View History"  target="_blank" value="{!URLFOR($Page.wk_wedge__CouponHistory,null, ['couponid'=Coup.id])}" styleclass="wdg-ctrl--btn preview"><span></span></apex:outputlink>
+                                <apex:outputlink styleclass="wdg-ctrl--btn edit" value="{!urlfor($Page.wk_wedge__addNewCoupon,null,[coupid=Coup.id])}">
+                                    <span></span>
+                                </apex:outputlink>
+                                <!--<apex:commandlink styleclass="wdg-ctrl--btn edit" action="{!editRecord}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox, thepopup" oncomplete="update_popup()">
+                                    <apex:param name="toOperateId" value="{!Coup.id}" assignto="{!toOperateId}"/>
+                                    <span></span>
+                                </apex:commandlink>-->
+                                <div class="wdg-ctrl--btn delete" id="singledelete" targetid="{!Coup.id}" ><span></span></div>
+                            </apex:column> 
+                            <apex:facet name="footer">
+                                <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                    <apex:outputpanel rendered='{!Coupons.size>0}'>
+                                        <apex:commandlink value="" action="{!first}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!previous}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                        <apex:outputText styleclass="wdg-dataTable--pages" value="{!pagenumber} of {!totalPages} "></apex:outputText>
+                                        <apex:commandlink value="" action="{!next}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!last}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                    </apex:outputpanel> 
+                                    <apex:outputpanel rendered="{!Coupons.size==0}">
+                                        <div >No Records Returned !!!!</div>
+                                    </apex:outputpanel>
+                                </apex:outputpanel>
+                            </apex:facet>
+                        </apex:datatable>
+                    </apex:outputpanel>
+                </div>
+                <apex:inputhidden value="{!deleteid}" id="deletable"/>
+                <apex:actionfunction name="deleteoneRecord" action="{!deletesingleCoupons}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete()"/>    
+                <apex:actionfunction name="deleteSelectedRecords" action="{!deleteSelectedCoupons}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete()"/>
+                <apex:actionfunction name="deleteAllRecords" action="{!deleteAllCoupons}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete()"/>
+                <apex:actionFunction name="updatePage" action="{!updatedata}" status="waitstatus" /><!--oncomplete="recordcount()"-->
+            </apex:form> 
+            <script>
+            jQuery(document).ready(function($) {
+                // Get Accounts via the REST API
+                $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Coupon__c',
+                       {
+                           beforeSend: function(xhr) {
+                               // Set the OAuth header from the session ID
+                               xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                           },
+                           success: function(response) {
+                               // Append the records to HTML list
+                               var str=JSON.stringify(response);
+                               var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                               var arr = total.split(',');
+                               document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                   return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                               });
+                           },
+                           error: function(jqXHR, textStatus, errorThrown) {
+                               // Error
+                               console.log(jqXHR.status + ': ' + errorThrown);
+                           }
+                       }
+                      );
+            });
+            function update_popup(){
+                $('[id$="ip_type"]').children('option').first().remove();
+                $('[id$="ip_type"]').change(function(){
+                    if($(this).val()=='Absolute')
+                        $('#max-des').hide();
+                    else
+                        $('#max-des').show();
+                });
+                if($('[id$="ip_type"]').val()=='Absolute')
+                    $('#max-des').hide();
+            }
+            
+            function afterdelete(){
+                recordcount();
+                closenotifications();    
+            }
+            function recordcount(){
+                if($('[Id$="urlval"]').val()!='' && $('[Id$="urlval"]').val()!=null){
+                    $.ajax($('[Id$="urlval"]').val(),
+                           {
+                               beforeSend: function(xhr) {
+                                   // Set the OAuth header from the session ID
+                                   xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                               },
+                               success: function(response) {
+                                   // Append the records to HTML list
+                                   var str=JSON.stringify(response);
+                                   var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                                   var arr = total.split(',');
+                                   document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                       return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                   });
+                               },
+                               error: function(jqXHR, textStatus, errorThrown) {
+                                   // Error
+                                   console.log(jqXHR.status + ': ' + errorThrown);
+                               }
+                           }
+                          );                    
+                }
+            }      
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

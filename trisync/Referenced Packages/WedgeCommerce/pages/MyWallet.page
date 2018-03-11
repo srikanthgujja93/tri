@@ -1,0 +1,109 @@
+<apex:page controller="wk_wedge.MyWallet" showHeader="false" standardStylesheets="false">
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage">
+        <apex:define name="templatebody">
+            <TITLE>My Wallet</TITLE>
+
+            <style>
+                .wdg .wdg-template--body {
+                    padding:30px 0;
+                }
+                .wdg-msg--box{
+                    width:300px;
+                    padding: 30px;
+                    margin: 6% auto;
+                    box-shadow: 0px 0px 15px 4px #ccc;
+                    border-radius: 3px;
+                    text-align:center;
+                    position:relative;
+                }
+                .wdg-wallet--text{
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+                .wdg-wallet--table{
+                    width:100%;
+                    text-align:center;
+                    /*position:absolute;*/
+                    bottom: 30px;
+                    left:0;
+                }
+                .wdg-wallet--table td{
+                    padding: 5px 0;
+                }
+                .wdg-wallet--inp{
+                    padding: 8px 8px;
+                    border-radius: 3px;
+                    margin: 10px 0px;
+                    width: 80%;
+                    outline: none;
+                    background: #fff;
+                    border: 1px solid #ccc;
+                }
+                .wdg-checkout--btn {
+                    background-color: #0087C1;
+                    min-width: 150px;
+                    cursor: pointer;
+                    height: 40px;
+                    padding: 0px 6px;
+                    outline: none;
+                    border: none;
+                    line-height: 2.7;
+                    text-align: center;
+                    box-sizing: border-box;
+                    text-decoration: none;
+                    color: #fff;
+                    font-size: 14px;
+                    border-radius: 3px;
+                }
+                ul li{
+                    margin-left:0px;
+                }
+            </style>
+            <apex:outputpanel layout="block" styleclass="wdg-msg--box" id="thisblock">
+                <apex:form >
+                    <apex:actionFunction action="{!createWallet}" name="createWallet" rerender="none"/>
+                    <apex:outputPanel styleClass="wdg-wallet--text">{!$Label.MyWallet_Total_Amount}:&nbsp;</apex:outputPanel>
+                    <apex:outputPanel styleClass="wdg-wallet--text" style="display:inline-block;">{!currSymbol}&nbsp;
+                        <apex:outputText value="{0,number,###,##0.00}">
+                            <apex:param value="{!if((WalletAmount == null),0,WalletAmount)}"/>
+                        </apex:outputText>
+                    </apex:outputPanel>
+                    <table class="wdg-wallet--table">
+                        <tr>
+                            <td>{!$Label.wk_wedge__mywallet_enter_amount_to_recharge} ({!currSymbol}):</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:inputText value="{!rechargeValue}" styleClass="wdg-wallet--inp" html-placeholder="0"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:commandButton action="{!redirectToCheckout}" value="{!$Label.wk_wedge__mywallet_add_money}" styleclass="wdg-checkout--btn" rerender="redirect_js" status="docSearch"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <apex:outputlink value="walletPassbook" styleclass="wdg-txn--link">{!$Label.wk_wedge__mywallet_wallet_transactions}</apex:outputlink>
+                            </td>
+                        </tr>
+                    </table>
+                </apex:form>
+            </apex:outputpanel>
+            <apex:outputPanel id="redirect_js">
+            	<script>
+                	console.log('test');
+                	var param = '{!queryString}';
+                	if(param != '')
+                        window.location.href = '{!$site.baseURL}/checkout?'+param;
+                </script>
+            </apex:outputPanel>
+            <script>
+                var walletId = '{!wallet.id}';
+                if(walletId == ''){
+                    createWallet();
+                }
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

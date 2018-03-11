@@ -1,0 +1,161 @@
+<apex:page controller="wk_wedge.imageslider" showheader="false" setup="false" standardstylesheets="false" cache="false" title="Banner Images" docType="HTML-5.0">
+    <style>
+        .wdg-nav-icon.template {
+            background-color: #34becd;
+        }
+         .wdg-addOption--btn{
+                     cursor: pointer;
+                    
+                     padding: 8px;
+                     background: #7DC37D;
+                     color: #fff;
+                     display: inline-block;
+                     text-align: center;
+                     text-decoration: none;
+                     border-radius: 2px;
+                     border: none;
+                     font-size: 13px;
+                     font-weight: 600;
+                     box-shadow: none;
+                     outline: none;
+                 }
+                 .wdg-body .wdg-dataTable--box{
+            margin-top:5px;
+        }
+        .totalRec{
+            font-size: 14px;
+            color: #777777;
+            margin-top:2px;
+        }
+        .wdg-body-titletext{
+            display:inline-block;
+            vertical-align: top;
+            line-height: 1;
+        }
+        .recperpage{
+            background: #FFF;
+            padding: 4px 8px;
+            border: 2px solid #57BDC2;
+            border-radius: 4px;
+            cursor:pointer;
+        }
+        .recperpage:focus{
+            outline:none;
+            cursor:pointer;
+        }
+    </style>
+    <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+          <apex:form id="productform">
+            <div class="wdg-body">
+                  <!--<div class="wdg-body--header">
+                       <apex:messages id="pagemessgaes" styleclass="pagemessages"/>
+                 </div>-->
+                 <apex:messages id="pagemessgaes" styleclass="pagemessages"/>
+                 <div class="wdg-body--titleblock clearfix">
+                       <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo bannerimage"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> Banner Images </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div>  
+                      <div class="wdg-ctrl--btnPanel">
+                         <apex:commandButton styleclass=" wdg-addOption--btn"  value="Template Menus" action="{!cancel}">
+                                        <span></span>
+                           </apex:commandButton>
+                         <apex:outputlink value="{!URLFOR($Page.wk_wedge__addimagebanner  ,null, ['tcompid'=$CurrentPage.parameters.tcompid])}" styleclass="wdg-ctrl--btn addNew"> <span></span></apeX:outputlink>
+                         <apex:commandlink action="{!cancel}" styleclass="wdg-ctrl--btn cancel"> 
+                                    <span></span>
+                         </apex:commandlink>
+                      </div>
+                 </div>
+                 <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-dataTable--box">
+                        <apex:datatable value="{!Images}" var="Mlink" styleclass="wdg-dataTable No-footer">
+                            <apex:column styleclass="medium" >
+                                <apex:facet name="header">Name</apex:facet>
+                                <apex:outputfield value="{!Mlink.name}"/>
+                                
+                            </apex:column>
+                            <apex:column styleclass="medium" >
+                              <apex:facet name="header">Image</apex:facet>
+                              <apex:image url="/servlet/servlet.FileDownload?file={!Mlink.wk_wedge__Image_id__c}" height="200px" width="400px"/>
+                            </apex:column>
+                            
+                            <apex:column styleclass="medium">
+                                <apex:facet name="header">Action</apex:facet>
+                                <apex:outputlink value="{!URLFOR($Page.wk_wedge__addimagebanner,null, ['id'=Mlink.id,'tcompid'=$CurrentPage.parameters.tcompid])}" styleclass="wdg-ctrl--btn edit"><span></span></apex:outputlink>
+                                <div class="wdg-ctrl--btn delete" targetid="{!Mlink.id}"><span></span></div>
+                           </apex:column>
+                        
+                        </apex:datatable>
+                         <apex:outputpanel layout="block" styleclass="wdg-no-results" rendered="{!Images.size==0}">
+                             <apex:outputpanel layout="block" >
+                                  <span>No Records Returned !!!!</span>
+                              </apex:outputpanel>
+                       </apex:outputpanel> 
+                      <apex:actionfunction name="deleteoneRecord" action="{!deleteSeltd}" rerender="notice" oncomplete="afterdelete()"/>
+                      <apex:inputhidden id="deletable" value="{!deletesel}"/>
+                    </apex:outputpanel>
+                             
+                </div>  
+             
+        </apex:form>
+         <script>
+            jQuery(document).ready(function($) {
+              // Get Accounts via the REST API
+                  $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Template_Image_slider__c',
+                    {
+                      beforeSend: function(xhr) {
+                        // Set the OAuth header from the session ID
+                        xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                      },
+                      success: function(response) {
+                        // Append the records to HTML list
+                        var str=JSON.stringify(response);
+                        var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                        var arr = total.split(',');
+                        document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                });
+                      },
+                      error: function(jqXHR, textStatus, errorThrown) {
+                        // Error
+                        console.log(jqXHR.status + ': ' + errorThrown);
+                      }
+                    }
+                  );
+                  
+                }); 
+                function afterdelete(){
+                    recordcount();
+                    closenotifications();    
+                }
+                function recordcount(){
+                    $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Template_Image_slider__c',
+                    {
+                      beforeSend: function(xhr) {
+                        // Set the OAuth header from the session ID
+                        xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                      },
+                      success: function(response) {
+                        // Append the records to HTML list
+                        var str=JSON.stringify(response);
+                        var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                        var arr = total.split(',');
+                        document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                });
+                      },
+                      error: function(jqXHR, textStatus, errorThrown) {
+                        // Error
+                        console.log(jqXHR.status + ': ' + errorThrown);
+                      }
+                    }
+                  );
+                }    
+            </script>
+          </apex:define>
+    </apex:composition>
+</apex:page>

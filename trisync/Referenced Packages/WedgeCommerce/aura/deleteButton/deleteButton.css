@@ -1,0 +1,13 @@
+.THIS .slds-backdrop{
+   background: rgba(0, 0, 0, 0.8);
+}
+.THIS .cp-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: 15px;
+    margin-left: -24px;
+}
+.THIS .slds-button.delbtn{
+    background:#EF6E64;    
+}

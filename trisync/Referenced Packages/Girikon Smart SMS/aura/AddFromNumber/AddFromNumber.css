@@ -1,0 +1,18 @@
+.THIS {
+}
+.THIS .setup-icon {
+    background-color: #0070D2;
+    padding: 7px;
+}
+.THIS .slds-input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #e1e1e1;
+}
+.THIS .slds-input::-moz-placeholder { /* Firefox 19+ */
+  color: #e1e1e1;
+}
+.THIS .slds-input:-ms-input-placeholder { /* IE 10+ */
+  color: #e1e1e1;
+}
+.THIS .slds-input:-moz-placeholder { /* Firefox 18- */
+  color: #e1e1e1;
+}

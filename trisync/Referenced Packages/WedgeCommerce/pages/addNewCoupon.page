@@ -1,0 +1,400 @@
+<apex:page controller="wk_wedge.addNewCoupon" showheader="false" docType="html-5.0" standardStylesheets="false" title="Add Coupon">
+    <style>
+        .wdg-nav-icon.coupons {
+        background-color: #34becd;
+        }
+        .wdg-nav-icon.sales {
+        background-color: #34becd;
+        }
+        .small-width{
+        width:38%;
+        display:inline-block;
+        height:80%;
+        }
+        .check-avail--btn{
+        padding:5px 20px;
+        }
+        .wdg-form--table tbody td.field .green-css{
+        color:green;
+        }
+        .wdg-form--table tbody td.field .red-css{
+        color:red;
+        }
+        .wedge_SelectListInner{
+        text-decoration:none;
+        }
+        .wedge_SelectListInner:hover{
+        text-decoration:none;
+        }
+        .selectionList{
+        list-style: none;
+        padding: 0;
+        }
+        .selectionList li{
+        display: inline;
+        border: 1px solid #adadad;
+        padding: 5px 10px;
+        margin-right: 15px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px !important;
+        font-family: 'Open Sans', sans-serif !important;
+        margin-left:0 !important;
+        }
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <apex:form id="productform">
+                <div class="wdg-body">
+                    <apex:outputpanel id="wdgErrorBlock" layout="block">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel> 
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo articles"></span>
+                            <span>Add Coupon</span>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:commandlink styleclass="wdg-ctrl--btn save " immediate="false" onclick="return ValidateSave(event);" action="{!saveData}" >
+                                <span></span>
+                            </apex:commandlink>
+                            <a href="{!URLFOR($page.coupons)}" class="wdg-ctrl--btn cancel">
+                                <span></span>
+                            </a>
+                        </div>
+                    </div>
+                    <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active"><a href="javascript:void(0)" data-target="productBlock">General</a></li>
+                            </ul>
+                        </div>
+                        <div id="productTabGroup" class="wdg-form--content">
+                            <apex:outputpanel layout="block" id="productBlock" styleclass="wdg-form--block">
+                                <div class="wdg-form--blocktitle">
+                                    <span>Information </span>
+                                </div>
+                                <div class="wdg-form--blockfields">
+                                    <table class="wdg-form--table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Coupon Name :" for="prodName"></apex:outputlabel></td>
+                                                <td class="field" id="prod_name_col">
+                                                    <div class="requiredInput">
+                                                        <div class="requiredBlock"></div>
+                                                        <apex:inputtext value="{!CouponName}" id="prodName" styleclass="field--small display-inline--block"/>
+                                                    </div>
+                                                    <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>                                               
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label">
+                                                    <apex:outputlabel value="Coupon Code :" for="prodAlias"/>
+                                                </td>
+                                                <td class="field">
+                                                    <div class="requiredInput small-width">
+                                                        <div class="requiredBlock"></div>
+                                                        <apex:inputtext value="{!CouponCode}" id="CouponCode" styleclass="display-inline--block"/>
+                                                    </div>
+                                                    <a href="javascript:void(0)" id="GenerateCode">Create one for you</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Available to :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:selectList value="{!CustomerLoginStatus}" size="1">
+                                                        <apex:selectOptions value="{!userOptions}"/>
+                                                    </apex:selectList>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Discount Type :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:selectList value="{!SelectedDiscountType}" id="prodStatus" styleclass="field--small display-inline--block" size="1">
+                                                        <apex:selectOptions value="{!discountOptions}"/>
+                                                    </apex:selectList>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="{!if((SelectedDiscountType != 'Percentage'),'Discount Amount ('+currsymbol+'):','Discount Percent:')}" for="prodstatus" id="discLabel"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:inputtext value="{!CouponValue}" styleclass="display-inline--block"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Minimum Transaction Amount :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:inputtext value="{!TotalAmount}" styleclass="display-inline--block"/>
+                                                </td>
+                                            </tr>
+                                            <tr id="maxDiscRow">
+                                                <td class="label"><apex:outputlabel value="Maximum Discount :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:inputtext value="{!maxDiscount}" styleclass="display-inline--block"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Products :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                        <apex:inputText value="{!queryProdName}"  onkeypress="return noenter(event, 'clickProd');"
+                                                                        onkeyup="delay('clickProd');"
+                                                                        styleclass=" field--small display-inline--block accountList wdg_customSelectList wdg_searchBox"
+                                                                        onclick="showList('#prodList');" onblur="hideList('#prodList');"
+                                                                        id="queryProdName" html-placeholder="Product"
+                                                                        style="width: 270px !important;" html-autocomplete="off">
+                                                        </apex:inputText>
+                                                        <span class="wedgeSelectListDropIcon"></span>
+                                                        <apex:inputHidden value="{!Products}" id="prodJSON" /> 
+                                                        
+                                                        <div class="wedge_selectListOuter field--small" id="prodList">
+                                                            <apex:outputPanel id="prodtable">
+                                                                <apex:repeat value="{!prodList}" var="a">
+                                                                    <a class="wedge_SelectListInner" 
+                                                                       href="javascript:addProduct('{!a}','{!a.Name}','');">
+                                                                        {!a.Name}</a>
+                                                                </apex:repeat>
+                                                                <apex:outputText value="No Product Return"
+                                                                                 styleClass="wedge_SelectListInner"
+                                                                                 rendered="{!prodList.size == 0}"> </apex:outputText>
+                                                            </apex:outputPanel>
+                                                        </div>
+                                                    </apex:outputPanel>
+                                                    <ul id="prodListView" class="selectionList">
+                                                        
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Categories :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                        <apex:inputText value="{!queryCatName}"  onkeypress="return noenter(event, 'clickCat');"
+                                                                        onkeyup="delay('clickCat');"
+                                                                        styleclass=" field--small display-inline--block accountList wdg_customSelectList wdg_searchBox"
+                                                                        onclick="showList('#catList');" onblur="hideList('#catList');"
+                                                                        id="queryCatName" html-placeholder="Category"
+                                                                        style="width: 270px !important;" html-autocomplete="off">
+                                                        </apex:inputText>
+                                                        <span class="wedgeSelectListDropIcon"></span>
+                                                        <apex:inputHidden value="{!Categories}" id="catJSON" /> 
+                                                        
+                                                        <div class="wedge_selectListOuter field--small" id="catList">
+                                                            <apex:outputPanel id="cattable">
+                                                                <apex:repeat value="{!catList}" var="a">
+                                                                    <a class="wedge_SelectListInner" 
+                                                                       href="javascript:addCategory('{!a}','{!a.Name}','');">
+                                                                        {!a.Name}</a>
+                                                                </apex:repeat>
+                                                                <apex:outputText value="No Category Return"
+                                                                                 styleClass="wedge_SelectListInner"
+                                                                                 rendered="{!catList.size == 0}"> </apex:outputText>
+                                                            </apex:outputPanel>
+                                                        </div>
+                                                    </apex:outputPanel>
+                                                    <ul id="catListView" class="selectionList">
+                                                        
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Start Date :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:input type="date" value="{!CouponStartDate}" styleclass="display-inline--block"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Valid For Days :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:inputtext value="{!validForDays}" styleclass="display-inline--block"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Transaction Per Coupon :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:inputtext value="{!UsesPerCoupon}" styleclass="display-inline--block"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Transaction Per Customer :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <apex:inputtext value="{!UsesPerCustomer}" styleclass="display-inline--block"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel value="Status :" for="prodstatus"></apex:outputlabel></td>
+                                                <td class="field">
+                                                    <div class="custom-checkbox {!if((CouponStatus),'checked','')}">
+                                                        <apex:inputCheckbox value="{!CouponStatus}" styleclass="display-inline--block"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <apex:actionFunction name="clickCat" action="{!valSetqueryString}" reRender="cattable">
+                                        <apex:param value="" name="queryCatName"/>
+                                    </apex:actionFunction>
+                                    <apex:actionFunction name="clickProd" action="{!valSetProdQueryString}" reRender="prodtable">
+                                        <apex:param value="" name="queryProdName"/>
+                                    </apex:actionFunction>
+                                </div>
+                            </apex:outputpanel> 
+                        </div>
+                    </apex:outputpanel>
+                </div>
+            </apex:form>
+            
+            <script>
+            
+            function ValidateSave(event){
+                
+                var str  = $("[Id$='prodName']").val();                       
+                if (str.match(/^[A-z0-9\d\s]+$/)) {
+                    $("[Id$='validate']").html('');
+                    return true;
+                }
+                else{
+                    alert("Review all the errors!");
+                    $("[Id$='validate']").html('Special Characters Are Not Allowed');
+                    event.preventDefault();
+                    return false;
+                }
+            }
+            function noenter(ev, obj)  {
+                if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+                    if(obj == 'clickCat') {
+                        clickCat($('input[id$="queryCatName"]').val()); 
+                    }
+                    if(obj == 'clickProd') {
+                        clickProd($('input[id$="queryProdName"]').val()); 
+                    }
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            function delay(obj){
+                var interval = 0;
+                if (interval)
+                    window.clearTimeout(interval);
+                interval = window.setTimeout(function() {
+                    if(obj == 'clickCat') {
+                        clickCat($('input[id$="queryCatName"]').val()); 
+                    }
+                    if(obj == 'clickProd') {
+                        clickProd($('input[id$="queryProdName"]').val());
+                    }
+                }, 500);
+            }
+            function showList(obj){
+                $(obj).css('visibilty','visible').slideDown(500);
+            }
+            function hideList(obj){
+                $(obj).css('visibilty','hidden').slideUp(1000);        
+            }
+            function addCategory(catid,name){
+                var categories = $('[id$=catJSON]').val();
+                if(categories != undefined && categories != ''){
+                    categories = JSON.parse(categories);
+                }else{
+                    categories = [];
+                }
+                var category = { id:catid, name:name};
+                var abc = categories.find(o => o.id === catid);
+                if(abc == undefined)
+                    categories.push(category);
+                $('[id$=catJSON]').val(JSON.stringify(categories));
+                generateCatView();
+                $('[id$=queryCatName]').val('');
+            }
+            function addProduct(prodid,name){
+                var products = $('[id$=prodJSON]').val();
+                if(products != undefined && products != ''){
+                    products = JSON.parse(products);
+                }else{
+                    products = [];
+                }
+                var product = { id:prodid, name:name};
+                var abc = products.find(o => o.id === prodid);
+                if(abc == undefined)
+                    products.push(product);
+                $('[id$=prodJSON]').val(JSON.stringify(products));
+                generateProdView();
+                $('[id$=queryProdName]').val('');
+            }
+            function generateCatView(){
+                var cats = $('[id$=catJSON]').val();
+                if(cats != undefined && cats != ''){
+                    cats = JSON.parse(cats);
+                }else{
+                    return;
+                }
+                $("#catListView").children().remove();
+                for(var i=0;i<cats.length;i++){
+                    $("#catListView").append('<li id="'+cats[i].id+'">'+cats[i].name+'</li>');
+                }
+                $("#catListView li").click(function(){
+                    cats.splice(cats.indexOf(cats.find(o => o.id === $(this).attr('id'))),1);
+                    $('[id$=catJSON]').val(JSON.stringify(cats));
+                    $(this).remove();
+                });
+            }
+            function generateProdView(){
+                var cats = $('[id$=prodJSON]').val();
+                if(cats != undefined && cats != ''){
+                    cats = JSON.parse(cats);
+                }else{
+                    return;
+                }
+                $("#prodListView").children().remove();
+                for(var i=0;i<cats.length;i++){
+                    $("#prodListView").append('<li id="'+cats[i].id+'">'+cats[i].name+'</li>');
+                }
+                $("#prodListView li").click(function(){
+                    cats.splice(cats.indexOf(cats.find(o => o.id === $(this).attr('id'))),1);
+                    $('[id$=prodJSON]').val(JSON.stringify(cats));
+                    $(this).remove();
+                });
+            }
+            generateCatView();
+            generateProdView();
+            
+            if($('[id$=prodStatus]').val() != 'Percentage'){
+                $('#maxDiscRow').hide();
+            }
+            
+            $('[id$=prodStatus]').change(function(){
+                $('#maxDiscRow').toggle();
+                if($('[id$=prodStatus]').val() == 'Percentage'){
+                    $('[id$=discLabel]').text('Discount Percent :');
+                }else{
+                    $('[id$=discLabel]').text('Discount Amount ({!currsymbol}):');
+                }
+            });
+            
+            wk=jQuery.noConflict();
+            (function(wk){
+                wk(document).on("blur",".wdg-body .wdg-form--table td [Id$='prodName']",function(){
+                    var str  = wk("[Id$='prodName']").val();                       
+                    if (str.match(/^[A-z0-9\d\s]+$/)) {
+                        wk("[Id$='validate']").html('');
+                    }
+                    else{
+                        wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+                    }
+                });
+                wk('#GenerateCode').click(function(){
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.addNewCoupon.createCode}',function(result,event){
+                            if(event.status){
+                                wk('input[id$=CouponCode]').val(result);
+                            }
+                        }
+                    );
+                });
+            }(jQuery));
+            </script>
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

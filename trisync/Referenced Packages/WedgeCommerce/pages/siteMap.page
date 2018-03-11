@@ -1,0 +1,32 @@
+<apex:page controller="wk_wedge.siteMap" showHeader="false" contentType="text/xml"> <!--text/plain-->
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    	<apex:repeat value="{!AccessiblePages}" var="page">
+	<url>
+		<loc>{!$Site.BaseUrl}/{!page}</loc>
+		<changefreq>daily</changefreq>
+		<priority>0.5</priority>
+	</url>
+    	</apex:repeat>
+        <apex:repeat value="{!products}" var="prod">
+	<url>
+        <loc>{!$Site.BaseUrl}/{!products[prod].alias__c}</loc>
+		<changefreq>daily</changefreq>
+		<priority>1.0</priority>
+	</url>
+    	</apex:repeat>
+        <apex:repeat value="{!categories}" var="cat">
+	<url>
+        <loc><apex:outputtext rendered="{!categories[cat].Category_Name_Path__c != null}">{!$Site.BaseUrl}/{!categories[cat].Category_Name_Path__c}</apex:outputtext></loc>
+		<changefreq>daily</changefreq>
+		<priority>1.0</priority>
+	</url>
+    	</apex:repeat>
+        <apex:repeat value="{!blogs}" var="blog">
+	<url>
+        <loc><apex:outputtext rendered="{!blogs[blog].Editable_Alias__c != null}">{!$Site.BaseUrl}/blog/{!blogs[blog].Editable_Alias__c}</apex:outputtext></loc>
+		<changefreq>daily</changefreq>
+		<priority>1.0</priority>
+	</url>
+    	</apex:repeat>
+    </urlset>
+</apex:page>

@@ -1,0 +1,103 @@
+<!--
+    @Author : Mukesh Gupta
+    @Date   : 12/June/2017
+    @Description : Display in left sidebar in classic and in lightning where you add this component
+-->
+<aura:component controller="gkn_sms.NotificationController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"  
+                access="global">
+    <ltng:require scripts="{!join(',',
+                           $Resource.gkn_sms__notification + '/cometd.js',
+                           $Resource.gkn_sms__jslib + '/jquery.js',
+                           $Resource.gkn_sms__notification + '/json2.js',
+                           $Resource.gkn_sms__notification + '/jquery.cometd.js')}"
+                  afterScriptsLoaded="{!c.scriptLoaded}"/>
+                  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />   
+    <aura:attribute name="Spinner"  type="boolean" default="false" />
+    <aura:attribute name="Tasks"    type="Task[]"  description="use for to store list of Task records" />   
+    <aura:attribute name="page"     type="integer" description="use for store page Number" />
+    <aura:attribute name="pages"    type="integer" description="use for store All Pages page Number" />
+    <aura:attribute name="total"    type="integer" description="total records count store" /> 
+    <aura:attribute name="Task"     type="Task"    description="Store Task object" />
+    <aura:attribute name="TaskId"   type="String"  description="Store Task object record ID" />
+    <aura:attribute name="pageType" type="String"  default="lightning" description="Check the page type i.e. lightning or classic" />
+    <aura:attribute name="styleAttribute" type="string" default="position: relative;left: 85%;top: -41px;display: inline"/>
+    <lightning:spinner aura:id="spinner" variant="brand" size="small"/>
+    <aura:if isTrue="{!v.total>0?true:false}">
+        <h3 class="slds-section-title--divider slds-text-body_regular">
+            Incoming SMS Show
+            <aura:if isTrue="{!v.pageType!='lightning'?true:false}"><br/></aura:if> 
+            {!(v.page*5+1)-5}-{!v.page*5>v.total?v.total:v.page*5} of {!v.total} Items
+        </h3>    
+        <aura:iteration items="{!v.Tasks}" var="tsk">
+            <div class="slds-grid slds-wrap slds-border_bottom" style="background-color:#fff">
+                <div class="slds-size_8-of-8 notification-box" style="height:85px;overflow:hidden">
+                    <div style="{!v.pageType=='lightning'?'padding:5px 10px':'padding:5px 0px'}">
+                        <p class="slds-m-left_xx-small" style="word-wrap: break-word;height:25px;">
+                            <lightning:button class="name-btn" variant="base" value="{!tsk.gkn_sms__Related_Record__c}" 
+                                              label="{!tsk.gkn_sms__Sent_To_Name__c!=null?tsk.gkn_sms__Sent_To_Name__c:'N/A'}" onclick="{!c.gotoDetailPage}"/>
+                            <aura:if isTrue="{!v.pageType=='lightning'}">
+                            	&nbsp; (&nbsp;<ui:outputPhone value="{!tsk.gkn_sms__From_Number__c}"/>)
+                            </aura:if>
+                        </p>
+                        <aura:if isTrue="{!v.pageType!='lightning'}">
+                            <p class="slds-m-left_xx-small"><ui:outputPhone value="{!tsk.gkn_sms__From_Number__c}"/></p>
+                            <p class="slds-m-left_xx-small"></p>
+                        </aura:if>
+                        <div class="slds-list__item slds-m-right_large slds-grid slds-truncate_container_95">
+                            <div class="slds-m-left_xx-small slds-truncate" title="{!tsk.gkn_sms__SMS_Body__c}">
+                                {!tsk.Name} 
+                            </div>
+                            <span class="slds-m-left_xx-small slds-no-flex "> 
+                                <aura:if isTrue="{!tsk.gkn_sms__Message_View__c}">
+                                    <lightning:icon iconName="utility:check" class="checkMsg" size="xx-small" alternativeText="Messaage viewed" />
+                                </aura:if> 
+                            </span>
+                        </div>                        
+                        <div class="slds-list__item slds-m-right_large slds-grid slds-truncate_container_95">
+                            <!--<lightning:icon iconName="utility:clock" size="xx-small"/>&nbsp;&nbsp;-->
+                            <span style="font-size:10px"><ui:outputDateTime value="{!tsk.CreatedDate}" format="M/dd/yyyy hh:mm:ss a"/></span>
+                        </div>
+                    </div>
+                    <div class="slds-m-around--x-small reply-btn" style="{!v.styleAttribute}">
+                        <lightning:button title="Reply" iconName="utility:reply" variant="base" value="{!tsk.Id}" label="" onclick="{!c.replyMsg}"/>
+                    </div> 
+                </div>
+            </div>
+        </aura:iteration>     
+        <!-- Previous next button section start -->
+        <div class="slds-m-around--medium">     
+            <div class="slds-align--absolute-left">
+                <lightning:button disabled="{!v.page>1?false:true}" variant="brand" label="Previous" onclick="{!c.previousPage}"/>
+                <lightning:button disabled="{!v.Tasks.length==5?false:true}" variant="brand" label="Next" onclick="{!c.nextPage}"/>
+            </div>
+        </div>   
+        
+        <!-- Previous next button section end -->
+        <aura:set attribute="else">
+            <div class="slds-box" style="background-color:#fff">You did not received SMS/MMS.</div>
+        </aura:set>
+    </aura:if>
+    
+    <audio src="{!$Resource.gkn_sms__alert}" aura:id="soundEffect" ></audio>
+        
+    <!-- Modal (popup) section start -->
+    <section aura:id="ReplyPopup" role="dialog" tabindex="-1"  aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-1" class="slds-modal slds-slide-down-cancel">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header slds-modal__header slds-modal__header_empty">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.closePopup}">
+                    <lightning:icon iconName="utility:close" class="white" size="small" alternativeText="Close" />
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <aura:if isTrue="{!v.TaskId != null}">
+                   <gkn_sms:SMSReplyPopup TaskID="{!v.TaskId}"/>
+                </aura:if>
+            </div>
+        </div>
+    </section>
+    <div aura:id="ReplyPopupBg" class="slds-backdrop slds-backdrop_open"></div> 
+    <!-- Modal (popup) section end -->
+</aura:component>

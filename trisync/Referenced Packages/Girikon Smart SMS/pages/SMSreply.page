@@ -1,0 +1,18 @@
+<!-- 
+    @Author : Sudip Halder
+    @Date   : 15/June/2017
+    @dexcription : This VF page open lightning component (SMSReplyPopup) in salesforce classic
+-->
+<apex:page controller="gkn_sms.NotificationController" showHeader="true">
+    <apex:slds />    
+    <apex:includeLightning />
+    <div id="lightning"></div>
+    <script>                
+        $Lightning.use("gkn_sms:SMSNotificationApp", function() {
+          $Lightning.createComponent("gkn_sms:SMSReplyPopup", {
+            "TaskID" : '{!JSENCODE(taskId)}',
+            "key" : '{!$Api.Session_ID}'
+          },"lightning", function(cmp) {});
+        });
+    </script>   
+</apex:page>

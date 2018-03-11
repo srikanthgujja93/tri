@@ -1,0 +1,60 @@
+.THIS .wdg-variant-table thead th{
+    color: #54698d;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    margin-right: 0.75rem;
+    margin-bottom: 0.25rem;
+	text-align: initial;    
+}
+.THIS .inputpos input{
+    border-radius: 4px;
+    border: 1px solid #d8dde6;    
+}
+.THIS .inputvar input{
+    border-radius: 4px;
+    border: 1px solid #d8dde6;
+	margin-left: 5px;    
+}
+.THIS .wdg-variant-table tbody td{
+    text-align: initial;
+    padding: 2px 0px;
+    vertical-align: top;
+}
+.THIS .wdg-variant-table thead{
+	background: none;
+}
+.THIS .addRow{
+	margin-left: 10px;
+}
+.THIS .categorydiv{
+	border: 1px solid #d8dde6;
+    border-radius: 4px;
+    height: 200px;
+    overflow: auto;    
+}
+.THIS .wdg-category--tableCategory td{
+    height: 30px;
+    padding: 0px;
+}
+.THIS .parent{
+   	height: 350px;
+	overflow-x: hidden;
+    overflow-y: auto;
+}
+.THIS .slds-form-element__label {
+    display: block;
+    text-align:left;
+}
+.THIS .categorydiv .wdg-category--tableCategory tbody td{
+    border-top: none;
+}
+.THIS .categorydiv .wdg-category--tableCategory tbody tr:hover>td:not(.slds-is-selected){
+    box-shadow: none;
+    background-color: transparent;
+}
+@media screen and (max-width: 980px)
+{
+    .THIS .parent{
+        height: 100%;
+    }
+}

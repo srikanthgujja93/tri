@@ -1,0 +1,32 @@
+.THIS {
+}
+.THIS .hide{
+    display:none;
+}
+.THIS .show{
+    display:block;
+}
+.THIS .gkn-sms-spiner{
+    z-index:9999;
+}
+.THIS .smsBody{
+    height:190px;
+}
+.THIS .slds-form-element__label { 
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.THIS .slds-spinner_container{
+    z-index:99999;
+}
+.THIS .slds-icon-utility-upload svg{
+    width: 0.70rem;
+    height: 0.70rem;
+    fill: #0070d2;
+}
+.THIS .slds-icon-utility-upload{
+    position: relative;
+    left: 2px;
+    top: -10px;
+}

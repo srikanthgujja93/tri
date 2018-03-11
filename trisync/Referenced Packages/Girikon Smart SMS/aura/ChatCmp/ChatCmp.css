@@ -1,0 +1,15 @@
+.THIS {
+}
+.THIS .slds-scope img{
+    width:100px !important;
+}
+.THIS .slds-has-dividers_around .selected{
+    background-color: #d5ebf2;
+}
+
+.THIS .slds-has-dividers_around li:hover{
+    background-color: #d5ebf2;
+}
+.THIS .firefox{
+    height:91px !important;
+}

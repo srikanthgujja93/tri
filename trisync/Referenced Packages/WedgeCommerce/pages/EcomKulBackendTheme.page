@@ -1,0 +1,1158 @@
+<apex:page showheader="false" standardstylesheets="false" id="templatepage" cache="false"  docType="HTML-5.0" controller="wk_wedge.EcomKulBackendTheme" language="{!$CurrentPage.parameters.lang}">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'/>
+    <apex:includescript value="{!URLFOR($Resource.wk_wedge__SFResources,'EcomResources/exterfiles/jquery.min.js')}"/>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+    </script>
+    <apex:includeScript value="{!$Resource.wk_wedge__countryState}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/css/backend/style.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/js/frontend/sha512.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/js/frontend/sha256.js')}"/>    
+    <style>
+        
+        .wdg-subNav--list{
+        display:none;
+        padding: 0;
+        list-style-type: none;
+        margin:0;
+        }
+        .wdg-subNav--list>li{
+        overflow: hidden;
+        font-size:14px;
+        background:#0E2342;
+        box-sizing:border-box;
+        border-top:1px solid #253F65;
+        
+        }
+        .wdg-sideMenu .wdg-nav--menulist>li a>span:nth-child(2) {
+        margin-left: 10px;
+        font-size: 14px;
+        vertical-align: middle;
+        }
+        .wdg-sideMenu .wdg-sideMenu--nav{
+        height: 36px;
+        background: url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'/wedgeCommerce/images/logo-wedge-full.svg')}") no-repeat;
+        margin-left: 5px;
+        margin-top: 5px;
+        }
+        .wdg .wdg-sideMenu.expand {
+        width: 240px;
+        }
+        .wdg-nav--menulist .carret{
+        display: inline-block;
+        width:0;
+        transform: rotate(0deg);
+        transition: transform 0.2s ease-in;
+        -webkit-transform: rotate(0deg);
+        -webkit-transition: transform 0.2s ease-in;
+        -moz-transform: rotate(0deg);
+        -moz-transition: transform 0.2s ease-in;
+        -ms-transform: rotate(0deg);
+        -ms-transition: transform 0.2s ease-in;
+        margin-left: 117px;
+        vertical-align: middle;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 6px solid #fff;
+        border-right:0;
+        
+        }
+        .wdg-nav--menulist .carret.down{
+        -ms-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        transform: rotate(90deg);
+        }
+        .wdg .wdg-body.move {
+        transform: translate(235px);
+        width: calc(100% - 275px);
+        }
+        .wdg-nav--menulist{
+        height:calc(100% - 45px);
+        overflow-y:auto;
+        overflow-x:hidden;
+        }
+        .wdg-nav--menulist>li{
+        box-sizing:border-box;
+        margin:0 !important;
+        
+        
+        }
+        .wdg-subNav--list>li>a{
+        width: 100%;
+        vertical-align: middle;
+        color: #fff;
+        margin-left:7px;
+        text-decoration: none;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        }
+        .shipping>span{
+        background-position: -30px -105px;
+        }
+        .wg-fixedbody{
+        width:100%;
+        
+        
+        background:#16325C;
+        color:white;
+        }
+        .fixedul{
+        padding: 9px 20px;
+        list-style-type:none;
+        display:flex;
+        color:#fff!important;
+        }
+        .wdg .wdg-pre--header{
+        box-sizing:border-box;
+        height:40px;
+        background-color:#EBEBEB;
+        }
+        .wdg-pre--header{
+        color:#333;
+        font-size:14px;
+        
+        }
+        .wdg-pre--header .wdg-preheader--navigation{
+        float:right;
+        margin-right:30px;
+        height:40px;
+        /*width:16%;*/
+        }
+        .wdg-preheader--navigation .wdg-preheader--navlist{
+        list-style-type:none;
+        padding:0;
+        margin:0; 
+        }
+        .wdg-preheader--navlist>li{
+        display:inline-block;
+        margin:0;
+        margin-left:15px;
+        padding:0;
+        
+        }
+        .wdg-preheader--navlist>li>a{
+        color:#333;
+        text-decoration:none;
+        display:block;
+        height:45px;
+        line-height:2.5;
+        }
+        .wdg-preheader--navlist li>a *{
+        vertical-align: middle;
+        }
+        .wdg-icon{
+        display: inline-block;
+        background-color: transparent;
+        background-image: url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}");
+        background-repeat: no-repeat;
+        height: 15px;
+        width: 15px;
+        
+        margin-right: 5px; 
+        vertical-align: middle;
+        }
+        .wdg-preheader--navlist>li>a i.wishlist{
+        background-position: -50px -30px;
+        }
+        .wdg-preheader--navlist>li>a i.account{
+        background-position: -20px -30px;
+        }
+        .wdg-pre--header .wdg-user--dropdown{
+        margin:0;
+        padding:0;
+        border:0;
+        margin-top: -5px;
+        right: 20px;
+        left: auto;
+        border-radius: 0px;
+        background: #fff;
+        }
+        .dropdown-menu {
+        
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        }
+        .open>.dropdown-menu {
+        display: block;
+        position: absolute;
+        }
+        .wdg-signIn--box{
+        width:550px;
+        height:315px;
+        position:relative;
+        display:table;
+        margin:0 auto;
+        border:1px solid #ccc;
+        box-sizing:border-box;
+        }
+        .wdg-signIn--box .fieldset{
+        text-align:left;
+        }
+        .wdg-loggedIn--box{
+        width:180px;
+        overflow:hidden;
+        }
+        .wdg-signIn--box span.sign-in--carret,.wdg-loggedIn--box span.sign-in--carret{
+        width: 20px;
+        height: 15px;
+        position: absolute;
+        display: inline-block;
+        background-color: transparent;
+        background-image: url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/sprite.png')}");
+        background-repeat:no-repeat;
+        top:0;
+        right:0;
+        margin-right:30px;
+        margin-top:-15px;
+        background-position: -217px -48px;
+        }
+        .wdg-signIn--box>div{
+        display:table-cell;
+        width:50%;
+        padding:10px;
+        }
+        .wdg-signIn--box div.sign-in{
+        border-right:1px solid #ccc;
+        
+        }
+        .wdg-signIn--box div.create-an--account{
+        
+        
+        }
+        .wdg-signIn--box div.sign-in .sign-in--with, .wdg-signIn--box .fieldset div{
+        margin-top:20px;
+        margin-bottom:20px;
+        }
+        .wdg-signIn--box  .fieldset label{
+        font-weight: 500;
+        display: block;
+        margin-bottom: 4px;
+        }
+        .wdg-signIn--box .fieldset input{
+        box-sizing: border-box;
+        padding: 6px;
+        outline: none;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        font-weight: 500;
+        display: block;
+        
+        }
+        .wdg-btn,.wdg-btn:hover,.wdg-btn:focus,.wdg-btn:active{
+        display:inline-block;
+        height:40px;
+        min-width:90px;
+        padding:0px 6px;
+        outline:none;
+        border:none;
+        line-height: 2.7;
+        text-align: center;
+        box-sizing:border-box;
+        text-decoration:none;
+        color:#fff;
+        font-size:14px;
+        border-radius:3px;
+        }
+        .wdg-btn.medium{
+        width:120px;
+        }
+        .wdg-btn.standard{
+        min-width:150px;    
+        }
+        .wdg-btn.large{
+        min-width:150px;    
+        }
+        .wdg-btn.full-width{
+        display:block;
+        width:100%;
+        }
+        .wdg-btn.gray{
+        background:#595959;
+        }
+        .wdg-btn.transparent{
+        background-color:#fff;
+        color:#222;
+        text-align:right;
+        } 
+        .wdg-btn.blue{
+        background-color:#54698D;
+        }
+        .wdg-btn.green{
+        background-color:#4BBA60;
+        }
+        .invisble{
+        opacity:0;
+        }
+        .create-an--account .create-acc--here{
+        margin-top:20px;
+        margin-bottom:22px;
+        }
+        .wdg-loggedIn--box .wdg-loggedIn--nav{
+        padding:0;
+        margin:0;
+        list-style-type:none;
+        border-bottom:2px solid #ccc;
+        }
+        .wdg-loggedIn--box .wdg-loggedIn--nav>li>a:nth-child(even){
+        background-color:#EBEBEB;
+        }
+        .wdg-loggedIn--box .wdg-loggedIn--nav>li>a{
+        display: block;
+        height: 40px;
+        border-top:1px solid #ccc;
+        background-color:#fff;
+        box-sizing: border-box;
+        padding: 8px 15px;
+        text-align: left;
+        color: #333;
+        }
+        .wdg-loggedIn--box .wdg-loggedIn--nav>li:last-child{
+        border-top:1px solid #ccc;
+        }
+        .wdg-loggedIn--box .wdg-loggedIn--nav>li>a:hover{
+        color:#fff;
+        background-color:#54698D;
+        }
+        .wdg-logoff--btn, .wdg-logoff--btn:hover,.wdg-logoff--btn:active,.wdg-logoff--btn:focus{
+        margin: 10px;
+        width:160px;
+        }
+        .caret {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 2px;
+        vertical-align: middle;
+        border-top: 4px dashed;
+        border-top: 4px solid\9;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        }
+        .wdg-Notedata{
+        font-size:12px;
+        color:red;
+        }
+        .wdg-note-content{
+        padding-left:20px;
+        }
+        .wdg-addOption--btn{
+        cursor: pointer;
+        
+        padding: 8px;
+        background: #7DC37D;
+        color: #fff;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 2px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: none;
+        outline: none;
+        }
+        .wdg-dataTable tbody td{
+        word-break: break-all;    
+        }
+        .medium-width{
+        width:40%;
+        }
+        .wdg .wdg-sideMenu{
+        position:absolute;
+        height:auto;
+        top:auto;
+        min-height:100%;
+        }
+        .wdg .wdg-menu-fix{
+        position:fixed;
+        bottom:0;
+        }
+        .wdg-nav--menulist{
+        height:auto;
+        }
+        .wdg-dataTable thead th, .wdg-category--tableheader td, .wdg-dataTable thead a{
+        font-size:initial !important;
+        }
+        .recperpage{
+        background: #FFF;
+        padding: 4px 8px;
+        border: 2px solid #57BDC2;
+        border-radius: 4px;
+        cursor:pointer;
+        margin-right: 10px;
+        -webkit-padding-start: 8px;
+        -webkit-padding-end: 8px;
+        -webkit-padding-after: 4px;
+        -webkit-padding-before: 4px;
+        }
+    </style>
+    <style>
+        /*Notices*/
+        .notices{
+        position: fixed;
+        top: 15px;
+        right: 0;
+        z-index: 555;
+        width: 500px;
+        
+        }
+        
+        .notices .notice-error>ul , .notices .notice-success>ul{
+        list-style-type:none;       
+        margin:0;
+        padding:0;
+        }
+        .notices .notice-error>ul>li, .notices .notice-success>ul>li{
+        padding:10px;
+        margin-top:10px;
+        margin-botton:10px;
+        
+        background-size: 64px 64px;
+        border: 1px solid #3c763d;
+        border-radius: 3px 0px 0px 3px;
+        font-size:15px;
+        color:#fff;
+        text-align: justify;
+        
+        }
+        .notices .notice-error>ul>li{
+        background-color:#c23934;
+        border: 1px solid #d74c3b;
+        }
+        .notices .notice-success>ul>li{
+        background-color: #04844b;
+        }
+        .notices i, .notices .wdg-notice--close{
+        height: 25px;
+        width: 25px;
+        margin-right:10px;
+        content: "";
+        display: inline-block;
+        vertical-align: top;
+        }
+        .notices i.error{
+        background: transparent url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/icon-warning.png')}") no-repeat center;
+        }
+        .notices i.success{
+        background: transparent  url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/icon-alarm.png')}")   no-repeat center;
+        }
+        .notices .wdg-notice--msg{
+        display:inline-block;
+        vertical-align:top;
+        margin-right:5px;
+        margin-left:5px;
+        width:385px;    
+        }
+        .notices .wdg-notice--close{
+        background: transparent   url("{!URLFOR($Resource.wk_wedge__wedgecommerce,'wedgeCommerce/images/icon-close.png')}") no-repeat center;
+        margin-left: 10px;
+        cursor: pointer;
+        }
+        .wdg-filter--options {
+        position: relative;
+        }
+        .wdg-filter--options>select {
+        border: none;
+        border-radius: 3px;
+        padding: 9px 30px 11px 10px;
+        font-size: 14px;
+        height:40px;
+        outline: none;
+        background: #DCDCDC;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        -ms-appearance: none;
+        -o-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        margin: 0px 4px;
+        }
+        .multidropdownsymbol {
+        top: 45%;
+        right: 10px;
+        float: right;
+        position: absolute;
+        }
+        .wdg-alert--container{
+        display:none;
+        }
+        .wdg-alert--cover{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000000;
+        }
+        .wdg-custom--alert{
+        z-index:1000001;
+        width:60%;
+        min-height:20%;
+        display: inline-block;
+        position: fixed;
+        top: 25%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        }
+        .wdg-custom--alert .wdg-alert--header{
+        margin-bottom: 0;
+        padding: 13px 15px;
+        height: 25px;
+        background: #16325C;
+        color: #fff;
+        font-weight: 600;
+        font-size: 15px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        }
+        .wdg-alert--close{
+        background: #FFFFFF;
+        color: #16325C;
+        height: 22px;
+        width: 22px;
+        text-align: center;
+        vertical-align: middle;
+        border-radius: 50%;
+        cursor: pointer;
+        float: right;
+        }
+        .wdg-alert--body{
+        min-height:20px;
+        background-color:white;
+        }
+        .alert-text{
+        text-align:center;
+        padding: 55px 10px;
+        margin-right: 10px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #333;
+        font-family: 'Oxygen', sans-serif;
+        margin:0;
+        }
+        .taberr{
+            display:none;
+            position: absolute;
+            top: 13px;
+            left: 4px;
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            background-color: #fff;
+            color: red;
+            font-weight: 700;
+            text-align: center;
+            font-size: 11px;
+        }  
+    </style>
+    <div class="wdg">
+        <apex:outputPanel layout="block" styleclass="wdg-alert--container">
+            <apex:outputPanel layout="block" styleclass="wdg-alert--cover">
+                <apex:outputPanel styleclass="wdg-custom--alert">
+                    <div class="wdg-alert--header">
+                        <span>Alert</span>
+                        <span class="wdg-alert--close offer" id="details-close">×</span>
+                    </div>
+                    <div class="wdg-alert--body">
+                        <p class="alert-text" id="wdg-custom-alrt--text">Alert Text Here</p>
+                    </div>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </apex:outputPanel>
+        <apex:actionstatus stopText="" id="waitstatus">
+            <apex:facet name="start">
+                <div class="wdg-popup--bg wdg-action-status"></div>
+                <div class="wdg-spinner"><div></div><div> loading... </div></div>
+            </apex:facet>
+        </apex:actionstatus>
+        <apex:outputpanel id="notice" layout="block" styleclass="notices">
+            <apex:outputpanel layout="block" rendered="{!err}" styleclass="notice-error">
+                <apex:datalist value="{!notices}" var="notice">
+                    <i class="error"></i><span class="wdg-notice--msg">{!notice}</span><span class="wdg-notice--close"></span>
+                </apex:datalist>
+            </apex:outputpanel>
+            <apex:outputpanel layout="block" rendered="{!success}" styleclass="notice-success">
+                <apex:datalist value="{!notices}" var="notice">
+                    <i class="success"></i><span class="wdg-notice--msg">{!notice}</span><span class="wdg-notice--close"></span>
+                </apex:datalist>
+            </apex:outputpanel>
+        </apex:outputpanel>
+        <div class="wdg-sideMenu">
+            
+            <div class="wdg-sideMenu--nav">
+                <a href="javascript:void(0)" id="collapse" class="wdg-nav--btn">
+                    <!--<span></span>
+<span></span>
+<span></span>-->
+                </a>
+            </div>
+            <ul class="wdg-nav--menulist">
+                <li>
+                    <a href="{!$page.WedgeDashboard}">
+                        <span title="Dashboards" class="wdg-nav-icon wedgeDashboard">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Dashboard}</span>
+                    </a>
+                </li>
+                <li class="wdg-accordion">
+                    <a href="javascript:void(0)">
+                        <span title="Configuration" class="wdg-nav-icon cms">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Configuration}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.storeAdmin}"><span   title="Store Manager" class="wdg-nav-icon storeadmin"><span></span></span><span >{!$label.wk_wedge__Nav_Store_Admin} </span></a></li>
+                        <li><a href="{!$page.paymentProcessors}"><span title="Payment Gateways"  class="wdg-nav-icon payment"><span></span></span><span >{!$label.wk_wedge__Nav_Payment_Gateways} </span></a></li>
+                        <li class="multicurrency" rendered="{!storeAdmin.Enable_Multicurrency__c!=null && storeAdmin.Enable_Multicurrency__c==true}"><a href="{!$page.ListCurrencies}"><span title="Multi Currency" class="wdg-nav-icon multiCurrency"><span></span></span><span >{!$label.wk_wedge__Nav_Multi_Currency}</span></a></li>
+                        <li class="multilanguage" rendered="{!storeAdmin.Enable_Multilanguage__c!=null && storeAdmin.Enable_Multilanguage__c==true}"><a href="{!$page.languageList}"><span title="Multilanguage" class="wdg-nav-icon multilanguage"><span></span></span><span >{!$label.wk_wedge__Nav_MultiLanguage}</span></a></li>
+                        <li><a href="{!$page.AutomaticEmailSettings}"><span title="Automate Email Events" class="wdg-nav-icon mailevents"><span></span></span><span >{!$label.wk_wedge__Nav_Automatic_Email_Events}</span></a></li>
+                        <li><a href="{!$page.CustomerShowcase}"><span title="Customer Showcase" class="wdg-nav-icon customershowcaseimage"><span></span></span><span >{!$label.wk_wedge__Nav_Customer_Showcase}</span></a></li>
+                        
+                    </ul>
+                </li>
+                <!--
+<li>
+<a href="{!$page.storeAdmin}">
+<span   title="Store Manager" class="wdg-nav-icon storeadmin">
+<span></span>
+</span>
+<span >Store Manager</span>
+</a>
+</li> -->
+                <li>
+                    <a href="{!$page.Templates}">
+                        <span title="Template Design" class="wdg-nav-icon template"><span></span></span>
+                        <span >{!$label.wk_wedge__Nav_Template_Text}</span>
+                    </a>
+                </li>
+                <li class="wdg-accordion">
+                    <a href="javascript:void(0)">
+                        <span title="Catalog" class="wdg-nav-icon productcatalog">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Catalog}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.CategoryListing}"><span title="Categories" class="wdg-nav-icon category"><span></span></span><span >{!$label.wk_wedge__Nav_Categories}</span></a></li>
+                        <li><a href="{!$page.ProductListting}"><span title="Products"  class="wdg-nav-icon product"><span></span></span><span >{!$label.wk_wedge__Nav_Products}</span></a></li>
+                        <li><a href="{!$page.Product_Features}"><span title="Product Features"  class="wdg-nav-icon prodfeature"><span></span></span><span >{!$label.wk_wedge__Nav_Product_Features}</span></a></li>
+                        <li><a href="{!$page.Product_options}"><span title="Product Options"  class="wdg-nav-icon prodOptions"><span></span></span><span >{!$label.wk_wedge__Nav_Product_Options}</span></a></li>
+                        <li><a href="{!$page.ReviewList}"><span title="Product Reviews"  class="wdg-nav-icon review"><span></span></span><span >{!$label.wk_wedge__Nav_Product_Reviews}</span></a></li>
+                        <li><a href="{!$page.ListRetailer}"><span title="Retailer"  class="wdg-nav-icon purchasechannel"><span></span></span><span >{!$label.wk_wedge__Nav_Retailers}</span></a></li>
+                        
+                    </ul>
+                </li>
+                <!--
+<li>
+<a href="{!$page.paymentProcessors}">
+<span title="Payment Gateways"  class="wdg-nav-icon payment"><span></span></span>
+<span >Payment Gateways </span>
+</a>
+</li>
+-->
+                
+                <li class="wdg-accordion">
+                    <a href="javascript:void(0)">
+                        <span title="Content Management" class="wdg-nav-icon contentmanagement">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Content_Management}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.articlelisting}"><span title="Articles" class="wdg-nav-icon article"><span></span></span><span >{!$label.wk_wedge__Nav_Articles}</span></a></li>
+                        <li><a href="{!$page.blogs}"><span title="Blogs"  class="wdg-nav-icon bloglis"><span></span></span><span >{!$label.wk_wedge__Nav_Blogs}</span></a></li>
+                    </ul>
+                </li>
+                <li class="wdg-accordion">
+                    <a href="javascript:void(0)">
+                        <span title="Sales" class="wdg-nav-icon sales">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Sales}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.Orderlisting}"><span title="Orders" class="wdg-nav-icon order"><span></span></span><span >{!$label.wk_wedge__Nav_Orders}</span></a></li>
+                        <li><a href="{!$page.cartlisting}"><span title="Cart and Wishlist"  class="wdg-nav-icon cartwishlist"><span></span></span><span >{!$label.wk_wedge__Nav_Cart_n_Wishlist}</span></a></li>
+                        <li><a href="{!$page.coupons}"><span title="Coupons"  class="wdg-nav-icon coupons"><span></span></span><span >{!$label.wk_wedge__Nav_Coupons}</span></a></li>
+                        
+                    </ul>
+                </li>
+                <li class="wdg-accordion">
+                    <a href="javascript:void(0)">
+                        <span title="Customers" class="wdg-nav-icon customerlisting">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Customers}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.customerlisting}"><span title="Customers" class="wdg-nav-icon customer"><span></span></span><span >{!$label.wk_wedge__Nav_Customers}</span></a></li>
+                        <li><a href="{!$page.Suppliers}"><span title="Suppliers" class="wdg-nav-icon supplier"><span></span></span><span >{!$label.wk_wedge__Nav_Suppliers}</span></a></li>
+                        <li><a href="{!$page.Contacuslisting}"><span title="Leads" class="wdg-nav-icon leadlisting"><span></span></span><span >{!$label.wk_wedge__Nav_Leads}</span></a></li>
+                    </ul>
+                </li>            
+                <li class="wallet" rendered="{!storeAdmin.Enable_Wallet__c!=null && storeAdmin.Enable_Wallet__c==true && storeAdmin.Wallet_Key__c!=null && storeAdmin.Wallet_Key__c!=''}">
+                    <a href="{!$page.WalletListing}">
+                        <span title="Wallet System"  class="wdg-nav-icon walletsystem"><span></span></span>
+                        <span >{!$label.wk_wedge__Nav_Wallet_System} </span>
+                    </a>
+                </li>
+                <li class="wdg-accordion shipping" rendered="{!storeAdmin.Enable_Shipping__c!=null && storeAdmin.Enable_Shipping__c==true}">        
+                    <a href="javascript:void(0)">
+                        <span title="Shipping and Taxes" class="wdg-nav-icon shipandtax">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Shipping_n_Taxes} </span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.shipping_locations}"><span title="Locations" class="wdg-nav-icon location"><span></span></span><span >{!$label.wk_wedge__Nav_Locations}</span></a></li>
+                        <li><a href="{!$page.shipping_methods}"><span title="Shipping Methods" class="wdg-nav-icon shippingmth"><span></span></span><span >{!$label.wk_wedge__Nav_Shipping_Methods}</span></a></li>
+                        <li><a href="{!$page.Taxes}"><span title="Taxes" class="wdg-nav-icon tax"><span></span></span><span >{!$label.wk_wedge__Nav_Taxes}</span></a></li>
+                    </ul> 
+                </li>
+                <li class="wdg-accordion requestquote" rendered="{!storeAdmin.Enable_Request_Quote__c!=null && storeAdmin.Enable_Request_Quote__c==true && storeAdmin.Request_Quote_key__c!=null && storeAdmin.Request_Quote_key__c!=''}">
+                    <a href="javascript:void(0)">
+                        <span title="Request Quotes" class="wdg-nav-icon requestquote">
+                            <span></span>
+                        </span>
+                        <span>{!$label.wk_wedge__Nav_Request_Quotes}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.Quotes}"><span title="Quotes"  class="wdg-nav-icon quotes"><span></span></span><span >{!$label.wk_wedge__Nav_Quotes}</span></a></li>
+                        <li><a href="{!$page.CustomFieldListing}"><span title="Custom Fields"  class="wdg-nav-icon customFields"><span></span></span><span >{!$label.wk_wedge__Nav_Custom_Fields}</span></a></li>
+                    </ul>
+                </li>
+                <li class="wdg-accordion rma" rendered="{!storeAdmin.Enable_RMA_Settings__c!=null && storeAdmin.Enable_RMA_Settings__c==true && storeAdmin.RMA_Key__c!=null && storeAdmin.RMA_Key__c!=''}">
+                    <a href="javascript:void(0)">
+                        <span title="Return Requests" class="wdg-nav-icon RMA">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_RMA_Settings}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.RMAReasonsListing}"><span title="RMA Reasons" class="wdg-nav-icon RMAReason"><span></span></span><span >{!$label.wk_wedge__Nav_RMA_Reasons}</span></a></li>
+                        <li><a href="{!$page.RMAActionListing}"><span title="RMA Action" class="wdg-nav-icon RMAAction"><span></span></span><span >{!$label.wk_wedge__Nav_RMA_Actions}</span></a></li>
+                        <li><a href="{!$page.RMARequestStatusListing}"><span title="RMA Request Status" class="wdg-nav-icon RMAStatus"><span></span></span><span >{!$label.wk_wedge__Nav_RMA_Request_Statues}</span></a></li>
+                        <li><a href="{!$page.ReturnRequestListing}"><span title="RMA Return Request" class="wdg-nav-icon RMARequest"><span></span></span><span >{!$label.wk_wedge__Nav_RMA_Return_Request} </span></a></li>
+                        
+                    </ul>
+                </li>
+                <!--
+<li class="wdg-accordion">
+<a href="javascript:void(0)">
+<span title="Additional Features" class="wdg-nav-icon additionalfeature">
+<span></span>
+</span>
+<span >Additional Features</span>
+<span class="carret"></span>
+</a>
+<ul class="wdg-subNav--list">
+<li><a href="{!$page.ListCurrencies}"><span title="Multi Currency" class="wdg-nav-icon multiCurrency"><span></span></span><span >Multi Currency</span></a></li>
+<li><a href="{!$page.languageList}"><span title="Multi language" class="wdg-nav-icon multilanguage"><span></span></span><span >Multi language</span></a></li>
+<li><a href="{!$page.AutomaticEmailSettings}"><span title="Automate Email Events" class="wdg-nav-icon mailevents"><span></span></span><span >Automate Email Events</span></a></li>
+<li><a href="{!$page.CustomerShowcase}"><span title="Customer Showcase" class="wdg-nav-icon customershowcaseimage"><span></span></span><span >Customer Showcase</span></a></li>
+
+</ul>
+</li>
+-->
+                <li class="wdg-accordion pushnotification" rendered="{!storeAdmin.Enable_Push_Notification__c!=null && storeAdmin.Enable_Push_Notification__c==true && storeAdmin.Push_Notification_Key__c!=null && storeAdmin.Push_Notification_Key__c!='' }">
+                    <a href="javascript:void(0)">
+                        <span title="Push Notification" class="wdg-nav-icon pushnotification">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Push_Notification}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        <li><a href="{!$page.SubscribersInformationListing}"><span title="Subscriber Info" class="wdg-nav-icon subscriberinfo"><span></span></span><span >{!$label.wk_wedge__Nav_Subscriber_Information}</span></a></li>
+                        <li><a href="{!$page.NotificationTemplateListing}"><span title="Notification Template" class="wdg-nav-icon notificationtemp"><span></span></span><span >{!$label.wk_wedge__Nav_Notification_Templates}</span></a></li>
+                    </ul>
+                </li>
+                <li class="wdg-accordion chanelmanager">
+                    <a href="javascript:void(0)">
+                        <span title="Channel Manager" class="wdg-nav-icon channelmanager">
+                            <span></span>
+                        </span>
+                        <span >{!$label.wk_wedge__Nav_Channel_Manager}</span>
+                        <span class="carret"></span>
+                    </a>
+                    <ul class="wdg-subNav--list">
+                        
+                        <li class="amazon" rendered="{!storeAdmin.Enable_Amazon__c!=null && storeAdmin.Enable_Amazon__c==true && storeAdmin.Amazon_Key__c!=null && storeAdmin.Amazon_Key__c!=''}"><a href="{!$page.amazon_config}"><span title="Amazon Connector" class="wdg-nav-icon amazonconnector"><span></span></span><span >{!$label.wk_wedge__Nav_Amazon_Connector}</span></a></li>
+                        
+                        <li class="ebay" rendered="{!storeAdmin.Enable_eBay__c!=null && storeAdmin.Enable_eBay__c==true && storeAdmin.eBay_Key__c!=null && storeAdmin.eBay_Key__c!=''}"><a href="{!$page.ebay_Config}"><span title="eBay Connector" class="wdg-nav-icon ebayconnector"><span></span></span><span >{!$label.wk_wedge__Nav_eBay_Connector}</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+        </div>
+        
+        <div class="wdg-pre--header">
+            <div class="container">
+                <div class="row">
+                    
+                    <div class="col-md-10 col-md-offset-2">
+                        
+                        <div class="wdg-preheader--navigation">
+                            
+                            <ul class="wdg-preheader--navlist">
+                                <li>
+                                    <apex:form >
+                                        <div class="wdg-filter--options" style="display:none">
+                                            <apex:selectList value="{!selectedLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!activatedLanguage.size>1}">
+                                                <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                                <apex:selectOptions value="{!activatedLanguage}">
+                                                    <span class="caret multidropdownsymbol"></span>
+                                                </apex:selectOptions>
+                                            </apex:selectList>
+                                        </div>
+                                        <script>
+                                        function setUrl(){
+                                            var query = window.location.search;
+                                            if(query.search('lang')!=-1){
+                                                var temp = query.substr(0,query.search('lang'));
+                                                query = query.substr(temp.length);
+                                                if(query.search('&')!= -1)
+                                                    query = query.substr(query.search('&')+1);
+                                                else
+                                                    query = '';
+                                                query = temp+query;
+                                            }
+                                            var newlang = $('select[id$="langSelect"]').val();
+                                            if(query == undefined || query == '')
+                                                query='?';
+                                            if(query.charAt(query.length-1) != '&')
+                                                query+= '&';
+                                            window.location.href = window.location.origin+window.location.pathname+query+'lang='+newlang;
+                                        }
+                                        </script>
+                                    </apex:form>
+                                </li>
+                                <li><div id="google_translate_element"></div></li>
+                                <li class="dropdown" id="user-dd">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                                        <i class="account wdg-icon"></i>
+                                        <span><apex:outputtext value="{!IF(NOT(ISPICKVAL($User.UserType,'Guest')),$User.FirstName +'  '+$User.LastName,'Account')}"/></span>
+                                        <span class="caret"></span>
+                                    </a>
+                                    <div class="dropdown-menu wdg-user--dropdown">
+                                        <apex:form >
+                                            <apex:outputpanel layout="block" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}" styleclass="wdg-loggedIn--box">
+                                                <ul class="wdg-loggedIn--nav">
+                                                    <li> <a href="https://wedgecommerce.com/blog/" target="_blank">{!$Label.wk_wedge__backend_user_guide_text}</a></li>
+                                                    
+                                                    <li> <a href="/home/home.jsp">{!$Label.wk_wedge__backend_back_to_salesforce_text}</a></li>
+                                                    <li><apex:commandbutton value="{!$Label.wk_wedge__backend_log_out}" action="{!sitelogout}" styleclass="wdg-btn blue wdg-logoff--btn"></apex:commandbutton></li>
+                                                </ul>
+                                            </apex:outputpanel>
+                                        </apex:form>
+                                    </div>
+                                </li> 
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <apex:insert name="Datacontent"></apex:insert>
+    </div>
+    
+    <div class="ecm_body_theme_wrap"> 
+        
+        <apex:insert name="Body"> </apex:insert>
+    </div>
+    <apex:includeScript value="{!urlfor($Resource.wk_wedge__wedgecommerce, 'wedgeCommerce/js/tinymce/js/tinymce/tinymce.min.js')}"/>
+    <script type="text/javascript">
+    tinymce.init({
+        selector: "textarea[tinymce=true]",
+        plugins: [
+            "advlist autolink lists link image charmap print preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table contextmenu paste"
+            
+        ],
+        convert_urls: false,
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+    });
+    </script>
+    <script>
+    var TimeoutVal='{!TimeoutValue}'; 
+    $=jQuery.noConflict();
+    (function($){
+        window.ShowAlert = function(AlertText){
+            $('#wdg-custom-alrt--text').text(AlertText);
+            $('.wdg-alert--container').show();
+            return 1;
+        }
+        $(document).ready(function(){
+            $('.wdg-alert--close').click(function(){
+                $('.wdg-alert--container').hide();
+            });
+            closenotifications();
+            var siteurl = $("#storelink a").attr('href');
+            if(siteurl=='#'){
+                $('#storelink').css('display','none');
+            }         
+            if($('.wdg-accordion.shipping').attr('rendered')=='true'){
+                $('.wdg-accordion.shipping').show();
+            }else{
+                $('.wdg-accordion.shipping').hide();
+            }
+            if($('.wdg-accordion.pushnotification').attr('rendered')=='true'){
+                $('.wdg-accordion.pushnotification').show();
+            }else{
+                $('.wdg-accordion.pushnotification').hide();
+            }
+            if($('.wdg-accordion.requestquote').attr('rendered')=='true'){
+                $('.wdg-accordion.requestquote').show();
+            }else{
+                $('.wdg-accordion.requestquote').hide();
+            }
+            if($('.wdg-accordion.rma').attr('rendered')=='true'){
+                $('.wdg-accordion.rma').show();
+            }else{
+                $('.wdg-accordion.rma').hide();
+            }
+            if($('.wallet').attr('rendered')=='true'){
+                $('.wallet').show();
+            }else{
+                $('.wallet').hide();
+            }
+            if($('.ebay').attr('rendered')=='true'){
+                $('.ebay').show();
+            }else{
+                $('.ebay').hide();
+            }
+            if($('.amazon').attr('rendered')=='true'){
+                $('.amazon').show();
+            }else{
+                $('.amazon').hide();
+            }
+            if($('.multicurrency').attr('rendered')=='true'){
+                $('.multicurrency').show();
+            }else{
+                $('.multicurrency').hide();
+            }
+            if($('.multilanguage').attr('rendered')=='true'){
+                $('.multilanguage').show();
+            }else{
+                $('.multilanguage').hide();
+            }
+            if($('.ebay').attr('rendered')=='false' && $('.amazon').attr('rendered')=='false'){
+                $('.wdg-accordion.chanelmanager').hide();
+            }
+            
+        });
+        $(document ).on("click",".wdg .wdg-nav--menulist>li.wdg-accordion>a",function(){
+            if($(this).parent().hasClass("open")){
+                $(this).parent().removeClass("open");
+                $(".wdg .wdg-nav--menulist>li.wdg-accordion>ul").slideUp();
+                $(".wdg .wdg-nav--menulist>li.wdg-accordion>a>.carret").removeClass("down");
+                
+            }
+            else if(!$(this).parent().hasClass("open")){
+                $(this).parent().addClass("open").siblings().removeClass("open");
+                $(".wdg .wdg-nav--menulist>li.wdg-accordion>a>.carret").removeClass("down");
+                $(".wdg .wdg-nav--menulist>li.wdg-accordion>ul").slideUp();
+                $(".wdg .wdg-nav--menulist>li.wdg-accordion.open>ul").slideDown();
+                $(".wdg .wdg-nav--menulist>li.wdg-accordion.open>a>.carret").addClass("down");
+                
+            } 
+        });   
+        $(document ).on("click",".custom-checkbox input",function(){
+            
+            $(this).parent().removeClass("checked");
+            if(this.checked){
+                $(this).parent().addClass("checked");
+            }     
+        });
+        $("#collapse").click(function(){
+            if($(".wdg-sideMenu").hasClass("expand")){
+                $(".wdg .wdg-nav--menulist>li.wdg-accordion>ul").slideUp();
+                $(".wdg-sideMenu").removeClass("expand");
+                $(".wdg-body").removeClass("move");
+                $(".wdg-text").removeClass("decPadding");
+            }
+            else if(!$(".wdg-sideMenu").hasClass("expand")){
+                $(".wdg .wdg-nav--menulist>li.wdg-accordion.open>ul").slideDown();
+                $(".wdg-sideMenu").addClass("expand");
+                $(".wdg-body").addClass("move");
+                $(".wdg-body .wdg-text").addClass("decPadding");
+            }
+        });
+        
+        $( document).on("mouseenter", " [id$='custom-tooltip'], .wdg-help--info",function(){
+            $(this).next().css({'display':'block','opacity':1.0});
+        }).on("mouseout", " [id$='custom-tooltip'] , .wdg-help--info",function(){
+            $(this).next().css({'display':'none','opacity':0.0});
+        });
+        
+        $( document ).on("click"," #openfilter ",function(){
+            
+            if($('.wdg-filter--box').hasClass('wdg-filter--open')){
+                $(".wdg-filters").slideUp(300, function(){
+                    $('.wdg-filter--box').removeClass('wdg-filter--open');
+                    $('.wdg-body--header').css({'border-bottom':'1px solid #adadad'});
+                });
+            }
+            else{
+                $('.wdg-filter--box').addClass('wdg-filter--open');
+                $('.wdg-body--header').css({'border-bottom':'none'});
+                $(".wdg-filters").slideDown(300);
+                
+            }
+        });
+        $( document ).on("click",".wdg-body .wdg-form--header ul.wdg-form--headeroptions li>a", function(){ 
+            $(".wdg-body .wdg-form--header ul.wdg-form--headeroptions li").removeClass("active");
+            $(this).parent().addClass("active");
+            var block= $(this).attr('data-target');
+            $("[Id$='"+block+"']").addClass("show").siblings().removeClass("show");
+        });
+        
+    }(jQuery));
+    
+    </script>
+    <script>
+    $=jQuery.noConflict();
+    (function($){
+        $( document ).on("click",".wdg-body .dropdown-wrap [Id$='deleteSelected']", function(){
+            if(confirm("do you really want to delete selected Records ?")==true){
+                deleteSelectedRecords();
+            }
+        });
+        $( document ).on("click",".wdg-body .dropdown-wrap [Id$='massactive']", function(){
+            if(confirm("do you really want to active selected Records ?")==true){
+                console.log('test');
+                massactive();
+            }
+        });
+        $( document ).on("click",".wdg-body .dropdown-wrap [Id$='masshidden']", function(){
+            if(confirm("do you really want to hide selected Records ?")==true){
+                masshidden();
+            }
+        });
+        $( document ).on("click",".wdg-body .dropdown-wrap [Id$='deleteALL']", function(){
+            if(confirm("All records will be deleted ?")==true){
+                deleteAllRecords();
+            }
+        });
+        $( document ).on("click",".wdg-body .wdg-dataTable .wdg-ctrl--btn.delete", function(){
+            if(confirm("do you really want to delete  this record?")==true){
+                $("[Id$='deletable']").val($(this).attr('targetid'));
+                if($("[Id$='deletable']").val()!=undefined && $("[Id$='deletable']").val()!='')
+                    deleteoneRecord();
+            }
+        });
+        $( document ).on("change",".wdg-body .wdg-dataTable th [Id$='headerCB'], .wdg-body .wdg-category--tableheader td [Id$='headerCB']",function(){
+            var a=this.checked;
+            console.log('both working')
+            var arr=[];
+            $(".wdg-body .wdg-dataTable td .eachselect, .wdg-body .wdg-category--tableCategory td .eachselect").each(function(){
+                $(this).prop('checked',a);
+                arr.push($(this).val());
+                if(a){
+                    $(this).parent().addClass('checked');
+                }else{
+                    $(this).parent().removeClass('checked');
+                }
+            });
+            if(a){
+                $("[Id$='deletable']").val(arr.join(','));
+            }else{
+                $("[Id$='deletable']").val('');
+            }
+        });
+        $( document ).on( "change", ".wdg-body .wdg-dataTable td .eachselect, .wdg-body .wdg-category--tableCategory td .eachselect", function(){
+            var arr=[];
+            var flag=true;
+            
+            $(".wdg-body .wdg-dataTable td .eachselect, .wdg-body .wdg-category--tableCategory td .eachselect").each(function(){
+                if($(this).prop('checked')){
+                    arr.push($(this).val());
+                    $(this).parent().addClass('checked');
+                }else{
+                    flag=false;
+                    $(this).parent().removeClass('checked');
+                }
+                
+            }); 
+            $("[Id$='deletable']").val(arr.join(','));
+            $(".wdg-body .wdg-dataTable th [Id$='headerCB']").prop('checked',flag);
+            $(".wdg-body .wdg-category--tableheader td [Id$='headerCB']").prop('checked',flag);
+            
+            if(flag){
+                $(".wdg-body .wdg-dataTable th [Id$='headerCB'],.wdg-category--tableheader td [Id$='headerCB']").parent().addClass('checked');
+            }else{
+                $(".wdg-body .wdg-dataTable th [Id$='headerCB'],.wdg-category--tableheader td [Id$='headerCB']").parent().removeClass('checked');
+            }
+        }); 
+        $( document ).on( "click", ".wdg-body .wdg-dataTable td .status-dropdown .status-option", function(){
+            var a = $(this).text().replace(/ /g,"");
+            var b = $(".wdg-body .wdg-dataTable td .status-dropdown .status-value span").text().replace(/ /g,"");
+            
+            $("[Id$='deletable']").val(a+':'+$(this).attr('targetid'));
+            changeRecordstatus();
+        });
+        $( document ).on( "click", ".wdg-body .wdg-category--tableCategory td .status-dropdown .status-option", function(){
+            var a = $(this).text().replace(/ /g,"");
+            var b= $(".wdg-body .wdg-category--tableCategory td .status-dropdown .status-value span").text().replace(/ /g,"");
+            
+            $("[Id$='deletable']").val(a+':'+$(this).attr('targetid'));
+            changeRecordstatus();
+        });
+        
+    }(jQuery));
+    document.onscroll= function() {controlNav()};
+    function controlNav(){
+        var NavTag=document.getElementsByClassName("wdg-sideMenu");
+        if (window.scrollY > NavTag[0].clientHeight-$(window).height()) {
+            $(NavTag[0]).addClass('wdg-menu-fix');
+        } else if(window.scrollY < NavTag[0].clientHeight-$(window).height() || window.scrollY == 0){
+            $(NavTag[0]).removeClass('wdg-menu-fix');
+        }
+    }
+    window.closenotifications=function(){
+        var timeoutvalue= parseInt(TimeoutVal);
+        if(isNaN(timeoutvalue))
+            timeoutvalue=1500;
+        setTimeout(function(){
+            $(".wdg .notices>div>ul").remove();
+            $(".wdg .details.details-close").trigger("click");
+        },timeoutvalue );
+    }
+    $(document).on("click",".wdg .notices>div>ul>li>span.wdg-notice--close",function(){
+        $(this).parent().remove();                    
+    });
+    </script>
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
+    
+    
+</apex:page>

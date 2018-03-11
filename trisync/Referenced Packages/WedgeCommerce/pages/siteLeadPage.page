@@ -1,0 +1,1767 @@
+<apex:page standardstylesheets="false" showheader="false" doctype="html-5.0"  title="wedgeCommerce">
+<!--
+ <meta charset="utf-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
+ <apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+ <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+ <apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+ <link href='//fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'/>
+ <script>
+    var siteurl="{!$site.baseurl}";
+    if(siteurl=="")
+    siteurl='/apex';
+    console.log(siteurl);
+ </script>
+
+ <style>
+        html, body,.fullpagewrapper{
+             background-color:#fff;
+             height:100%;
+             width:100%;
+             text-decoration:none;
+         }
+          
+         
+        body, body>*{
+            font-family: 'Oxygen', sans-serif;
+            margin:0px;
+            
+        }
+        a,a:hover,a:active,a:focus{
+            text-decoration:none;
+            outline:none;
+        }
+        .fullpagewrapper {
+            position: relative;
+            margin: 0;
+        }
+       
+       
+        .sf-helper-top-container{
+            background-color:#ebebeb;
+            width:100%;
+            padding:10px 0px;
+            min-height:20px;
+        }
+        .top-nav-list{
+            margin:0;
+            padding:0;
+            float:right;
+            color:#333333;
+            font-size:14px;
+            font-weight:400;
+            
+        }
+        
+        .top-nav-list-opt span{
+            vertical-align:middle;
+        } 
+        .top-nav-list-opt{
+            margin:0;
+            padding:0;
+            list-style-type:none;
+            display:inline-block;
+            cursor:pointer;
+            min-width:100px;
+            position:relative;
+            color:#333333;
+        }
+        a.top-nav-list-opt:hover, a.top-nav-list-opt:focus, a.top-nav-list-opt:active{
+            color:#333333;
+        }
+        .fe-icon{
+              display: inline-block;
+              background-color:transparent;
+              background-image: url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}');
+              background-repeat:no-repeat; 
+              height: 15px;
+              width: 15px;
+              margin-right:5px;
+              vertical-align: middle;
+        }
+        .wishlist-ico{
+            background-position:-50px -30px;
+        }
+        .account-ico{
+            background-position:-20px -30px;
+        }
+        .main-header-block{
+            margin:20px auto;
+           
+        }
+         .header-main-logo,.header-search,.cart-info{
+         display:inline-block;
+         }
+        .header-main-logo-link{
+            display:inline-block;
+        }
+        
+        .cart-info-group{
+            background:#0086C0;
+            padding:10px;
+            border-radius:3px;
+            width:150px;
+            margin-right:10px;
+            float:right;
+            text-align:center;
+            cursor:pointer;
+            display:inline-block;
+            
+            
+        }
+        .cart-ico{
+            width:20px;
+            height:20px;
+            background-position:0px -28px;
+        }
+        .cart-text{
+            vertical-align:middle;
+            font-size:14px;
+            color:#fff;
+        }
+        .cart-items{
+              display: inline-block;
+              width: 15px;
+              font-size: 12px;
+              text-align: center;
+              border-radius: 50%;
+              margin: 0 3px;
+              color: #0086C0;
+              background-color: #fff;
+            
+        }
+        .mega-menu-header-wrap{
+            background:#0086C0;
+            height:50px;
+        }
+        .mega-menu-list{
+            margin:0;
+            padding:0;
+            position:relative;
+            list-style-type:none;
+           
+        }
+        .mega-menu-list::after{
+            content:"";
+            clear:both;
+        }
+        .mega-menu-list::after{
+            content:"";
+            display:table;
+        }
+        .wrapper{
+             padding-bottom:30px;
+             padding-top:30px;
+             overflow:hidden;
+             display:table;
+             height:100%;
+             padding-left:0px;
+             padding-right:0px;
+             position:relative;
+        }
+        .mega-menu-list>li{
+            margin:0;
+            min-width:100px;
+            font-size:14px;
+            float:left;
+            
+        }
+        .mega-menu-list>li:first-child>a{
+          border-left:1px solid #006E9E;
+        }
+        .mega-menu-list>li>a,.mega-menu-list>li>a:hover,.mega-menu-list>li>a:focus,.mega-menu-list>li>a:active{
+            display:block;
+            color:#fff;
+            padding:15px;
+            text-decoration:none;
+            text-align:center;
+            border-right:1px solid #006E9E;
+             
+        }
+        .megamenu-categories-dropdown{
+            width:275px;
+            background:#007aaf;
+              padding: 11px !important;
+        }
+        .megamenu-categories-dropdown>a{
+            display:block;
+            font-weight:700;
+            font-size:20px;
+        }
+        .dropdown-white{
+            background-position: -145px -48px;
+            width: 11px;
+            float: right;
+            margin-top: 8px;
+        }
+        .category-list-items{
+            width:275px;
+            overflow:hidden;
+            display:inline-block;
+            list-style-type:none;
+            padding:0;
+            margin:0; 
+            min-height:400px;
+            border:1px solid #ccc;
+            border-top:none;
+        }
+        .lead-promo-slider{
+             display: inline-block;
+             vertical-align: top;
+             width: calc(100% - 280px);
+             overflow:hidden;
+             min-height:400px;
+             padding:15px 15px 0px 15px
+        
+        }
+        .slider-wrap{
+            border:1px solid #ccc;
+            height:385px;
+            width:100%;
+        }
+       
+.styled-select select {
+    text-align: center;
+    background: transparent url("b.png") no-repeat right center;
+    width: 150px;
+    height: 39px;
+    padding: 5px;
+    line-height: 2;
+    font-size: 14px;
+    color: #1c1c1c;
+    border: 1px solid #0087c1;
+    margin-left: -4px;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: inline-block;
+    border-left: 0px;
+    padding-left: 20px;
+     padding-right: 20px;
+}
+.styled-select {
+    display: inline-block;
+}
+.styled-select select option {
+    
+    padding: 5px;
+    padding-top: 7px!important;
+    padding-bottom: 7px!important;
+    color: #1c1c1c;
+    font-size: 14px;
+    font-family:inherit;
+    font-weight: 400;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+    background-color: white;
+}
+
+option:checked, option:hover {
+    color:#1c1c1c;
+    background-color: #EEEEEE;
+}
+  .em_footer_area{
+        background-color:#444444;
+        min-height: 300px;
+    }
+    .em_email_enter{
+    margin-top: 20px;
+}
+.em_email_enter input[type=text]  {
+    border-radius:3px;
+    color: #ccc;
+    font-family: inherit;
+    font-size: inherit;
+    height: 39px;
+    line-height: inherit;
+    padding-left: 10px;
+   
+    background-color: #fff;
+    border:none;
+}
+.em_subscribes{
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 500;
+    color: #fff;
+    margin-top: 30px;
+}
+hr{
+    border-color:#5C5C5C;
+}
+.em_subscribebtn {
+    color: #fff;
+    background: none;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    width: 139px;
+    height: 39px;
+    margin-left: 10px;
+    margin-right: 25px;
+}
+.em_subscribebtn:hover {
+    color: #fff;
+ 
+    background: #0087C1;
+    border-radius: 4px;
+    border: none;
+    width: 139px;
+    height: 39px;
+    margin-left: 10px;
+    margin-right: 25px;
+}
+.em_copyrighttext{
+    color: #fff;
+    font-size: 16px;
+    margin-top: 15px;
+}
+.em_follow{
+    color: #fff;
+    font-size: 16px;    
+    display: inline-block;
+}
+.em_social_list, .em_social_list li {
+    display: inline-block;
+    list-style-type: none;
+    padding-left: 6px;
+}
+.em_fb{
+    width: 30px;
+    height: 30px;
+
+    position: relative;
+}
+.em_fb span {
+    background: transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat scroll 0 0;
+    height: 28px;
+    
+    position: absolute;
+    top: 10px;
+    width: 28px;
+}
+.em_fb span:hover {
+    background: transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat scroll -28px 0;
+    height: 28px;
+    
+    position: absolute;
+    top: 10px;
+    width: 28px;
+}
+.em_twi{
+    width: 30px;
+    height: 30px;
+    
+    position: relative;
+}
+.em_twi span {
+    background: transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat scroll -56px 0px;
+    height: 28px;
+    
+    position: absolute;
+    top: 10px;
+    width: 28px;
+}
+.em_twi span:hover {
+    background: transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat scroll -84px 0px;
+    height: 28px;
+    
+    position: absolute;
+    top: 10px;
+    width: 28px;
+}
+.em_lin{
+    width: 30px;
+    height: 30px;
+    
+    position: relative;
+}
+.em_lin span {
+    background: transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat scroll -112px 0px;
+    height: 28px;
+    
+    position: absolute;
+    top: 10px;
+    width: 28px;
+}
+.em_lin span:hover {
+    background: transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat scroll -140px 0px;
+    height: 28px;
+    
+    position: absolute;
+    top: 10px;
+    width: 28px;
+}
+.em_gplus{
+    width: 30px;
+    height: 30px;
+    
+    position: relative;
+}
+.em_gplus span {
+    background: transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat scroll -168px 0;
+    height: 28px;
+    
+    position: absolute;
+    top: 10px;
+    width: 28px;
+}
+.em_gplus span:hover {
+    background: transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat scroll -196px 0;
+    height: 28px;
+    
+    position: absolute;
+    top: 10px;
+    width: 28px;
+}
+.em_footerbox{
+    color: #fff;
+    list-style-type:none;
+    font-size: 16px;
+    
+}
+.em_hr{
+    margin-bottom: 6px;
+    margin-top: 10px;
+}
+.em_botm{
+    margin-bottom: 10px;
+}
+.em_noofproduct{
+  
+    background-color: #fff;
+    border-radius: 84px;
+    color: #0086c0;
+    height: 18px;
+    width: 18px;
+    display: inline-block;
+    text-align: center;
+
+}
+.account .account-login-wrap{
+    position:absolute;
+    width:560px;
+    height:340px;
+    border:1px solid #ccc;
+    background:#fff;
+    right:0;
+    z-index:225;
+    box-sizing:border-box;
+    margin-top:10px;
+    display:none;
+    
+    
+}
+
+.account .account-logged-in-wrap{
+    position:absolute;
+    width:175px;
+    height:150px;
+    border:1px solid #ccc;
+    background:#fff;
+    right:0;
+    z-index:225;
+    box-sizing:border-box;
+    margin-top:10px;
+    display:none;
+    
+}
+.account-logged-in-wrap .logged-in-menu{
+    padding:0;
+    
+    list-style-type:none;
+    text-align:center;
+}
+.logged-in-menu>li{
+    padding:0;
+    
+}
+.logged-in-menu>li:nth-child(even){
+    background:#ebebeb;
+}
+.logged-in-menu>li>a{
+    display:block;
+    padding:10px 6px;
+    text-decoration:none;
+    color:#333333;
+    
+}
+.logged-in-menu>li>a:hover{
+    background-color:#0086C0;
+    color:#fff;
+}
+ .loginAccount.open  form .account-login-wrap,.loginAccount.open  form .account-logged-in-wrap{
+    display:block;
+}
+.loginAccount>.dropdown-toggle>span{
+       vertical-align:middle; 
+}
+.pointer{
+    width:20px;
+    height:15px;
+    position:absolute;
+    display:inline-block;
+    background:transparent url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}') no-repeat -217px -48px;
+    
+}
+.pointer-up{
+    top:-15px;
+    right:48px;
+}
+.account-login-wrap::after {
+    clear: both;
+    content: "";
+}
+.space-top-15{
+    margin-top:15px;
+}
+.space-top-85{
+    margin-top:85px;
+    
+}
+.account-login-wrap .acc-block{
+    width:50%;
+    height:100%;
+    box-sizing:border-box;
+    border-right:1px solid #ccc;
+    float:left;
+    padding:0px 10px;;
+}
+.account-login-wrap .acc-block:last-child{
+    border-right:none;
+}
+    .acc-block label{
+        font-weight:500;
+        display:block;
+        margin-bottom:10px;
+    }
+    .acc-block input{
+        box-sizing:border-box;
+        padding:6px;
+        outline:none;
+        width:100%;
+        border:1px solid #ccc;
+        border-radius:3px;
+        font-weight:500;
+        display:block;
+        margin-bottom:10px;
+    }
+    .acc-block a, .acc-logout {
+        display:inline;
+        margin-right:13px;
+        padding:10px 20px;
+        border-radius:3px;
+        background-color:#0086C0;
+        vertical-align:middle;
+        color:#fff;
+        min-width:100px;
+        text-decoration:none;
+        text-align:center;
+    }
+    .acc-block a:hover, .acc-logout:hover,.acc-block a:active, .acc-logout:active,.acc-block a:focus, .acc-logout:focus{
+        text-decoration:none;
+        color:#fff;
+    }
+    a.acc-logout{
+            margin: 0 auto;
+            display: block;
+            width: 80%;
+    }
+    .acc-block a.create-acc{
+        background-color:#595959;
+        width:100%;
+        margin-top:35px;
+    }
+body a: hover{
+text-decoration:none!important;
+}
+.em_cart,.em_items{
+color:#fff;
+text-decoration:none;
+}
+.em_cart:hover,.em_cart:focus,.em_cart:active,.em_items:hover,.em_items:focus,.em_items:active
+{
+color:#fff;
+text-decoration:none;
+
+}
+.ajax_loader_bg {
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    position: fixed;
+    opacity: 0.33;
+    z-index:777;
+}
+.ajax_loader {
+    height: 80px;
+    width: 80px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index:789;
+    border-radius:50%;
+    margin-left: -35px;
+    margin-top: -35px;
+    background: #fff url('{!URLFOR($resource.EcomKulResources,'EcomKulResources/FrontEnd/css/all-images/wedgecommerce-2.gif')}') no-repeat center;
+}
+
+.header-search-group{
+        display:inline-block;
+        position:relative;
+        vertical-align:middle;
+    }
+.header-search-group input[type="text"]{
+    outline:none;
+    display:inline-block;
+    float:left;
+    height:40px;
+    width:250px;
+    padding:6px 12px; 
+    box-sizing:border-box;
+    border:1px solid #0087C1;
+    border-right:none;
+    border-top-left-radius:3px;
+    border-bottom-left-radius:3px;
+}
+.header-search-group .category-select{
+    display:inline-block;
+    float:left;
+    position:relative;
+    white-space:no-wrap;
+}
+.header-search-group .category-select-dropdown,.header-search-group .category-select-dropdown:active,.header-search-group .category-select-dropdown:focus{
+    display:inline-block;
+    padding:6px 12px;
+    width:155px;
+    outline:none;
+    height:40px;
+    text-align:left;
+    border:1px solid #0087C1;
+    background:#fff;
+}
+.header-search-group .category-select-dropdown>.caret{
+    float:right;
+    margin-top:7px;
+}
+.header-search-group .search-link{
+    
+    display:inline-block;
+    float:left;
+    width:50px;
+    position:relative;
+    height:40px;
+    min-height:20px;
+    background:#0087C1;
+    border-top-right-radius:3px;
+    border-bottom-right-radius:3px;
+    border:1px solid #0087C1;
+}
+.header-search-group a>i{
+    background-image: url('{!URLFOR($Resource.EcomKulResources, 'EcomKulResources/FrontEnd/css/sprite.png')}');
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -9px;
+    margin-top: -9px;
+    background-position: -214px -30px;
+    background-color: transparent;
+    background-repeat:no-repeat;
+}
+.Prod_intent{
+    width:251px;
+    display:block;
+    border-radius:0px;
+    padding:0px;
+    border:none;
+    margin-top:0px;
+    border-left:1px solid #0087C1;
+    border-right:1px solid #0087C1;
+}
+.options{
+    min-width:155px;
+    border-radius:0px;
+    padding:0px;
+    border:none;
+    margin-top:0px;
+    border-left:1px solid #0087C1;
+    border-right:1px solid #0087C1;
+}
+.options span,.Prod_intent span{
+    display:block;
+    padding:6px 12px;
+    height:35px;
+    cursor:pointer;
+    border-bottom:1px solid #0087C1;
+}
+.options span:hover{
+    color:#fff;
+    background:#0087C1;
+}
+.Cart{
+    text-decoration:none;
+    color:#fff;
+    display: inline-block;
+    border-radius:6px;
+}
+.cart-pagebackground{
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    position: fixed;
+    opacity: 0.4; 
+    z-index: 559;
+}
+.details-container{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    
+    background: #fff;
+    z-index: 569;
+}
+.details-container.cart-height{
+    height: 300px;
+    width: 600px;
+    margin-top: -150px;
+    margin-left: -300px;
+}
+.details-container.wishlist-height{
+    height: 250px;
+    width: 600px;
+    margin-top: -125px;
+    margin-left: -300px;
+}
+.Cart:hover,.cart:active,.cart:focus{
+    text-decoration:none;
+    border-radius:6px;
+    display: inline-block;
+    color:#4D91B3; 
+}
+.details.detail-header{ 
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    
+    }
+ .details.details-close{
+    float:right;
+    cursor:pointer;
+ }
+ .details.Quickproduct-details{
+        padding: 15px 40px;
+ }
+ .details.Quickproduct-details .details-image-Box{
+    display:inline-block;
+    vertical-align:middle;
+    border:1px solid #ccc;
+    height:100px;
+    width:100px;
+    overflow:hidden;
+ }
+ .details.Quickproduct-details .details-image-Box > img{
+    width:100%;
+    height:100%;
+    display:block;
+ }
+ 
+ .details.Quickproduct-details .details-product-Box{
+    display:inline-block;
+    vertical-align:middle;
+    margin-left:15px;
+    text-align:right;
+    width:400px;
+ }
+ .details.Quickproduct-details p.text-left{
+    text-align:left;
+ }
+ .details.detail-prefooter{
+    padding:10px 40px;
+    font-weight:700;
+ }
+ .details.detail-prefooter .cart-total-info{
+    float:right;
+    
+ }
+ .details.detail-footer{
+    border-top:1px solid #ccc;
+    padding:15px
+ }
+ .details.detail-footer .Qbuttons{
+    color: #fff;
+        
+    min-width: 120px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 3px;
+ }
+ 
+ .details.detail-footer .Qviewcart{
+    background-color: #0086CE;
+    float:left;
+ }
+ .details.detail-footer .Qcheckout{
+    background-color: #4BBA60;
+    float:right;
+ }
+ .qvPOP{
+            width:800px;
+            height:600px;
+            margin-left:-400px;
+            margin-top:-300px;
+            overflow:hidden;
+            box-shadow: 0px 0px 15px 4px #333;
+        }
+        .qvPOP .qvPOP-header{
+            padding: 10px 15px;
+            font-size: 16px;
+            color: #333;
+            height:40px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .qvPOP-header .qvclose{
+            cursor:pointer;
+            float:right;
+        }
+        .qvPOP .qvcomp-wrap{
+            padding:15px;
+            height:560px;
+            overflow-y:auto;
+            overflow-x:hidden;
+            width:800px;
+            
+        }
+        
+            .image-gallery{
+                margin-top:5px;
+            }
+            .image-gallery a{
+                display:inline-block;
+                border:2px solid transparent;
+                
+            }
+            .image-gallery img{
+                width:70px;
+                height:70px;
+                
+                
+            }
+            .image-gallery a.active{
+                border:2px solid #ccc;
+            }   
+            p.prod-name-heading {
+                display:block;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #ccc;
+            }
+            .prod-description{
+                text-align:justify;
+            }
+            .prod-price{
+                font-weight: 700;
+                color: #333;
+                font-size: 20px;
+                margin-top: 25px;
+                 margin-bottom: 15px;
+            }
+            .qv-p-specs{
+                margin:15px 0px;
+                display:table;
+            }
+            .qv-p-specs div{
+                margin-bottom:15px;
+                display:table-row;
+            }
+            .qv-p-specs div span{
+                display:table-cell;
+                padding:8px 0px;
+                margin-right:10px;
+            }
+            .qv-p-specs div span:last-child{
+                padding-left:15px;
+            }
+            .qv-btn-group{
+                margin-top:15px;
+            }
+            .qv-btn-group a,.qv-btn-group a:hover,.qv-btn-group a:focus,.qv-btn-group a:active{
+                display: inline-block;
+                
+                color: #fff;
+                min-width: 120px;
+                padding: 8px;
+                margin-top: 5px;
+                
+                text-align: center;
+                border-radius: 3px;
+                text-decoration:none;
+            }
+            .qv-btn-group a.qv-addtocart{
+                background-color: #0086CE;
+            }
+            .qv-btn-group a.qv-wishlist{
+                background-color: #4BBA60;
+                margin-left:55px;
+            }
+            .quant-group >*{
+                display:inline-block;
+                margin:0;
+                vertical-align:middle;
+            }
+            .quant-group .quant-box{
+                width:35px;
+                height:35px;
+                box-sizing:border-box;
+                padding:2px;
+                text-align:center;
+            } 
+            .quant-group .quant-controller{
+                height:35px;
+                width:20px;
+                text-decoration: none;
+            }
+            .quant-group .quant-controller i{
+                display:block;
+                font-style:normal;
+                height:17.5px;
+                border:1px solid #ccc;
+                text-align:center;
+                width:20px; 
+                line-height: 16px;
+                color: #333;
+                text-decoration: none;
+            }
+            div.login-error,ul.pagerrormsg{
+                position: fixed;
+                top: 15px;
+                right: 0;
+                z-index: 555;
+                width: 500px; 
+                padding: 10px;
+                color: #fff;
+                background-color: #c23934;
+                background-image: linear-gradient(45deg,rgba(0,0,0,.025) 25%,transparent 25%,transparent 50%,rgba(0,0,0,.025) 50%,rgba(0,0,0,.025) 75%,transparent 75%,transparent);
+                border: 1px solid #d74c3b;
+                background-size:64px 64px;   
+                border-radius: 3px 0px 0px 3px;
+                font-weight: 700;
+                text-align: justify;
+            }
+            div.login-error>p,div.notice-success>p,ul.pagerrormsg li{
+                    width: 400px;
+                    display: inline-block;
+                    font-weight: 400;
+                    font-size: 15px;
+                    color: #fff;
+                    margin-bottom:0px;
+                    vertical-align:middle;
+            }
+            div.Tnc-header{
+            
+            }
+            i.fe-notify-icon,span.fe-notify-icon,ul.pagerrormsg li::before{
+                height:25px;
+                width:25px;
+                content:"";
+                display:inline-block;
+                vertical-align:middle;
+            }
+            i.fe-notify-icon.notify_error,ul.pagerrormsg li::before{
+                background:transparent url("{!URLFOR($Resource.EcomKulResources,'EcomKulResources/FrontEnd/css/notificationIcons/icon-warning.png')}") no-repeat center;
+                margin-right: 10px;
+            }
+            i.fe-notify-icon.notify_success{
+                background:transparent url("{!URLFOR($Resource.EcomKulResources,'EcomKulResources/FrontEnd/css/notificationIcons/icon-alarm.png')}") no-repeat center;
+                margin-right: 10px;
+            }
+            span.fe-notify-icon.notify_close{
+                background:transparent url("{!URLFOR($Resource.EcomKulResources,'EcomKulResources/FrontEnd/css/notificationIcons/icon-close.png')}") no-repeat center;
+                margin-left: 10px;
+                cursor:pointer;
+            }
+            div.notice-success{
+                position:fixed;
+                top:15px;
+                right:0;
+                z-index:555;
+                width:500px;
+                padding:10px;
+                background-color:#04844b;
+                background-image: linear-gradient(45deg,rgba(0,0,0,.025) 25%,transparent 25%,transparent 50%,rgba(0,0,0,.025) 50%,rgba(0,0,0,.025) 75%,transparent 75%,transparent);
+                background-size:64px 64px;    
+                color:#3c763d;
+                border:1px solid #3c763d;
+                border-radius:3px 0px 0px 3px;
+                font-weight:700;
+                text-align:justify;
+            
+            }
+            .wdg-error--msg {
+                    list-style-type: none;
+                    margin: 0;
+                    display: block;
+                    padding: 10px;
+                    color: #fff;
+                    font-size: 14px;
+                    background-color: #C23932;
+                    background-image: linear-gradient(45deg,rgba(0,0,0,.025) 25%,transparent 25%,transparent 50%,rgba(0,0,0,.025) 50%,rgba(0,0,0,.025) 75%,transparent 75%,transparent);
+                    border: 1px solid #d74c3b;
+                    background-size: 64px 64px;
+                    border-radius: 3px;
+                    text-align: left;
+        }
+            
+         @media only screen and (max-width: 767px){
+            .cart-info-group,.header-main-logo-link{
+                clear:both;
+                float:none;
+                display:block;
+                margin:20px auto;
+            }
+            .header-main-logo-link{
+                width:200px;
+                clear:both;
+                float:none;
+                display:block;
+                margin:0px auto  20px auto;
+                text-align:center;
+            }
+            
+        } 
+    </style>
+     <apex:actionStatus id="docSearch" stopText="" layout="block" styleclass="Spinnerloader">
+          <apex:facet name="start">
+             <div class="ajax_loader_bg"></div>
+             <div class="ajax_loader"></div>
+            
+          </apex:facet>
+      </apex:actionStatus>
+    <div class="fullpagewrapper">
+         <apex:outputpanel layout="block" id="quickTNCview">
+            <apex:outputpanel layout="block" rendered="{!TNCView}">
+                <div class="cart-pagebackground"> </div> 
+                <apex:outputpanel layout="block" styleclass="qvPOP details-container" id="qvPop">
+                    <div class="qvPOP-header"><span>Terms and Conditions</span> <span class="qvclose" id="Tncclose">❌</span></div>
+                    <div class="qvcomp-wrap">
+                        <apex:dynamiccomponent componentvalue="{!TNCarticle}"/>
+                    </div>
+                </apex:outputpanel>
+            </apex:outputpanel>
+         </apex:outputpanel>
+    <apex:outputpanel layout="block" id="QuickcartView">
+         <apex:outputpanel layout="block" rendered="{!Qview}">
+            <div class="cart-pagebackground"> </div>                
+            <div class="details-container cart-height">
+                <p class="details detail-header">
+                     <span>Product is added to cart</span>
+                     <span class="details details-close" id="details-close" > &#10060;</span>
+                </p>
+                <div class="details Quickproduct-details">
+                    <div class="details-image-Box">
+                        <img src="/servlet/servlet.FileDownload?file={!cImage}"/>
+                    </div>
+                    <div class="details-product-Box">
+                        <p class="prodname">{!Cprodname}</p>
+                        <p class="prodQuant"> Quantity : {!CprodQuant} </p>
+                        <p class="prodprice"> Price : {!CprodQuant} &#10005; {!Currsymbol} {!Cprodprice} </p>
+                        
+                    </div>
+                </div>
+                <p class="details detail-prefooter"> 
+                    <span class="cart-item-info">You have {!cartitems} {!IF(cartitems >1,'items','item')} in your cart</span>
+                    <span class="cart-total-info">Cart Total : {!Currsymbol} {!Carttotal}</span>
+                </p>
+                <p class="details detail-footer clearfix"> 
+                    <a href="{!URLFOR($page.viewCart,null,null)}" class=" Qbuttons Qviewcart">Viewcart</a>
+                    <a href="{!URLFOR($page.checkout,null,null)}" class="Qbuttons Qcheckout">Checkout</a>
+                </p>
+            
+            </div>
+         </apex:outputpanel>
+    </apex:outputpanel> 
+    <apex:form >
+    <apex:actionfunction name="addtocartfunc" action="{!addToThisCart}" status="docSearch" rerender="cart,QuickproductView,QuickcartView" oncomplete="hideQveiw()"/>
+       <apex:actionfunction name="addtowishlistfunc" action="{!addToThiswishlist}" status="docSearch" rerender="wishcount,QuickproductView,QuickwishlistView" oncomplete="hideWQveiw()"/>
+    <apex:inputhidden value="{!quantity}" id="prodQuantity"/>
+    <apex:outputpanel layout="block" id="QuickproductView">
+        <apex:outputpanel layout="block" rendered="{!qprodView}">
+            <div class="cart-pagebackground"> </div> 
+                <apex:outputpanel layout="block" styleclass="qvPOP details-container" id="qvPop">
+                    <div class="qvPOP-header"> 
+                        <span>Quick view product</span>
+                        <span class="qvclose" id="qvclose">&#10060;</span>
+                    </div>
+                    <div class="qvcomp-wrap">
+                        
+                            <div class="row">
+                                <div class="col-md-6"> 
+                                    <img id="img1"  src="/servlet/servlet.FileDownload?file={!ProductDetails.Image_Id__c}" data-zoom-image="/servlet/servlet.FileDownload?file={!ProductDetails.Image_Id__c}" height="400px" width="360px" />
+                                     <div class="clearfix image-gallery" id="gallery_01">
+                                       <a href="javascript:void(0)"  data-image="/servlet/servlet.FileDownload?file={!ProductDetails.Image_Id__c}" class="active "  data-zoom-image="/servlet/servlet.FileDownload?file={!ProductDetails.Image_Id__c}">  
+                                         <img  src="/servlet/servlet.FileDownload?file={!ProductDetails.Image_Id__c}"  />
+                                       </a>
+                                       <apex:repeat value="{!ProductDetails.attachments}" var="att">
+                                            <a href="javascript:void(0)"  data-image="/servlet/servlet.FileDownload?file={!att.id}" data-zoom-image="/servlet/servlet.FileDownload?file={!att.id}">
+                                                <img src="/servlet/servlet.FileDownload?file={!att.id}"  />
+                                           </a>
+                                       </apex:repeat>
+                                    </div>
+                                </div> 
+                                <div class="col-md-6"> 
+                                    <p class="oxy-20-bold prod-name-heading"> {!ProductDetails.name}</p>
+                                    <apex:outputtext value="{!ProductDetails.product_description__c}" styleclass="prod-description" escape="false"> </apex:outputtext>
+                                    <p class="prod-price">Price : {!Currsymbol} {!ProductDetails.List_price__c}</p>
+                                    <div class="qv-p-specs">
+                                        <div>
+                                            <span>Product SKU :</span>
+                                            <span>{!ProductDetails.ProductCode}</span>
+                                        </div>
+                                        <div>
+                                            <span>Product Availability :</span>
+                                            <span>{!IF(ProductDetails.Stock_Availability__c,'Available', 'Out of stock')}</span>
+                                        </div>
+                                        <div>
+                                            <span>Quantity :</span>
+                                            <span class="quant-group">
+                                                <input type ="text" class="quant-box" value="1" max="{!ProductDetails.amount__C}" id="quantval"/>
+                                                <a href="javascript:void(0)" class="quant-controller">
+                                                    <i id="add">&#43;</i>
+                                                    <i id="reduce">&#x2212;</i>
+                                                </a>
+                                            </span> 
+                                        </div>
+                                    </div>
+                                    <div class="qv-btn-group"> 
+                                        <a href="javascript:void(0)" onclick="addtocartfunc()" class="qv-addtocart">Add to cart</a>
+                                        <a href="javascript:void(0)" onclick="addtowishlistfunc()" class="qv-wishlist">Add to wishlist</a>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+                </apex:outputpanel>               
+            </apex:outputpanel>
+        
+        </apex:outputpanel> 
+        </apex:form>
+       <apex:outputpanel layout="block" id="QuickwishlistView">
+         <apex:outputpanel layout="block" rendered="{!qwishlist}">
+            <div class="cart-pagebackground"> </div>                
+            <div class="details-container wishlist-height">
+                <p class="details detail-header">
+                     <span>Product is added to Wishlist</span>
+                     <span class="details details-close" id="details-close" > &#10060;</span>
+                </p>
+                <div class="details Quickproduct-details">
+                    <div class="details-image-Box">
+                        <img src="/servlet/servlet.FileDownload?file={!cImage}"/>
+                    </div>
+                    <div class="details-product-Box">
+                        <p class="text-left"> {!Cprodname} successfully added to wishlist</p>
+                      
+                    </div>
+                </div>
+                <p class="details detail-footer clearfix"> 
+                     <a href="{!URLFOR($Page.Wishlist,null,null)}" class="Qbuttons Qcheckout">View wishlist</a>
+                </p>
+            
+            </div>
+         </apex:outputpanel>
+      </apex:outputpanel>
+     
+    
+    <div class="sf_wrapper">
+        <apex:outputpanel layout="block" styleclass="login-error" rendered="{!$CurrentPage.parameters.loginerr=='1'}">
+            <i class="fe-notify-icon notify_error "></i>
+            <p> Login attempt failed !!!. The username or password you have entered is invalid. Please try again.</p>
+            <span class="fe-notify-icon notify_close"></span>
+        </apex:outputpanel>
+        
+    <div class="sf-helper-top-container top-nav">
+        <div class="container"> 
+            <div class="top-nav-list">
+              
+                <apex:outputlink value="{!URLFOR($Page.Wishlist,null,null)}" styleclass="top-nav-list-opt wishlist" id="wishcount">
+                        <i class="fe-icon wishlist-ico"></i>
+                        <span>Wishlist ({!wishlistcount})</span>
+                </apex:outputlink>
+                <div class="top-nav-list-opt account " >
+                    <div id="logaccount" class="loginAccount dropdown">
+                       
+                        <span class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fe-icon account-ico"></i>
+                            <apex:outputpanel rendered="{!ISPICKVAL($User.UserType,'Guest')}">Account</apex:outputpanel>
+                            <apex:outputpanel rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">{!$User.FirstName}&nbsp;{!$User.LastName}</apex:outputpanel>
+                         </span>
+                    <apex:form >
+                    <apex:outputpanel layout="block" styleclass="account-login-wrap" rendered="{!ISPICKVAL($User.UserType,'Guest')}"> 
+                        <span class="pointer pointer-up"></span>
+                        <apex:outputpanel layout="block" styleclass="acc-block">
+                            <h4 class="oxy-20-bold">Sign In</h4>
+                            <p class="space-top-15"> Sign in with your username and password</p>
+                            <p class="space-top-15">
+                                <apex:outputlabel value="E-mail/UserName :" for="usr"></apex:outputlabel>
+                                <apex:inputtext html-placeholder="Email" value="{!username}" id="usr"/>
+                            </p>
+                            <p class="space-top-15">
+                                <apex:outputlabel value="Password :" for="pswd"></apex:outputlabel>
+                                <apex:inputsecret html-placeholder="********" value="{!password}" id="pswd"/>
+                            </p>
+                            <p class="space-top-15">
+                                <apex:commandlink value="Sign In" action="{!sitelogin}" styleclass="info-panel-btn"/>
+                                <a href="{!URLFOR($Page.ForgotPassword)}" styleclass="info-panel-btn" style="margin-right:0px;">Forgot Password ?</a>
+
+                            </p>
+                        </apex:outputpanel>
+                        <apex:outputpanel layout="block" styleclass="acc-block">
+                            <p class="space-top-85"> Create a {!$Site.name} account here using your email address</p>
+                            <apex:outputlink value="{!URLFOR($Page.SiteRegister)}" styleclass="create-acc">Create An Account</apex:outputlink>
+                        
+                        </apex:outputpanel>
+                    </apex:outputpanel>
+                    <apex:outputpanel layout="block" styleclass="account-logged-in-wrap" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}"> 
+                        <span class="pointer pointer-up"></span>
+                        <ul class="logged-in-menu">
+                            <li><a href="{!URLFOR($page.userprofiles)}">My Profie</a></li>
+                            <li> <a href="{!URLFOR($page.myorders)}">My Orders</a></li>
+                        </ul>
+                        <apex:commandlink value="Sign Out" action="{!sitelogout}" styleclass="acc-logout"></apex:commandlink>
+                    </apex:outputpanel>
+                     </apex:form>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="main-header-block">
+        <div class="container header-grid">
+            <div class="row">
+                <div class="col-xs-12 col-md-3 col-sm-3 header-main-logo">
+                    <a href="{!$site.baseurl}" class="header-main-logo-link" >
+                        <apex:outputpanel rendered="{!logo!=''}">
+                            <img src="/servlet/servlet.FileDownload?file={!logo}" width="132px" height="32px"/>
+                        </apex:outputpanel>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-md-6 col-sm-6 header-search  text-center">
+                    <div class="header-search-group">
+                        <apex:form >
+                            <div class="category-select">
+                                <apex:inputhidden value="{!categoryQuery}" id="catQuery"/>
+                                <apex:inputtext value="{!queryKeyword}" html-placeholder="Search Here" onkeypress="redirectToSearch(event)"/>
+                                <apex:actionfunction name="redirectSearch" action="{!search}" rerender="dsas"/>
+                            </div>
+                            <div class="category-select">
+                                <button class="category-select-dropdown" id="caret-dropdown" type="button" data-toggle="dropdown" aria-expanded="false">
+                                    <span id="dropdownval">{!categoryKeyword}</span>
+                                    <span class="caret"></span>
+                                 </button>
+                                   <ul class="dropdown-menu options" id="dropOpt">
+                                      <li><span id="all">All Categories</span></li>
+                                      
+                                    </ul>
+                            </div>
+                            <apex:commandLink value="" action="{!search}" styleClass="search-link"><i class="search-logo"></i></apex:commandLink> 
+                        </apex:form>
+                    </div>
+               </div>
+                <div class="col-xs-12 col-md-3 col-sm-3 cart-info  text-center">
+                    <apex:outputpanel id="cart" layout="block">
+                        <apex:outputpanel layout="block" styleclass="login-error" rendered="{!carterr}">
+                            <i class="fe-notify-icon notify_error "></i>
+                            <p>{!cartmsg}</p>
+                           <span class="fe-notify-icon notify_close"></span>
+                        </apex:outputpanel>
+                        <apex:outputpanel layout="block" styleclass="notice-success" rendered="{!cartsuccess}">
+                            <i class="fe-notify-icon notify_success "></i>
+                            <p>{!cartmsg}</p>
+                             <span class="fe-notify-icon notify_close"></span>
+                        </apex:outputpanel>
+                        <a href="{!URLFOR($page.viewcart)}" class="cart-info-group">
+                            <apex:outputPanel >
+                                <i class="fe-icon cart-ico"></i>
+                                <span class="em_cart">Cart</span> <span class="em_noofproduct">{!cartitems}</span>
+                                <span class="em_items">Items</span>
+                            </apex:outputPanel>
+                         </a>
+                     </apex:outputPanel> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mega-menu-header-wrap">
+        <div class="container mega-menu-header">
+            <div class="row">
+                <div class="category_menu">
+                    <ul id="sf_ecom_cat_menu" class="mega-menu-list">
+                 
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.sf_ecom_cat_menu{
+
+    position: relative;
+    background: #34495e;
+    list-style-type:none;
+    margin:0 auto;
+    width:95%;
+
+}
+*{
+    margin:0;
+    padding:0;
+
+}
+ul.sf_ecom_cat_menu>ul,li{
+
+    list-style-type: none;
+}
+.sf_ecom_cat_menu li.sf_ecom_cat_menu-items {
+    float:left;
+    color:#fff;
+}
+.sf_ecom_cat_menu li.sf_ecom_cat_menu-items>a{
+        font-family: 'Oxygen', sans-serif;
+    color:#fff;
+    font-size:13px;
+    padding:15px;
+    display: inline-block;
+    text-decoration:none;
+
+}
+ul.sf_ecom_cat_menu::after, ul.sf_ecom_cat_menu::before{
+    display:table;
+    clear:both;
+    content:'';
+    line-height:0;
+}
+
+ul.navContent{
+  min-width: 200px;
+  display: none; 
+  position: absolute;
+  background: white;
+  z-index: 200;
+  border: 1px solid #CCCCCC;
+  border-top: 0;
+  padding: 15px 16px;
+  
+}
+
+li.submenu-col{
+    margin: 0px 10px 0px 0px;
+  display: inline-block;
+  vertical-align: top;
+  min-width: 139px;
+
+}
+.nav-top-header{
+  min-height: 25px;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #CCCCCC;
+}
+.nav-top-header>a{
+    text-decoration:none;
+    color:#494949;
+    
+    font-size:13px;
+    font-weight:bold;
+     font-family: 'Oxygen', sans-serif;
+}
+.submenu-list-item{
+    margin-bottom:10px;
+    }
+.submenu-list-link{
+    font-family: 'Oxygen', sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    outline: none;
+    color: #6E6E6E;
+    cursor: pointer;
+    border-bottom: 0;
+  
+
+}
+.shoWMe{
+    display:block !important;
+}
+.to_the_right .navContent{
+    right:0px;
+}
+.ecm_bredcrum_Wrapper{
+    padding:10px;
+    
+}
+.footer{
+    
+    height:50px;
+    background-color:#0086C0;
+}
+.pre-footer{
+   background-color:#444444;
+   padding: 15px;
+   color:#fff;
+
+}
+.emailup,.emailup:focus,.emailup:active,.emailup:hover{
+    height:42px;
+    padding:6px 12px;
+    color: #444;
+    width: 340px;
+    border:none;
+    outline:none;
+    border-radius:3px;
+    display:inline-block;
+    vertical-align:middle;
+    
+    
+}
+.subscribe{
+    float:right;
+}
+.subscribeBtn,.subscribeBtn:hover,.subscribeBtn:active,.subscribeBtn:focus{
+    display:inline-block;
+    text-decoration:none;
+    border:1px solid #fff;
+    border-radius:3px;
+    color:#fff;
+    padding:10px 12px;
+    width:140px;
+    vertical-align:middle;
+    text-align:center;
+    margin-left:15px;
+}
+.oxy-20-bold {
+  font-weight: 600;
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.oxy-20-bold.oxy-20-bold--underline{
+   display: block;
+   border-bottom:1px solid #ccc;
+   padding-bottom:10px;
+}
+.footer-links-panel{
+    margin-top:15px;
+    
+}
+.footer-links-blocks>div{
+    margin:10px 0px;
+    border-right:1px solid #5c5c5c;
+    min-height:150px;
+    overflow:hidden;
+}
+.footer-links-blocks:last-child{
+    border-color:transparent;
+}
+.link-item-wrap{
+    margin:10px 0px;
+}
+.link-item-wrap a,.link-item-wrap a:hover,.link-item-wrap a:active,.link-item-wrap a:focus{
+    color:#fff;
+    text-decoration:none;
+    display:block;
+    
+}
+.link-item-heading{
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+.link-item-button{
+  border-radius:3px;
+  padding:6px;
+  min-width:150px;
+  display:inline-block !important;
+  border:1px solid #fff;
+  text-align:center;
+}
+.blackout-wrap{
+    position:fixed;
+    width:100%;
+    height:100px;
+    background:#000;
+    
+}
+.textval{
+    color:#fff;
+    margin-top:15px;
+}
+.social-icon-wrap{
+    margin-top:8px;
+    text-align:justify;
+}
+.social-icon-wrap a{
+    display:inline-block;
+    margin-left:8px;
+    vertical-align:middle;
+}
+.social-icon-wrap a:first-child{
+    margin-left:0px;
+    
+}
+.social-icon-wrap img{
+    display:inline-block;
+    width:36px;
+    height:36px;
+}
+</style>
+
+<div class="wrapper container">
+  <apex:insert name="body_content">
+  </apex:insert>
+</div>
+
+<div class="pre-footer">
+    <div class="container">
+        
+        <apex:outputpanel rendered="{!flinks}" layout="block" styleclass="row footer-links-panel">
+            <div class="col-md-3 footer-links-blocks">
+                <div class="">
+                     <apex:dynamicComponent componentValue="{!footerDetailscol1}"/>
+                </div>
+            </div>
+            <div class="col-md-3 footer-links-blocks">
+                <div class="">
+                    <apex:dynamicComponent componentValue="{!footerDetailscol2}"/>
+                </div>
+            </div>
+            <div class="col-md-3 footer-links-blocks">
+                <div class="">
+                    <apex:dynamicComponent componentValue="{!footerDetailscol3}"/>
+                </div>
+            </div>
+            <div class="col-md-3 footer-links-blocks" >
+                <div  style="border-right:none">
+                     <apex:dynamicComponent componentValue="{!footerDetailscol4}"/>
+                </div>
+                 
+            </div>
+         </apex:outputpanel>
+    </div>
+</div>
+<div class="footer"> 
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center textval">
+                <apex:dynamicComponent componentvalue="{!footertextval}" />   
+            </div>
+        </div>
+   </div>
+</div>
+</div>
+<script>
+         wk=jQuery.noConflict();
+        (function(wk) {
+        var npsc='wk_wedge__';
+            wk( window ).load(function(){
+                if({!JSENCODE($CurrentPage.parameters.loginerr)=='1'}){
+                    window.hidenotification();
+                }
+            });
+            function childgen(data){
+              var begin='';
+              for(var item=0;item<data.length;item++){
+                  begin+='<li class="submenu-col"><div class="nav-top-header"><a href="'+siteurl+'/categories/'+data[item].alias+'">'+data[item].title+'</a></div><ul class="submenu-type-list">';
+                if(data[item].children !==undefined){
+                  for(var a=0;a<data[item].children.length;a++)
+                  begin+='<li class="submenu-list-item"><a  class="submenu-list-link" href="'+siteurl+'/categories/'+data[item].alias+'">'+data[item].children[a].title+'</a></li>';
+                }
+
+              begin+='</ul></li>';
+            }
+           
+            return begin;
+          }
+           function childgenx(data){
+            var begin='';
+            for(item in data){
+              begin+='<li class="submenu-list-item"><a  class="submenu-list-link" href="'+siteurl+'/categories/'+data[item].alias+'">'+data[item].title+'</a></li>';
+            }
+              return begin;
+          }
+           window.externalLinks=function(menuitem){
+            var s='';
+            for(var item=0;item<menuitem.length;item++ ){
+              s+='<li><a href="'+menuitem[item][npsc+'Url__c']+'">'+menuitem[item][npsc+'title__c']+'</a>';
+            
+            }
+            
+             return s;
+           }
+           window.megamenu=function (data){
+              var begin='';
+              for(var item=0;item<data.length;item++){
+                 begin+='<li class="sf_ecom_cat_menu-items"><a href="'+siteurl+'/categories/'+data[item].alias+'" class="sf_ecom_cat_menu-items-link">'+data[item].title+'</a>';
+                 if(data[item].children!==undefined){
+                    var count=0;
+                    var childData=data[item].children;
+                    for(child in childData){
+                         if(childData[child].children!==undefined)
+                          count+=1;
+                    }
+                    if(count>0){
+                       begin+='<div class="nav-wrap"><ul class="navContent" style="left:auto">'
+                       begin+=childgen(data[item].children);
+                        begin+='</div></ul>';
+                    } 
+                    else{
+                       begin+='<div class="nav-wrap"><ul class="navContent" style="left:auto">';
+                       begin+=childgenx(data[item].children);
+                       begin+='</div></ul>';
+                    } 
+                   
+                  }
+                  begin+='</li>';
+              }
+              begin+=''
+              return begin;
+            };
+             wk('#sf_ecom_cat_menu').on('mouseenter' ,'.sf_ecom_cat_menu-items',function(){
+                wk('div>ul',this).addClass('shoWMe');
+            var wid=0;
+            var widx=0;
+            wk(this).prevAll().each(function(){
+                wid+=wk(this).width();
+             });
+             wk('div>ul>li',this).each(function(){
+                 widx+=wk(this).width();
+             });
+             wid=wk(this).parent().width()-wid;
+            if(widx> wid){
+                  wk('.nav-wrap',this).addClass('to_the_right');
+            }
+                
+           
+                
+          });
+           
+          wk('#sf_ecom_cat_menu').on('mouseleave' ,'.sf_ecom_cat_menu-items',function(){
+            wk('.navContent').removeClass('shoWMe');
+             wk('.nav-wrap',this).removeClass('to_the_right');
+          });
+        
+            
+            wk( document ).on("click", " span.notify_close", function(){
+                wk(this).parent().remove();
+            });
+            window.clearnotification=function(obj){
+                wk(obj).parent().remove();
+            }
+           
+           wk("[Id$='dropOpt']").on('click', ' span',function(){
+                console.log(wk(this).attr('id')+' and ' +wk(this).text());
+                wk("[Id$='dropdownval']").text(wk(this).text());
+                wk("[Id$='catQuery']").val(wk(this).attr('id'));
+            
+           });
+            wk( document ).on('click',"[Id$='QuickcartView'] #details-close",function(){
+                wk("[Id$='QuickcartView'] > div").remove();
+                
+            
+           });
+            wk( document ).on('click',"[Id$='QuickwishlistView'] #details-close",function(){
+                wk("[Id$='QuickwishlistView'] > div").remove();
+                
+            
+           });
+            wk( document ).on('click',"[Id$='QuickproductView'] #qvclose",function(){
+                wk("[Id$='QuickproductView'] > div").remove();
+                
+            
+           });
+           wk( document ).on('click',"[Id$='quickTNCview'] #Tncclose",function(){
+                wk("[Id$='quickTNCview'] > div").remove();
+                
+            
+           });
+          
+           window.hideQveiw=function(){
+            var timeoutvalue= parseInt(TimeoutVal);
+            if(isNaN(timeoutvalue))
+                timeoutvalue=1500; 
+            setTimeout(function(){
+                wk("[Id$='QuickcartView'] > div").remove();
+                wk(".notify_close").trigger('click');
+             }, timeoutvalue); 
+             
+           }
+         window.hideWQveiw=function(){
+            var timeoutvalue= parseInt(TimeoutVal);
+            if(isNaN(timeoutvalue))
+                timeoutvalue=1500;
+            setTimeout(function(){
+                wk("[Id$='QuickwishlistView'] > div").remove();
+                wk(".notify_close").trigger('click');
+             },timeoutvalue );
+             
+             
+           }
+        wk( document).on('click',' .quant-controller>#reduce',function(){
+                    var a=parseInt(wk("[Id$='quantval']").val());
+                    a=a-1;
+                    var val=1;
+                    a= a > val?a:val;
+                    wk("[Id$='quantval']").val(a);
+                    wk("[Id$='prodQuantity']").val(a);
+                });
+        wk( document).on('click','.quant-controller>#add',function(){
+                    var a=parseInt(wk("[Id$='quantval']").val());
+                    a=a+1;
+                    var val=parseInt(wk("[Id$='quantval']").attr('max'));
+                    a= a < val?a:val;
+                    wk("[Id$='quantval']").val(a);
+                    wk("[Id$='prodQuantity']").val(a);
+        });
+        window.hidenotification=function(){
+           var timeoutvalue= parseInt(TimeoutVal);
+            if(isNaN(timeoutvalue))
+                timeoutvalue=1500;
+            setTimeout(function(){
+                wk(".notify_close").trigger('click');
+            },timeoutvalue);
+        }
+         wk( document).on("mouseenter", " #custom-tooltip",function(){
+                   wk(this).next().css({'display':'block','opacity':1.0});
+               }).on("mouseout", " #custom-tooltip",function(){
+                    wk(this).next().css({'display':'none','opacity':0.0});
+               });
+             
+        })(jQuery);
+
+        </script> 
+        <script type="text/javascript">
+            var a='{!JSENCODE(jsonstring)}';
+            var menulink=JSON.parse('{!JSENCODE(MenuLinksJson)}');
+            document.getElementById('sf_ecom_cat_menu').innerHTML=megamenu(JSON.parse(a))+window.externalLinks(menulink);
+            var primeCat=JSON.parse('{!JSENCODE(CategoriesforDrop)}');
+            var opt='';
+            for(key in primeCat){
+              if(primeCat[key]["Id"]!==undefined && primeCat[key]["Name"]!==undefined)
+                opt+='<li><span id="'+primeCat[key]["Id"]+'">'+primeCat[key]["Name"]+'</span>';
+            }
+            var a=document.getElementById('dropOpt').innerHTML;
+            document.getElementById('dropOpt').innerHTML=a+opt;
+        
+            window.redirectToSearch=function(e){
+              if(e.keyCode===13){
+                redirectSearch();
+              }
+            
+            }
+        </script>
+     -->
+</apex:page>

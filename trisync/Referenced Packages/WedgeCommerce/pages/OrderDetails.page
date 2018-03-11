@@ -1,0 +1,325 @@
+<apex:page controller="wk_wedge.Orderdetails" standardstylesheets="false" title="orders" setup="false" showheader="false" cache="false" >
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">
+            <div class="container">
+                <TITLE>ORDER DETAILS</TITLE>
+                <style>
+                    .order-start-wrap{
+                    margin-top:15px;
+                    }
+                    .unit-order-wrap{
+                    border-bottom:1px solid #ccc;
+                    margin-top: 15px;
+                    padding: 10px;
+                    padding-top: 0;                    
+                    }
+                    h4.order-count{
+                    display:inline-block;                    
+                    }
+                    div.order-count{
+                    padding-bottom:15px;
+                    border-bottom:1px solid #ccc;
+                    }
+                    h4.details-title {
+                    font-size: 16px;
+                    font-weight: 700;
+                    padding: 10px 15px;
+                    border-bottom: 1px solid #ccc;
+                    }
+                    .details-block{
+                    margin-top:10px;
+                    }
+                    .info .info-table td{
+                    padding:10px;
+                    }
+                    .info .info-table td:first-child{
+                    font-weight:700;
+                    vertical-align:top;
+                    }
+                    .unitproduct{
+                    margin:10px;
+                    display:block;
+                    }
+                    .unitproduct img{
+                    border:1px solid #ccc;
+                    }
+                    .unitproduct .unitproduct-url{
+                    display:inline-block;
+                    vertical-align:middle;
+                    cursor:pointer;
+                    }   
+                    .unitproduct .unitproduct-details{
+                    width:75%;
+                    margin-left:15px;
+                    display:inline-block;
+                    vertical-align:middle;
+                    }
+                    .unitproduct-details> span {
+                    font-weight: 700;
+                    display: block;
+                    margin-top: 10px;
+                    }
+                    .prdname-url, .prdname-url:hover, .prdname-url:active, .prdname-url:focus{
+                    color:#333;
+                    font-weight:bold;
+                    }
+                    .order-details-button, .order-details-button:hover, .order-details-button:active, .order-details-button:focus{
+                    text-decoration:none;
+                    display: inline-block;
+                    background-color: #4BBA60;
+                    color: #fff;
+                    width: 170px;
+                    padding: 10px;
+                    cursor:pointer;
+                    text-align: center;
+                    border-radius: 3px;
+                    margin-right: 20px;
+                    }
+                    @media screen and (max-width: 991px){
+                    table.info-table{
+                    width: 100%;
+                    }
+                    table.info-table td:last-child{
+                    text-align: right;
+                    }                                   
+                    }                
+                    @media screen and (max-width: 675px){
+                    .request-btns.pull-right{
+                    float: none!important;
+                    }
+                    .request-btns{
+                    display: block;
+                    }
+                    .unitproduct .unitproduct-details{
+                    width: 60%;
+                    }
+                    .info .info-table td{
+                    
+                    }
+                    }
+                    @media screen and (max-width: 460px){
+                    .request-btns > a,.request-btns > a:hover,.request-btns > a:focus,.request-btns > a:active{
+                    width: 100%;
+                    }
+                    .request-btns >a:last-child{
+                    margin-top:10px;
+                    }
+                    .unitproduct .unitproduct-details{
+                    width: 47%;
+                    }
+                    }
+                </style>
+                <apex:outputpanel layout="block" id="orderWrap">
+                    <apex:outputpanel layout="block"  rendered="{!orderdetails!=null}">
+                        <div class="container order-start-wrap">
+                            <div class="order-count">
+                                <h4 class="oxy-20-bold  order-count">
+                                    {!$ObjectType.Order.label} {!orderdetails.ordernumber}                                 
+                                </h4>                             
+                                <apex:outputpanel styleclass="pull-right request-btns" rendered="{!storeAdmin.wk_wedge__Enable_RMA_Settings__c==true && storeAdmin.wk_wedge__RMA_Key__c!='' && storeAdmin.wk_wedge__RMA_Key__c!=null}">
+                                    <apex:outputLink styleclass="order-details-button " value="{!URLFOR($Page.wk_wedge__returnRequest,null, ['orderid'=orderdetails.id])}" rendered="{!NOT(OR(ISPICKVAL($User.UserType,'Guest'),(orderdetails.status=='Draft')))}">
+                                        {!$Label.wk_wedge__orderdetail_place_return_request_button}
+                                    </apex:outputLink>                                    
+                                    <apex:outputLink styleclass="order-details-button "  value="{!URLFOR($Page.wk_wedge__orderReturn,null, ['ordId'=orderdetails.id])}" rendered="{!requestCount>0}"><!--rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}"-->
+                                        {!$Label.wk_wedge__orderdetail_requested_return_button}
+                                    </apex:outputLink>
+                                </apex:outputpanel>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="details-block">
+                                        <h4 class="details-title"> {!$Label.wk_wedge__orderdetail_information}</h4>
+                                        <div class="info">
+                                            <table class="info-table">
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_order_number} :</td>
+                                                    <td>{!orderdetails.ordernumber}</td>
+                                                </tr>
+                                                <apex:outputPanel rendered="{!if((orderdetails.orderitems.size>0),true,false)}">
+                                                    <tr>
+                                                        <td>{!$Label.wk_wedge__orderdetail_order_status} :</td>
+                                                        <td><apex:outputfield value="{!orderdetails.status}"/></td>
+                                                    </tr>
+                                                    <apex:outputPanel rendered="{!AND(orderdetails.wk_wedge__Payment_Method_Type__c!=null,orderdetails.wk_wedge__Payment_Method_Type__c!='')}">
+                                                        <tr>
+                                                            <td>{!$Label.wk_wedge__orderdetail_paid_through} :</td>
+                                                            <td><apex:outputtext value="{!orderdetails.wk_wedge__Payment_Method_Type__c}"/></td>                                                
+                                                        </tr> 
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!AND(orderdetails.Shipping_Method__r.name!=null,orderdetails.Shipping_Method__r.name!='')}">
+                                                        <tr>
+                                                            <td>{!$Label.wk_wedge__orderdetail_shipping_method} :</td>
+                                                            <td><apex:outputtext value="{!orderdetails.Shipping_Method__r.name}"/></td>                                                
+                                                        </tr> 
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!AND(subtotal!=null,subtotal!=0.00)}">
+                                                        <tr>
+                                                            <td>{!$Label.wk_wedge__orderdetail_subtotal} :</td>
+                                                            <td>{!currSymbol} 
+                                                                <apex:outputtext value="{0,number, ###,##0.00}">
+                                                                    <apex:param value="{!subtotal}"/>
+                                                                </apex:outputtext>    
+                                                            </td>                                                                                                             
+                                                        </tr> 
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!AND(shippingcharge!=null,shippingcharge!=0.00)}">
+                                                        <tr>
+                                                            <td>{!$Label.wk_wedge__orderdetail_shipping_charge} :</td>
+                                                            <td>{!currSymbol} 
+                                                                <apex:outputtext value="{0,number, ###,##0.00}">
+                                                                    <apex:param value="{!shippingcharge}"/>
+                                                                </apex:outputtext> 
+                                                            </td>
+                                                                                                           
+                                                        </tr> 
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!AND(taxcharge!=null,taxcharge!=0.00)}">
+                                                        <tr>
+                                                            <td>{!$Label.wk_wedge__orderdetail_tax} :</td>
+                                                            <td>{!currSymbol} 
+                                                                <apex:outputtext value="{0,number, ###,##0.00}">
+                                                                    <apex:param value="{!taxcharge}"/>
+                                                                </apex:outputtext> 
+                                                            </td>
+                                                            
+                                                        </tr> 
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!AND(orderdetails.wk_wedge__Discount__c != null, orderdetails.wk_wedge__Discount__c > 0)}">
+                                                        <tr>
+                                                            <td>{!$Label.wk_wedge__orderdetail_order_discount} :</td>
+                                                            <td>{!currsymbol}&nbsp;
+                                                                <apex:outputText value="{0,number,###,##0.00}">
+                                                                    <apex:param value="{!orderdetails.wk_wedge__Discount__c * exchangeRate}"/>
+                                                                </apex:outputText>
+                                                            </td>
+                                                        </tr>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!AND(orderdetails.Wallet_Transactions__r != null, orderdetails.Wallet_Transactions__r.size > 0)}">
+                                                        <apex:repeat value="{!orderdetails.Wallet_Transactions__r}" var="wt">
+                                                            <tr>
+                                                                <td>{!$Label.wk_wedge__orderdetail_wallet_deduction} :</td>
+                                                                <td>{!currsymbol}&nbsp;
+                                                                    <apex:outputText value="{0,number,###,##0.00}">
+                                                                        <apex:param value="{!wt.wk_wedge__Transaction_Amount__c * exchangeRate}"/>
+                                                                    </apex:outputText>
+                                                                    <!--<apex:outputfield value="{!wt.Transaction_Amount__c}"/>-->
+                                                                </td>
+                                                            </tr>
+                                                        </apex:repeat>
+                                                    </apex:outputPanel>
+                                                    <tr>
+                                                        <td>{!$Label.wk_wedge__orderdetail_order_amount} :</td>
+                                                        <td>{!currSymbol}
+                                                            <apex:outputtext value="{0,number, ###,##0.00}">
+                                                                <apex:param value="{!ordertotal}"/>
+                                                            </apex:outputtext>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="AmountPaid">
+                                                    	<td>Amount Paid:</td>
+                                                        <td>{!currsymbol}&nbsp;
+                                                            <apex:outputText value="{0,number,###,##0.00}">
+                                                                <apex:param value="{!PaidAmount * exchangeRate}"/>
+                                                            </apex:outputText>
+                                                        </td>
+                                                    </tr>
+                                                </apex:outputPanel>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="details-block">
+                                        <h4 class="details-title"> {!$Label.wk_wedge__orderdetail_billing_information}</h4>
+                                        <div class="info">
+                                            <table class="info-table">
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_billing_name} :</td>
+                                                    <td>{!orderdetails.billtocontact.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_billing_phone} :</td>
+                                                    <td><apex:outputfield value="{!orderdetails.billtocontact.phone}"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_billing_email} :</td>
+                                                    <td><apex:outputfield value="{!orderdetails.billtocontact.email}"/></td>                                                
+                                                </tr>
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_billing_address} :</td>
+                                                    <td>
+                                                        <p>{!orderdetails.billingstreet},</p>
+                                                        <p>{!orderdetails.billingcity}, {!orderdetails.billingstate}</p>
+                                                        <p>{!orderdetails.billingcountry}, {!orderdetails.billingpostalcode}</p>
+                                                    </td>                                                
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <apex:outputpanel layout="block" rendered="{!AND(storeAdmin.wk_wedge__Enable_Shipping__c,(orderdetails.shiptocontactid!=null))}" styleclass="details-block">
+                                        <h4 class="details-title"> {!$Label.wk_wedge__orderdetail_shipping_information}</h4>
+                                        <div class="info">
+                                            <table class="info-table">
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_shipping_name} :</td>
+                                                    <td>{!orderdetails.shiptocontact.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_shipping_phone} :</td>
+                                                    <td><apex:outputfield value="{!orderdetails.shiptocontact.phone}"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_shipping_email} :</td>
+                                                    <td><apex:outputfield value="{!orderdetails.shiptocontact.email}"/></td>                                                
+                                                </tr>
+                                                <tr>
+                                                    <td>{!$Label.wk_wedge__orderdetail_shipping_address} :</td>
+                                                    <td>
+                                                        <p>{!orderdetails.Shippingstreet},</p>
+                                                        <p>{!orderdetails.Shippingcity}, {!orderdetails.Shippingstate}</p>
+                                                        <p>{!orderdetails.Shippingcountry}, {!orderdetails.Shippingpostalcode}</p>
+                                                    </td>                                                
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </apex:outputpanel>                                
+                                </div>
+                                <div class="col-md-6">
+                                    <apex:outputpanel layout="block" rendered="{!AND(orderdetails.orderitems!=null,orderdetails.orderitems.size!=0)}" styleclass="details-block">
+                                        <h4 class="details-title"> {!$Label.wk_wedge__orderdetail_order_items}</h4>
+                                        <div class="info">
+                                            <apex:repeat var="prod" value="{!orderdetails.orderitems}">
+                                                <div class="unitproduct">
+                                                    <a href="{!URLFOR($Page.productdetail,null, ['productid'=prod.pricebookentry.product2.id])}"
+                                                       class="unitproduct-url">
+                                                        <apex:image url="/servlet/servlet.FileDownload?file={!prod.pricebookentry.product2.wk_wedge__Image_Id__c}" width="100px" height="100px"/>
+                                                    </a>
+                                                    <div class="unitproduct-details">
+                                                        <apex:outputPanel rendered="{!prod.pricebookentry.product2.IsActive}">
+                                                            <a href="{!URLFOR($Page.productdetail,null, ['productid'=prod.pricebookentry.product2.id])}" class="prdname-url"> 
+                                                                <span>{!prod.pricebookentry.product2.name} </span>
+                                                            </a>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel rendered="{!NOT(prod.pricebookentry.product2.IsActive)}" styleclass="prdname-url">
+                                                            <span>{!prod.pricebookentry.product2.name} </span>
+                                                        </apex:outputPanel>
+                                                        <span>{!prod.pricebookentry.product2.productcode} </span>
+                                                        
+                                                        <span><apex:outputtext value="{0,number,###,###}"><apex:param value="{!prod.Quantity}"/></apex:outputtext> &#215; {!currSymbol}
+                                                            <apex:outputtext value="{0, number, ###,###.00}">
+                                                                <apex:param value="{!prod.unitprice}"/>
+                                                            </apex:outputtext>
+                                                        </span>
+                                                        <span>{!prod.description}</span>
+                                                    </div>                                            
+                                                </div>
+                                            </apex:repeat>
+                                        </div>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                </apex:outputpanel>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

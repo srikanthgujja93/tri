@@ -1,0 +1,26 @@
+<aura:component >
+	<ltng:require styles="{!$Resource.wk_wedge__SLDS +'/assets/styles/salesforce-lightning-design-system-ltng.css'}"/>
+    <aura:attribute name="MenuLinksId" type="String" default=""/>
+    <aura:attribute name="tcompid" type="String" default=""/>
+    <aura:attribute name="TemplateId" type="String" default=""/>
+    <aura:registerEvent name="openPopup" type="wk_wedge:WedgePopupEvent"/>
+    <aura:handler name="RemoveComponent" action="{!c.removeComponent}" event="wk_wedge:RemoveComponentDynamically"/>
+    <div class="wk_static"> 
+        <aura:if isTrue="{!(v.MenuLinksId=='')}">
+            <div class="addicon" onclick="{!c.getComponent}">
+            	<span ></span>
+            </div>
+            <aura:set attribute="else">
+            	<ui:button class="slds-button slds-p-horizontal--x-small slds-vertical-align--middle" press="{!c.getEditCompnent}">
+                    <span>
+                        <wk_wedge:SVG class="slds-button__icon" xlinkHref="{!$Resource.wk_wedge__SLDS +'/assets/icons/utility-sprite/svg/symbols.svg#edit'}" />
+                        <span class="slds-assistive-text">Edit</span>
+                    </span>                	
+                </ui:button>
+            </aura:set>
+        </aura:if>
+        <div aura:id="cmpBody">
+        	{!v.body}
+        </div>        
+    </div>
+</aura:component>

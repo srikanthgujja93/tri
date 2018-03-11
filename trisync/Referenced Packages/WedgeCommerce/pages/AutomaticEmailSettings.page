@@ -1,0 +1,360 @@
+<apex:page showheader="false" setup="false" title="Automatic Email Events" standardstylesheets="false" controller="wk_wedge.AutomaticEmailSettings" cache="false">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+   
+        <style>
+             .wdg-nav-icon.mailevents {
+                    background-color: #34becd;
+                }
+                 .wdg-nav-icon.cms{
+                    background-color: #34becd;
+                } 
+            .wdg-form--box .wdg-form--header{
+                height:43px;
+            }
+            .wdg-ctrl--btn-wide{
+                position: relative;
+                color: white;
+                padding: 4px;
+                outline: none;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                vertical-align: middle;
+                display: inline-block;
+                background: #0079BC;
+                margin-top: 10px;
+            }
+            .variants--headeroptions {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                //height: 100%;
+            }
+            .variants--headeroptions li {
+                //height: 100%; 
+                float: left;
+                display: inline-block;
+                vertical-align: middle;
+            }
+            .variants--headeroptions a {
+                display: block;
+                color: #fff;
+                cursor: pointer;
+                box-sizing: border-box;
+                height: 100%;
+                line-height: 2.6;
+                padding: 0px 20px;
+            }
+            .variants--headeroptions li.active a {
+                background: #fff;
+                border: 1px solid #adadad;
+                border-left: none;
+                border-right: none;
+                color: #555555;
+            }
+            .selectType{
+                padding: 6px;
+                border-radius: 3px;
+                font-size: 14px;
+                color: #222;
+                background: #fff;
+                border: 1px solid #adadad;
+                outline: none;
+                box-shadow: none;
+                display: inline-block;
+                width: 150px;
+                box-sizing: border-box;
+            }
+            .wdg-variant-table select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+                background: #fff url('{!urlfor($Resource.wk_wedge__wedgecommerce,"wedgeCommerce/images/dropdown-icon.png")}') no-repeat 97% center;
+                padding: 6px;
+                border-radius: 3px;
+                font-size: 14px;
+                border: 1px solid #adadad;
+                outline: none;
+                box-shadow: none;
+                display: block;
+                min-width: 300px;
+                padding-right:20px;
+            }
+            tr{
+                border-bottom: 1px solid #ADADAD;
+            }
+            table select{
+                margin:auto;
+            }
+            .wdg-form--block .wdg-form--blockfields{
+                width:100% !important;
+            }
+            th{
+                padding-left:15px;
+                padding-right:15px;
+            }
+        </style>
+            <apex:form id="thepopblock" styleclass="wdg-dataentry--form">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                    </apex:outputpanel>
+                    
+                        <div class="wdg-body--titleblock clearfix">
+                            <div class="wdg-body--title">
+                                <span class="wdg-title--logo mailevents"></span>
+                                <span>Automatic Email Events</span>
+                            </div>
+                            <div class="wdg-ctrl--btnPanel">
+                                <a href="javascript:void(0);" class="wdg-ctrl--btn save">
+                                    <span></span>
+                                </a>
+                                <apex:actionfunction name="saveSettings" action="{!saveSettings}" rerender="FeatureBlock,js_block" status="waitstatus">
+                                    <apex:param value="" name="jsonstring"/>
+                                </apex:actionfunction>
+                                <apex:actionFunction name="deleteSetting" action="{!deleteSetting}" rerender="FeatureBlock,js_block" status="waitstatus">
+                                    <apex:param value="" name="delid"/>
+                                </apex:actionFunction>
+                                 <!--<a href="{!$page.Product_options}" class="wdg-ctrl--btn cancel"> 
+                                    <span></span>
+                                </a> -->
+                            </div>
+                        </div>
+                        <div class="wdg-form--box">
+                            <div class="wdg-form--header">
+                            <ul class="variants--headeroptions clearfix">
+                              
+                                <li class="active">
+                                    <a href="javscript:void(0)"  data-target="variantBlock">General </a>
+
+                                </li>
+                               
+                            </ul>
+                        </div>
+                        <apex:outputpanel layout="block" id="FeatureBlock" styleclass="wdg-form--content">
+                           
+                            <div id="variantBlock" class="wgd-form--tab show">
+                                <div class="wdg-form--block"> 
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Add Events </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-variant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Event</th>
+                                                    <th>Template</th>
+                                                    <th>Active</th>
+                                                    <th>Notify User</th>
+                                                    <th>Notify Admin</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="wdg-table--body">
+                                                <apex:repeat value="{!EventsList}" var="event">
+                                                    <tr class="PrimeRow">
+                                                        <td>
+                                                            <apex:selectlist value="{!event.eventTitle}" size="1" disabled="true">
+                                                                <apex:selectOptions value="{!EventsDisabled}"/>
+                                                            </apex:selectlist>
+                                                            <!--<apex:outputText value="{!event.eventTitle}"/>-->
+                                                        </td>
+                                                        <td>
+                                                            <apex:selectlist value="{!event.settingOBJ.wk_wedge__TemplateId__c}" size="1">
+                                                                <apex:selectOptions value="{!templates}"/>
+                                                            </apex:selectlist>
+                                                        </td>
+                                                        <td>
+                                                            <div class='custom-checkbox {!if((event.settingOBJ.IsActive__c),"checked","")}'>
+                                                                <apex:inputCheckbox value="{!event.settingOBJ.wk_wedge__IsActive__c}"/>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class='custom-checkbox {!if((event.settingOBJ.ToUser__c),"checked","")}'>
+                                                                <apex:inputCheckbox value="{!event.settingOBJ.wk_wedge__ToUser__c}" disabled="{!if((event.IsAdmin),true,false)}"/>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class='custom-checkbox {!if((event.settingOBJ.ToAdmin__c),"checked","")}'>
+                                                                <apex:inputCheckbox value="{!event.settingOBJ.wk_wedge__ToAdmin__c}"/>
+                                                            </div>
+                                                        </td>
+                                                        <td class=" option">
+                                                            <div class="option_btn">
+                                                                <a href="javascript:void(0)" class="wdg-ctrl--btn delete deleteRow" id="{!event.SettingOBJ.id}"><span></span></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </apex:repeat>
+                                                <!--<tr id="PrimeRow">
+                                                    <td class="Xsmall position"></td>
+                                                    <td class=" large variant"></td>
+                                                    <td class=" Xsmall modifier"></td>
+                                                    <td class=" large typeval"></td>
+                                                    <td></td>
+                                                    <td class=" Xsmall option">
+                                                        <div class="option_btn">
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn delete deleteRow" ><span></span></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>-->
+                                            </tbody>
+                                        </table>
+                                        <a href="javascript:void(0)" class="wdg-ctrl--btn-wide addNew addRow">Add New Row</a>
+                                    </div>
+                                    
+                                </div>
+                              
+                            </div>
+                             
+                        </apex:outputpanel>
+                    </div>
+                </div>
+            </apex:form>
+            <script>
+                window.eventCount = {!eventCount};
+                window.currentCount = {!currentCount};
+                console.log(eventCount+' '+currentCount); 
+                function geteventlist(){
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.AutomaticEmailSettings.actionList}', 
+                        function(result, event){
+                            try{
+                                res = JSON.parse(result.replace(/(&quot\;)/g,"\""));
+                                var newrow = "<tr class='newRow'>";
+                                newrow += "<td class='field'>";
+                                newrow += "<select>";
+                                for(var i=0;i<res.length;i++){
+                                    if(i==0)
+                                        newrow+= ("<option value='"+res[i]+"' selected>"+res[i]+"</option>");
+                                    else
+                                        newrow+= ("<option value='"+res[i]+"'>"+res[i]+"</option>");
+                                }
+                                newrow += "</select></td><td class='field'><select>";
+                                newrow += '{!TemplateString}';
+                                newrow += "</select>";
+                                newrow += "</td><td><div class='custom-checkbox'><input type='checkbox'/></div>";
+                                newrow += "</td><td><div class='custom-checkbox'><input type='checkbox'/></div>";
+                                newrow += "</td><td><div class='custom-checkbox'><input type='checkbox'/></div>";
+                                newrow += "</td><td><div class='option_btn'><a href='javascript:void(0)' class='wdg-ctrl--btn delete deleteRow' ><span></span></a></div>";
+                                newrow += "</td></tr>";
+                                console.log(newrow);
+                                if(currentCount<eventCount){
+                                    $(".wdg-table--body").append(newrow);
+                                    currentCount++;
+                                }
+                                $(".wdg-ctrl--btn.deleteRow").click(function(){
+                                    if($(this).attr('id')!=undefined){
+                                        deleteSetting($(this).attr('id'));
+                                    }
+                                    currentCount--;
+                                    console.log($(this).parent().parent().parent().remove());
+                                });
+                            }catch(err){
+                                console.log(err);
+                            }
+                        }, 
+                        {escape: true}
+                    );
+                }
+            </script>
+            <apex:outputPanel id="js_block">
+                <script>
+                $=jQuery.noConflict();
+                (function($){
+                    if($('tr').length<=1)
+                        geteventlist();
+                    $(document).ready(function(){
+                        $(".wdg-ctrl--btn.save").click(function(){
+                            //console.log($('tr').children());
+                            var rows = $('tr');
+                            var toPassArray = [];
+                            for(var i=1;i<rows.length;i++){
+                                var toPass = {};
+                                //console.log(rows[i].childNodes);
+                                var z;
+                                if(!$(rows[i]).hasClass('PrimeRow')){
+                                    console.log('New');
+                                    z = rows[i].childNodes[0].childNodes[0].selectedIndex;
+                                    z = rows[i].childNodes[0].childNodes[0].childNodes[z].value;
+                                    toPass.eventName = z;
+                                }else{//.children('option:selected').val()
+                                    //z = rows[i].childNodes[1].childNodes[0].selectedIndex;
+                                    //z = rows[i].childNodes[1].childNodes[0].childNodes[2*z+1].value;
+                                    z = $(rows[i]).children('td').first().children('select').first().children('option:selected').val();
+                                    toPass.eventName = z;
+                                }
+                                
+                                if(!$(rows[i]).hasClass('PrimeRow')){
+                                    console.log('New');
+                                    z = rows[i].childNodes[1].childNodes[0].selectedIndex;
+                                    z = rows[i].childNodes[1].childNodes[0].childNodes[z].value;
+                                    toPass.emailTemplate = z;
+                                }else{
+                                    //console.log(rows[i].childNodes[3].childNodes[0].childNodes);
+                                    //console.log($(rows[i]).children('td').first().next().children('select').first().children('option:selected').val());
+                                    //z = rows[i].childNodes[3].childNodes[0].selectedIndex;
+                                    //z = rows[i].childNodes[3].childNodes[0].childNodes[2*z+1].value;
+                                    z = $(rows[i]).children('td').first().next().children('select').first().children('option:selected').val();
+                                    toPass.emailTemplate = z;
+                                }
+                                
+                                if(!$(rows[i]).hasClass('PrimeRow')){
+                                    console.log('New');
+                                    z = rows[i].childNodes[2].childNodes[0].childNodes[0].checked;
+                                    toPass.IsActive = z;
+                                }else{
+                                    //console.log('Prime');
+                                    //console.log($(rows[i]).children('td').first().next().next().children('div').children('input').is(":checked"));
+                                    //z = rows[i].childNodes[5].childNodes[1].childNodes[0].checked;
+                                    toPass.IsActive = $(rows[i]).children('td').first().next().next().children('div').children('input').is(":checked");
+                                }
+                                
+                                if(!$(rows[i]).hasClass('PrimeRow')){
+                                    console.log('New');
+                                    z = rows[i].childNodes[3].childNodes[0].childNodes[0].checked;
+                                    toPass.ToUser = z;
+                                }else{
+                                    //console.log('Prime');
+                                    //console.log(rows[i].childNodes[7]);
+                                    //z = rows[i].childNodes[7].childNodes[1].childNodes[0].checked;
+                                    toPass.ToUser = $(rows[i]).children('td').first().next().next().next().children('div').children('input').is(":checked");
+                                }
+                                
+                                if(!$(rows[i]).hasClass('PrimeRow')){
+                                    console.log('New');
+                                    z = rows[i].childNodes[4].childNodes[0].childNodes[0].checked;
+                                    toPass.ToAdmin = z;
+                                }else{
+                                    //console.log('Prime');
+                                    //console.log(rows[i].childNodes[7]);
+                                    //z = rows[i].childNodes[9].childNodes[1].childNodes[0].checked;
+                                    toPass.ToAdmin = $(rows[i]).children('td').first().next().next().next().next().children('div').children('input').is(":checked");
+                                }
+                                
+                                toPassArray.push(toPass);
+                                //console.log(toPassArray);
+                            }
+                            //console.log(JSON.stringify(toPassArray));
+                            saveSettings(JSON.stringify(toPassArray));
+                        });
+                        $(".wdg-ctrl--btn-wide.addNew").click(function(){
+                            console.log($(".wdg-table--body"));
+                            geteventlist();
+                        });
+                        $(".wdg-ctrl--btn.deleteRow").click(function(){
+                            if($(this).attr('id')!=undefined){
+                                deleteSetting($(this).attr('id'));
+                                console.log($(this).attr('id'));
+                                currentCount--;
+                            }
+                            console.log($(this).parent().parent().parent().remove());
+                        });
+                    });
+                }(jQuery));
+            </script>
+           </apex:outputPanel>
+        </apex:define>
+    </apex:composition>
+</apex:page>

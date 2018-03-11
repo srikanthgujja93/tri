@@ -1,0 +1,17 @@
+<apex:page Sidebar="false" showHeader="false" cache="false" StandardStyleSheets="false" controller="ATC.AvSessionCon">
+<!--  The purpose of this page is to get the session ID and pass to real page -->
+<script>
+    document.title = 'Avata CPD....';
+    var sessionId = '{!SessionId}';
+    var str = document.location.href;
+    var equery = '';
+    if (str.indexOf('?') !== -1) {
+        //contains URL query already - grab query
+        equery += '&'+str.substring(str.indexOf('?')+1);
+    }
+    str = str.substr(0,str.lastIndexOf('\/')+1); //take out url upto '...apex/'
+    var loc = str + "CPD?_sId="+encodeURI(sessionId)+equery;
+    window.location = str + "CPD?_sId="+encodeURI(sessionId)+equery;
+</script>
+<!-- EndContent  -->
+</apex:page>

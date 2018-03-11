@@ -1,0 +1,121 @@
+<aura:component controller="gkn_sms.AdminConfigController"
+	implements="force:appHostable">
+	<ltng:require scripts="{!$Resource.gkn_sms__jslib + '/jquery.js'}"/>
+    <aura:attribute name="smsConfig" type="gkn_sms__GirikonSMSConfig2__c"
+		default="{'sobjectType': 'gkn_sms__GirikonSMSConfig2__c','Name':'','gkn_sms__isSaveInCustomObj__c':false,'gkn_sms__Object_Name__c':''}" />
+	<aura:attribute name="selectedObj" type="String" default=""/>
+	<aura:attribute name="msg" type="String" default=""/>
+	<aura:attribute name="layoutList" type="List" default="null"/>
+    <aura:attribute name="pageAndBtnStatus" type="sObject" default="{'sobjectType': 'CheckPagesAndBtn','isSMSBtnExist':'exist'
+                                                                    ,'isBulkSMSBtnExist':'exist','isHistoryPageExist':'exist','isBulkSMSPageExist':'exist'}"/>
+    
+	<aura:handler name="init" value="{!this}"  action="{!c.doInit}"/>
+	<aura:registerEvent name="smsApp" type="gkn_sms:smsApp" />
+	
+    <lightning:spinner aura:id="loading" class="slds-show gkn-sms-spiner" alternativeText="Loading" variant="brand" size="small" />
+    <div aura:id="mobileAction" class="slds-hide" style="background-color:#fff">
+        <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <div class="slds-media slds-media--center slds-has-flexi-truncate">      
+                    <div class="slds-media__body">
+                        <lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelConfig}" />
+                        Create New
+                    </div>
+                </div>
+                <div class="slds-no-flex">
+                    <lightning:button variant="brand" label="Save Config" onclick="{!c.addNewConfig}" />
+                </div>
+            </div>
+        </div>
+    </div>
+	<article class="slds-card onesetupSetupHeader">
+		<div class="slds-card__header setup-header-element slds-grid">
+			<header class="slds-media slds-media--center slds-has-flexi-truncate">
+				<div class="setup-header-element">
+					<span
+						class="slds-icon_container slds-icon-utility-settings setup-icon"
+						title="Setup"> 
+                        <lightning:icon variant="inverse" iconName="utility:settings" size="small"/>
+					</span>
+				</div>
+				<div class="slds-media__body">
+					<h2>
+						<div class="slds-p-left--medium">
+							<span class="slds-text-heading--small">SMS Setup</span>
+						</div>
+					</h2>
+				</div>
+			</header>
+		</div>
+		<div class="slds-p-left--medium">
+			<div class="slds-p-left--x-small">
+                <div class="slds-card__body">Once configured for an object, a button captioned “Send SMS” will be created and available for addition on all related page layouts.</div>
+			</div>
+		</div>
+	</article>
+	<div class="slds-m-around--small"></div>
+	<div aura:id="configcontainer" class="slds-grid slds-p-horizontal--small">		
+		<div class="slds-col">
+			<div class="slds-form-element">
+				<label class="slds-form-element__label" for="configName"><abbr
+					class="slds-required" title="required">*</abbr> Title </label>
+				<div class="slds-form-element__control">
+					<ui:inputText aura:id="configName" class="slds-input"
+						value="{!v.smsConfig.Name}" />
+				</div>
+			</div>			
+			<div class="slds-m-around--small"></div>
+			<div class="slds-form-element">
+				<label class="slds-form-element__label" for="objectName"><abbr
+					class="slds-required" title="required">*</abbr> Select
+					Object</label>
+				<div class="slds-form-element__control">
+					<div aura:id="objectNameLabel" class="slds-select_container">					
+                        <ui:inputSelect disabled="{!v.smsConfig.Id==null?false:true}" class="slds-select" change="{!c.changeObject12}"
+                                        aura:id="objectName"
+                                        value="{!v.smsConfig.gkn_sms__Object_Name__c}" />
+                        
+					</div>
+				</div>
+			</div>
+			<div class="slds-m-around--small"></div>
+			<div class="slds-form-element">
+				<label class="slds-form-element__label" for="fieldName"><abbr
+					class="slds-required" title="To Number is required field">*</abbr> To Number
+					Field</label>
+				<div class="slds-form-element__control">
+					<div aura:id="toNumberLabel" class="slds-select_container">
+						<ui:inputSelect class="slds-select" aura:id="fieldName"
+							value="{!v.smsConfig.gkn_sms__toNumber__c}" />
+					</div>
+				</div>
+			</div>
+			<!--<div class="slds-m-around-small"></div>-->
+            <div class="slds-form-element" style="display:none">
+                <label class="slds-checkbox--toggle slds-grid">                    
+                    <input aura:id="isSave" id="isSave" checked="{!v.smsConfig.gkn_sms__isSaveInCustomObj__c}" type="checkbox" name="checkbox" aria-describedby="toggle-desc" />
+                    <span id="toggle-desc" class="slds-checkbox--faux_container" aria-live="assertive">
+                        <span class="slds-checkbox--faux"></span>
+                        <span class="slds-checkbox--on">Enabled</span>
+                        <span class="slds-checkbox--off">Disabled</span>
+                    </span>
+                    <span class="slds-form-element__label slds-m-bottom--none">Do you also want to save SMS to Custom Object?</span>
+                </label>
+            </div>
+            <div class="slds-m-around--small"></div>
+            <br/>
+			<div aura:id="desktopAction" class="slds-form-element">
+				<lightning:button variant="brand" label="Save Config" onclick="{!c.addNewConfig}" />
+				<lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelConfig}" />
+                <lightning:spinner aura:id="smsSpinner" class="slds-hide" alternativeText="Loading" variant="brand" size="small" />
+			</div>
+
+		</div>
+		<div class="slds-col">&nbsp;</div>
+		<div class="slds-col">&nbsp;</div>
+		<div class="slds-col">&nbsp;</div>
+		<div class="slds-col">&nbsp;</div>
+		<div class="slds-col">&nbsp;</div>
+	</div>
+
+</aura:component>

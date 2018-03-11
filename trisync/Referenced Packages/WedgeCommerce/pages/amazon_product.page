@@ -1,0 +1,398 @@
+<apex:page showheader="false" standardStyleSheets="false" doctype="html-5.0" title="Amazon Products" controller="wk_wedge.wedge_Amazon_product_class">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <style>
+                 .wdg-nav-icon.amazonconnector {
+                    background-color: #34becd;
+                }
+                .wdg-nav-icon.channelmanager {
+                    background-color: #34becd;
+                }
+                .wdg-ctrl--btn.settings{
+                    padding: 0 10px;
+                }
+                .wdg-body .wdg-ctrl--btngroup {
+                    width: 80px;
+                }
+                .buttonsync {
+                    padding: 0 0 0 1px !important;
+                    background-color: #34BECD;
+                    border: none;
+                    color: white;
+                }
+                .buttonsync{
+                    padding:0 0 0 1px !important;
+                    background-color: #23B4C3;
+                    border:none;
+                    color:white;
+                }
+                .buttonsync:hover{
+                    cursor:pointer;
+                }
+                .buttonsync:focus{
+                    outline:none;
+                }
+                .ess_full_cov{
+                    position:fixed;
+                    width:100%;
+                    height:100%;
+                    background-color:rgba(0,0,0,0.2);
+                    align-items: center;
+                    justify-content:center;
+                    z-index:20;
+                    display:flex;
+                    left:0;
+                    top:0;
+                }
+                .cp-spinner{
+                    width:48px;
+                    height:48px;
+                    display:inline-block;
+                    box-sizing:border-box;
+                    position:relative
+                }
+                .cp-meter{
+                    border-radius:50%;
+                    border-top:solid 6px #0fd6ff;
+                    border-right:solid 6px #0fd6ff;
+                    border-bottom:solid 6px #0fd6ff;
+                    border-left:solid 6px #0fd6ff;
+                    width:48px;
+                    height:48px;
+                    display:inline-block;
+                    box-sizing:border-box
+                }
+                .cp-meter:before{
+                    border-radius:3px;
+                    content:" ";
+                    width:6px;
+                    height:12px;
+                    display:inline-block;
+                    box-sizing:border-box;
+                    background-color:#0fd6ff;
+                    position:absolute;
+                    top:5px;
+                    left:16px;
+                    transform-origin:center bottom;
+                    animation:cp-meter-animate-before 1s linear infinite
+                }
+                @keyframes cp-meter-animate-before{
+                    0%{transform:rotate(-45deg)}
+                    100%{transform:rotate(315deg)}
+                }
+
+                .loadcontainer{
+                    width:25%;
+                    background-color:white;
+                    display:flex;
+                    flex-wrap: wrap;
+                    justify-content:center;
+                    align-items:center;
+                    height:165px;
+                    border:2px solid #16325C;
+                }
+                .counttext{
+                    margin:0;
+                    color:#8e8e8e;
+                    text-align:center;
+                }
+                .tablecenter{
+                    margin:auto;
+                }
+                .wdg-body .wdg-dataTable--box{
+                    margin-top:5px;
+                }
+                .totalRec{
+                    font-size: 14px;
+                    color: #777777;
+                    margin-top:2px;
+                }
+                .wdg-body-titletext{
+                    display:inline-block;
+                    vertical-align: top;
+                    line-height: 1;
+                }
+                .recperpage{
+                    background: #FFF;
+                    padding: 4px 8px;
+                    border: 2px solid #57BDC2;
+                    border-radius: 4px;
+                    cursor:pointer;
+                }
+                .recperpage:focus{
+                    outline:none;
+                    cursor:pointer;
+                }
+                .desc_class{
+                    width:25%;
+                }
+                .wdg-form--content{
+                    padding:20px;
+                    padding-top:0;
+                }
+                .wdg-body .wdg-body--header{
+                    border-bottom:none;
+                }
+            </style>
+            <!--<apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>-->
+            <apex:form id="theForm">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                            <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                        </apex:outputpanel>
+                    <div class="wdg-body--header">
+                        
+
+                        <div class="wdg-search--box"> 
+                           <apex:inputtext html-placeholder="Search"  value="{!searchstr}" onkeydown="dosearch(event)"/>
+                           <apex:commandbutton value="Search" styleclass="wdg-submit--btn search" onclick="initsearch()" action="{!dummymethod}" rerender="none"/>
+                           <apex:actionFunction name="initsearch" action="{!fetchagain}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus"/>
+                        </div> 
+                    </div>
+                    <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-form--box">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class=""> <a href="{!$page.amazon_config}">Configuration</a></li>
+                                <li class="active"> <a href="#">Products</a></li>
+                                <li class=""> <a href="{!$page.amazon_categories}">Categories</a></li>
+                                <li class=""> <a href="{!$page.amazon_customers}">Customers</a></li>
+                                <li class=""> <a href="{!$page.amazon_orders}">Order</a></li>
+                            </ul>
+                        </div>
+                    <div class="wdg-form--content">
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <div class="wdg-body-titletext"><span class="wdg-title--logo amazonproduct"></span></div>
+                            <div class="wdg-body-titletext">
+                                <div> Amazon Products </div>
+                                <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                            </div>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                            <apex:selectList size="1" value="{!currentlimit}" id="recPerPage" onchange="initsearch()" styleclass="recperpage">
+                                <apex:selectOptions value="{!recordperpage}"/>
+                            </apex:selectList>
+                            <div class="wdg-ctrl--btngroup clearfix">
+                                <div class="wdg-ctrl--btn settings">
+                                    <apex:commandButton value="Sync" onclick="startSync()" rerender="wdgTable" styleclass="buttonsync"/>
+                                </div>
+                                 <div class="dropdown dropdown-wrap">
+                                    <button type="button"  data-toggle="dropdown" class="wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                        <span></span>
+                                    </button>
+                                     <div class="dropdownMenu">
+                                        <div><apex:commandLink action="{!dummymethod}" onclick="deletemultiple()" reRender="wdgTable, wdgerrorBlock" value="Delete Selected"/></div>
+                                        <div><apex:commandLink action="{!deleteallebayprod}" reRender="wdgTable, wdgerrorBlock">Delete All </apex:commandLink></div>
+                                    </div>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                        <apex:outputpanel layout="block"  id="wdgTablebox" styleclass="wdg-dataTable--box">
+                        <apex:datatable value="{!recordlist}" var="leadl" styleclass="wdg-dataTable"  id="wdgTable">
+                            <apex:column styleClass="ess_table_col_first" headerClass="ess_table_col_first" rendered="{!rendercol}">
+                                <apex:facet name="header">
+                                    <apex:outputPanel styleClass="custom-checkbox">
+                                        <apex:inputCheckbox id="headcheck" onclick="checkallbox()" styleclass="checkbox"/>
+                                    </apex:outputPanel>
+                                </apex:facet>
+                                <div class="custom-checkbox">
+                                    <apex:inputCheckbox onclick="allBoxesChecked()" styleclass="checkbox"/>
+                                </div>
+                            </apex:column>
+                            <apex:column rendered="{!rendercol}" styleclass="desc_class">
+                                <apex:facet name="header">
+                                    Name
+                                </apex:facet>
+                                <apex:outputLink value="/../{!leadl.id}" styleClass="ess_lead_name">{!leadl.name}</apex:outputLink>
+                            </apex:column>
+                            <apex:column headervalue="Image" rendered="{!rendercol}">
+                                <apex:image value="{!leadl.wk_wedge__Amazon_Image_URL__c}" height="100px" width="100px" rendered="{!rendercol}"/>
+                            </apex:column>
+                            <apex:column value="{!leadl.description}" headervalue="Description" rendered="{!rendercol}" styleclass="desc_class"/>
+                            <apex:column headervalue="Categories" rendered="{!rendercol}">
+                                <apex:dataTable value="{!leadl.Product_Categories__r}" var="cat" styleClass="tablecenter">
+                                    <apex:column value="{!cat.wk_wedge__Categories__c}" styleclass="nocss"/>
+                                </apex:dataTable>
+                            </apex:column>
+                            <apex:column value="{!leadl.ProductCode}" headervalue="Product SKU" rendered="{!rendercol}"/>
+                            <apex:column headerValue="Price" rendered="{!rendercol}">
+                                <apex:datatable value="{!leadl.pricebookentries}" var="price" styleclass="tablecenter">
+                                    <apex:column value="{!price.unitprice}" styleclass="nocss"/>
+                                </apex:datatable>
+                            </apex:column>
+                            <apex:column rendered="{!not(rendercol)}" styleClass="nocss" headerValue=" ">
+                                <apex:outputPanel styleClass="ess_error_show">No records To Show</apex:outputPanel>
+                            </apex:column>
+                            <apex:facet name="footer">
+                                <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate" id="footpanal">
+                                    <apex:outputpanel rendered='{!if((totalrecords>0),true,false)}'>
+                                        <apex:commandlink value="" action="{!fetchagain}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first "><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!fetchlessrecords}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                        <apex:outputText styleclass="wdg-dataTable--pages" value="{!pageno} of {!totalPage} "></apex:outputText>
+                                        <apex:commandlink value="" action="{!fetchmorerecords}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                        <apex:commandlink value="" action="{!fetchlastpage}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                    </apex:outputpanel>
+                                    <script>
+                                        console.log('{!totalRecords}');
+                                        $('#totalrec').text('{!totalRecords}');
+                                    </script>
+                                </apex:outputpanel>
+                            </apex:facet>
+                        </apex:datatable>
+                    </apex:outputpanel> 
+                        </div>
+                    </apex:outputpanel>
+                    <div class="ess_full_cov" id="loaddiv">
+                        <div class="loadcontainer">
+                            <div class="cp-spinner cp-meter"></div>
+                            <p id="countpara" class="counttext">Getting Total Count</p>
+                        </div>
+                    </div>
+                </div>
+                    
+                <apex:actionFunction action="{!initsync}" name="getProductBatch" rerender="js_block, wdgerrorBlock">
+                    <apex:param assignTo="{!pageNumber}" name="pagenumber" value=""/>
+                </apex:actionFunction>
+                <apex:actionFunction action="{!fetchagain}" name="refresh" reRender="wdgTable, wdgerrorBlock"/>
+                <apex:actionFunction action="{!deleterecord}" name="deleteinit" reRender="wdgTable, headpanal, wdgerrorBlock" status="loadgif">
+                    <apex:param name="idlist" value="" assignTo="{!deletelist}"/>
+                    <apex:param name="idlen" value="15" assignTo="{!idlength}"/>
+                </apex:actionFunction>
+                <apex:actionFunction action="{!getReportList}" name="ReportList" rerender="js_block, MWS_op"/>
+                <apex:actionFunction action="{!insertproducts}" name="initinsert" rerender="none" oncomplete="hideLoader()"/>
+            </apex:form>
+            <script>
+                function showTimeout(){
+                    if(timeremaining>0 && showtimer==true){
+                        console.log('test');
+                        $('#countpara').text('Report was not generated... '+timeremaining-- + ' seconds till next request');
+                    }else{
+                        $('#countpara').text('');
+                        clearInterval(timer);
+                    }
+                }
+                function hideLoader(){
+                    $('.ess_full_cov').hide();
+                }
+                function startSync(){
+                    if('{!enableSync}' == 'true'){
+    	                $('.ess_full_cov').show();
+	                    $('#countpara').text('Report Requested');
+                    	getProductBatch();
+                    }else{
+                        //alert('Error: configuration not set');
+                    }
+                }
+                var allchecked=false;
+                function deletemultiple(){
+                    var checkedBoxes= document.querySelectorAll('input[type=checkbox]:checked');
+                    var str='';
+                    var i=0;
+                    if(allchecked)
+                        i++;
+                    for(;i<checkedBoxes.length;i++){
+                        var tempstr=checkedBoxes[i].parentNode.parentNode.nextSibling.childNodes[0].href;
+                        console.log(checkedBoxes[i].parentNode.parentNode.nextSibling);
+                        while(tempstr.length!=18){
+                            tempstr=tempstr.substr(1);
+                        }
+                        str+=tempstr;
+                        console.log(str);
+                    }
+                    deleteinit(str);
+                }
+                function checkallbox(){
+                    var checkBoxes= document.querySelectorAll('input[type=checkbox]');
+                    if(allchecked==false){
+                        for(var i=1;i<checkBoxes.length;i++){
+                            checkBoxes[i].checked=true;
+                            $(checkBoxes[i]).parent().addClass('checked');
+                        }
+                        allchecked=true;
+                    }else{
+                        for(var i=1;i<checkBoxes.length;i++){
+                            checkBoxes[i].checked=false;
+                            $(checkBoxes[i]).parent().removeClass('checked');
+                        }
+                        allchecked=false;
+                    }
+                }
+                function allBoxesChecked(){
+                    var checkBoxes= document.querySelectorAll('input[type=checkbox]');
+                    var i=1;
+                    for(;i<checkBoxes.length;i++){
+                        if(checkBoxes[i].checked==false){
+                            checkBoxes[0].checked=false;
+                            $(checkBoxes[0]).parent().removeClass('checked');
+                            break;
+                        }
+                    }
+                    if(i==checkBoxes.length){
+                        checkBoxes[0].checked=true;
+                        $(checkBoxes[0]).parent().addClass('checked');
+                        allchecked=true;
+                    }
+                    else{
+                        checkBoxes[0].checked=false;
+                        $(checkBoxes[0]).parent().removeClass('checked');
+                        allchecked=false;
+                    }
+                }
+                function dosearch(event){
+                    console.log(event);
+                    if(event.keyCode==13){
+                        event.preventDefault();
+                        initsearch();
+                    }
+                    return false;
+                }
+            </script>
+            <script>
+            jQuery(document).ready(function($) {
+              // Get Accounts via the REST API
+              $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+Product2+where+wk_wedge__Amazon_Listing_ID__c!=null',
+                {
+                  beforeSend: function(xhr) {
+                    // Set the OAuth header from the session ID
+                    xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                  },
+                  success: function(response) {
+                    // Append the records to HTML list
+                    var str=JSON.stringify(response);
+                    var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                    var arr = total.split(',');
+                    document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                            });
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    // Error
+                    console.log(jqXHR.status + ': ' + errorThrown);
+                  }
+                }
+              );
+                $('.ess_full_cov').hide();
+            });
+          </script>
+            <apex:outputPanel id="js_block">
+                <script>
+                    var showtimer = false;
+                    window.timeremaining = 60;
+                    var result = "{!products}";
+                    if(result==''){
+                        setTimeout(ReportList,60000);
+                        showtimer = true;
+                        timer = setInterval(showTimeout,1000);
+                    }
+                    else if(result!='start'){
+                        showtimer = false;
+                        initinsert();
+                    }
+                </script>
+            </apex:outputPanel>
+        </apex:define>
+    </apex:composition>
+</apex:page>

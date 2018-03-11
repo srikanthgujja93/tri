@@ -1,0 +1,1164 @@
+<apex:page controller="wk_wedge.Addcategory" title="Add Category" sidebar="false" standardstylesheets="false" showheader="false" id="thepage" cache="false">   
+    <style>
+        .wdg-dataentry--form{
+        height:auto;
+        }
+        .wdg-nav-icon.productcatalog, .wdg-nav-icon.category {
+        background-color: #34becd;
+        }
+        .wdg-form--table select{
+        padding-right: 45px;
+        }
+        .small-width{
+        width:40%;
+        display:inline-block;
+        height:80%;
+        }
+        .check-avail--btn{
+        padding:5px 20px;
+        }
+        .wdg-form--table tbody td.field .green-css{
+        color:green;
+        }
+        .wdg-form--table tbody td.field .red-css{
+        color:red;
+        }
+        .check-avail--btn{
+        margin-left: 10px;
+        border: 1px solid #adadad;
+        padding: 5px 20px;
+        border-radius: 3px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: #555555;
+        }
+        .check-avail--btn:hover{
+        color: #fff;
+        background: #34BECD;
+        border-color: #34BECD;
+        }
+        .btn-block{
+        position: absolute;
+        right: 20px;
+        top: 0px;
+        }
+        .wdg-filter--options>select {
+        border: none;
+        border-radius: 3px;
+        padding: 9px 30px 11px 10px;
+        font-size: 14px;
+        height: 40px;
+        outline: none;
+        background: #DCDCDC;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        -ms-appearance: none;
+        -o-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        margin: 0px 4px;
+        }
+        #orderIndexError{
+        font-size: 12px;
+        color: red;
+        }
+        .wdg-form--headeroptions li{
+            position: relative;
+        }
+        
+              
+    </style>
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <apex:form id="pop_form">
+                <div class="wdg-popup wdg-hide" id="imagePopUp">
+                    <div class="wdg-popup--modal" id="doc-pop">
+                        <div class="wdg-modal--header clearfix">
+                            <div class="wdg-modal--title">Images</div>
+                            <apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+                        </div>
+                        <div class="wdg-modal--content padding-0">
+                            <div class="wdg-imagepop--box">
+                                <div class="wdg-imagepop--folder">
+                                    <div class="wdg-images--container">
+                                        <apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+                                            <div class="wdg-checkbox--box">
+                                                <apex:inputcheckbox html-targetvalue="{!folder.value}"  styleclass="folder-checkbox"/>
+                                            </div>
+                                            <apex:outputlabel value="{!folder.label}"/>
+                                        </apex:datalist>
+                                        <apex:inputhidden value="{!documentfolder}" id="docfolder" />
+                                    </div>
+                                </div>
+                                <apex:outputpanel layout="block" id="imageSet" styleclass="wdg-imagepop--images">
+                                    <div class="wdg-images--container">
+                                        <apex:repeat value="{!Images}" var="imgs">
+                                            <apex:image url="/servlet/servlet.FileDownload?file={!Imgs.id}" html-targetId="{!Imgs.id}" alt="{!Imgs.name}"/>
+                                        </apex:repeat>
+                                        <apex:outputpanel layout="block" styleclass="selectFolder" rendered="{!Images.size==0}">
+                                            <apex:outputpanel >
+                                                <apex:outputtext value="Please select a folder from left" rendered="{!OR(documentfolder==null,documentfolder=='')}" />
+                                                <apex:outputtext value="No images returned" rendered="{!AND(documentfolder!=null,documentfolder!='')}"/>
+                                            </apex:outputpanel>
+                                        </apex:outputpanel>
+                                    </div>
+                                </apex:outputpanel>
+                            </div>
+                            <apex:actionfunction name="newImages" rerender="imageSet" status="waitstatus"/>
+                        </div>
+                        <div class="wdg-modal--footer">
+                        </div> 
+                    </div>
+                    <div class="wdg-popup--bg fadein"></div> 
+                </div>
+            </apex:form>
+            <!--<apex:form id="productform"  styleclass="wdg-dataentry--form"> 
+                
+            </apex:form>-->
+            <div class="wdg-body">
+                <apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+                <!--<div class="wdg-body--header">
+
+</div>-->
+                <div class="wdg-body--titleblock clearfix">
+                    <div class="wdg-body--title">
+                        <span class="wdg-title--logo categories"></span>
+                        <span>Add Category</span>
+                    </div>
+                    <apex:form >
+                        <div class="wdg-filter--options" style="display:inline-block">
+                            <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!activatedLanguage.size>1}">
+                                <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                <apex:selectOptions value="{!activatedLanguage}">
+                                    <span class="caret multidropdownsymbol"></span>
+                                </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                    </apex:form>
+                </div>
+                <apex:form >
+                    <div class="wdg-body--titleblock clearfix btn-block">
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:commandlink styleclass="wdg-ctrl--btn save " onclick="return ValidateSave(event);" action="{!save}" >
+                                <span></span>
+                            </apex:commandlink>               
+                            <a href="{!$page.CategoryListing}" class="wdg-ctrl--btn cancel"> 
+                                <span></span>
+                            </a>
+                        </div>  
+                    </div>
+                    <div class="wdg-popup wdg-hide" id="fileuploadPopUp">
+                        <div class="wdg-popup--modal">
+                            <div class="wdg-modal--header clearfix">
+                                <div class="wdg-modal--title">Images</div>
+                                <apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+                            </div>
+                            <div class="wdg-modal--content padding-0">
+                                <div class="wdg-imagepop--box">
+                                    <div class="wdg-imagepop--folder">
+                                        <div class="wdg-images--container">
+                                            <apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+                                                <div class="wdg-radio--box">
+                                                    <span class="dot"></span>
+                                                    <input type="radio" name="folder" value="{!folder.value}" class="folder-radio" />
+                                                </div>
+                                                <apex:outputlabel value="{!folder.label}"/>
+                                            </apex:datalist>
+                                            <apex:inputhidden value="{!uploadfolder}" id="uploadfolder" />
+                                        </div>
+                                    </div>
+                                    <apex:outputpanel layout="block"  styleclass="wdg-imagepop--images">
+                                        <apex:outputpanel layout="block" styleclass="wgd-uploadImage--box">
+                                            <div class="wdg-upload--image">
+                                                <apex:outputpanel layout="block"></apex:outputpanel>
+                                            </div>
+                                            <div class="wdg-uploadimage--title" id="Image_upload_title">Image.jpg</div>
+                                        </apex:outputpanel>
+                                        <div class="wdg-upload--file">
+                                            <div class="wdg-file--box">
+                                                <span>choose file</span>
+                                                <apex:inputFile value="{!document.body}" filename="{!document.name}" id="Uploadfile" accept="image/*" styleClass="inputupload" />
+                                            </div>
+                                            <div class="wdg-fileupload--error wdg-hide">
+                                                
+                                            </div>
+                                        </div> 
+                                    </apex:outputpanel>
+                                </div> 
+                            </div>
+                            <div class="wdg-modal--footer">
+                            </div>
+                        </div>
+                        <div class="wdg-popup--bg fadein"></div> 
+                    </div>
+                    <apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+                        <div class="wdg-form--header">
+                            <ul class="wdg-form--headeroptions">
+                                <li class="active">                                    
+                                    <a href="javascript:void(0)" data-target="categoryblock">General</a>
+                                    <span class="taberr">!</span>
+                                </li>
+                                <li >                                                                       
+                                    <a href="javascript:void(0)" data-target="categorySEO">SEO</a>
+                                    <span class="taberr">!</span> 
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="productTabGroup" class="wdg-form--content">
+                            <div id="categoryblock" class="wgd-form--tab show">
+                                <apex:outputpanel layout="block"  styleclass="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Information </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Name :" for="prodName"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield value="{!Categories.name}" id="prodName"  styleclass=" display-inline--block" rendered="{!metaname==null}"/>
+                                                            <apex:inputtext value="{!metaname}" id="prodNameMeta" styleclass="display-inline--block" rendered="{!metaname!=null}"/>
+                                                        </div>
+                                                        <apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>                                                     
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel for="Rlevel">Select Root Level </apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <apex:outputPanel styleClass="wedgeSelectListSearch">
+                                                            <apex:inputText value="{!queryCatName}"  onkeypress="return noenter(event, 'clickCat');"
+                                                                            styleclass="field--small display-inline--block accountList wdg_customSelectList wdg_searchBox"
+                                                                            onclick="showList('#catList');" onblur="hideList('#catList');"
+                                                                            id="queryCatName" html-autocomplete="off">
+                                                            </apex:inputText>
+                                                            <span class="wedgeSelectListDropIcon"></span>
+                                                            <apex:inputHidden value="{!parent}" id="queryCatId" /> 
+                                                            
+                                                            <div class="wedge_selectListOuter field--small" id="catList">
+                                                                <apex:outputPanel id="cattable">
+                                                                    <apex:inputHidden value="{!jsondataString}" id="renderJsonString"/>
+                                                                    <div id="show">
+                                                                        <a class="wedge_SelectListInner" 
+                                                                           href="javascript:addAccount('','-- Root Category--','queryCatName', 'queryCatId');">
+                                                                            -- Root Category--</a>
+                                                                    </div>
+                                                                </apex:outputPanel>
+                                                            </div>
+                                                        </apex:outputPanel>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Order :" for="prodordind"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!Categories.wk_wedge__order_index__c}" id="prodordind"  styleclass="field--small display-inline--block"/>
+                                                        <span id="orderIndexError"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Description :" for="proddesc"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <apex:inputfield value="{!Categories.wk_wedge__Category_Description__c}" id="proddesc"  styleclass="field--small display-inline--block" rendered="{!metadesc==null}" html-tinymce="true"/>
+                                                        <apex:inputtextarea value="{!metadesc}" id="prodDescmeta" styleclass="display-inline--block" rendered="{!metadesc!=null}" html-tinymce="true"/>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Status :" for="prodstatus"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <div class="custom-checkbox">
+                                                            <apex:inputcheckbox value="{!Categories.wk_wedge__Active__c}" id="prodStatus"  styleclass="field--small display-inline--block" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td class="label"><apex:outputlabel value="Banner Image :" for="prodAmount"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <div class="wdg-warning--box">
+                                                            <div class="wdg-warning">Image dimensions should be a maximum of 1140 pixels wide by 400 pixels high for best results. Larger images will be resized and may appear distorted.</div>
+                                                        </div>
+                                                        
+                                                        <apex:actionregion >
+                                                            <apex:outputpanel id="ImagesPane" layout="block" styleclass="wgd-uploadImage--box">
+                                                                <div class="wdg-upload--image display-inline--block">
+                                                                    <apex:outputpanel layout="block" rendered="{!imgSelected==null}"></apex:outputpanel>
+                                                                    <apex:image url="/servlet/servlet.FileDownload?file={!imgSelected}" width="108px" height="90px" rendered="{!NOT(imgSelected==null)}" />
+                                                                </div>
+                                                                <apex:inputhidden value="{!imgSelected}" id="Imgsel"/>
+                                                                <apex:inputhidden value="{!ImageOptionSelected}" id="Imgoptsel"/>
+                                                                <div class="wdg-uploadimage--title" id="Image_title"></div>
+                                                            </apex:outputpanel>
+                                                            <div class="wdg-uploadImage--btngroup">
+                                                                <a href="javascript:void(0)" data-target="fileuploadPopUp" value="0" class="ImgSelect">Upload</a>
+                                                                <a href="javascript:void(0)" data-target="imagePopUp" value="1" class="ImgSelect">Documents</a>
+                                                                <apex:outputlink value="javascript:void(0)" rendered="{!NOT(imgSelected==null)}" id="removeImages" style="border-left:none">Remove Image</apex:outputlink>
+                                                            </div>
+                                                        </apex:actionregion>
+                                                        <apex:outputPanel layout="block" Id="validateImg" styleclass="validateClass"></apex:outputPanel> 
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </apex:outputpanel>
+                            </div>
+                            <div id="categorySEO" class="wgd-form--tab">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>SEO </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>                                                
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="SEO Alias :  " for="prodAlias"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput small-width">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield value="{!Categories.wk_wedge__Editable_Alias__c}" id="prodAlias" styleclass="display-inline--block"/>
+                                                        </div>
+                                                        <!--<apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel> -->
+                                                        <!--<a class="check-avail--btn" href="javascript:void(0)">Check Availability</a>-->
+                                                        <span id="availableCheck"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Page Title :  " for="pagetitle"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <apex:inputtext value="{!Categories.wk_wedge__Category_Page_Title__c}" id="pagetitle" styleclass="display-inline--block" rendered="{!metapagetitle==null}"/>
+                                                            <apex:inputtext value="{!metapagetitle}" id="pagetitleMeta" styleclass="display-inline--block" rendered="{!metapagetitle!=null}"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Meta Description :  " for="metapagedescription"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">                                                            <apex:inputtext value="{!Categories.wk_wedge__Category_Meta_Description__c}" id="metapagedescription" styleclass="display-inline--block" rendered="{!metapagedesc==null}"/>
+                                                            <apex:inputtext value="{!metapagedesc}" id="pagedescMeta" styleclass="display-inline--block" rendered="{!metapagedesc!=null}"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Meta Keywords :  " for="metakeyword"/>
+                                                        <c:ToolTip helptext="Enter comma separated values"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <apex:inputtext value="{!Categories.wk_wedge__Category_Meta_Keywords__c}" id="metakeyword" styleclass="display-inline--block" rendered="{!metakeywords==null}"/>
+                                                            <apex:inputtext value="{!metakeywords}" id="keywordsMeta" styleclass="display-inline--block" rendered="{!metakeywords!=null}"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                            
+                    </apex:outputpanel>
+                </apex:form>
+            </div>
+            <apex:form >
+                <apex:actionFunction name="clickCat"
+                                     action="{!getjsondataStringM}"
+                                     reRender="cattable" oncomplete="reRenderCategory();">
+                    <apex:param value="" name="queryCatName"/>
+                </apex:actionFunction>
+            </apex:form>
+            <script>
+            var catJson='{!JSENCODE(jsondata)}';
+            var parentCat='{!JSENCODE(parent)}'
+            </script>
+            <script>
+            
+            function ValidateSave(event){
+                
+                var str  = $("[Id$='prodName']").val();
+                if(str == undefined)
+                    str = $("[Id$='prodNameMeta']").val();
+                if (str!=null && str!='' && window.enableSave) {
+                    $("[Id$='validate']").html('');
+                    return true;
+                }
+                else{ 
+                    if(str==null || str==''){
+                        $("[Id$='validate']").html('Name is required.');
+                        $('.wdg-form--headeroptions li').each(function(){
+                           if($(this).find('a').attr('data-target')=='categoryblock'){
+                               if(!$(this).hasClass('active'))
+                                   $(this).find('span').show();
+                               else
+                                   $(this).find('span').hide();
+                           }
+                        });
+                    }
+                    if(!window.enableSave){
+                        $('.wdg-form--headeroptions li').each(function(){
+                           if($(this).find('a').attr('data-target')=='categorySEO'){
+                               if(!$(this).hasClass('active'))
+                                   $(this).find('span').show();
+                               else
+                                   $(this).find('span').hide();
+                           }
+                        });
+                    }             
+                    
+                    event.preventDefault();
+                    return false;
+                }
+            }
+            
+            wk=jQuery.noConflict();
+            (function(wk){
+                /*  window.createCategoriesOptions=function(categories, ischildren, rootL){
+                        var optionset = '';
+                        for(item in categories){
+                            //var selected='';
+                           if(categories[item].key==parentCat)
+                               //  selected='selected';
+                            //optionset += '<option value="'+categories[item].key+'"  '+selected+'>';
+                            optionset +="<a class='wedge_SelectListInner' style='display: block;' href='javascript:addAccount('"+categories[item].key+"','"+categories[item].title+"','queryCatName', 'queryCatId');'>";
+                            if(typeof(categories[item].children) !=undefined){
+                                var spaces=''      
+                                for(var i=0;i<rootL;i++){
+                                    spaces+='¦'+'&nbsp;&nbsp;&nbsp;&nbsp;';
+                                }
+                                optionset +=spaces+categories[item].title; 
+                                optionset += '</a><br/>';
+                                optionset +=createCategoriesOptions(categories[item].children, false,(rootL+1));
+                            }
+                            else {
+                                optionset += categories[item].title;
+                                optionset += '</a><br/>';
+                            }
+                            
+                            //optionset += '</a>';
+                            
+                        }
+                       return optionset;
+                    }    */
+                window.enableSave = false;
+                wk('[id$=prodAlias]').blur(function(){
+                    var aliasName = wk(this).parent().find('input').val();
+                    if(aliasName != ''){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.Addcategory.checkAvailability}',
+                            aliasName, 
+                            function(result, event){
+                                if (event.status) {
+                                    if(result == null || result == '{!CurrentProductId}' || aliasName == 'abc'){
+                                        wk('#availableCheck').text('');
+                                        /*wk('#availableCheck').addClass('green-css');
+                                        wk('#availableCheck').removeClass('red-css');*/
+                                        window.enableSave = true;
+                                    }else{
+                                        console.log('Already in use');
+                                        wk('#availableCheck').text('SEO Alias Unavailable');
+                                        wk('#availableCheck').removeClass('green-css');
+                                        wk('#availableCheck').addClass('red-css');
+                                        window.enableSave = false;
+                                    }
+                                } else {
+                                    window.enableSave = false;
+                                }
+                            }, 
+                            {escape: true}
+                        );
+                    } else {
+                        wk('#availableCheck').text('Enter value for SEO Alias First');
+                        wk('#availableCheck').removeClass('green-css');
+                        wk('#availableCheck').addClass('red-css');
+                        window.enableSave = false;
+                    }
+                });
+                
+                window.createCategoriesOptions=function(categories, ischildren, rootL){
+                    var optionset = '';
+                    if(typeof(categories) != undefined && categories != undefined) {
+                        for(item in categories){
+                            console.log(typeof(categories[item].title) != 'undefined');
+                            if(categories[item].key==parentCat){
+                                $('[id$="queryCatName"]').val(categories[item].title);
+                                $('[id$="queryCatId"]').val(categories[item].key);
+                            }
+                            optionset +="<a class='wedge_SelectListInner' href='javascript:addAccount("+categories[item].key+"','"+categories[item].title+"','queryCatName', 'queryCatId');'>";
+                            
+                            if(typeof(categories[item].children) !=undefined && typeof(categories[item].title) !='undefined'){
+                                console.log(categories[item].title);
+                                var hrefA= 'javascript:addAccount("'+categories[item].key+'","'+categories[item].title+'","queryCatName", "queryCatId");';
+                                optionset +="<a class='wedge_SelectListInner' href='"+hrefA+"'>";
+                                var spaces=''      
+                                for(var i=0;i<rootL;i++){
+                                    spaces+='¦'+'&nbsp;&nbsp;&nbsp;&nbsp;';
+                                }
+                                optionset += spaces+categories[item].title; 
+                                optionset += '</a>';
+                                optionset += createCategoriesOptions(categories[item].children, false,(rootL+1));
+                            }
+                            else if(typeof(categories[item].title) !='undefined') {
+                                optionset +="<a class='wedge_SelectListInner' href='javascript:addAccount('"+categories[item].key+"','"+categories[item].title+"','queryCatName', 'queryCatId');'>";
+                                optionset += categories[item].title;
+                                optionset += '</a><br/>';
+                            }
+                            
+                            //optionset += '</a>';
+                            
+                        }
+                    }
+                    else {
+                        optionset = '';
+                        console.log('else part');
+                    }
+                    return optionset;
+                }   
+                wk( window ).load(function(){
+                    var categories=[];
+                    if(catJson!=null && catJson!='')
+                        categories=JSON.parse(catJson);
+                    //window.createCategoriesOptions(categories,false,0);
+                    //wk("[Id$='show']").append(window.createCategoriesOptions(categories,false,0));
+                    
+                    wk("[Id$='show']").append(window.createCategoriesOptions(categories,false,0));
+                    
+                });
+                
+                wk( document ).on("change",".wdg-body .wdg-form--table td [Id$='show']",function(){
+                    
+                    wk("[Id$='parentCat']").val(wk(this).val());
+                })
+                wk( document ).on("blur",".wdg-body .wdg-form--table td [Id$='prodName']",function(){
+                    var str  = wk("[Id$='prodName']").val();                       
+                    if (str!=null && str!='') {
+                        wk("[Id$='validate']").html('');
+                    }
+                    else{
+                        wk("[Id$='validate']").html('Name is required.');
+                    }
+                })
+            }(jQuery));
+            </script>
+            <script>
+            wk=jQuery.noConflict();
+            (function(wk){
+                if(wk("[Id$='prodStatus']").attr('checked')=='checked' ){
+                    wk("[Id$='prodStatus']").parent().addClass("checked");                 
+                }
+                wk( document).on("click",".wdg-form--headeroptions li a ",function(){
+                    wk('.active.taberr').hide();
+                    
+                    wk(this).parent().siblings().removeClass("active");
+                    wk(this).parent().addClass("active");
+                    var ids=wk(this).attr("data-target");
+                    wk("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                    $('.wdg-form--headeroptions li').each(function(){
+                        
+                        if($(this).find('a').attr('data-target')=='categoryblock' && $("[Id$='validate']").html()!='' && $("[Id$='validate']").html()!=null){
+                           if(!$(this).hasClass('active'))
+                               $(this).find('span').show();
+                           else
+                             $(this).find('span').hide();
+                        }
+                        if($(this).find('a').attr('data-target')=='categorySEO' && !window.enableSave){
+                           if(!$(this).hasClass('active'))
+                               $(this).find('span').show();
+                           else
+                               $(this).find('span').hide();
+                        }
+                    });
+                    
+                }); 
+                wk(document ).on("click",".custom-checkbox input",function(){
+                    
+                    wk(this).parent().removeClass("checked");
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                    }
+                });
+                
+                
+                wk(document ).on("click",".folder-checkbox",function(){
+                    var arr=[];
+                    wk(".folder-checkbox").each(function(){
+                        if(this.checked){
+                            wk(this).parent().addClass("checked");
+                            arr.push(wk(this).attr('targetvalue'));
+                        }
+                        else
+                            wk(this).parent().removeClass("checked");
+                    });
+                    wk("[Id$='docfolder']").val(arr.join(','))
+                    newImages();
+                });
+                wk(document ).on("click",".folder-radio",function(){
+                    wk(".folder-radio").parent().removeClass("checked");
+                    
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                        wk("[Id$='uploadfolder']").val(wk(this).val())
+                        
+                    }
+                });
+                wk(document).on("click","[Id$='wgdPopupClose']", function(){categoryblock
+                    wk("[Id$='imagePopUp'],[Id$='fileuploadPopUp']").removeClass("wdg-show").addClass("wdg-hide");
+                });
+                wk(document).on("click",".wdg-uploadImage--btngroup a",function(){
+                    var ids=wk(this).attr("data-target");
+                    wk("[Id$='"+ids+"']").addClass("wdg-show").removeClass("wdg-hide");
+                });
+                wk(document).on("click",".wdg-imagepop--box .wdg-images--container img",function(){
+                    var ids=wk(this).attr("targetid");
+                    var name=wk(this).attr("alt");
+                    wk("[Id$='Imgsel']").val(ids);
+                    wk("[Id$='Imgoptsel']").val(0);
+                    wk("[Id$='Image_title']").text(name);
+                    wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                    wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+                    wk("[Id$='wgdPopupClose']").trigger("click");
+                    
+                });
+                wk(document).on("click","[Id$='Uploadfile']",function(event){
+                    var ufolder=wk("[Id$='uploadfolder']").val();
+                    wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");
+                    wk(".wdg-fileupload--error").text("");
+                    if(ufolder==null || ufolder==''){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Please Select a folder from left");
+                        event.preventDefault();
+                    }
+                });
+                wk( document ).on("click"," [Id$='removeImages']", function(){
+                    wk(".wdg-uploadimage--title").text("image.jpg");  
+                    wk("[Id$='Imgsel']").val('');
+                    wk("[Id$='Imgoptsel']").val('');
+                    wk(".wdg-upload--image").html("<div></div>");
+                    wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                    
+                });
+                wk('[id$=prodName]').blur(function(){
+                    var SEOAlias = wk(this).val().replace(/[^a-zA-Z0-9_\- ]/g, "").toLowerCase();
+                    if(wk('[id$=prodAlias]').val()=='' && wk('[id$=prodName]').val()!=''){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.Addcategory.checkAvailability}',
+                            SEOAlias.replace(/ /g,'-'), 
+                            function(result, event){
+                                if (event.status) {
+                                    if(result == null || result == '{!CurrentProductId}' || aliasName == 'abc'){
+                                        wk('[id$=prodAlias]').val(SEOAlias.replace(/ /g,'-'));
+                                        window.enableSave = true;
+                                    }else{
+                                        wk('[id$=prodAlias]').val(SEOAlias.replace(/ /g,'-') +'-'+ Math.floor(Math.random() * 100));
+                                        window.enableSave = false;
+                                    }
+                                    wk('#availableCheck').text('');
+                                } else {
+                                    window.enableSave = false;
+                                }
+                            }, 
+                            {escape: true}
+                        );
+                        //wk('[id$=prodAlias]').val(SEOAlias.replace(/ /g,'-'));
+                    }
+                });
+                wk('[id$=prodName]').trigger('blur');
+                wk('[id$=prodAlias]').trigger('blur');
+                wk(document).on("change","[Id$='Uploadfile']",function(event){
+                    var ufolder=wk("[Id$='uploadfolder']").val();
+                    wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");
+                    wk(".wdg-fileupload--error").text("");
+                    if(ufolder==null || ufolder==''){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Please Select a folder from left");
+                        event.preventDefault();
+                    }
+                    var fakepath=wk(this).val();
+                    var templist=fakepath.split('\\');
+                    var filename=templist[templist.length-1];  
+                    var tempext=filename.split('.')
+                    var fileext=tempext[tempext.length-1];
+                    if(fileext.toLowerCase()!='jpg' && fileext.toLowerCase()!='jpeg' && fileext.toLowerCase()!='png'){
+                        wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+                        wk(".wdg-fileupload--error").text("Only jpeg, jpg and png files are allowed");
+                        wk(this).val('')
+                        
+                    }else{
+                        wk(".wdg-uploadimage--title").text(filename);
+                        wk("[Id$='Imgoptsel']").val(1);
+                        wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+                        wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+                        
+                        wk("[Id$='wgdPopupClose']").trigger("click");
+                    }
+                });
+            }(jQuery));
+            </script>
+            <script>
+            function noenter(ev, obj)  {
+                if (window.event && window.event.keyCode == 13 || ev.which == 13 || window.event.keyCode == 32 ) {
+                    if(obj == 'clickCat') {
+                        clickCat($('input[id$="queryCatName"]').val()); 
+                    }
+                    
+                    // return false;
+                } 
+            }
+            function delay(obj){
+                var interval = 0;
+                if (interval)
+                    window.clearTimeout(interval);
+                interval = window.setTimeout(function() {
+                    if(obj == 'clickCat') {
+                        clickCat($('input[id$="queryCatName"]').val()); 
+                        //catJson='{!JSENCODE(jsondataString)}';
+                        //console.log(catJson);
+                    }
+                }, 500);
+            }
+            function showList(obj){
+                $(obj).css('visibilty','visible').slideDown(500);
+            }
+            function hideList(obj){
+                $(obj).css('visibilty','hidden').slideUp(1000);        
+            }
+            function addAccount(obj,name, nameId, valueId) {
+                // $(".queryPortalName").val(name);
+                $('[id$="'+valueId+'"]').val(obj);
+                $('[id$="'+nameId+'"]').val(name);
+            }
+            function reRenderCategory() {
+                var interval = 0;
+                console.log('working');
+                if (interval)
+                    window.clearTimeout(interval);
+                interval = window.setTimeout(function() {
+                    var renderList = $("[Id$='renderJsonString']").val();
+                    var categories=[];
+                    if(renderList!=null && renderList!='' ){
+                        categories=JSON.parse(renderList);
+                        if(categories.length != 0) {
+                            $("[Id$='show']").append(window.createCategoriesOptions(categories,false,0));  
+                            console.log('its Working' );
+                        }
+                        
+                    }
+                }, 1000);
+            }
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>
+<!--
+
+<apex:page controller="wk_wedge.Addcategory" title="Add Category" sidebar="false" standardstylesheets="false" showheader="false" id="thepage" cache="false">   
+<style>
+.wdg-nav-icon.productcatalog, .wdg-nav-icon.category {
+background-color: #34becd;
+}
+</style>
+<apex:composition template="wk_wedge__EcomKulBackendTheme">
+<apex:define name="Datacontent">
+<apex:form id="pop_form">
+<div class="wdg-popup wdg-hide" id="imagePopUp">
+<div class="wdg-popup--modal" id="doc-pop">
+<div class="wdg-modal--header clearfix">
+<div class="wdg-modal--title">Images</div>
+<apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+</div>
+<div class="wdg-modal--content padding-0">
+<div class="wdg-imagepop--box">
+<div class="wdg-imagepop--folder">
+<div class="wdg-images--container">
+<apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+<div class="wdg-checkbox--box">
+<apex:inputcheckbox html-targetvalue="{!folder.value}"  styleclass="folder-checkbox"/>
+</div>
+<apex:outputlabel value="{!folder.label}"/>
+</apex:datalist>
+<apex:inputhidden value="{!documentfolder}" id="docfolder" />
+</div>
+</div>
+<apex:outputpanel layout="block" id="imageSet" styleclass="wdg-imagepop--images">
+<div class="wdg-images--container">
+<apex:repeat value="{!Images}" var="imgs">
+<apex:image url="/servlet/servlet.FileDownload?file={!Imgs.id}" html-targetId="{!Imgs.id}" alt="{!Imgs.name}"/>
+</apex:repeat>
+<apex:outputpanel layout="block" styleclass="selectFolder" rendered="{!Images.size==0}">
+<apex:outputpanel >
+<apex:outputtext value="Please select a folder from left" rendered="{!OR(documentfolder==null,documentfolder=='')}" />
+<apex:outputtext value="No images returned" rendered="{!AND(documentfolder!=null,documentfolder!='')}"/>
+</apex:outputpanel>
+</apex:outputpanel>
+</div>
+</apex:outputpanel>
+</div>
+<apex:actionfunction name="newImages" rerender="imageSet" status="waitstatus"/>
+</div>
+<div class="wdg-modal--footer">
+</div> 
+</div>
+<div class="wdg-popup--bg fadein"></div> 
+</div>
+</apex:form>
+<apex:form id="productform"  styleclass="wdg-dataentry--form"> 
+<div class="wdg-popup wdg-hide" id="fileuploadPopUp">
+<div class="wdg-popup--modal">
+<div class="wdg-modal--header clearfix">
+<div class="wdg-modal--title">Images</div>
+<apex:outputlink styleclass="wdg-modal--close" id="wgdPopupClose" value="javascript:void(0)"></apex:outputlink>
+</div>
+<div class="wdg-modal--content padding-0">
+<div class="wdg-imagepop--box">
+<div class="wdg-imagepop--folder">
+<div class="wdg-images--container">
+<apex:datalist value="{!Folderlist}" var="folder" styleclass="wdg-imagepop--folderlist">
+<div class="wdg-radio--box">
+<span class="dot"></span>
+<input type="radio" name="folder" value="{!folder.value}" class="folder-radio" />
+</div>
+<apex:outputlabel value="{!folder.label}"/>
+</apex:datalist>
+<apex:inputhidden value="{!uploadfolder}" id="uploadfolder" />
+</div>
+</div>
+<apex:outputpanel layout="block"  styleclass="wdg-imagepop--images">
+<apex:outputpanel layout="block" styleclass="wgd-uploadImage--box">
+<div class="wdg-upload--image">
+<apex:outputpanel layout="block"></apex:outputpanel>
+</div>
+<div class="wdg-uploadimage--title" id="Image_upload_title">Image.jpg</div>
+</apex:outputpanel>
+<div class="wdg-upload--file">
+<div class="wdg-file--box">
+<span>choose file</span>
+<apex:inputFile value="{!document.body}" filename="{!document.name}" id="Uploadfile" accept="image/*" styleClass="inputupload" />
+</div>
+<div class="wdg-fileupload--error wdg-hide">
+
+</div>
+</div> 
+</apex:outputpanel>
+</div> 
+</div>
+<div class="wdg-modal--footer">
+</div>
+</div>
+<div class="wdg-popup--bg fadein"></div> 
+</div>
+<div class="wdg-body">
+<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>
+
+<div class="wdg-body--titleblock clearfix">
+<div class="wdg-body--title">
+<span class="wdg-title--logo categories"></span>
+<span>Add Category</span>
+</div>
+<div class="wdg-ctrl--btnPanel">
+<apex:commandlink id="SaveButton" immediate="false" onclick="return ValidateSave(event);" action="{!save}" styleclass="wdg-ctrl--btn save" >
+<span></span>
+</apex:commandlink>
+
+<a href="{!$page.CategoryListing}" class="wdg-ctrl--btn cancel"> 
+<span></span>
+</a>
+</div>  
+</div>
+
+<apex:outputpanel layout="block" styleclass="wdg-form--box" id="thefeatureform">
+<div class="wdg-form--header">
+<ul class="wdg-form--headeroptions">
+<li class="active"><a href="javascript:void(0)" data-target="categoryblock">General</a></li>
+</ul>
+</div>
+<div id="productTabGroup" class="wdg-form--content">
+<apex:outputpanel layout="block" id="categoryblock" styleclass="wdg-form--block">
+<div class="wdg-form--blocktitle">
+<span>Information </span>
+</div>
+<div class="wdg-form--blockfields">
+<table class="wdg-form--table">
+<tbody>
+<tr>
+<td class="label"><apex:outputlabel value="Name :" for="prodName"></apex:outputlabel></td>
+<td class="field">
+<div class="requiredInput">
+<div class="requiredBlock"></div>
+<apex:inputfield value="{!Categories.name}" id="prodName"  styleclass=" display-inline--block"/>
+</div>
+<apex:outputPanel layout="block" Id="validate" styleclass="validateClass"></apex:outputPanel>                                                     
+</td>
+</tr>
+<tr>
+<td class="label"><apex:outputlabel for="Rlevel">Select Root Level </apex:outputlabel></td>
+<td class="field">
+<apex:outputpanel >
+<select id="show">
+<option value="root">-- Root Category--</option>
+</select>
+<apex:inputhidden value="{!parent}" id="parentCat"/>
+</apex:outputpanel>
+</td>
+
+</tr>
+<tr>
+<td class="label"><apex:outputlabel value="Order :" for="prodordind"></apex:outputlabel></td>
+<td class="field"><apex:inputfield value="{!Categories.wk_wedge__order_index__c}" id="prodordind"  styleclass="field--small display-inline--block"/></td>
+</tr>
+<tr>
+<td class="label"><apex:outputlabel value="Description :" for="proddesc"></apex:outputlabel></td>
+<td class="field"><apex:inputfield value="{!Categories.wk_wedge__Category_Description__c}" id="proddesc"  styleclass="field--small display-inline--block"/></td>
+</tr>
+
+<tr>
+<td class="label"><apex:outputlabel value="Status :" for="prodstatus"></apex:outputlabel></td>
+<td class="field">
+<div class="custom-checkbox">
+<apex:inputfield value="{!Categories.wk_wedge__Active__c}" id="prodStatus"  styleclass="field--small display-inline--block" />
+</div>
+</td>
+</tr>
+<tr>
+
+<td class="label"><apex:outputlabel value="Banner Image :" for="prodAmount"></apex:outputlabel></td>
+<td class="field">
+<div class="wdg-warning--box">
+<div class="wdg-warning">Image dimensions should be a maximum of 1140 pixels wide by 400 pixels high for best results. Larger images will be resized and may appear distorted.</div>
+</div>
+
+<apex:actionregion >
+<apex:outputpanel id="ImagesPane" layout="block" styleclass="wgd-uploadImage--box">
+<div class="wdg-upload--image display-inline--block">
+<apex:outputpanel layout="block" rendered="{!imgSelected==null}"></apex:outputpanel>
+<apex:image url="/servlet/servlet.FileDownload?file={!imgSelected}" width="108px" height="90px" rendered="{!NOT(imgSelected==null)}" />
+</div>
+<apex:inputhidden value="{!imgSelected}" id="Imgsel"/>
+<apex:inputhidden value="{!ImageOptionSelected}" id="Imgoptsel"/>
+<div class="wdg-uploadimage--title" id="Image_title"></div>
+</apex:outputpanel>
+<div class="wdg-uploadImage--btngroup">
+<a href="javascript:void(0)" data-target="fileuploadPopUp" value="0" class="ImgSelect">Upload</a>
+<a href="javascript:void(0)" data-target="imagePopUp" value="1" class="ImgSelect">Documents</a>
+<apex:outputlink value="javascript:void(0)" rendered="{!NOT(imgSelected==null)}" id="removeImages" style="border-left:none">Remove Image</apex:outputlink>
+</div>
+</apex:actionregion>
+<apex:outputPanel layout="block" Id="validateImg" styleclass="validateClass"></apex:outputPanel> 
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</apex:outputpanel>
+</div>
+</apex:outputpanel>
+</div>
+</apex:form>
+<script>
+var catJson='{!JSENCODE(jsondata)}';
+var parentCat='{!JSENCODE(parent)}'
+</script>
+<script>
+wk=jQuery.noConflict();
+(function(wk){
+    
+    window.createCategoriesOptions=function(categories, ischildren, rootL){
+        
+        var optionset = '';
+        console.log('test');
+        console.log(categories);
+        if(typeof(categories) != 'undefined' && categories != undefined) {
+            for(item in categories){
+                console.log('Category Item' +categories[item]);
+                var selected='';
+                if(categories[item].key==parentCat)
+                    selected='selected';
+                optionset += '<option value="'+categories[item].key+'"  '+selected+'>';
+                if(typeof(categories[item].children) !=undefined){
+                    var spaces=''      
+                    for(var i=0;i<rootL;i++){
+                        spaces+='¦'+'&nbsp;&nbsp;&nbsp;&nbsp;';
+                    }
+                    optionset +=spaces+categories[item].title; 
+                    optionset +=createCategoriesOptions(categories[item].children, false,(rootL+1));
+                }
+                else {
+                    optionset += categories[item].title;
+                }
+                
+                optionset += '</option>';
+            }
+        }
+        return optionset;
+    }       
+    
+    wk( window ).load(function(){
+        var categories=[];
+        if(catJson!=null && catJson!='')
+            categories=JSON.parse(catJson)
+            console.log('categories'+categories);
+        wk("[Id$='show']").append(window.createCategoriesOptions(categories,false,0));
+    });
+    
+    wk( document ).on("change",".wdg-body .wdg-ctrl--btnPanel [Id$='show']",function(){
+        
+        wk("[Id$='parentCat']").val(wk(this).val());
+    });
+    
+    wk( document ).on("blur",".wdg-body .wdg-form--table td [Id$='prodName']",function(){
+        var str  = wk("[Id$='prodName']").val();                       
+        if (str.match(/^[A-z0-9\d\s]+$/)) {
+            wk("[Id$='validate']").html('');
+        }
+        else{
+            wk("[Id$='validate']").html('Special Characters Are Not Allowed');
+        }
+    })
+    
+}(jQuery));
+
+</script>
+<script>
+function ValidateSave(event){
+    var str  = $("[Id$='prodName']").val();
+    var img = $("[Id$='Imgsel']").val();                     
+    if (str.match(/^[A-z0-9\d\s]+$/) && img!='' && img!=null) {
+        $("[Id$='validate']").html('');
+        $("[Id$='validateImg']").html('');
+        return true;
+    }
+    else{                    
+        //alert("Review all the errors!");
+        
+        if(!str.match(/^[A-z0-9\d\s]+$/)){
+            $("[Id$='validate']").html('Special Characters Are Not Allowed');
+        }
+        
+        if(img=='' || img==null){
+            $("[Id$='validateImg']").html('Please Upload An Image');
+        }                       
+        
+        event.preventDefault();
+        return false;
+    }
+}
+
+wk=jQuery.noConflict();
+(function(wk){
+    wk( document).on("click",".wdg-form--headeroptions li a ",function(){
+        wk(this).parent().siblings().removeClass("active");
+        wk(this).parent().addClass("active");
+        var ids=wk(this).attr("data-target");
+        wk("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+        
+        
+    }); 
+    wk(document).on("click",".custom-checkbox input",function(){
+        
+        wk(this).parent().removeClass("checked");
+        if(this.checked){
+            wk(this).parent().addClass("checked");
+        }
+    });
+    wk(document ).on("click",".folder-checkbox",function(){
+        var arr=[];
+        wk(".folder-checkbox").each(function(){
+            if(this.checked){
+                wk(this).parent().addClass("checked");
+                arr.push(wk(this).attr('targetvalue'));
+            }
+            else
+                wk(this).parent().removeClass("checked");
+        });
+        wk("[Id$='docfolder']").val(arr.join(','))
+        newImages();
+    });
+    wk(document ).on("click",".folder-radio",function(){
+        wk(".folder-radio").parent().removeClass("checked");
+        
+        if(this.checked){
+            wk(this).parent().addClass("checked");
+            wk("[Id$='uploadfolder']").val(wk(this).val())
+            
+        }
+    });
+    wk(document).on("click","[Id$='wgdPopupClose']", function(){
+        wk("[Id$='imagePopUp'],[Id$='fileuploadPopUp']").removeClass("wdg-show").addClass("wdg-hide");
+    });
+    wk(document).on("click",".wdg-uploadImage--btngroup a",function(){
+        var ids=wk(this).attr("data-target");
+        wk("[Id$='"+ids+"']").addClass("wdg-show").removeClass("wdg-hide");
+    });
+    wk(document).on("click",".wdg-imagepop--box .wdg-images--container img",function(){
+        var ids=wk(this).attr("targetid");
+        var name=wk(this).attr("alt");
+        wk("[Id$='Imgsel']").val(ids);
+        wk("[Id$='Imgoptsel']").val(0);
+        wk("[Id$='Image_title']").text(name);
+        wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+        wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+        wk("[Id$='wgdPopupClose']").trigger("click");
+        
+    });
+    wk(document).on("click","[Id$='Uploadfile']",function(event){
+        var ufolder=wk("[Id$='uploadfolder']").val();
+        wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");
+        wk(".wdg-fileupload--error").text("");
+        if(ufolder==null || ufolder==''){
+            wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+            wk(".wdg-fileupload--error").text("Please Select a folder from left");
+            event.preventDefault();
+        }
+    });
+    wk( document ).on("click"," [Id$='removeImages']", function(){
+        wk(".wdg-uploadimage--title").text("image.jpg");  
+        wk("[Id$='Imgsel']").val('');
+        wk("[Id$='Imgoptsel']").val('');
+        wk(".wdg-upload--image").html("<div></div>");
+        wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+        
+    });
+    wk(document).on("change","[Id$='Uploadfile']",function(event){
+        var ufolder=wk("[Id$='uploadfolder']").val();
+        wk(".wdg-fileupload--error").addClass("wdg-hide").removeClass("wdg-show");
+        wk(".wdg-fileupload--error").text("");
+        if(ufolder==null || ufolder==''){
+            wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+            wk(".wdg-fileupload--error").text("Please Select a folder from left");
+            event.preventDefault();
+        }
+        var fakepath=wk(this).val();
+        var templist=fakepath.split('\\');
+        var filename=templist[templist.length-1];  
+        var tempext=filename.split('.')
+        var fileext=tempext[tempext.length-1];
+        if(fileext.toLowerCase()!='jpg' && fileext.toLowerCase()!='jpeg' && fileext.toLowerCase()!='png'){
+            wk(".wdg-fileupload--error").addClass("wdg-show").removeClass("wdg-hide");
+            wk(".wdg-fileupload--error").text("Only jpeg, jpg and png files are allowed");
+            wk(this).val('')
+            
+        }else{
+            wk(".wdg-uploadimage--title").text(filename);
+            wk("[Id$='Imgoptsel']").val(1);
+            wk(".wdg-uploadImage--btngroup [Id$='removeImages']").remove();
+            wk(".wdg-uploadImage--btngroup").append('<a id="removeImages"  href="javascript:void(0)" style="border-left:none">Remove Image</a>');
+            
+            wk("[Id$='wgdPopupClose']").trigger("click");
+        }
+    });
+}(jQuery));
+</script>
+</apex:define>
+</apex:composition>
+</apex:page>
+-->

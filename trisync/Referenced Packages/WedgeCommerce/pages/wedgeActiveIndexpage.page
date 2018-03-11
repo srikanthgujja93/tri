@@ -1,0 +1,967 @@
+<apex:page controller="wk_wedge.wedgeActiveIndexpagecontroller" title="{!$Site.name}" setup="false" standardstylesheets="false" showHeader="false" cache="false"  applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"  > 
+    <title>{!str.Site_Home_Page_Title__c}</title>
+    <link rel="canonical" href="{!str.Site_URL__c}"/>
+    <meta name="description" content="{!str.Site_Meta_Description__c}"/>
+    <meta name="keywords" content="{!str.Site_Meta_Keywords__c}"/>
+    <apex:composition template="wk_wedge__WedgesiteTemplatePage"> 
+        <apex:define name="templatebody">            
+            <link href="//fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet" type="text/css"/>
+            <apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+            <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
+            <apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+            
+            <style>
+                .info{
+                position:fixed;
+                top:0;
+                right:0;
+                width:400px;
+                height:100px;
+                border:1px solid red;
+                background:green;
+                display:none;
+                
+                }
+                
+                .wdg-offer-selectlist{
+                margin-left:0;
+                width:100%;
+                margin-bottom: 10px;
+                }
+                .wdg-offer-multiSelect{
+                width: 100%;
+                border-radius: 3px;
+                margin-bottom: 10px;
+                }
+                .wdg-offer-email,.wdg-offer-number,.wdg-offer-textarea,.wdg-offer-inputField,.wdg-offer-Date{
+                width: 100%;
+                padding: 6px;
+                border-radius: 3px;
+                border: 1px solid #adadad;
+                margin-bottom: 10px;
+                }
+                .wdg-offer-options{
+                margin-left: 20px;
+                vertical-align: top;
+                }
+            </style>
+            <style> 
+                .wdg-page--block{
+                margin-top:15px;
+                margin-bottom:0px;
+                }
+                .wdg-showcase--row{
+                margin-top:30px;
+                }
+                .test--border{
+                border:1px solid #ccc;
+                }
+                .wdg-page--block .show-case--block{
+                display:inline-block;
+                position:relative;
+                box-sizing:border-box;
+                overflow:hidden;
+                }
+                .show-case--block.col--2{
+                width:95%;
+                height:330px;
+                }
+                .show-case--block.col--3{
+                width:96%;
+                height:330px;
+                }
+                .show-case--block .show-case--background{
+                display:block;
+                position:relative;
+                }
+                .show-case--block  .show-case--desc{
+                background:#fff;
+                border: 1px solid #ccc;
+                padding:10px;
+                box-sizing:border-box;
+                overflow:hidden;
+                position:absolute;
+                bottom:0;
+                text-align:center;
+                }
+                .show-case--center{
+                padding:10px;
+                box-sizing:border-box;
+                overflow:hidden;
+                position:absolute;
+                top:0;
+                left:0;
+                display:table;
+                width:355px;
+                height:262px;
+                background:transparent;
+                }
+                .show-case--center .show-casecenter--desc{
+                display:table-cell;
+                vertical-align:middle;
+                }
+                .show-casecenter--desc .heading{
+                font-family: 'Great Vibes', cursive;
+                font-weight: 400;
+                text-align: center;
+                font-size: 51px;
+                margin: auto;
+                height: 65px;
+                overflow: hidden;
+                
+                }
+                .show-casecenter--desc .underline{
+                background: transparent url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/wave.png')}") no-repeat center;
+                height: 10px;
+                margin:auto;
+                margin-top:10px;
+                
+                }
+                .show-casecenter--desc .description{
+                margin-top: 10px;
+                height: 45px;
+                line-height: 1.8;
+                overflow: hidden;
+                
+                }
+                .show-casecenter--desc .link{
+                margin-top: 10px;
+                display: block;
+                font-size: 15px;
+                font-weight: 600;
+                }
+                .show-case--block  .show-case--desc.col--2{
+                margin-left:50px;
+                margin-right:50px;
+                width:450px;
+                /*height:140px;*/
+                z-index:200;
+                }
+                .show-case--block  .show-case--desc.col--3{
+                margin-left:38px;
+                margin-right:38px;
+                width:290px;
+                }
+                .show-case--desc .message{
+                max-height: 92px;
+                margin-top: 0px;
+                margin-bottom: 10px;
+                overflow: hidden;
+                }
+                .show-case--desc .link{
+                color:#429ACA;
+                text-decoration:none;
+                font-size:15px;
+                font-weight:600;
+                }
+                .wdg-panel--block{
+                margin-top:15px;
+                }
+                .wdg-panel--block  .panel-title{
+                font-size: 20px;
+                font-weight: 600;
+                padding-left: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #adadad;
+                }
+                .panel-product--row .product-details--container{
+                width: 100%;
+                margin: 20px auto;
+                height: auto;
+                overflow: hidden;
+                display: block;
+                color: #333333!important;
+                height:427px;
+                }
+                .panel-product--row .product-details--container:hover {
+                box-shadow: 0px 0px 15px 4px #ccc;
+                }
+                .panel-product--row .product-details--container .product-image--wrapper{
+                height: 265px;
+                text-align: center;
+                overflow:hidden;
+                display:block;
+                padding:18px;
+                position: relative;
+                }
+                .panel-product--row .product-details--container .product-image--wrapper.shady{
+                background:#ebebeb;
+                }
+                .product-image--wrapper img{
+                height: 220px;
+                width:220px;
+                background:#fff;
+                }
+                .product-details--container  .product-details *{
+                display:block;
+                text-align:center;
+                margin-bottom: 10px;
+                margin-top: 10px;
+                }
+                .product-details .productlabel{
+                font-weight: 600;
+                font-size: 15px;
+                color: #222;
+                word-break: break-word;
+                padding:0 20px;
+                }
+                .product-details .product-wishpanel a{
+                margin-right:25px;
+                }
+                .product-details .product-wishpanel a:last-child{
+                margin-right:0px;
+                margin-left:0;
+                }
+                .product-details .product-wishpanel .quickzoom{
+                display: inline-block;
+                width: 40px;
+                height: 40px;
+                background: url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -1px -69px;
+                border-radius: 3px;
+                border: 1px solid #FF7E00;
+                vertical-align: middle;
+                visibility: visible;
+                }
+                .product-details .product-wishpanel .addcart{
+                display: none;
+                width: 40px;
+                height: 40px;
+                background: url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -238px -69px;
+                border-radius: 3px;
+                border: 1px solid #008AB6;
+                vertical-align: middle;
+                visibility: hidden;
+                }
+                .product-details .product-wishpanel .addcart:hover{
+                background-position: -278px -69px;
+                }                
+                .product-details .product-wishpanel{
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 25px;
+                }
+                .product-details .product-wishpanel .quickzoom:hover{
+                background-position: -40px -69px;
+                }
+                .product-details .product-wishpanel .addwishlist {
+                display: inline-block;
+                width: 40px;
+                height: 40px;
+                /*background: url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -81px -69px;*/
+                border-radius: 3px;
+                border: 1px solid #999999;
+                vertical-align: middle;
+                visibility: visible;
+                }
+                .product-details .product-wishpanel .addwishlist:before{
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                background: url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -81px -69px;
+                border-radius: 3px;
+                /*border: 1px solid #999999;*/
+                vertical-align: middle;
+                visibility: visible;
+                }
+                .product-details .product-wishpanel .addwishlist:hover{
+                background-position: -121px -69px;
+                }
+                .customershw{
+                padding-bottom: 6px;
+                background: #F1F1F1;
+                padding-top: 11px;
+                }
+                .pushnoti-subscribe .modal-content .modal-header{
+                margin-bottom: 0;
+                padding: 13px 15px;
+                height: 50px;
+                background: #0087C1;
+                color: #fff;
+                font-weight: 600;
+                font-size: 15px;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+                }
+                .pushnoti-subscribe .modal-content .modal-header .close{
+                background: #FFFFFF;
+                color: #0087C1;
+                height: 22px;
+                width: 22px;
+                text-align: center;
+                vertical-align: middle;
+                border-radius: 50%;
+                font-size: initial;
+                font-weight: initial;
+                line-height: initial;
+                opacity: 1;
+                }
+                
+                .pushnoti-subscribe .modal-content .modal-footer .closebtn{
+                background-color: #4BBA60;
+                color:white;
+                border:none;
+                }
+                .pushnoti-subscribe .modal-content .modal-footer .activebtn{
+                background-color: #0087C1;
+                color:white;
+                border:none;
+                }
+            </style>
+            <style>
+                /*-------Showcase Responsive--------*/
+                .product-details--container  .product-details .addwishlistDisabled {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    background: transparent url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -81px -109px;
+                    border-radius: 3px;
+                    border: 1px solid #D21B28;
+                    vertical-align: middle;
+                    margin-left: unset;
+                }
+                .product-details--container  .product-details .addwishlistDisabled:hover {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    background: transparent url("{!URLFOR($Resource.wedgecommerce,'wedgeCommerce/images/sprite.png')}") no-repeat -121px -109px;
+                    border-radius: 3px;
+                    border: 1px solid #D21B28;
+                    vertical-align: middle;
+                    margin-left: unset;
+                }
+                .showcase-responsive{
+                display:none;
+                }
+                .product-details .product-wishpanel a.retailer:last-child {
+                display: inline-block;
+                
+                }
+                .out-of-stock-wrapper{
+                    position: absolute;
+                    height: calc(100% - 45px);
+                    width: 220px;
+                    box-sizing: border-box;
+                    vertical-align: middle;
+                    background: #e2dcdc;
+                    opacity: 0.4;
+                    text-align: center;
+                    z-index: 1;
+                }
+                .out-of-stock-text{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    font-size: 30px;
+                    font-weight: 700;
+                    margin-top: -15px;
+                    margin-left: -90px;
+                    color: #222;
+                    box-sizing: border-box;
+                    vertical-align: middle;
+                    text-align: center;
+                }
+                @media (max-width: 1024px){
+                .showcase-responsive{
+                display: block;
+                }
+                .showcase-desktop{
+                display: none;
+                }
+                .showcase-responsive .show-case--block  .show-case--desc.col--2{
+                margin-left: -36%;
+                margin-right: 0;
+                width: 340px;
+                z-index: 200;
+                left: 50%;
+                }
+                .showcase-responsive .show-case--block.col--2{
+                width: 100%;
+                }                   
+                .showcase-responsive .show-case--background{
+                width:100%;
+                height:80%
+                }
+                .showcase-responsive .show-case--block.col--3{
+                width: 100%;
+                }
+                .showcase-responsive .show-case--center{
+                left: 12%;
+                margin-left: -25%;
+                padding-bottom: 0px;                    
+                }
+                .showcase-responsive .show-case--block  .show-case--desc.col--3{
+                width: 225px;
+                }                   
+                
+                }
+                @media (max-width: 991px){
+                .showcase-responsive .show-case--block  .show-case--desc.col--2{
+                margin-left: -32%;
+                width: 450px;
+                left: 50%;
+                }
+                .showcase-responsive .show-case--block  .show-case--desc.col--3{
+                margin-left: -32%;
+                width: 450px;
+                left: 50%;
+                }
+                .showcase-responsive .show-case--center{
+                margin-left: 12%;
+                }
+                .wdg-showcase--row{
+                margin-top:15px;
+                }
+                .showcase-responsive .show-case--block.col--2.second{
+                margin-top:15px;
+                }
+                .showcase-responsive .show-case--block.col--3.center{
+                height: 265px; 
+                }
+                }
+                @media (max-width: 767px){
+                .showcase-responsive .show-case--block  .show-case--desc.col--2{
+                margin-left: -30%;
+                width: 380px;
+                left: 50%;
+                }
+                .showcase-responsive .show-case--block  .show-case--desc.col--3{
+                margin-left: -30%;
+                width: 380px;
+                left: 50%;
+                }
+                .showcase-responsive .show-case--center{
+                margin-left: 9%;
+                }
+                
+                }
+                @media (max-width: 600px){
+                .showcase-responsive .show-case--block  .show-case--desc.col--2{
+                margin-left: -39%;
+                width: 300px;
+                left: 60%;
+                }
+                .showcase-responsive .show-case--block  .show-case--desc.col--3{
+                margin-left: -39%;
+                width: 300px;
+                left: 60%;
+                }
+                .showcase-responsive .show-case--center{
+                margin-left: 3%;
+                }
+    /* padding: 18px; */
+                .product-details .product-wishpanel .quickzoom{
+                display:none;
+                }
+                .product-details .product-wishpanel .addcart{
+                display: inline-block;
+                visibility: visible;
+                }
+                }
+                @media (max-width: 420px){
+                .product-details .product-wishpanel .quickzoom{
+                display:none;                       
+                }
+                .product-details .product-wishpanel .addcart{
+                display: inline-block;
+                visibility: visible;
+                }
+                .showcase-responsive .bold, .oxy-20-bold{
+                font-size: 16px;
+                }
+                .showcase-responsive .show-case--desc .link{
+                font-size: 13px;
+                }
+                .showcase-responsive .show-case--block  .show-case--desc.col--2{
+                margin-left: -44%;
+                width: 235px;
+                left: 60%;
+                }
+                .showcase-responsive .show-case--block .show-case--desc.col--3{
+                margin-left: -44%;
+                width: 235px;
+                left: 60%;
+                }
+                .showcase-responsive .show-case--center {
+                margin-left: -10%;                      
+                }
+                }
+                @media (max-width: 320px){
+                .product-details .product-wishpanel .quickzoom{
+                display:none;
+                }
+                .product-details .product-wishpanel .addcart{
+                display: inline-block;
+                visibility: visible;
+                }
+                .showcase-responsive .bold, .oxy-20-bold{
+                font-size: 14px;
+                }
+                .showcase-responsive .show-case--desc .link{
+                font-size: 11px;
+                }
+                .showcase-responsive .show-case--block  .show-case--desc.col--2{
+                margin-left: -44%;
+                width: 184px;
+                left: 60%;
+                }
+                .showcase-responsive .show-case--block  .show-case--desc.col--3{
+                margin-left: -44%;
+                width: 184px;
+                left: 60%;
+                }
+                .showcase-responsive .show-case--center {
+                margin-left: -30%;
+                }
+                }
+            </style> 
+            <!-- Modal -->
+            <div class="info"></div>
+            <div class="container">
+                <!-- Trigger the modal with a button -->
+                <button type="button" class="btn btn-info btn-lg" id="openButton" data-toggle="modal" data-target="#myModal" style="display:none;">Open Modal</button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog pushnoti-subscribe">
+                        
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                                <span class="productQview-close offer close" id="details-close" data-dismiss="modal">×</span>
+                                <h4 class="modal-title">{!$Label.Index_Page_Subscribe_Form}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>{!$Label.Index_Page_Do_you_want_to_subscribe}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="subscribe" class="btn btn-default activebtn" data-dismiss="modal">{!$Label.Index_Page_Subscribe_Button}</button>
+                                <button type="button" class="btn btn-default closebtn" data-dismiss="modal">{!$Label.Index_Page_Close_Button}</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+            
+            
+            <apex:form > 
+                
+                
+                
+                <apex:outputpanel layout="block" styleclass="wdg-page--block" style="margin-top:0px;" rendered="{!Componentstatus['Image Slider']}">
+                    <c:ImageSlider />
+                </apex:outputpanel>
+                <div class="container"> 
+                    <apex:outputpanel layout="block" styleclass="wdg-page--block" id="wdg-top--panels" rendered="{!Componentstatus['Panels']}">
+                        <apex:repeat var="panels" value="{!TopPanels}" >
+                            <apex:outputpanel layout="block" styleclass="wdg-panel--block" rendered="{!panels.pro.size>0}">
+                                <apex:outputpanel layout="block" rendered="{!panels.headStatus}"> 
+                                    <h4 class="panel-title">{!panels.heading}</h4>
+                                </apex:outputpanel>
+                                <apex:outputpanel styleclass="row panel-product--row" layout="block" >
+                                    <apex:repeat value="{!panels.pro}" var="prod">
+                                        <apex:outputpanel styleclass="col-md-3 col-sm-6 col-xs-12 panel-product--wrapper" layout="block">
+                                            <apex:outputpanel layout="block" styleclass="product-details--container">
+                                                <apex:outputlink styleclass="product-image--wrapper" value="{!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=prod.id])}" > <!-- /apex/productdetail?productid={!prod.id}--><!--{!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=prod.id])}-->
+                                                    <apex:outputpanel styleclass="out-of-stock-wrapper" rendered="{!prod.wk_wedge__Amount__c==0}"></apex:outputpanel>
+                                                    <apex:outputpanel styleclass="out-of-stock-text" rendered="{!prod.wk_wedge__Amount__c==0}">{!$Label.wk_wedge__out_of_stock}</apex:outputpanel>
+                                                    <apex:image url="/servlet/servlet.FileDownload?file={!prod.wk_wedge__Image_Id__c}" styleClass="product-image img img-responsive"></apex:image>
+                                                </apex:outputlink>
+                                                <apex:outputpanel layout="block" styleclass="product-details">                                                    
+                                                    <apex:outputlink value="{!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=prod.id])}" styleclass="productlabel">{!prod.name}</apex:outputlink>
+                                                    <apex:outputpanel styleclass="product-price">{!currSymbol}&nbsp;
+                                                        <apex:outputtext value="{0,number,###,##0.00}">
+                                                            <apex:param value="{!prod.wk_wedge__List_price__c}"/>
+                                                        </apex:outputtext>
+                                                    </apex:outputpanel>
+                                                    <apex:outputpanel styleclass="product-wishpanel">
+                                                        <apex:commandLink styleclass="addcart" rendered="{!AND(NOT(prod.wk_wedge__Sold_By_Retailer__c),NOT(prod.wk_wedge__Amount__c==0))}" title="{!$Label.wk_wedge__productdetail_add_to_cart_button}" value="" action="{!addtocart}" status="docSearch"  rerender="cart,cartItems,QuickcartView,rerenderNav,notice">
+                                                            <apex:param name="prodid" value="{!prod.id}" assignto="{!prodid}"/>
+                                                            <apex:param name="prodName" value="{!prod.name}" assignto="{!prodName}"/>   
+                                                            <apex:param name="prodprice" value="{!prod.wk_wedge__List_price__c}" assignto="{!prodcost}"/> 
+                                                            <apex:param name="prodimage" value="{!prod.wk_wedge__Image_Id__c}" assignto="{!prodimage}"/> 
+                                                        </apex:commandLink>  
+                                                        <apex:commandLink styleclass="quickzoom" title="{!$Label.wk_wedge__quickview_button}" value="" action="{!qViewopen}" status="docSearch" rerender="cart,cart,QuickproductView,notice" oncomplete="updatemodifier()">
+                                                            <apex:param name="prodid" value="{!prod.id}" assignto="{!prodid}"/> 
+                                                        </apex:commandLink>
+                                                        <apex:outputlink styleclass="retailer" value="{!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=prod.id])}" rendered="{!prod.Sold_By_Retailer__c }" title="{!$Label.wk_wedge__retailers_label}"></apex:outputlink>   
+                                                        <apex:commandLink styleclass="addwishlist" value="" action="{!addtowishlist}"  status="docSearch" title="{!$Label.wk_wedge__site_template_product_popup_add_to_wishlist_button}" rendered="{!AND(AND(userregenbale,NOT(prod.wk_wedge__Sold_By_Retailer__c)),NOT(prod.isActive))}" rerender="cart,QuickproductView,QuickwishlistView,wishcount,rerenderNav,notice,wdg-top--panels,wdg-bottom--panels" oncomplete="closenotifications()">
+                                                            <apex:param name="prodid" value="{!prod.id}" assignto="{!prodid}"/> 
+                                                            <apex:param name="prodName" value="{!prod.name}" assignto="{!prodName}"/>  
+                                                            <apex:param name="prodimg" value="{!prod.wk_wedge__Image_Id__c}" assignto="{!prodimg}"/>  
+                                                        </apex:commandLink>
+                                                        <apex:outputlink rendered="{!AND(AND(userregenbale,NOT(prod.wk_wedge__Sold_By_Retailer__c)),prod.isActive)}" value="javascript:void(0);" styleclass="addwishlistDisabled" title="{!$Label.wk_wedge__product_already_added_in_wishlist}"/>                                                       
+                                                    </apex:outputpanel>
+                                                        
+                                                </apex:outputpanel>
+                                            </apex:outputpanel> 
+                                        </apex:outputpanel>
+                                    </apex:repeat>
+                                </apex:outputpanel>
+                            </apex:outputpanel>
+                        </apex:repeat>     
+                    </apex:outputpanel>
+                    <apex:outputpanel layout="block" styleclass="wdg-page--block showcase-desktop" rendered="{!Componentstatus['Central Show Case']}">
+                        <apex:outputpanel layout="block" styleclass="row wdg-showcase--row">
+                            <div class="col-md-6 col-sm-12 text-left ">
+                                <div class="show-case--block col--2">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!topleft.wk_wedge__Image_Id__c}"  rendered="{!NOT(topleft.wk_wedge__Image_Id__c==null)}" width="555px" height="262px" styleclass="show-case--background"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--desc col--2">
+                                        <h4 class="oxy-20-bold">{!topleft.wk_wedge__Heading__c}</h4>
+                                        <div class="message">
+                                            <apex:outputtext value="{!topleft.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                        </div>
+                                        <apex:outputlink value="{!topleft.Connected_Link_url__c }" target="{!topleft.wk_wedge__Target__c}" styleclass="link">{!topleft.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12  text-right">
+                                <div class="show-case--block col--2 ">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!topright.wk_wedge__Image_Id__c}"  rendered="{!NOT(topright.wk_wedge__Image_Id__c==null)}" width="555px" height="262px" styleclass="show-case--background">
+                                        <apex:outputpanel layout="block" styleclass="show-case--desc col--2">
+                                            <h4 class="oxy-20-bold">{!topright.wk_wedge__Heading__c}</h4>
+                                            <div class="message">
+                                                <apex:outputtext value="{!topright.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                            </div>
+                                            <apex:outputlink value="{!topright.Connected_Link_url__c }" target="{!topright.wk_wedge__Target__c}"  styleclass="link">{!topright.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        </apex:outputpanel>
+                                    </apex:image>
+                                </div>
+                            </div>
+                        </apex:outputpanel>
+                        <apex:outputpanel layout="block" styleclass="row wdg-showcase--row">
+                            <div class="col-md-4 col-sm-12 text-left">
+                                <div class="show-case--block col--3">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!middleleft.wk_wedge__Image_Id__c}"  rendered="{!NOT(middleleft.wk_wedge__Image_Id__c==null)}" width="355px" height="262px" styleclass="show-case--background"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--desc col--3">
+                                        <h4 class="oxy-20-bold">{!middleleft.wk_wedge__Heading__c}</h4>
+                                        <div class="message">
+                                            <apex:outputtext value="{!middleleft.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                        </div>
+                                        <apex:outputlink value="{!middleleft.wk_wedge__connected_Link_URL__c}"  target="{!middleleft.wk_wedge__Target__c}" styleclass="link">{!middleleft.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                    </apex:outputpanel>
+                                </div> 
+                            </div>
+                            <div class="col-md-4 col-sm-12 text-center ">
+                                <div class="show-case--block col--3">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!middlecenter.wk_wedge__Image_Id__c}" rendered="{!NOT(middlecenter.wk_wedge__Image_Id__c==null)}"  width="355px" height="262px" styleclass="show-case--background"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--center">
+                                        <div class="show-casecenter--desc">
+                                            <p class="heading">{!middlecenter.Heading__c}</p>
+                                            <p class="underline"></p>{!$Label.wk_wedge__out_of_stock}
+                                            <div class="description">
+                                                <apex:outputtext value="{!middlecenter.wk_wedge__Description__c}" escape="false"/>
+                                            </div>
+                                            <apex:outputlink value="{!middlecenter.Connected_Link_url__c }" target="{!middlecenter.wk_wedge__Target__c}" styleclass="link">{!middlecenter.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        </div>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12 text-right ">
+                                <div class="show-case--block col--3">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!middleright.wk_wedge__Image_Id__c}" rendered="{!NOT(middleright.wk_wedge__Image_Id__c==null)}"  width="355px" height="262px" styleclass="show-case--background"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--desc col--3">
+                                        <h4 class="oxy-20-bold">{!middleright.wk_wedge__Heading__c}</h4>
+                                        <div class="message">
+                                            <apex:outputtext value="{!middleright.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                        </div>
+                                        <apex:outputlink value="{!middleright.Connected_Link_url__c }"  target="{!middleright.wk_wedge__Target__c}" styleclass="link">{!middleright.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                        </apex:outputpanel>
+                        <apex:outputpanel layout="block" styleclass="row wdg-showcase--row">
+                            <div class="col-md-6 col-sm-12 text-left ">
+                                <div class="show-case--block col--2">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!bottomleft.wk_wedge__Image_Id__c}" width="555px" height="262px" styleclass="show-case--background"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--desc col--2">
+                                        <h4 class="oxy-20-bold">{!bottomleft.wk_wedge__Heading__c}</h4>
+                                        <div class="message">
+                                            <apex:outputtext value="{!bottomleft.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                        </div>
+                                        <apex:outputlink value="{!bottomleft.Connected_Link_url__c }" target="{!bottomleft.wk_wedge__Target__c}" styleclass="link">{!bottomleft.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            <div class="col-md-6 col-sm-12  text-right">
+                                <div class="show-case--block col--2">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!bottomright.wk_wedge__Image_Id__c}"  rendered="{!NOT(topright.wk_wedge__Image_Id__c==null)}" width="555px" height="262px" styleclass="show-case--background">
+                                        <apex:outputpanel layout="block" styleclass="show-case--desc col--2">
+                                            <h4 class="oxy-20-bold">{!bottomright.wk_wedge__Heading__c}</h4>
+                                            <div class="message">
+                                                <apex:outputtext value="{!bottomright.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                            </div>
+                                            <apex:outputlink value="{!bottomright.Connected_Link_url__c }" target="{!bottomright.wk_wedge__Target__c}"  styleclass="link">{!bottomright.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        </apex:outputpanel>
+                                    </apex:image>
+                                </div>
+                            </div>
+                            
+                        </apex:outputpanel>
+                    </apex:outputpanel>
+                    <apex:outputpanel layout="block" styleclass="wdg-page--block showcase-responsive" rendered="{!Componentstatus['Central Show Case']}">
+                        <apex:outputpanel layout="block" styleclass="row wdg-showcase--row">
+                            <div class="col-md-6 col-sm-12 ">
+                                <div class="show-case--block col--2">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!topleft.wk_wedge__Image_Id__c}"  rendered="{!NOT(topleft.wk_wedge__Image_Id__c==null)}" styleclass="show-case--background img img-responsive"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--desc col--2">
+                                        <h4 class="oxy-20-bold">{!topleft.wk_wedge__Heading__c}</h4>
+                                        <div class="message">
+                                            <apex:outputtext value="{!topleft.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                        </div>
+                                        <apex:outputlink value="{!topleft.Connected_Link_url__c }" target="{!topleft.wk_wedge__Target__c}" styleclass="link">{!topleft.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="show-case--block col--2 second">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!topright.wk_wedge__Image_Id__c}"  rendered="{!NOT(topright.wk_wedge__Image_Id__c==null)}" styleclass="show-case--background img img-responsive">
+                                        <apex:outputpanel layout="block" styleclass="show-case--desc col--2">
+                                            <h4 class="oxy-20-bold">{!topright.wk_wedge__Heading__c}</h4>
+                                            <div class="message">
+                                                <apex:outputtext value="{!topright.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                            </div>
+                                            <apex:outputlink value="{!topright.Connected_Link_url__c }" target="{!topright.wk_wedge__Target__c}"  styleclass="link">{!topright.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        </apex:outputpanel>
+                                    </apex:image>
+                                </div>
+                            </div>
+                        </apex:outputpanel>
+                        <apex:outputpanel layout="block" styleclass="row wdg-showcase--row">
+                            <div class="col-md-4 col-sm-12">
+                                <div class="show-case--block col--3">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!middleleft.wk_wedge__Image_Id__c}"  rendered="{!NOT(middleleft.wk_wedge__Image_Id__c==null)}" styleclass="show-case--background img img-responsive"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--desc col--3">
+                                        <h4 class="oxy-20-bold">{!middleleft.wk_wedge__Heading__c}</h4>
+                                        <div class="message">
+                                            <apex:outputtext value="{!middleleft.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                        </div>
+                                        <apex:outputlink value="{!middleleft.wk_wedge__connected_Link_URL__c}"  target="{!middleleft.wk_wedge__Target__c}" styleclass="link">{!middleleft.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                    </apex:outputpanel>
+                                </div> 
+                            </div>
+                            <div class="col-md-4 col-sm-12 text-center">
+                                <div class="show-case--block col--3 center">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!middlecenter.wk_wedge__Image_Id__c}" rendered="{!NOT(middlecenter.wk_wedge__Image_Id__c==null)}" styleclass="show-case--background img img-responsive"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--center">
+                                        <div class="show-casecenter--desc">
+                                            <p class="heading">{!middlecenter.Heading__c}</p>
+                                            <p class="underline"></p>
+                                            <div class="description">
+                                                <apex:outputtext value="{!middlecenter.wk_wedge__Description__c}" escape="false"/>
+                                            </div>
+                                            <apex:outputlink value="{!middlecenter.Connected_Link_url__c }" target="{!middlecenter.wk_wedge__Target__c}" styleclass="link">{!middlecenter.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        </div>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="show-case--block col--3">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!middleright.wk_wedge__Image_Id__c}" rendered="{!NOT(middleright.wk_wedge__Image_Id__c==null)}"  styleclass="show-case--background img img-responsive"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--desc col--3">
+                                        <h4 class="oxy-20-bold">{!middleright.wk_wedge__Heading__c}</h4>
+                                        <div class="message">
+                                            <apex:outputtext value="{!middleright.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                        </div>
+                                        <apex:outputlink value="{!middleright.Connected_Link_url__c }"  target="{!middleright.wk_wedge__Target__c}" styleclass="link">{!middleright.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                        </apex:outputpanel>
+                        <apex:outputpanel layout="block" styleclass="row wdg-showcase--row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="show-case--block col--2">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!bottomleft.wk_wedge__Image_Id__c}" styleclass="show-case--background img img-responsive"/>
+                                    <apex:outputpanel layout="block" styleclass="show-case--desc col--2">
+                                        <h4 class="oxy-20-bold">{!bottomleft.wk_wedge__Heading__c}</h4>
+                                        <div class="message">
+                                            <apex:outputtext value="{!bottomleft.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                        </div>
+                                        <apex:outputlink value="{!bottomleft.Connected_Link_url__c }" target="{!bottomleft.wk_wedge__Target__c}" styleclass="link">{!bottomleft.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            <div class="col-md-6 col-sm-12  text-right">
+                                <div class="show-case--block col--2 second">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!bottomright.wk_wedge__Image_Id__c}"  rendered="{!NOT(topright.wk_wedge__Image_Id__c==null)}" styleclass="show-case--background img img-responsive">
+                                        <apex:outputpanel layout="block" styleclass="show-case--desc col--2">
+                                            <h4 class="oxy-20-bold">{!bottomright.wk_wedge__Heading__c}</h4>
+                                            <div class="message">
+                                                <apex:outputtext value="{!bottomright.wk_wedge__Description__c}" escape="false"></apex:outputtext>
+                                            </div>
+                                            <apex:outputlink value="{!bottomright.Connected_Link_url__c }" target="{!bottomright.wk_wedge__Target__c}"  styleclass="link">{!bottomright.wk_wedge__Connected_Link_Titile__c}</apex:outputlink>
+                                        </apex:outputpanel>
+                                    </apex:image>
+                                </div>
+                            </div>
+                            
+                        </apex:outputpanel>
+                    </apex:outputpanel>
+                    <apex:outputpanel layout="block" styleclass="wdg-page--block" id="wdg-bottom--panels" rendered="{!Componentstatus['Panels']}">
+                        <apex:repeat var="panels" value="{!bottomPanels}">
+                            <apex:outputpanel layout="block" styleclass="wdg-panel--block" rendered="{!panels.pro.size>0}">
+                                <apex:outputpanel layout="block" rendered="{!panels.headStatus}"> 
+                                    <h4 class="panel-title">{!panels.heading}</h4>
+                                </apex:outputpanel>
+                                <apex:outputpanel styleclass="row panel-product--row" layout="block" >
+                                    <apex:repeat value="{!panels.pro}" var="prod">
+                                        <apex:outputpanel styleclass="col-md-3 col-sm-6 col-xs-12 panel-product--wrapper" layout="block">
+                                            <apex:outputpanel layout="block" styleclass="product-details--container">
+                                                <apex:outputlink styleclass="product-image--wrapper" value="{!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=prod.id])}" > <!-- {!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=prod.id])}-->
+                                                    <apex:outputpanel styleclass="out-of-stock-wrapper" rendered="{!prod.wk_wedge__Amount__c==0}"></apex:outputpanel>
+                                                    <apex:outputpanel styleclass="out-of-stock-text" rendered="{!prod.wk_wedge__Amount__c==0}">{!$Label.wk_wedge__out_of_stock}</apex:outputpanel>
+                                                    <apex:image url="/servlet/servlet.FileDownload?file={!prod.wk_wedge__Image_Id__c}" styleClass="product-image img img-responsive"></apex:image>
+                                                </apex:outputlink>
+                                                
+                                                <apex:outputpanel layout="block" styleclass="product-details">                                                    
+                                                    <apex:outputlink value="{!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=prod.id])}" styleclass="productlabel">{!prod.name}</apex:outputlink>
+                                                    <apex:outputpanel styleclass="product-price">{!currsymbol}&nbsp;
+                                                        <apex:outputtext value="{0,number,###,##0.00}">
+                                                            <apex:param value="{!prod.wk_wedge__List_price__c}"/>
+                                                        </apex:outputtext>
+                                                    </apex:outputpanel>
+                                                    <apex:outputpanel styleclass="product-wishpanel">
+                                                        <apex:commandLink styleclass="addcart" value="" rendered="{!AND(NOT(prod.wk_wedge__Sold_By_Retailer__c),NOT(prod.wk_wedge__Amount__c==0))}" title="{!$Label.wk_wedge__productdetail_add_to_cart_button}" action="{!addtocart}" status="docSearch" rerender="cartItems,QuickcartView,rerenderNav,notice">
+                                                            <apex:param name="prodid" value="{!prod.id}" assignto="{!prodid}"/> 
+                                                            <apex:param name="prodprice" value="{!prod.wk_wedge__List_price__c}" assignto="{!prodcost}"/>
+                                                            <apex:param name="prodimage" value="{!prod.wk_wedge__Image_Id__c}" assignto="{!prodimage}"/> 
+                                                        </apex:commandLink>  
+                                                        <apex:commandLink styleclass="quickzoom" value="" title="{!$Label.wk_wedge__quickview_button}" action="{!qViewopen}" status="docSearch" rerender="cart,cart,QuickproductView" oncomplete="updatemodifier()">
+                                                            <apex:param name="prodid" value="{!prod.id}" assignto="{!prodid}"/> 
+                                                        </apex:commandLink>  
+                                                        <apex:outputlink styleclass="retailer" value="{!URLFOR($Page.wk_wedge__productdetail,null, ['productid'=prod.id])}" rendered="{!prod.Sold_By_Retailer__c }" title="{!$Label.wk_wedge__retailers_label}"></apex:outputlink>   
+                                                        <apex:commandLink styleclass="addwishlist" value="" action="{!addtowishlist}"  status="docSearch" title="{!$Label.wk_wedge__site_template_product_popup_add_to_wishlist_button}" rendered="{!AND(AND(userregenbale,NOT(prod.wk_wedge__Sold_By_Retailer__c)),NOT(prod.isActive))}" rerender="cart,QuickproductView,QuickwishlistView,wishcount,rerenderNav,notice,wdg-bottom--panels,wdg-top--panels" oncomplete="closenotifications()">
+                                                            <apex:param name="prodid" value="{!prod.id}" assignto="{!prodid}"/> 
+                                                            <apex:param name="prodName" value="{!prod.name}" assignto="{!prodName}"/>  
+                                                            <apex:param name="prodimg" value="{!prod.wk_wedge__Image_Id__c}" assignto="{!prodimg}"/>  
+                                                        </apex:commandLink>
+                                                        <apex:outputlink rendered="{!AND(AND(userregenbale,NOT(prod.wk_wedge__Sold_By_Retailer__c)),prod.isActive)}" value="javascript:void(0);" styleclass="addwishlistDisabled" title="{!$Label.wk_wedge__product_already_added_in_wishlist}"/>                                                       
+                                                    </apex:outputpanel>
+                                                </apex:outputpanel>
+                                            </apex:outputpanel> 
+                                        </apex:outputpanel>
+                                    </apex:repeat>
+                                </apex:outputpanel>
+                            </apex:outputpanel>
+                        </apex:repeat> 
+                        
+                    </apex:outputpanel>
+                    
+                </div>
+                <apex:outputpanel layout="block" styleclass="wdg-page--block customershw"
+                                  rendered="{!rndrCustomerShowcase}" 
+                                  style="margin-top:0px;" id="wdg-top--showcase">
+                    <c:CustomerShowcaseSlider /> 
+                </apex:outputpanel>   
+                <apex:actionfunction name="createEntry" action="{!send}"/>
+                <apex:inputhidden id="registeredId" value="{!regId}"/>
+                <apex:inputhidden id="endptUrl" value="{!endptUrl}"/>
+            </apex:form> 
+            
+            <script>
+            function updatemodifier(){
+                $('.modifier').each(function(){
+                    var regex = '-';
+                    var str = $(this).html();
+                    if(str.includes(regex)){
+                        str=str.replace(regex,'');
+                        console.log(str);
+                    }
+                    $(this).html(str);
+                });
+            }
+            function send_reg_id_to_file(regid) {
+                // alert("This is reg id"+regid);
+                $.get("write_reg_id.php?reg_id="+regid, function(data, status){
+                    //     alert("Data: " + data + "\nStatus: " + status);
+                });
+            }
+            
+            $(document).ready(function(){ 
+                $('.productlabel').each(function(){
+                    if($(this).text().length > 50){
+                        $(this).text($(this).text().substring(0,50));
+                    }
+                });
+                var key = '{!activatepushnotificationkey}';
+                key = SHA512(key);
+                key = key.substr(0,20);
+                if('{!str.wk_wedge__Enable_Push_Notification__c}'=='true' && key=='{!str.wk_wedge__Push_Notification_Key__c}'){
+                    if ('serviceWorker' in navigator) {
+                        //console.log('Service Worker is supported');
+                        var icon ='{!BaseUrl}/servlet/servlet.FileDownload?file={!str.wk_wedge__Default_Push_Notification_Logo__c}';
+                        navigator.serviceWorker.register('{!URLFOR($Resource.wk_wedge__serviceworker)}').then(function(reg) {                                
+                            reg.pushManager.getSubscription().then(function(sub){
+                                if(sub){
+                                    return true;
+                                }else{
+                                    
+                                    $('#openButton').trigger('click');
+                                    $('#subscribe').click(function(){
+                                        reg.pushManager.subscribe({
+                                            userVisibleOnly: true
+                                        }).then(function(sub) {                            
+                                            //console.log('endpoint:', sub.endpoint);
+                                            //console.log('registration id:', sub.endpoint.split("/").slice(-1)[0]);
+                                            var reg_id = sub.endpoint.split("/").slice(-1)[0];                
+                                            send_reg_id_to_file(reg_id);
+                                            //console.log(reg_id);
+                                            $("[id$='registeredId']").val(reg_id);
+                                            $("[id$='endptUrl']").val(sub.endpoint);
+                                            createEntry();
+                                            new Notification('{!str.wk_wedge__Push_Notification_Heading__c}', {
+                                                body: '{!str.wk_wedge__Push_Notification_Text__c}',
+                                                vibrate: [200, 100, 200, 100, 200, 100, 200],
+                                                icon:icon,
+                                                tag: 'Notification-sample'                           
+                                            });
+                                        }).catch(function(error) {
+                                            //console.log(':^(', error);
+                                        });                              
+                                        
+                                        
+                                    });                                     
+                                    
+                                    
+                                    
+                                }
+                            });
+                            
+                            
+                            
+                            
+                        }); 
+                    } else {                        
+                        //console.warn('Service workers aren\'t supported in this browser.');                           
+                        //$( ".container" ).append('Service workers aren\'t supported in this browser.');
+                    }
+                }
+                
+                var lbls = $('.productlabel');
+                //console.log(lbls);
+                for(var i=0;i<lbls.length;i++){
+                    if(lbls[i].innerHTML.length > 45){
+                        $(lbls[i]).text(lbls[i].innerHTML.substring(0,45)+'...');
+                    }
+                    //lbls[i] = lbls[i].substring(0,20)+'...';
+                }                    
+            });
+            
+            
+            </script>
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

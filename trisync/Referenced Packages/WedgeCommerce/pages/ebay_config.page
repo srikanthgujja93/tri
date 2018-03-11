@@ -1,0 +1,174 @@
+<apex:page showheader="False" standardstylesheets="false" title="eBay Configuration" controller="wk_wedge.ebayconfig" doctype="html-5.0">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+            <style>
+                .wdg-nav-icon.ebayconnector {
+                    background-color: #34becd;
+                }
+                .wdg-nav-icon.channelmanager {
+                    background-color: #34becd;
+                }
+                .oauthclass{
+                    width:50px;
+                }
+                .connectbutton{
+                    background-color: #7DC37D;
+                    color:white;
+                    border:none;
+                    padding:15px 25px;
+                    border-radius:3px;
+                    display:block;
+                    margin:auto;
+                }
+                .connectbutton:hover{
+                    cursor:pointer;
+                }
+                .connectbutton:disabled{
+                    background-color: darkgrey;
+                    cursor:not-allowed;
+                }
+                .newwidth{
+                    display:inline !important;
+                    width:95% !important;
+                }
+                .disabled{
+                    width:95% !important;
+                    display: inline-block !important;
+                }
+                .wdg-form--table input[type="date"], .wdg-form--table input[type="number"] {
+                    padding: 6px;
+                    border-radius: 3px;
+                    font-size: 14px;
+                    color:#222;
+                    border: 1px solid #adadad;
+                    outline: none;
+                    box-shadow: none;
+                    display:block;
+                    width:100%;
+                    box-sizing:border-box;
+                }
+                .leftcheck{
+                    
+                }
+            </style>
+            <apex:form styleclass="wdg-dataentry--form">
+            
+                <div class="wdg-body">
+                    <!--<apex:messages styleClass="wdg-error--msg"/>-->
+                   
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo ebayconfig"></span>
+                            <span> eBay Connector</span>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <apex:commandlink styleclass="wdg-ctrl--btn save " action="{!saveconfig}">
+                                <span></span>
+                            </apex:commandlink>
+                            <a href="{!$page.StoreAdmin}" class="wdg-ctrl--btn cancel"> 
+                                <span></span>
+                            </a>
+                         </div>  
+                    </div>
+                     <apex:outputpanel layout="block" id="itemblock" styleclass="wdg-form--box">
+                         <apex:outputPanel rendered="{!if((oauth==null),true,false)}">
+                             <div class="wdg-form--header">
+                                 <ul class="wdg-form--headeroptions">
+                                     <li class="active"> <a href="#">Configuration</a></li>
+                                 </ul>
+                             </div>
+                         </apex:outputPanel>
+                         <apex:outputPanel rendered="{!if((oauth!=null),true,false)}">
+                             <div class="wdg-form--header">
+                                 <ul class="wdg-form--headeroptions">
+                                     <li class="active"> <a href="#">Configuration</a></li>
+                                     <li class="" > <a href="{!$Page.ebay_categories}">Categories</a></li>
+                                     <li class="" > <a href="{!$Page.ebay_products}">Products</a></li>
+                                     <li class="" > <a href="{!$Page.ebay_customers}">Customers</a></li>
+                                     <li class="" > <a href="{!$Page.ebay_orders}">Order</a></li>
+                                 </ul>
+                             </div>
+                         </apex:outputPanel>
+                        <div class="wdg-form--content">
+                            <div class="wdg-form--block">
+                                <div class="wdg-form--blocktitle">
+                                    <span>Information </span>
+                                </div>
+                                <div class="wdg-form--blockfields">
+                                    <table class="wdg-form--table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label"><apex:outputLabel >App ID (Client ID):</apex:outputLabel>
+                                                <span><c:ToolTip helptext="this is the app id generated from ebay"/></span>
+                                                </td>
+                                                <td class="field"><apex:inputText value="{!appid}" styleclass="newwidth"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputLabel >Dev ID:</apex:outputLabel>
+                                                <span><c:ToolTip helptext="this is the dev id generated from ebay"/></span></td>
+                                                <td class="field"><apex:inputText value="{!devid}" styleclass="newwidth"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputLabel >Cert ID (Client Secret):</apex:outputLabel>
+                                                <span><c:ToolTip helptext="this is the cert id generated from ebay"/></span></td>
+                                                <td class="field"><apex:inputText value="{!certid}" styleclass="newwidth"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputLabel >RuName:</apex:outputLabel>
+                                                <span><c:ToolTip helptext="this is the RuName generated from ebay"/></span></td>
+                                                <td class="field"><apex:inputText value="{!runame}" styleclass="newwidth"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputLabel >Sandbox:</apex:outputLabel>
+                                                <span><c:ToolTip helptext="Check this only if the credentials are of sandbox user"/></span></td>
+                                                <td class="field"><apex:selectList value="{!sandbox}" styleclass="newwidth" size="1">
+                                                    <apex:selectOptions value="{!AccountTypes}"/>
+                                                </apex:selectList></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputLabel >O-Auth:</apex:outputLabel>
+                                                <span><c:ToolTip helptext="this is the oauth which is recieved from ebay"/></span></td>
+                                                <td class="field">
+                                                <apex:inputTextArea value="{!oauth}" rows="5" cols="59" disabled="true"/></td>
+                                            </tr>
+                                            <!--<tr>
+                                                <td class="label"><apex:outputlabel >Authentication URL:</apex:outputlabel>
+                                                <span><c:ToolTip helptext="paste the url here after connecting and authenticating from ebay"/></span></td>
+                                                <td class="field"><apex:inputText value="{!authurl}" styleclass="newwidth"/></td>
+                                            </tr>-->
+                                            <tr>
+                                                <td class="label"><apex:outputlabel >Start Date</apex:outputlabel>
+                                                <span><c:ToolTip helptext="this date will be used as reference point for product and order import"/></span></td>
+                                                <td class="field"><apex:input type="date" value="{!selecteddate}" styleclass="newwidth"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputlabel >No. of Days</apex:outputlabel>
+                                                <span><c:ToolTip helptext="this will specify the total number of days from start date"/></span></td>
+                                                <td class="field"><apex:input html-min="1" html-max="120" type="number" value="{!days}" styleclass="newwidth"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label"><apex:outputLabel >Pricebook:</apex:outputLabel>
+                                                <span><c:ToolTip helptext="The default pricebook stored in store admin"/></span></td>
+                                                <td class="field">
+                                                    <apex:outputtext value="{!pricebookname}" styleclass="disabled"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <apex:commandButton action="{!showif}" value="Connect eBay" onclick="openebay()" rerender="ifpanal" disabled="{!ConnectEnable}" styleclass="connectbutton"/>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>  
+                </div>
+            </apex:form>
+            <script>
+                function openebay(){
+                    window.open('{!gentokenurl}');
+                }
+                $(document).ready(function(){
+                    $('mceu*').css('display','none');
+                });
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

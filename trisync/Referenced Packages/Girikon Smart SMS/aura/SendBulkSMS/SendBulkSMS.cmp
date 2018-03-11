@@ -1,0 +1,230 @@
+<aura:component access="GLOBAL" controller="gkn_sms.LightningBulkSMSCtr" implements="force:appHostable,flexipage:availableForAllPageTypes">
+	<aura:attribute name="uploadMediaUrls" type="String" default=""/>
+    <aura:attribute name="appName" type="String"
+		default="Girikon Send Bulk SMS" />
+	<aura:attribute name="objName" type="String" />
+    <aura:attribute name="balance" type="integer" default="0"/>
+	<aura:attribute name="objId" type="String" />
+	<aura:attribute name="allSelected" type="String" />
+    <aura:attribute name="countryCode" type="String" default="+1"/>
+    <aura:attribute name="validNum" type="integer" default="0"/>
+	<aura:attribute name="toNumber" type="String"
+		description="object field name" />
+	<aura:attribute name="selectedRecord" type="List"
+		description="All Selected Record" />
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:attribute name="hasMessage" type="String" default=""
+		description="" />
+	<aura:attribute name="messageType" type="string" default="" />
+	<aura:attribute name="documentType" type="String"/> 
+    
+	<div class="slds">
+        <lightning:spinner aura:id="documentUploadingWaiting" class="hide gkn-sms-spiner" alternativeText="Loading" variant="brand" size="small" />
+		<article class="slds-card">
+			<div class="slds-card__header slds-grid">
+				<header
+					class="slds-media slds-media--center slds-has-flexi-truncate">
+					<div class="slds-media__figure">
+						<span
+							class="slds-icon_container slds-icon-utility-settings setup-icon"
+                              title="Template"> 
+                            <lightning:icon variant="inverse" iconName="utility:phone_portrait" size="small"/>
+						</span>
+					</div>
+					<div class="slds-media__body">
+						<h2>
+							 <span class="slds-text-heading--small">Send Bulk SMS On {!v.objName} List View</span>
+						</h2>
+					</div>
+				</header>
+			</div>
+			<div class="slds-card__body" style="padding-left:25px">
+                SMS will be sent to selected records from the List View having valid "TO" number. SMS is not sent to records marked "OPT OUT".<br/>
+                For sending bulk SMS to all records in the Object, please use "Bulk SMS" TAB.
+			</div>
+			<div class="slds-card__footer"></div>
+		</article>
+
+		<aura:if isTrue="{!!empty(v.hasMessage)?true:false}">
+            <div style="position:absolute" class="{!v.hasMessage==''?'slds-hide':'slds-notify_container slds-is-relative slds-show'}">
+                <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.messageType}" role="alert"> 
+                    <span class="slds-assistive-text">{!v.messageType}</span>
+                    <span class="{!'slds-icon_container slds-icon-utility-'+v.messageType+' slds-m-right_small slds-no-flex slds-align-top'}" title="{!v.messageType}">
+                        <lightning:icon variant="bare" class="slds-icon slds-icon_small" iconName="{!'utility:'+v.messageType}" size="small"/>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">
+                           {!v.hasMessage}
+                        </h2>
+                    </div>
+                    <lightning:buttonIcon iconName="utility:close" class="slds-notify__close slds-button_icon-inverse" size="small" variant="bare" onclick="{!c.closeToast}"/>
+                </div>
+            </div>            
+		</aura:if>
+		
+		<div class="slds-p-vertical--xxx-small">&nbsp;</div>
+		<aura:if isTrue="{!empty(v.objId)?true:false}">
+			<div role="alertdialog" tabindex="-1"
+				aria-labelledby="prompt-heading-id"
+				aria-describedby="prompt-message-wrapper"
+				class="slds-modal slds-fade-in-open slds-modal--prompt">
+				<div class="slds-modal__container">
+					<div
+						class="slds-modal__header slds-theme--error slds-theme--alert-texture">
+						<button onclick="{!c.goBack}"
+							class="slds-button slds-modal__close slds-button--icon-inverse"
+							title="Close">
+							<lightning:icon variant="inverse" iconName="utility:close" size="small"/>
+							<span class="slds-assistive-text">Close</span>
+						</button>
+						<h2 class="slds-text-heading--medium" id="prompt-heading-id">ERROR!</h2>
+					</div>
+					<div class="slds-modal__content slds-p-around--medium">
+						<p>
+							You have not selected any valid record.<br />Please go back to select record.
+						</p>
+					</div>
+					<div class="slds-modal__footer slds-theme--default">
+						<lightning:button variant="neutral" label="Go Back"
+							onclick="{!c.goBack}" iconName="utility:chevronleft"
+							iconPosition="left" />
+					</div>
+				</div>
+			</div>
+			<div class="slds-backdrop slds-backdrop--open"></div>
+		</aura:if>
+		<div class="slds-grid slds-grid--pull-padded-medium">
+			<div class="slds-size--5-of-12 slds-p-horizontal--small">                
+				<div class="slds-box slds-box--small slds-theme--shade slds-text-align--left">
+					<div class="slds-grid">
+						<div class="slds-size--3-of-6 slds-p-horizontal--small">
+							<div class="slds-form--stacked">
+								<div class="slds-form-element">
+									<label class="slds-form-element__label" for="fromNumber">
+										<abbr class="slds-required" title="required">*</abbr> From
+										Number
+									</label>
+									<div class="slds-form-element__control">
+										<div class="slds-select_container">
+											<ui:inputSelect change="{!c.changeFromNumber}" class="slds-select" aura:id="fromNumber" />
+										</div>
+									</div>
+                                </div>
+								<div class="slds-form-element">
+									<label class="slds-form-element__label" for="tempList"> <abbr
+										class="slds-required" title="required">*</abbr> Select Template
+									</label>
+									<div class="slds-form-element__control">
+										<div class="slds-select_container">
+											<ui:inputSelect class="slds-select"
+												change="{!c.changeTemplate}" aura:id="tempList" />
+										</div>
+									</div>
+								</div>
+								<div>&nbsp;</div>
+								<div class="slds-form-element">
+									<label class="slds-form-element__label" for="tempBody"> <abbr
+										class="slds-required" title="required">*</abbr> SMS Text which will be sent
+									</label>
+									<ui:inputTextarea maxlength="1550" class="slds-textarea" aura:id="tempBody"
+										value="" rows="7" />
+								</div>
+								<div>&nbsp;</div>
+								<div class="slds-form-element">
+									<lightning:button variant="brand" label="Send"
+										onclick="{!c.sendSMS}" iconName="utility:sms"
+										iconPosition="right" />
+									<lightning:spinner aura:id="smsSpinner" variant="brand" size="small" />
+                                    <br/>
+								</div>
+                                <div aura:id="batchStatus"></div>
+								<div>&nbsp;</div>
+							</div>							
+						</div>
+						<!--  START Upload document Markup-->
+						<div class="slds-size--3-of-6 slds-p-horizontal--small">
+							<div class="slds-form-element">
+								<span class="slds-form-element__label">Upload an Image</span>
+								<div class="slds-form-element__control">
+									<div class="slds-file-selector slds-file-selector--images">
+										<div class="slds-file-selector__dropzone" style="height:100px;">                                            
+											<input type="file" onchange="{!c.uploadDocument}" 
+												   class="slds-file-selector__input slds-assistive-text"
+												   id="file_upload_input_01" aura:id="file_upload_input_01" accept="audio/*,video/*,image/*"/>
+											<ui:inputText value="" aura:id="documentName" class="hide"/>
+											<ui:inputTextarea value="" aura:id="documentBody" class="hide"/>
+											<ui:inputText value="" aura:id="documentExtension" class="hide"/>
+											<label class="slds-file-selector__body" for="file_upload_input_01">
+												<span class="slds-file-selector__button slds-button slds-button--neutral">                                    
+													<lightning:icon iconName="utility:upload" class="slds-button__icon slds-button__icon--left" variant="bare"/>
+													Upload Image
+                                                </span>
+											</label>
+										</div>
+										<div>
+											<lightning:spinner aura:id="uploadingstatus" class="hide gkn-sms-spiner" alternativeText="Uploading" variant="brand" size="small" />
+										</div>
+										<div id="preview" style="display:none">
+											
+										</div>                        
+									</div>
+								</div>
+							</div>
+							<div class="slds-form-element">
+								<div style="width: 100%; height: 40px; border-bottom: 1px solid e1e1e1; text-align: center">
+									<span style="font-weight: bold; margin-top: 10px; position: absolute;">
+										OR
+									</span>
+								</div>
+							</div>
+							<div class="slds-form-element">
+								<span class="slds-form-element__label">Provide publicly accessible file URL</span>
+								<div class="slds-form-element__control">
+									<ui:inputText class="slds-input" aura:id="mediaUrl" placeholder="Publicly Accessible URL" value=""/>
+								</div>
+							</div>
+						</div>
+						<!--  End Upload document Markup-->
+					</div>
+				</div>
+            </div>
+            
+			<div class="slds-size--7-of-12 slds-p-horizontal--small">
+				<div
+					class="slds-box slds-box--small slds-theme--shade slds-text-align--left slds-scrollable--y">
+					<table
+						class="slds-table slds-table--bordered slds-table--cell-buffer">
+						<thead>
+							<tr class="slds-text-title--caps">
+								<th>S.NO.</th>
+								<th scope="col">
+									<div class="slds-truncate" title="Name">
+										{!v.objName} Name</div>
+								</th>
+								<th scope="col">
+									<div class="slds-truncate" title="To Number">To Number</div>
+								</th>                                
+							</tr>
+						</thead>
+						<tbody>
+							<aura:iteration indexVar="no" items="{!v.selectedRecord}"
+								var="item">
+								<tr>
+									<th>{!no+1}</th>
+									<th scope="row" data-label="Name">
+										<div class="slds-truncate" title="Name">
+											<a href="javascript:return void(0);">{!item.Name}</a>
+										</div>
+									</th>
+									<td data-label="To Number">
+										<div class="slds-truncate" title="Cloudhub">{!item.toNum}</div>
+									</td>                                    
+								</tr>
+							</aura:iteration>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</aura:component>

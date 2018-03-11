@@ -1,0 +1,172 @@
+<aura:component access="GLOBAL" implements="force:appHostable" controller="gkn_sms.SMSAccountSetupCtr">
+    <ltng:require scripts="{!join(',', $Resource.gkn_sms__jslib + '/jquery.js',$Resource.gkn_sms__jslib + '/flot_jquery.js', $Resource.gkn_sms__jslib + '/jquery.flot.pie.js',$Resource.gkn_sms__jslib + '/drawchart.js')}" afterScriptsLoaded="{!c.doAfterScriptLoad}"/>
+    <aura:attribute name="isActive" type="String" default="false"/>
+    <aura:attribute name="isActive2" type="String" default="false"/>
+    <aura:attribute name="msg" type="String"/>
+    <aura:attribute name="siteUrl" type="String" default=""/>
+    
+    <aura:attribute name="firstTimeActivate" type="String" default=""/>
+    <aura:attribute name="smsbalance" type="gkn_sms__SMSBalance__c" default="{'sobjectType': 'gkn_sms__SMSBalance__c',
+	'gkn_sms__balanceSMS__c':'0','gkn_sms__totalSMS__c':0,'gkn_sms__usageSms__c':0,'gkn_sms__IncomingSMSCount__c':0,'gkn_sms__OutgoingSMSCount__c':0}"/>
+    
+    <aura:attribute name="emailAddress" type="String" default=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />  
+	<lightning:spinner aura:id="loading" class="slds-hide" alternativeText="Loading" variant="brand" size="small" />
+    
+    <!-- REQUIRED SLDS WRAPPER -->
+    <div class="slds-scope">        
+        <!-- PRIMARY CONTENT WRAPPER -->
+        <div class="smartsmsapp">            
+            <!-- RELATED LIST CARDS-->            
+            <div aura:id="sldsgrid" class="slds-grid slds-m-top--small">                
+                <!-- MAIN CARD -->
+                <div aura:id="leftdiv" class="slds-col slds-col-rule--right slds-p-right--large slds-size--9-of-12">
+                    <div class="section-1">
+                    	<h1 aura:id="section1heading" class="slds-text-heading--medium slds-m-bottom--medium">One Time Setup</h1>                    
+                    	<div class="slds-m-left--xxx-small slds-grid slds-grid--vertical-stretch">
+                        <div class="slds-col cell">
+                            <div class="border">						
+                                <aura:if isTrue="{!v.msg == 'Activated' ? true : false}">
+                                    <lightning:icon iconName="standard:work_order_item" size="small"/>
+                                </aura:if>
+                                <h2 class="slds-text-heading--small slds-m-bottom--small">{!v.msg}</h2>    
+                                <aura:if isTrue="{!v.msg == 'Activated' ? true : false}">
+                                    <div class="slds-col slds-size--6-of-12" style="display: inline-block;">
+                                        <span class="slds-text-heading--small">Site URL</span>(Works only with Enterprise and Unlimited Edition)<br/>
+                                        <ui:inputText aura:id="siteURL" placeholder="Site URL" class="slds-input" value="{!v.siteUrl}"/>
+                                    </div>
+                                    <div class="slds-col slds-size--3-of-12" style="display: inline;margin: 0px 10px;">                                        
+                                        <lightning:button onclick="{!c.saveSiteUrl}" label="Save" variant="brand"/>
+                                        <lightning:button onclick="{!c.editSiteUrl}" label="Edit"/>
+                                    </div>
+                                </aura:if>
+                                
+                                <p>{!v.firstTimeActivate}</p>                            
+                                <aura:if isTrue="{!v.isActive == 'false' ? true : false}">
+                                    <button onclick="{!c.sendKey}" class="slds-button slds-button--brand" id="sendKey">Activate</button>		
+                                </aura:if>
+                                
+                                <aura:if isTrue="{!v.isActive2 == 'false'?true:false}">		
+                                    <aura:if isTrue="{!v.isActive == 'created' ? true : false}">					
+                                        <div class="slds-form--stacked">
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="inputSample2">API Key</label>
+                                                <div class="slds-form-element__control">
+                                                    <ui:inputText aura:id="apiKey" class="slds-input" placeholder="Enter Api Key" />
+                                                </div>
+                                            </div>
+                                            <div class="slds-form-element">							    
+                                                <div class="slds-form-element__control">
+                                                    <button onclick="{!c.saveApiKey}" class="slds-button slds-button--brand" id="saveKey">Save</button>
+                                                    <button onclick="{!c.reSendKey}" class="slds-button slds-button--brand" id="resendActivation">Re Send</button>      
+                                                </div>
+                                            </div>
+                                        </div>							
+                                    </aura:if>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>                    
+                    </div>                    
+                    <div class="section-2 slds-p-top--large slds-m-top--large slds-col-rule--top">                        
+                        <div class="slds-grid">
+                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                <h1 aura:id="section2heading" class="slds-text-heading--medium slds-m-bottom--medium">
+                                    <lightning:icon iconName="standard:report" size="small"/>
+                                    &nbsp;&nbsp;APP Usage Stats
+                                </h1>
+                            </header>                            
+                            <div class="slds-no-flex">
+                                <lightning:button iconName="action:refresh" iconPosition="left" variant="brand" label="Refresh" onclick="{!c.Refresh}" />
+                                <lightning:spinner aura:id="smsSpinner" class="slds-hide" alternativeText="Loading" variant="brand" size="small" />
+                            </div>
+                        </div>
+                        
+                        <div class="slds-grid">                            
+                            <div class="slds-col slds-grid--align-center">
+                                <div align="center" class="slds-box slds-box--small slds-text-align--center">
+                                    
+                                    <div class="piechat" id="piechat" aura:id="piechat" style="width: 250px; height: 150px;"></div>
+                                </div>
+                            </div>							                            
+                        </div>                        
+                        
+                        <div aura:id="badgebox" class="slds-grid">
+                            <div aura:id="badge1" class="slds-col">
+                                <div class="slds-box slds-box--small slds-text-align--center">
+                                    <lightning:badge label="{!'Total : '+v.smsbalance.gkn_sms__totalSMS__c}" />
+                                </div>
+                            </div>
+                            <div aura:id="badge2" class="slds-col">
+                                <div class="slds-box slds-box--small slds-text-align--center">
+                                    <lightning:badge label="{!'Remaining : '+v.smsbalance.gkn_sms__balanceSMS__c}" />
+                                </div>
+                            </div>
+                            <div aura:id="badge3" class="slds-col">
+                                <div class="slds-box slds-box--small slds-text-align--center">
+                                    <lightning:badge label="{!'USED : '+v.smsbalance.gkn_sms__usageSms__c}" />
+                                </div>
+                            </div>
+                        </div>     
+                        <div style="color:#800000">
+                            Note - Depending upon SMS/MMS size, the USAGE counter will vary.
+                        </div>
+                    </div>                      
+                    <div class="section-3 slds-p-top--large slds-m-top--large slds-col-rule--top">
+                        Click <a href="https://www.girikon.com/apps/smartsms/" target="_blank">here</a> to find out activation steps and pricing.
+                    </div>
+                </div>                
+                <!-- / MAIN CARD -->                
+                <!-- NARROW CARD -->
+                <div aura:id="rightdiv" class="slds-col slds-p-left--large slds-size--3-of-12">                        
+                    <div class="slds-p-top--large">
+                    	<article class="slds-card slds-card--narrow">                            
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                <div class="slds-media__figure">                                        
+                                    <lightning:icon iconName="action:log_a_call" size="small" class=""/>
+                                </div>
+                                <div class="slds-media__body slds-truncate">
+                                    <h2 class="slds-text-heading--small">Contact Us</h2>
+                                </div>
+                            </header>
+                        </div>
+                        
+                        <div class="slds-card__body">
+                            <div class="slds-card__body--inner">
+                                <div class="slds-tile">                                    
+                                    <div class="slds-tile__detail slds-text-body--small">
+                                        <dl class="slds-list--horizontal slds-wrap">
+                                            <dt class="slds-item--label slds-text-color--weak slds-truncate" title="Email">
+                                                Email:
+                                            </dt>
+                                            <dd class="slds-item--detail" title="sales@girikon.com,appsupport@girikon.com">
+                                                sales@girikon.com<br/>appsupport@girikon.com<br/>
+                                            </dd>
+                                        </dl>
+                                        <dl class="slds-list--horizontal slds-wrap slds-p-top--small">
+                                            <dt class="slds-item--label slds-text-color--weak slds-truncate" title="Phone">
+                                                Phone:
+                                            </dt>
+                                            <dd class="slds-item--detail slds-truncate" title="+1-480-432-1110/602-456-5582">
+                                                +1-480-432-1110<br/>+1-602-456-5582
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                            
+                        <div class="slds-card__footer">
+                            <a href="https://www.girikon.com/contact-us/" target="_blank">Contact Now<span class="slds-assistive-text">Contact Now</span></a>
+                        </div>                            
+                    </article>                        
+                    </div>
+				</div>
+                <!-- / NARROW CARD -->                   
+            </div>
+            <!-- / RELATED LIST CARDS -->            
+        </div>
+        <!-- / PRIMARY CONTENT WRAPPER -->
+    </div>
+    <!-- / REQUIRED SLDS WRAPPER -->
+</aura:component>

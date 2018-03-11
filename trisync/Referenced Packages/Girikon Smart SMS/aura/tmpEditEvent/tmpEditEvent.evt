@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event template">
+	<aura:attribute name="editSMSTemp" type="gkn_sms__SMSTemplate__c" description="" />
+	<aura:attribute name="activeTab" type="String" default="RightBarContainer" description="" />
+</aura:event>

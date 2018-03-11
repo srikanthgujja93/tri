@@ -1,0 +1,340 @@
+<apex:page showheader="false" setup="false" title="Add Product Options" standardstylesheets="false" controller="wk_wedge.ProductoptionAddcontroller" cache="false">
+    <apex:composition template="wk_wedge__EcomKulBackendTheme" >
+        <apex:define name="Datacontent">
+            
+            <style>
+                .wdg-form--box .wdg-form--header{
+                height:43px;
+                }
+                .wdg-nav-icon.productcatalog, .wdg-nav-icon.prodOptions {
+                background-color: #34becd;
+                }
+                .variants--headeroptions {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                //height: 100%;
+                }
+                .variants--headeroptions li {
+                //height: 100%; 
+                float: left;
+                display: inline-block;
+                vertical-align: middle;
+                }
+                .variants--headeroptions a {
+                display: block;
+                color: #fff;
+                cursor: pointer;
+                box-sizing: border-box;
+                height: 100%;
+                line-height: 2.6;
+                padding: 0px 20px;
+                }
+                .variants--headeroptions li.active a {
+                background: #fff;
+                border: 1px solid #adadad;
+                border-left: none;
+                border-right: none;
+                color: #555555;
+                }
+                .selectType{
+                padding: 6px;
+                border-radius: 3px;
+                font-size: 14px;
+                color: #222;
+                background: #fff;
+                border: 1px solid #adadad;
+                outline: none;
+                box-shadow: none;
+                display: inline-block;
+                width: 150px;
+                box-sizing: border-box;
+                }
+                .error_field{
+                border-color:red !important;
+                }
+            </style>
+            <apex:form id="thepopblock" styleclass="wdg-dataentry--form">
+                <div class="wdg-body">
+                    <apex:outputpanel layout="block" id="wdgerrorBlock">
+                        <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                    </apex:outputpanel>
+                    <div class="wdg-body--header"></div>
+                    <div class="wdg-body--titleblock clearfix">
+                        <div class="wdg-body--title">
+                            <span class="wdg-title--logo productoption"></span>
+                            <span>Add Product Option</span>
+                        </div>
+                        <div class="wdg-filter--options" style="display:inline-block">
+                            <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!activatedLanguage.size>1}">
+                                <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                <apex:selectOptions value="{!activatedLanguage}">
+                                    <span class="caret multidropdownsymbol"></span>
+                                </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                        <div class="wdg-ctrl--btnPanel">
+                            <a href="javascript:void(0);" class="wdg-ctrl--btn save">
+                                <span></span>
+                            </a>
+                            <apex:actionfunction name="saveFeatures" action="{!saveFeatures}"/>
+                            <a href="{!$page.Product_options}" class="wdg-ctrl--btn cancel"> 
+                                <span></span>
+                            </a> 
+                        </div>
+                    </div>
+                    <div class="wdg-form--box">
+                        <div class="wdg-form--header">
+                            <ul class="variants--headeroptions clearfix">
+                                <li class="active">
+                                    <a href="javscript:void(0)"  data-target="productBlock">General</a>
+                                </li>                                
+                                <li >
+                                    <a href="javscript:void(0)"  data-target="variantBlock">Variants</a>                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        <apex:outputpanel layout="block" id="FeatureBlock" styleclass="wdg-form--content">
+                            <div id="productBlock" class="wgd-form--tab show">
+                                <div class="wdg-form--block">
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Information </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-form--table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Option Name :" for="ipname"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <apex:inputtext value="{!productF.name}" id="ipname" styleclass="display-inline--block" rendered="{!metaname==null}"/>
+                                                        <apex:inputtext value="{!metaname}" id="ipnameMeta" styleclass="display-inline--block" rendered="{!metaname!=null}"/>
+                                                    </td>
+                                                </tr>
+                                                
+                                                
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Option Status :  " for="ips"/>
+                                                    </td>
+                                                    <td class="field">
+                                                        <div class="custom-checkbox {!IF(productF.wk_wedge__Option_Status__c,'checked','')}">
+                                                            <apex:inputfield value="{!productF.wk_wedge__Option_Status__c}" id="ips"  styleclass="display-inline--block"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td class="label"><apex:outputlabel value="Option Type :" for="iptype"></apex:outputlabel></td>
+                                                    <td class="field">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputhidden value="{!productF.wk_wedge__Option_Type__c}" id="ipType"/>
+                                                            <select  id="ip_type_sel" onchange="javascript:document.getElementById('{!$component.ipType}').value=document.getElementById('ip_type_sel').value;" >
+                                                                <option value="">--None--</option>
+                                                                <apex:repeat value="{!types}" var="ogrp">
+                                                                    <optgroup label="{!ogrp.groupName}">
+                                                                        <apex:repeat value="{!ogrp.opt}" var="opt">
+                                                                            <option value="{!opt.value}">{!opt.label}</option>
+                                                                        </apex:repeat>
+                                                                    </optgroup>
+                                                                </apex:repeat>
+                                                            </select> 
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td class="label">
+                                                        <apex:outputlabel value="Description :" for="ipdesc"></apex:outputlabel>
+                                                    </td>
+                                                    <td class="field">
+                                                        <apex:inputtextarea value="{!productF.wk_wedge__Description__c}" id="ipdesc" styleclass="display-inline--block" rendered="{!metadesc==null}" html-tinymce="true"/>
+                                                        <apex:inputtextarea value="{!metadesc}" id="ipdescMeta" styleclass="display-inline--block" rendered="{!metadesc!=null}" html-tinymce="true"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="variantBlock" class="wgd-form--tab ">
+                                <div class="wdg-form--block"> 
+                                    <div class="wdg-form--blocktitle">
+                                        <span>Add Variants </span>
+                                    </div>
+                                    <div class="wdg-form--blockfields">
+                                        <table class="wdg-variant-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Position </th>
+                                                    <th> Value</th>
+                                                    <th> Modifier</th>
+                                                    <th> Type</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="PrimeRow">
+                                                    <td class="Xsmall position"><input type="text" /></td>
+                                                    <td class=" large variant"><input type="text" /></td>
+                                                    <td class=" Xsmall modifier"><input type="text"/></td>
+                                                    <td class=" large typeval">
+                                                        <select name="singleSelect" class="selectType">
+                                                            <option value="Absolute" >Absolute</option>
+                                                            <option value="Percent">Percent</option>
+                                                        </select>
+                                                        
+                                                    </td>
+                                                    <td class=" Xsmall option">
+                                                        <div class="option_btn">
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn addNew addRow"><span></span></a>
+                                                            <a href="javascript:void(0)" class="wdg-ctrl--btn delete deleteRow" ><span></span></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        </apex:outputpanel>
+                    </div>
+                </div>
+                <apex:inputhidden id="variants" value="{!selectedvariants}"/>
+            </apex:form>
+            <script>
+            var ProductVariants='{!JSENCODE(Pvariants)}';
+            </script>
+            <script> 
+            $=jQuery.noConflict();
+            (function($){
+                $( document ).ready(function(){
+                    $("[Id$='ip_type_sel'] option").each(function(){
+                        if($(this).val()==$("[Id$='ipType']").val()){
+                            $(this).prop('selected',true);
+                        }
+                    });
+                    
+                    
+                    if(ProductVariants!=null && ProductVariants!=''){
+                        var variants=JSON.parse(ProductVariants);
+                        for(key in variants){
+                            var arr=$(".wdg-form--blockfields .wdg-variant-table tbody tr");
+                            $(arr[key]).attr('data-target',variants[key]['Id']);
+                            $(".position input",arr[key]).val(variants[key]['wk_wedge__Order_Index__c']);
+                            $(".variant input",arr[key]).val(variants[key]['Name']);
+                            $(".modifier input",arr[key]).val(variants[key]['wk_wedge__Modifier__c']);
+                            $(".typeval select",arr[key]).val(variants[key]['wk_wedge__Type__c']);
+                            if($(".wdg-form--blockfields .wdg-variant-table tbody tr").length<variants.length)
+                                $(".wdg-form--blockfields .wdg-variant-table .addRow").last().trigger("click");
+                        }
+                    }
+                });
+                
+                $( document).on("click",".variants--headeroptions li a ",function(event){
+                    if($(this).text()!='Variants ' || ($("[Id$='ipType']").val()=='M' || $("[Id$='ipType']").val()=='T')){
+                        $(this).parent().addClass("active");
+                        var ids=$(this).attr("data-target");
+                        $("[Id$='"+ids+"']").addClass("show").siblings().removeClass("show");
+                        $(this).parent().siblings().removeClass("active");
+                    }
+                    else {
+                        window.ShowAlert("variants can not be defined for this Option type");
+                    }
+                }); 
+                
+                $( document).on("click"," .wdg-form--blockfields .wdg-variant-table .addRow",function(){
+                    $(this).parent().parent().parent().after( "<tr>"+$("[Id$='PrimeRow']").html()+"</tr>");
+                });
+                
+                $( document).on("click"," .wdg-form--blockfields .wdg-variant-table .deleteRow",function(){
+                    if($(".wdg-form--blockfields .wdg-variant-table tbody tr").length>1)
+                        $(this).parent().parent().parent().remove();
+                });
+                
+                $( document ).on("click",".wdg-ctrl--btn.save",function(){
+                    var enableSave = true;
+                    if($("[Id$='ipType']").val()=='M' || $("[Id$='ipType']").val()=='T'){
+                        var arr=[];
+                        $(".wdg-form--blockfields .wdg-variant-table tbody tr").each(function(){
+                            var obj={"pos":"","val":'',"modif":'',"type":''};
+                            var a=$(".position input",this).val();
+                            var b=$(".variant input",this).val();
+                            var c=$(".modifier input",this).val();
+                            var d=$(".typeval select",this).val();
+                            
+                            obj['pos']=a;
+                            obj['val']=b;
+                            obj['modif']=c;
+                            obj['type']=d;
+                            $(".position input",this).removeClass('error_field');
+                            $(".variant input",this).removeClass('error_field');
+                            $(".modifier input",this).removeClass('error_field');
+                            $(".typeval select",this).removeClass('error_field');
+                            if(a == undefined || a == ''){
+                                $(".position input",this).addClass('error_field');
+                                window.ShowAlert('All values in variants table must be filled');
+                                enableSave = false;
+                                //return;
+                            }
+                            if(!$.isNumeric(a)){
+                                window.ShowAlert('All positions must be numeric in variants table');
+                                $(".position input",this).addClass('error_field');
+                                enableSave = false;
+                                //return;
+                            }
+                            if(b == undefined || b == ''){
+                                window.ShowAlert('All values in variants table must be filled');
+                                $(".variant input",this).addClass('error_field');
+                                enableSave = false;
+                                //return;
+                            }
+                            if(c == undefined || c == ''){
+                                window.ShowAlert('All values in variants table must be filled');
+                                $(".modifier input",this).addClass('error_field');
+                                enableSave = false;
+                                //return;
+                            }
+                            if(!$.isNumeric(c)){
+                                window.ShowAlert('All modifiers must be numeric in variants table');
+                                $(".modifier input",this).addClass('error_field');
+                                enableSave = false;
+                                //return;
+                            }
+                            if(d == undefined || d == ''){
+                                window.ShowAlert('All values in variations table must be filled');
+                                $(".typeval select",this).addClass('error_field');
+                                enableSave = false;
+                                //return;
+                            }
+                            var id = $(this).attr('data-target');
+                            if(id == undefined)
+                                obj['Id'] = '';
+                            else
+                                obj['Id'] = id;
+                            arr.push(obj);
+                        });
+                        $("[Id$='variants']").val(JSON.stringify(arr));
+                    }
+                    if(enableSave)
+                        saveFeatures();                         
+                });
+                
+                wk(document ).on("click",".custom-checkbox input",function(){
+                    
+                    wk(this).parent().removeClass("checked");
+                    if(this.checked){
+                        wk(this).parent().addClass("checked");
+                    }
+                });
+            }(jQuery));
+            </script>
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

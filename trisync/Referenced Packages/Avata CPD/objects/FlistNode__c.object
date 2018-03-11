@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>This is a handle to a node in a folder (virtual container) list</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>Private</externalSharingModel>
+    <fields>
+        <fullName>AvDocumentRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ref to the associated document</description>
+        <externalId>false</externalId>
+        <label>AvDocument Reference</label>
+        <referenceTo>AvDocument__c</referenceTo>
+        <relationshipName>FlistNodes</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>FlistRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The Flist to which this node belongs</description>
+        <externalId>false</externalId>
+        <label>Parent Folder</label>
+        <referenceTo>Flist__c</referenceTo>
+        <relationshipName>FlistNodesFlistRef</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>HandleKind__c</fullName>
+        <deprecated>false</deprecated>
+        <description>What is the payload of this node?</description>
+        <externalId>false</externalId>
+        <label>Object Kind</label>
+        <precision>2</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>HlistRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Payload: Hlist</description>
+        <externalId>false</externalId>
+        <label>List Reference</label>
+        <referenceTo>Hlist__c</referenceTo>
+        <relationshipName>FlistNodesHlistRef</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>IndirectFlistRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Proxy node</description>
+        <externalId>false</externalId>
+        <label>Folder Reference</label>
+        <referenceTo>Flist__c</referenceTo>
+        <relationshipName>FlistNodes1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>MapRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Pointer to a Map</description>
+        <externalId>false</externalId>
+        <label>Map Reference</label>
+        <referenceTo>Map__c</referenceTo>
+        <relationshipName>FlistNodesMapRef</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>PhaseProjectRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Project Reference</label>
+        <referenceTo>PhaseGateProject__c</referenceTo>
+        <relationshipName>FlistNodesPhaseProjectRef</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>PublicGroupRef__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Reference to a public group ID stored as a string</description>
+        <externalId>false</externalId>
+        <label>Team Reference</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ReportRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Pointer to a report record</description>
+        <externalId>false</externalId>
+        <label>Report Reference</label>
+        <referenceTo>AvReport__c</referenceTo>
+        <relationshipName>FlistNodesReportRef</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>SprintRef__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Sprint Reference</label>
+        <referenceTo>Sprint__c</referenceTo>
+        <relationshipLabel>Folder Nodes</relationshipLabel>
+        <relationshipName>FolderNodes</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <label>Folder Node</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>FlistRef__c</columns>
+        <columns>HandleKind__c</columns>
+        <columns>HlistRef__c</columns>
+        <columns>IndirectFlistRef__c</columns>
+        <columns>MapRef__c</columns>
+        <columns>PhaseProjectRef__c</columns>
+        <columns>ReportRef__c</columns>
+        <columns>AvDocumentRef__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>FLN-{00000}</displayFormat>
+        <label>Folder List Item ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Folder Nodes</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>Private</sharingModel>
+</CustomObject>

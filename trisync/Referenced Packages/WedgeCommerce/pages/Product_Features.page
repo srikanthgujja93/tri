@@ -1,0 +1,227 @@
+<apex:page controller="wk_wedge.ProductFeatureController" showHeader="false" standardStylesheets="false" docType="HTML-5.0" cache="false" title="Product Features">
+    <style>
+        .wdg-nav-icon.productcatalog, .wdg-nav-icon.prodfeature {
+            background-color: #34becd;
+        }
+        .wdg-body .wdg-dataTable--box{
+            margin-top:5px;
+        }
+        .totalRec{
+            font-size: 14px;
+            color: #777777;
+            margin-top:2px;
+        }
+        .wdg-body-titletext{
+            display:inline-block;
+            vertical-align: top;
+            line-height: 1;
+        }
+        .recperpage{
+            background: #FFF;
+            padding: 4px 8px;
+            border: 2px solid #57BDC2;
+            border-radius: 4px;
+            cursor:pointer;
+        }
+        .recperpage:focus{
+            outline:none;
+            cursor:pointer;
+        }
+    </style>
+    <apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>  
+    <apex:composition template="wk_wedge__EcomKulBackendTheme">
+        <apex:define name="Datacontent">
+                <apex:form >
+                
+                     <div class="wdg-body">
+                         <apex:outputpanel layout="block" id="wdgerrorBlock">
+                            <!--<apex:messages id="pagemessgaes" styleclass="wdg-error--msg"/>-->
+                        </apex:outputpanel>
+                         <div class="wdg-body--header">
+                                
+                                 <div class="wdg-filter--box">
+                                    <span id="openfilter" class="wdg-ctrl--btn filter"><span></span></span>
+                                </div>
+                                <div class="wdg-search--box"> 
+                                   <apex:inputtext html-placeholder="Search Name"  value="{!searchQuery}"/>
+                                   <apex:commandbutton value="Search" styleclass="search wdg-submit--btn" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,urlstr" status="waitstatus" oncomplete="recordcount()"/>
+                                   <apex:outputPanel id="urlstr"><apex:inputHidden id="urlval" value="{!url}"/></apex:outputPanel>
+                                </div> 
+                            </div>   
+                            <div class="wdg-filters">
+                                <div class="wdg-filter--title">Filter Here</div>
+                                  <div class="wdg-filters-wrap">
+                                    <div class="wdg-filter--options">
+                                        <span> Filter By Type</span>
+                                          <apex:inputtext value="{!types}" html-placeholder="Type"/>
+                                    </div>
+                                   
+                                    <div class="wdg-filter--options">
+                                         <apex:commandbutton value="Apply" styleclass="wdg-submit--btn apply" action="{!updateFeed}" rerender="wdgerrorBlock,wdgTable,wdgTablebox,urlstr" status="waitstatus" oncomplete="recordcount()"/>
+                                    </div>
+                                </div>
+                           </div>
+                            <div class="wdg-body--titleblock clearfix">
+                                <div class="wdg-body--title">
+                                    <div class="wdg-body-titletext"><span class="wdg-title--logo features"></span></div>
+                                    <div class="wdg-body-titletext">
+                                        <div> Product Features </div>
+                                        <div class="totalRec"> Total Records: <span id="totalrec"></span></div>
+                                    </div>
+                                </div>
+                                <div class="wdg-filter--options" style="display:inline-block;margin-left:8px;">
+                                    <apex:selectList value="{!selectedRecordLanguage}" multiselect="false" size="1" id="langSelect" rendered="{!activatedLanguage.size>1}">
+                                        <apex:actionSupport action="{!changeLang}" event="onchange" oncomplete="setUrl()" rerender="none" status="waitstatus"/>
+                                        <apex:selectOptions value="{!activatedLanguage}">
+                                            <span class="caret multidropdownsymbol"></span>
+                                        </apex:selectOptions>
+                                    </apex:selectList>
+                                </div>  
+                                <div class="wdg-ctrl--btnPanel">
+                                    <apex:outputLabel value="Record Per Page : " for="recPerPage" style="vertical-align: middle;"/>
+                                    <apex:selectList size="1" value="{!pagesize}" id="recPerPage" onchange="updatePage()" styleclass="recperpage">
+                                        <apex:selectOptions value="{!recordperpage}"/>
+                                    </apex:selectList>
+                                     <a href="{!URLFOR($page.Product_Feature_Add)}" class=" wdg-ctrl--btn addNew">
+                                        <span></span>
+                                    </a>
+                                    
+                                    <div class="wdg-ctrl--btngroup clearfix">
+                                        <div class="wdg-ctrl--btn settings">
+                                            <span></span>
+                                        </div>
+                                        <div class="dropdown dropdown-wrap">
+                                            <button type="button"  data-toggle="dropdown" class=" wdg-ctrl--btn drop-down dropdown-toggle" id="ecm_ctrl_Dropdown">
+                                                <span></span>
+                                            </button>
+                                            <div class="dropdownMenu">
+                                               <div> <a href="javascript:void(0)"  id="deleteSelected">Delete Selected </a></div>
+                                               <div> <a href="javascript:void(0)" id="deleteALL" >Delete All </a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <apex:outputpanel layout="block" id="wdgTablebox" styleclass="wdg-dataTable--box">
+                                <apex:pagemessages />
+                                <apex:datatable value="{!features}" var="feat" id="wdgTable" styleclass="wdg-dataTable">
+                                     <apex:column styleclass="Xsmall">
+                                        <apex:facet name="header">  
+                                            <div class="custom-checkbox">
+                                                <input type="checkbox" id="headerCB"/>
+                                            </div>
+                                        </apex:facet>
+                                        <div class="custom-checkbox">
+                                                <input type="checkbox" class="eachselect" value="{!feat.id}"/>
+                                        </div>
+                                    </apex:column>
+                                    <apex:column styleclass="medium">
+                                        <apex:facet name="header">
+                                            <apex:commandlink value="Feature Name {!IF(fieldName=='name',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                                <apex:param name="fieldName" value="name" assignto="{!fieldName}"/>
+                                            </apex:commandlink>
+                                        </apex:facet>
+                                        <apex:outputfield value="{!feat.name}"/>
+                                    </apex:column> 
+                                     <apex:column styleclass="medium">
+                                        <apex:facet name="header">
+                                            <apex:commandlink value="Type {!IF(fieldName=='type__C',IF(sortdir=='ASC','▴','▾'),'')}" action="{!sortparam}" rerender="wdgerrorBlock,wdgTable,wdgTablebox" status="waitstatus" styleclass="col-sort">
+                                                <apex:param name="fieldName" value="type__C" assignto="{!fieldName}"/>
+                                            </apex:commandlink>
+                                        </apex:facet>
+                                        <apex:outputfield value="{!feat.wk_wedge__Type__c}"/>
+                                    </apex:column> 
+                                    
+                                    <apex:column styleclass="feed_list_table-edit medium">
+                                        <apex:facet name="header">Action</apex:facet>
+                                         <apex:outputlink value="{!URLFOR($Page.wk_wedge__Product_Feature_Add,null,[featId=feat.id])}" styleclass=" wdg-ctrl--btn edit">
+                                            <span></span>
+                                        </apex:outputlink>
+                                        <div class=" wdg-ctrl--btn delete" id="singledelete" targetid="{!feat.id}"><span></span></div>
+                                        
+                                    
+                                    </apex:column> 
+                                    <apex:facet name="footer">
+                                        <apex:outputpanel layout="block" styleclass="wdg-dataTable--paginate">
+                                            <apex:outputpanel rendered='{!features.size>0}'>
+                                                <apex:commandlink value="" action="{!first}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox" styleclass="wdg-ctrl--btn paginate first"><span></span></apex:commandlink>
+                                                <apex:commandlink value="" action="{!previous}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate Prev"><span></span></apex:commandlink>
+                                                <apex:outputText styleclass="wdg-dataTable--pages" value="{!pagenumber} of {!totalPages} "></apex:outputText>
+                                                <apex:commandlink value="" action="{!next}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate next"><span></span></apex:commandlink>
+                                                <apex:commandlink value="" action="{!last}" status="waitstatus"  rerender="wdgerrorBlock,wdgTable,wdgTablebox"  styleclass="wdg-ctrl--btn paginate last"><span></span></apex:commandlink>
+                                            </apex:outputpanel> 
+                                            <apex:outputpanel rendered="{!features.size==0}">
+                                                <div class="">No Records Returned !!!!</div>
+                                            </apex:outputpanel>
+                                        </apex:outputpanel>
+                                    </apex:facet>
+                                </apex:datatable>
+                             </apex:outputpanel>
+                             <apex:inputhidden value="{!deleteid}" id="deletable"/>
+                             <apex:actionfunction name="deleteoneRecord" action="{!deletesinglefeatures}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete()"/>
+                              <apex:actionfunction name="deleteSelectedRecords" action="{!deleteSelectedfeatures}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete()"/>
+                             <apex:actionfunction name="deleteAllRecords" action="{!deleteAllfeatures}" status="waitstatus" rerender="wdgerrorBlock,wdgTable,wdgTablebox,notice" oncomplete="afterdelete()"/>
+                            <apex:actionFunction name="updatePage" action="{!updatedata}" status="waitstatus"/><!-- oncomplete="recordcount()"-->
+                        </div>
+                       
+                </apex:form>
+                <script>
+                jQuery(document).ready(function($) {
+                  // Get Accounts via the REST API
+                  $.ajax('/services/data/v39.0/query?q=SELECT+Name+FROM+wk_wedge__Product_Features__c',
+                    {
+                      beforeSend: function(xhr) {
+                        // Set the OAuth header from the session ID
+                        xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                      },
+                      success: function(response) {
+                        // Append the records to HTML list
+                        var str=JSON.stringify(response);
+                        var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                        var arr = total.split(',');
+                        document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                });
+                      },
+                      error: function(jqXHR, textStatus, errorThrown) {
+                        // Error
+                        console.log(jqXHR.status + ': ' + errorThrown);
+                      }
+                    }
+                  );
+                });
+                function afterdelete(){
+                    recordcount();
+                    closenotifications();    
+                }
+                function recordcount(){
+                    console.log($('[Id$="urlval"]').val());
+                    if($('[Id$="urlval"]').val()!='' && $('[Id$="urlval"]').val()!=null){
+                        $.ajax($('[Id$="urlval"]').val(),
+                        {
+                          beforeSend: function(xhr) {
+                            // Set the OAuth header from the session ID
+                            xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+                          },
+                          success: function(response) {
+                            // Append the records to HTML list
+                            var str=JSON.stringify(response);
+                            var total = str.substr(str.indexOf('totalSize":') + 11, str.indexOf(','));
+                            var arr = total.split(',');
+                            document.getElementById('totalrec').innerHTML=arr[0].replace(/./g, function(c, i, a) {
+                                        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+                                    });
+                          },
+                          error: function(jqXHR, textStatus, errorThrown) {
+                            // Error
+                            console.log(jqXHR.status + ': ' + errorThrown);
+                          }
+                        }
+                      );                    
+                    }
+                }   
+              </script>
+        </apex:define>  
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,52 @@
+<aura:component controller="wk_wedge.WedgeTemplateComponentLightning" implements="force:appHostable">
+	<ltng:require styles="{!$Resource.wk_wedge__SLDS +'/assets/styles/salesforce-lightning-design-system-ltng.css'}" scripts="{!$Resource.wk_wedge__wedgecommerce+'/wedgeCommerce/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptsLoaded}"/>	
+	<aura:handler name="init" value="{!this}" action="{!c.getTemplates}" />
+    <aura:attribute name="TemplateId" type="String" default=''/>
+	<aura:attribute name="TempComponentList" type="wk_wedge__Template_Component__c[]"/>
+    
+    <aura:registerEvent name="createTemplateVariants" type="wk_wedge:TemplateComponentsEvent"/>
+	    
+    <div class="wk_static pos">
+		<div class="slds-page-header pageHeader slds-p-around--x-small" role="banner">
+			<div class="slds-has-flexi-truncate">
+				<div class="slds-media">
+					<div class="templatelarge slds-m-left--medium">
+						<span ></span>
+					</div>
+					<div class="slds-media__body slds-m-left--x-small">
+						<p class="heading">Template Components</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+        	<table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                <thead class="tableHeader">
+                    <tr class="slds-text-heading--label tableHeaderRow">
+                        <th class="action column" scope="col">Name</th>
+                        <th class="slds-is-sortable column" scope="col">Status</th>
+                        <th class="slds-is-sortable column" scope="col">Configure</th>                    
+                    </tr>  
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.TempComponentList}" var="key">
+                        <tr class="slds-hint-parent">
+                            <td data-label="Name" class="action column">{!key.Name}</td>
+                            <td data-label="Status" class="action column">
+                                <aura:if isTrue="{!key.wk_wedge__active__c}">
+                                    Active
+                                    <aura:set attribute="else">
+                                      Hidden
+                                    </aura:set>
+                                </aura:if>
+                            </td>
+                            <td data-label="Configure " class="column">
+                                <wk_wedge:NavigateToTemplateVariants label="Configure" TemplateId="{!v.TemplateId}" tcompId="{!key.Id}" tcompName="{!key.Name}"/>
+                            </td>                            
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+	</div>
+</aura:component>
